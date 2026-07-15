@@ -127,6 +127,26 @@ body{background:#0a0908;padding:16px;color:var(--color-editor-foreground);}
 .aiimg{display:flex;align-items:center;gap:7px;background:var(--color-editor-elevated);border:1px solid var(--color-editor-border);color:var(--color-editor-foreground);border-radius:var(--radius-md);padding:9px 15px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);cursor:pointer;}
 .aiimg .ti{font-size:16px;color:var(--color-primary);}
 .export{background:var(--color-primary);color:#fff;border:none;border-radius:var(--radius-md);padding:10px 20px;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;}
+/* template switcher */
+.tmpl-sw{position:relative;display:flex;align-items:center;}
+.tmpl-btn{display:flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--color-editor-border);border-radius:var(--radius-md);background:var(--color-editor-elevated);color:var(--color-editor-foreground);font-size:var(--text-label);font-weight:var(--font-weight-body-strong);cursor:pointer;white-space:nowrap;}
+.tmpl-btn .ti{font-size:14px;color:var(--color-editor-muted);}
+.tmpl-btn .tmpl-name{color:var(--color-primary);}
+.tmpl-btn .chevron{font-size:12px;color:var(--color-editor-muted);transition:transform .2s;}
+.tmpl-sw.open .chevron{transform:rotate(180deg);}
+.tmpl-dd{position:absolute;top:calc(100% + 6px);left:0;width:260px;background:var(--color-editor-surface);border:1px solid var(--color-editor-border);border-radius:var(--radius-lg);box-shadow:0 8px 24px rgba(0,0,0,.4);z-index:20;display:none;overflow:hidden;}
+.tmpl-sw.open .tmpl-dd{display:block;}
+.tmpl-dd-item{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;font-size:var(--text-label);color:var(--color-editor-foreground);border-bottom:1px solid var(--color-editor-border);}
+.tmpl-dd-item:last-child{border-bottom:none;}
+.tmpl-dd-item:hover{background:var(--color-editor-elevated);}
+.tmpl-dd-item.active{background:rgba(239,97,8,.08);}
+.tmpl-dd-item .tmpl-thumb{width:36px;height:36px;border-radius:var(--radius-sm);border:1px solid var(--color-editor-border);background:var(--color-editor-elevated);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--color-editor-muted);flex-shrink:0;}
+.tmpl-dd-item.active .tmpl-thumb{border-color:var(--color-primary);}
+.tmpl-dd-item .tmpl-info{flex:1;min-width:0;}
+.tmpl-dd-item .tmpl-info .tmpl-n{font-weight:var(--font-weight-body-strong);}
+.tmpl-dd-item .tmpl-info .tmpl-d{font-size:var(--text-meta);color:var(--color-editor-muted);margin-top:2px;}
+.tmpl-dd-item .tmpl-check{font-size:14px;color:var(--color-primary);display:none;}
+.tmpl-dd-item.active .tmpl-check{display:block;}
 /* body: 左細/中央/右 → 下タイムライン */
 .mid{flex:1;display:grid;grid-template-columns:78px 1fr 320px;grid-template-rows:1fr;min-height:0;overflow:hidden;}
 /* 左細ツールバー */
@@ -137,6 +157,7 @@ body{background:#0a0908;padding:16px;color:var(--color-editor-foreground);}
 .rt.on{background:rgba(239,97,8,.14);color:var(--color-primary);}
 /* 中央：純黒ステージ */
 .stagewrap{display:flex;flex-direction:column;min-width:0;background:var(--color-editor-stage);}
+.stage-topbar{display:flex;align-items:center;padding:8px 14px;border-bottom:1px solid var(--color-editor-border);background:var(--color-editor-surface);flex:none;}
 .stage{flex:1;display:flex;align-items:flex-start;justify-content:center;min-height:0;padding:20px;}
 .vid{width:230px;aspect-ratio:9/16;border-radius:var(--radius-md);background:var(--color-editor-elevated);display:flex;align-items:flex-end;justify-content:center;color:var(--color-editor-muted);font-size:40px;position:relative;overflow:hidden;}
 .vid .cap{position:absolute;bottom:24px;left:0;right:0;text-align:center;color:#fff;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);}
@@ -223,6 +244,73 @@ body{background:#0a0908;padding:16px;color:var(--color-editor-foreground);}
 .playhead{position:absolute;top:0;bottom:0;width:2px;background:#ff5c35;z-index:5;pointer-events:none;}
 .playhead::before{content:"";position:absolute;top:0;left:-4px;width:10px;height:9px;background:#ff5c35;border-radius:2px;}
 
+@media (max-width:430px) {
+  /* --- video_editor_dark_wire.html mobile --- */
+  body{padding:8px;}
+  /* App wrapper: full width, auto height, no fixed height */
+  .app{
+    width:100% !important;
+    height:auto !important;
+    min-height:100svh;
+    border-radius:var(--radius-md);
+  }
+  /* Header: compact */
+  .hd{height:48px;padding:0 10px;gap:8px;}
+  .title{font-size:var(--text-label);}
+  .aiimg span{display:none;}
+  .export{padding:8px 12px;font-size:var(--text-label);}
+  /* Mid 3-column → single column */
+  .mid{
+    display:flex !important;
+    flex-direction:column !important;
+    overflow:visible !important;
+    min-height:0;
+  }
+  /* Left rail → horizontal strip */
+  .rail{
+    flex-direction:row !important;
+    height:auto !important;
+    width:100% !important;
+    padding:6px 8px !important;
+    overflow-x:auto;
+    overflow-y:hidden;
+    gap:4px !important;
+    border-right:none !important;
+    border-bottom:1px solid var(--color-editor-border);
+    flex-shrink:0;
+  }
+  .rt{
+    width:auto !important;
+    min-width:52px;
+    flex-direction:column;
+    padding:6px 8px !important;
+    flex-shrink:0;
+  }
+  /* Center stage: full width, appropriate height */
+  .stagewrap{width:100% !important;min-width:0;}
+  .stage{padding:14px;min-height:260px;}
+  .pctrl{gap:10px;padding:10px;}
+  /* Right properties panel → full width below */
+  .right{
+    width:100% !important;
+    min-width:0;
+    border-left:none !important;
+    border-top:1px solid var(--color-editor-border);
+    max-height:340px;
+    overflow:hidden;
+  }
+  .rbody{padding:12px;}
+  /* Timeline: full width, reduced height */
+  .tl{height:180px !important;}
+  .tlhd{padding:8px 12px;}
+  /* template switcher SP */
+  .stage-topbar{padding:6px 10px;}
+  .tmpl-label{display:none;}
+  .tmpl-btn{padding:5px 10px;font-size:var(--text-meta);}
+  .tmpl-dd{width:220px;}
+  .tmpl-dd-item{padding:8px 10px;}
+  .tmpl-dd-item .tmpl-thumb{width:30px;height:30px;font-size:14px;}
+}
 </style></head><body>
 <div class="app">
   <div class="hd">
@@ -250,6 +338,7 @@ body{background:#0a0908;padding:16px;color:var(--color-editor-foreground);}
 
     <!-- 中央 純黒ステージ -->
     <div class="stagewrap">
+      <div class="stage-topbar"><div class="tmpl-sw" id="tmplSw" onclick="this.classList.toggle('open')"><button class="tmpl-btn"><i class="ti ti-template"></i><span class="tmpl-label">テンプレ:</span> <span class="tmpl-name">テロップ基本</span><i class="ti ti-chevron-down chevron"></i></button><div class="tmpl-dd" onclick="event.stopPropagation()"><div class="tmpl-dd-item active" onclick="pickTmpl(this,'テロップ基本')"><div class="tmpl-thumb"><i class="ti ti-typography"></i></div><div class="tmpl-info"><div class="tmpl-n">テロップ基本</div><div class="tmpl-d">白文字+黒縁・スタンダード</div></div><i class="ti ti-check tmpl-check"></i></div><div class="tmpl-dd-item" onclick="pickTmpl(this,'バラエティ')"><div class="tmpl-thumb" style="background:#ffe8cc;"><i class="ti ti-sparkles"></i></div><div class="tmpl-info"><div class="tmpl-n">バラエティ</div><div class="tmpl-d">カラフル・強調テロップ</div></div><i class="ti ti-check tmpl-check"></i></div><div class="tmpl-dd-item" onclick="pickTmpl(this,'シネマ')"><div class="tmpl-thumb" style="background:#1a1a1a;color:#aaa;"><i class="ti ti-movie"></i></div><div class="tmpl-info"><div class="tmpl-n">シネマ</div><div class="tmpl-d">字幕スタイル・映画風</div></div><i class="ti ti-check tmpl-check"></i></div><div class="tmpl-dd-item" onclick="pickTmpl(this,'ポップ縦型')"><div class="tmpl-thumb" style="background:#e4e8ff;color:#5a5aff;"><i class="ti ti-device-mobile"></i></div><div class="tmpl-info"><div class="tmpl-n">ポップ縦型</div><div class="tmpl-d">TikTok/Reels向け</div></div><i class="ti ti-check tmpl-check"></i></div></div></div></div>
       <div class="stage"><div class="vid"><i class="ti ti-photo"></i><span class="cap">美味しそうな後ろ足</span></div></div>
       <div class="pctrl"><i class="ti ti-player-skip-back"></i><i class="ti ti-player-track-prev"></i><span class="play"><i class="ti ti-player-play"></i></span><i class="ti ti-player-track-next"></i><i class="ti ti-player-skip-forward"></i><span class="tc">00:06 / 00:36</span></div>
     </div>
@@ -680,7 +769,13 @@ document.querySelectorAll('.clip').forEach(function(c){
 })();
 function toggleChatPlusMenu(e){e.stopPropagation();document.getElementById('chatPlusMenu').classList.toggle('show');}
 function closeChatPlusMenu(){document.getElementById('chatPlusMenu').classList.remove('show');}
-document.addEventListener('click',function(){closeChatPlusMenu();});
+document.addEventListener('click',function(e){closeChatPlusMenu();var sw=document.getElementById('tmplSw');if(sw&&!sw.contains(e.target))sw.classList.remove('open');});
+function pickTmpl(el,name){
+  document.querySelectorAll('.tmpl-dd-item').forEach(i=>i.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelector('.tmpl-name').textContent=name;
+  document.getElementById('tmplSw').classList.remove('open');
+}
 </script>
 <script src="sonner.js"></script>
 </body></html>

@@ -146,11 +146,13 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .st .tx{font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);white-space:nowrap;color:var(--color-muted-foreground);} .st.now .tx{color:var(--color-foreground);} .st.done .tx{color:var(--color-foreground);}
 .stline{flex:1;height:2px;background:var(--color-border);min-width:40px;margin:0 -4px;margin-bottom:20px;} .stline.done{background:var(--color-success);}
 .main{flex:1;min-width:0;display:flex;flex-direction:column;min-height:0;}
-#subnav{display:flex;align-items:center;gap:9px;padding:14px 30px 0;font-size:var(--text-label);color:var(--color-muted-foreground);}
-.snn{display:flex;align-items:center;gap:6px;font-weight:var(--font-weight-body-strong);}
-.snn .c{width:20px;height:20px;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:var(--text-meta);background:var(--color-background);color:var(--color-muted-foreground);}
-.snn.on{color:var(--color-primary);} .snn.on .c{background:var(--color-primary);color:#fff;}
-.snline{flex:none;width:30px;height:1px;background:var(--color-border);}
+#subnav{display:flex;align-items:center;justify-content:center;gap:0;padding:16px 24px;border-bottom:1px solid var(--color-border);background:var(--color-card);max-width:600px;margin:0 auto;width:100%;}
+.snn{display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;z-index:1;}
+.snn .c{width:28px;height:28px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);border:2px solid var(--color-border);background:var(--color-card);color:var(--color-muted-foreground);transition:all .2s;}
+.snn .tx{font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);white-space:nowrap;color:var(--color-muted-foreground);}
+.snn.done .c{background:var(--color-success);color:#fff;border-color:var(--color-success);} .snn.done .tx{color:var(--color-foreground);}
+.snn.now .c{background:var(--color-primary);color:#fff;border-color:var(--color-primary);} .snn.now .tx{color:var(--color-foreground);}
+.snline{flex:1;height:2px;background:var(--color-border);min-width:40px;margin:0 -4px;margin-bottom:20px;} .snline.done{background:var(--color-success);}
 .canvas{flex:1;overflow-y:auto;padding:32px 40px 48px;min-height:0;max-width:820px;margin:0 auto;width:100%;box-sizing:border-box;}
 .canvas:has(#sc_editor.on){max-width:none;padding:20px 24px 32px;}
 .screen{display:none;} .screen.on{display:block;}
@@ -192,7 +194,16 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .tplrow:last-child{border-bottom:none;} .tplrow:hover{background:var(--color-surface);}
 .tplrow .ic{width:28px;height:28px;flex:none;border-radius:var(--radius-sm);background:var(--color-background);color:var(--color-muted-foreground);display:flex;align-items:center;justify-content:center;font-size:15px;}
 .tplrow .tn{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);} .tplrow .cv2{margin-left:auto;color:var(--color-muted-foreground);font-size:15px;}
-.tpl-section{border:1px solid var(--color-border);border-radius:var(--radius-md);margin-bottom:12px;overflow:hidden;}
+.tpl-drop-wrap{position:relative;}
+.tpl-drop-btn{width:36px;height:36px;flex:none;border:1px solid var(--color-border);border-radius:var(--radius-md);background:transparent;color:var(--color-muted-foreground);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.tpl-drop-btn:hover{background:var(--color-surface);color:var(--color-foreground);}
+.tpl-drop-menu{display:none;position:absolute;top:calc(100% + 6px);right:0;min-width:240px;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);box-shadow:0 4px 16px rgba(0,0,0,.12);padding:6px 0;z-index:50;}
+.tpl-drop-menu.show{display:block;}
+.tpl-drop-label{padding:8px 16px 4px;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);}
+.tpl-drop-item{display:flex;align-items:center;gap:10px;padding:10px 16px;font-size:var(--text-body);color:var(--color-foreground);cursor:pointer;white-space:nowrap;}
+.tpl-drop-item:hover{background:var(--color-surface);}
+.tpl-drop-item i{font-size:17px;color:var(--color-muted-foreground);width:20px;text-align:center;}
+.tpl-drop-divider{height:1px;background:var(--color-border);margin:4px 0;}
 .tpl-header{display:flex;align-items:center;gap:10px;padding:14px 16px;cursor:pointer;}
 .tpl-header .cv{color:var(--color-muted-foreground);font-size:17px;transition:transform .2s;}
 .tpl-section.open .tpl-header .cv{transform:rotate(180deg);color:var(--color-primary);}
@@ -207,11 +218,11 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 /* 予測変換チャット（固定高さ） */
 .booth{background:#f0ede9;border:1px solid var(--color-border);border-radius:var(--radius-lg);height:520px;display:flex;flex-direction:column;overflow:hidden;}
 .booth-hd{display:flex;align-items:center;gap:9px;padding:11px 14px;border-bottom:1px solid var(--color-border);background:var(--color-card);}
-.booth-hd .bt{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);} .booth-hd .bs{font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:1px;}
-#stream{flex:1;overflow-y:auto;padding:13px;display:flex;flex-direction:column;gap:10px;min-height:0;}
-.bmsg{display:flex;gap:9px;align-items:flex-start;} .bmsg img{width:32px;height:32px;border-radius:var(--radius-md);object-fit:cover;flex:none;background:var(--color-primary-subtle);}
-.bbub{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:11px 14px;font-size:var(--text-body);line-height:1.7;max-width:84%;}
-.memsg{align-self:flex-start;background:var(--color-surface, var(--color-card));border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:10px 13px;font-size:var(--text-body);line-height:1.6;max-width:84%;}
+.booth-hd img{width:34px;height:34px;border-radius:var(--radius-md);object-fit:contain;background:var(--color-primary-subtle);}
+.booth-hd .bt{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);} .booth-hd .bs{font-size:var(--text-meta);color:var(--color-success);font-weight:var(--font-weight-body-strong);margin-top:1px;}
+#stream{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:11px;min-height:0;}
+.bmsg{font-size:var(--text-body);line-height:1.7;}
+.memsg{align-self:flex-end;background:var(--color-primary);color:#fff;border-radius:var(--radius-lg);border-top-right-radius:var(--radius-sm);padding:10px 13px;font-size:var(--text-body);line-height:1.6;max-width:88%;}
 .proposal-cards{display:flex;flex-direction:column;gap:8px;margin-top:10px;}
 .proposal-card{border:1.5px solid var(--color-border);border-radius:var(--radius-md);padding:14px 16px;cursor:pointer;background:var(--color-card);transition:border-color .15s;}
 .proposal-card:hover{border-color:var(--color-border-strong);}
@@ -242,14 +253,18 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .plan-card .pc-bullets{list-style:disc;padding-left:18px;font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.8;}
 .tplmarker{align-self:center;display:flex;align-items:center;gap:7px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-info);background:var(--color-info-subtle);border-radius:var(--radius-full);padding:8px 15px;}
 .donemsg{align-self:center;display:flex;align-items:center;gap:7px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-success);background:var(--color-success-subtle);border-radius:var(--radius-full);padding:8px 15px;}
-#sugbox{border-top:1px solid var(--color-border);background:var(--color-card);padding:10px 13px 0;display:flex;flex-wrap:wrap;gap:7px;}
+#sugbox{border-top:1px solid var(--color-border);background:var(--color-card);padding:10px 13px 10px;display:flex;flex-wrap:wrap;gap:7px;}
 .suglabel{width:100%;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);display:flex;align-items:center;gap:5px;margin-bottom:2px;} .suglabel .ti{color:var(--color-primary);font-size:13px;}
 .sug{display:inline-flex;align-items:center;border:1.5px solid #ffd8b0;background:var(--color-primary-subtle);color:var(--color-primary);border-radius:var(--radius-full);padding:8px 13px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);cursor:pointer;}
 .sug:hover{background:var(--color-primary);color:#fff;border-color:var(--color-primary);}
-.chatcomposer{display:flex;gap:8px;padding:11px 13px;background:var(--color-card);align-items:center;}
-.chatcomposer .plus{width:38px;height:38px;flex:none;border:1px solid var(--color-border);border-radius:var(--radius-md);background:transparent;color:var(--color-muted-foreground);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-.chatcomposer input{flex:1;border:1.5px solid var(--color-border);border-radius:var(--radius-md);padding:10px 13px;font-size:var(--text-body);} .chatcomposer input:focus{outline:none;border-color:var(--color-primary);}
-.chatcomposer .s{width:38px;height:38px;flex:none;border:none;border-radius:var(--radius-full);background:var(--color-primary);color:#fff;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.sug:disabled{opacity:.4;cursor:not-allowed;pointer-events:none;}
+.confirm-sug{background:var(--color-primary);color:#fff;border-color:var(--color-primary);}
+.chatcomposer{background:var(--color-card);border-top:1px solid var(--color-border);padding:10px 13px;}
+.chatcomposer-inner{background:var(--color-muted);border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden;}
+.chatcomposer-inner textarea{display:block;width:100%;border:none;background:transparent;padding:12px 14px 8px;font-size:var(--text-body);line-height:1.5;resize:none;outline:none;font-family:inherit;color:var(--color-foreground);min-height:44px;}
+.chatcomposer-bar{display:flex;align-items:center;justify-content:space-between;padding:6px 8px 8px;}
+.chatcomposer-bar .cmp-plus{width:32px;height:32px;flex:none;border:none;border-radius:var(--radius-full);background:var(--color-background);color:var(--color-muted-foreground);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.chatcomposer-bar .cmp-send{width:32px;height:32px;flex:none;border:none;border-radius:var(--radius-full);background:var(--color-primary);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .chat-plus-wrap{position:relative;}
 .chat-plus-menu{display:none;position:absolute;bottom:calc(100% + 8px);left:0;min-width:220px;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);box-shadow:0 4px 16px rgba(0,0,0,.12);padding:6px 0;z-index:50;}
 .chat-plus-menu.show{display:block;}
@@ -359,6 +374,34 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .foot{border-top:1px solid var(--color-border);padding:14px 30px;display:flex;justify-content:space-between;align-items:center;flex:none;}
 .btn{display:inline-flex;align-items:center;gap:7px;border-radius:var(--radius-md);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);padding:11px 22px;cursor:pointer;border:1px solid transparent;}
 .btn .ti{font-size:16px;} .btn-ghost{background:var(--color-card);color:var(--color-foreground);border-color:var(--color-border);} .btn-primary{background:linear-gradient(135deg,var(--color-primary),var(--color-primary-light));color:#fff;}
+@media (max-width:430px){
+  body{padding:0;}
+  .app{width:100%;height:100vh;border-radius:0;border-left:none;border-right:none;}
+  .topbar{height:48px;padding:0 12px;gap:8px;}
+  .topbar .hdr-right{gap:6px;}
+  .topbar .hdr-page{font-size:var(--text-body);}
+  .stepbar{overflow-x:auto;flex-wrap:nowrap;padding:10px 16px;gap:4px;max-width:100%;justify-content:flex-start;}
+  .st .l{font-size:10px;}
+  .stline{min-width:20px;}
+  #subnav{overflow-x:auto;flex-wrap:nowrap;padding:8px 16px;max-width:100%;justify-content:flex-start;}
+  .main{flex:1;min-height:0;overflow-y:auto;}
+  .canvas{padding:16px;max-width:100%;}
+  .g2{grid-template-columns:1fr;}
+  .g3{grid-template-columns:1fr;}
+  .subcards{grid-template-columns:1fr 1fr;}
+  .foot{padding:12px 16px;flex-wrap:wrap;gap:8px;}
+  .btn{padding:10px 16px;font-size:var(--text-label);}
+  .booth{height:auto;min-height:420px;}
+  #sugbox{flex-wrap:wrap;}
+  .sug{font-size:11px;padding:6px 10px;}
+  .proposal-card-pg{padding:14px 16px;}
+  .h1{font-size:var(--text-h2);}
+  /* Editor: main + ai-panel stacks vertically */
+  #sc_editor [style*="grid-template-columns:240px"]{display:flex !important;flex-direction:column !important;}
+  .ai-panel-open,.ai-panel-closed{width:100% !important;}
+  #sc_finish>div{flex-direction:column !important;gap:24px !important;padding:24px 16px !important;}
+  #sc_finish>div>div:last-child{width:100% !important;max-width:320px;margin:0 auto;}
+}
 </style></head><body>
 <div class="app">
   <div class="topbar"><div class="hdr-left"><span class="hdr-page"><i class="ti ti-template"></i>投稿作成</span><span class="tag" id="flowtag" style="display:none"></span></div><div class="hdr-right"><button class="helpbtn">?</button><button class="close"><i class="ti ti-list"></i></button></div></div>
@@ -428,124 +471,15 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 
       <!-- 何をベースに（アコーディオン＋チャット） -->
       <div class="screen" id="sc_base">
-        <div class="h1">何をベースに作りますか？<span class="req">必須</span></div>
-        <div class="h1sub"><i class="ti ti-messages" style="color:var(--color-muted-foreground)"></i>素材を1つ選んで開いてください。開いた中で入力できます（画面は切り替わりません）。</div>
-        <div class="mcard reco open" id="m_kw">
-          <div class="mhead" onclick="acc('m_kw')"><div class="mic"><i class="ti ti-abc"></i></div><div><div class="mt">キーワードから<span class="rbadge">おすすめ</span></div><div class="md">短い言葉やチャットから、AIが画像台本を組み立てます</div></div><i class="ti ti-chevron-down cv"></i></div>
-          <div class="mbody"><div class="mbody-inner">
-            <div class="tpl-section" id="m_tpl">
-              <div class="tpl-header" onclick="acc2('m_tpl')"><i class="ti ti-layout-grid" style="color:var(--color-muted-foreground);font-size:15px;"></i><span style="font-size:var(--text-body);font-weight:var(--font-weight-body-strong);">自分のテンプレから作る（3件）</span><i class="ti ti-chevron-down cv" style="margin-left:auto;"></i></div>
-              <div class="tpl-body" style="display:none;"><div class="tplchips">
-                <span class="tplchip" onclick="pickTemplate('物件紹介カルーセル')"><i class="ti ti-layout-grid"></i>物件紹介カルーセル</span>
-                <span class="tplchip" onclick="pickTemplate('ビフォーアフター')"><i class="ti ti-photo"></i>ビフォーアフター</span>
-                <span class="tplchip" onclick="pickTemplate('スペック訴求')"><i class="ti ti-businessplan"></i>スペック訴求</span>
-                <span class="tplchip"><i class="ti ti-template"></i>テンプレ一覧・新規作成</span>
-              </div></div>
-            </div>
-            <div class="booth">
-              <div class="booth-hd"><img src="./assets/iine-fox-face.png" alt="AIアシスト" style="width:36px;height:36px;flex:none;border-radius:var(--radius-md);object-fit:contain;"><div style="flex:1;"><div class="bt">AIアシスト</div><div class="bs">何でも相談してください</div></div><button onclick="resetChat(this)" style="border:none;background:transparent;color:var(--color-muted-foreground);font-size:18px;cursor:pointer;"><i class="ti ti-refresh"></i></button></div>
-              <div id="stream"><div class="bmsg"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAABtCAMAAABeOpmlAAACqVBMVEVMaXFdREU8GAc8GAZPMCxGGwNXJwVPFxkrCg46FgU+GghAHg9EIhU7FgQ7FgU6FgU9GQlEIxjVzszb1tVkJwI+Gww1FAY8GQlBIBEuDwRGJho+GglDIBJJKyKXiYFIKiGll489GQm0oIu7sKy1qKMxDAAuCgD66M356MzAuLX56Mz14sb558z558q7pIv7kxn6khn76cz66c38khn76Mz66Mz6kxv6kRn7lBr7kxv86s36khv////86s/6kxn9lBo6FAL19fUeHh78khf6kRc4EwEhISD458v66s74kRr66M37lBz66Ms9FgIwCwD6khj/mx7/9dgzDQD87NKbQgL/mB36jhIsCAD/8tby8vL/99w0EQIoBAD6kx0cHR6gQwMWFxjz8/MSEhP/lRv+8NT9lhw3DwD669H8/P2kRwT77dZBFwL+7dHoihz35cn4+fn/++EgAQBCIBHzkBzw7+8XGx1OHwNGJhdYOio6Gg4/MR5yMAPi0rlMKxzr3MNvU0JiRDNnSzs1LCFmMgeysrL/nyF1Wkn6pkL78Nr05syOdWKHbVt4PwrvjRxVHQGoXxJPMiZdQDLx4ccbGxuAZVKHSQ3QwKmzZRPihhudkYa+bhf7t2XCsJr7r1GRTw59Z12SOwfp5+b36dCvo5v7nC3LuKDi3t3MxcR2XlODNwJVNSKdVxF8fHt/b2WVgnrbyrOVfGjHdBe8po96enn6mCSokn2NenGjjHZEQj3QeBf64r7//+fm1r7Yxq363bT62av7y477w3wpKSf75cX7oTeroJPbgRqchHA2NDFiXVXt7Ov//vLVfRi4rKfGvbr6055WT0kJCw2KhXpZVk/8VCDgfRb/ViDsnD74Uh+3g0rNeyi4PhbcRRfyTBv+UR3+UB7mkzl+XD+meEeSLa6yAAAAqHRSTlMADsHPGP7+AwH+/nZR6PPcs0L+/v6C/Y5l/jamWiT+Lf6Z/v7+4+69of5pQIKE8f//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////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"><div class="bbub">こんにちは！どんな投稿をつくりましょう？まずは方向性を教えてください。</div></div></div>
+        <div class="h1">企画を考える</div>
+        <div class="h1sub">AIと会話しながら企画内容を決めていきます</div>
+        <div id="m_kw" style="border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden;">
+            <div class="booth" style="border:none;border-radius:0;">
+              <div class="booth-hd"><img src="./assets/iine-fox-face.png" alt="AIアシスト"><div style="flex:1;"><div class="bt">AIアシスタント</div><div class="bs">● オンライン</div></div><div class="tpl-drop-wrap"><button onclick="toggleTplDrop(event)" class="tpl-drop-btn"><i class="ti ti-layout-grid"></i></button><div class="tpl-drop-menu" id="tplDropMenu"><div class="tpl-drop-label">テンプレから作る</div><div class="tpl-drop-item" onclick="pickTemplate('物件紹介カルーセル');closeTplDrop()"><i class="ti ti-layout-grid"></i>物件紹介カルーセル</div><div class="tpl-drop-item" onclick="pickTemplate('ビフォーアフター');closeTplDrop()"><i class="ti ti-photo"></i>ビフォーアフター</div><div class="tpl-drop-item" onclick="pickTemplate('スペック訴求');closeTplDrop()"><i class="ti ti-businessplan"></i>スペック訴求</div><div class="tpl-drop-divider"></div><div class="tpl-drop-item" onclick="closeTplDrop()"><i class="ti ti-template"></i>テンプレ一覧・新規作成</div></div></div></div>
+              <div id="stream"><div class="bmsg">保存した企画内容を使用しますか？</div></div>
               <div id="sugbox"></div>
-              <div style="background:#ffffff;border-top:1px solid var(--color-border);padding:8px 13px 11px;">
-                <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:18px;overflow:hidden;">
-                  <div style="padding:12px 16px 4px;">
-                    <input placeholder="自分で入力してもOK" style="width:100%;border:none;background:transparent;padding:0;font-size:var(--text-body);outline:none;color:var(--color-foreground);">
-                  </div>
-                  <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 8px 8px;">
-                    <div class="chat-plus-wrap">
-                      <button onclick="toggleChatPlusMenu(event)" style="width:34px;height:34px;flex:none;border:1px solid var(--color-border);border-radius:var(--radius-full);background:#ffffff;color:var(--color-muted-foreground);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="ti ti-plus"></i></button>
-                      <div class="chat-plus-menu" id="chatPlusMenu">
-                        <div class="cpm-item" onclick="closeChatPlusMenu()"><i class="ti ti-file-upload"></i>写真・ファイルの追加</div>
-                        <div class="cpm-item" onclick="closeChatPlusMenu()"><i class="ti ti-folder"></i>いいねドライブから追加</div>
-                      </div>
-                    </div>
-                    <button style="width:34px;height:34px;flex:none;border:none;border-radius:var(--radius-full);background:var(--color-primary);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg></button>
-                  </div>
-                </div>
-              </div>
             </div>
-          </div></div>
-        </div>
-        <div class="mcard" id="m_mat"><div class="mhead" onclick="acc('m_mat')"><div class="mic"><i class="ti ti-folder"></i></div><div><div class="mt">資料から</div><div class="md">アップロード済みのファイルから生成</div></div><i class="ti ti-chevron-down cv"></i></div>
-          <div class="mbody"><div class="mbody-inner">
-            <div class="drop" style="border:1.5px dashed var(--color-border-strong);border-radius:var(--radius-md);padding:22px;text-align:center;color:var(--color-muted-foreground);font-size:var(--text-label);margin-bottom:14px"><i class="ti ti-file-upload" style="font-size:26px;display:block;margin-bottom:7px"></i>資料をドロップ、またはクリックしてアップロード</div>
-            <div class="selstack">
-              <div class="selrow sel" onclick="pickRow(this)"><div class="th"><i class="ti ti-file-text"></i></div><div><div class="nm">物件詳細_駅徒歩5分1LDK.pdf</div><div class="mt">PDF・1.2MB ・ 2日前</div></div><span class="chk"><i class="ti ti-check"></i></span></div>
-              <div class="selrow" onclick="pickRow(this)"><div class="th"><i class="ti ti-photo"></i></div><div><div class="nm">内観写真_まとめ.zip</div><div class="mt">画像12枚 ・ 2日前</div></div><span class="chk"></span></div>
-            </div>
-          </div></div>
-        </div>
-        <div class="mcard" id="m_sav"><div class="mhead" onclick="acc('m_sav')"><div class="mic"><i class="ti ti-bookmark"></i></div><div><div class="mt">保存した企画案から</div><div class="md">過去に保存した企画案から</div></div><i class="ti ti-chevron-down cv"></i></div>
-          <div class="mbody"><div class="mbody-inner"><div class="selstack">
-            <div class="selrow sel" onclick="pickRow(this)"><div class="th"><i class="ti ti-bookmark"></i></div><div><div class="nm">新着物件・推し設備先出し型</div><div class="mt">Instagram ・ 5枚構成 ・ 先月保存</div></div><span class="chk"><i class="ti ti-check"></i></span></div>
-            <div class="selrow" onclick="pickRow(this)"><div class="th"><i class="ti ti-bookmark"></i></div><div><div class="nm">キャンペーン告知・お得訴求</div><div class="mt">Instagram ・ 3枚構成 ・ 2ヶ月前</div></div><span class="chk"></span></div>
-          </div></div></div>
-        </div>
-        <div class="mcard" id="m_oth"><div class="mhead" onclick="acc('m_oth')"><div class="mic"><i class="ti ti-pencil"></i></div><div><div class="mt">その他（直接入力）</div><div class="md">企画名や企画詳細を直接入力して指定</div></div><i class="ti ti-chevron-down cv"></i></div>
-          <div class="mbody"><div class="mbody-inner">
-            <div style="margin-bottom:13px"><div style="font-size:var(--text-label);font-weight:var(--font-weight-body-strong);margin-bottom:6px;display:flex;align-items:center;gap:6px">企画名<span class="req">必須</span></div><input style="width:100%;border:1.5px solid var(--color-border);border-radius:var(--radius-md);padding:11px 13px;font-size:var(--text-body)" placeholder="例：駅徒歩5分・南向き1LDK 新着紹介"></div>
-            <div><div style="font-size:var(--text-label);font-weight:var(--font-weight-body-strong);margin-bottom:6px">企画の詳細</div><textarea style="width:100%;border:1.5px solid var(--color-border);border-radius:var(--radius-md);padding:11px 13px;font-size:var(--text-body);min-height:80px;resize:none" placeholder="伝えたいことを自由に"></textarea></div>
-          </div></div>
-        </div>
-      </div>
-
-      <!-- 4 具体案を選ぶ -->
-      <div class="screen" id="sc_concept">
-        <div class="h1">台本を選ぶ</div><div class="h1sub"><i class="ti ti-sparkles" style="color:var(--color-muted-foreground)"></i>渡した素材をもとに、AIが3つの台本を作りました。シーン構成を確認して1つ選んでください。</div>
-        <div class="selstack" style="margin-top:4px">
-          <div class="selrow sel" onclick="pickRow(this)" style="align-items:flex-start"><div class="th"><i class="ti ti-video"></i></div><div><div class="nm">A案・テンポ重視 情報ギュッと型 <span class="tag2">おすすめ</span></div><div class="mt">S1 駅徒歩5分・南向きを大きくインパクト表示<br>S2 間取りと「即入居OK」を一気に見せる<br>S3 水回り・日当たりのビフォーアフター<br>S4 「内見予約はプロフから」CTAで締め</div></div><span class="chk"><i class="ti ti-check"></i></span></div>
-          <div class="selrow" onclick="pickRow(this)"><div class="th"><i class="ti ti-video"></i></div><div><div class="nm">B案・ルームツアー型</div><div class="mt">玄関→居室→水回りの順に歩くように紹介。滞在時間を稼ぐ構成</div></div><span class="chk"></span></div>
-          <div class="selrow" onclick="pickRow(this)"><div class="th"><i class="ti ti-video"></i></div><div><div class="nm">C案・暮らし提案 ストーリー型</div><div class="mt">「この部屋での休日」をナレーションで。共感重視</div></div><span class="chk"></span></div>
-        </div>
-      </div>
-
-      <!-- 5 仕上げる -->
-      <div class="screen" id="sc_proposal">
-        <div class="h1">企画案を選ぶ</div>
-        <div class="h1sub">AIが方向性をもとに投稿案を作りました。気になる案を選んでください。</div>
-        <div class="proposal-cards-page">
-          <div class="proposal-card-pg sel" onclick="pickProposalPg(this)">
-            <div class="pc-head"><span class="pc-radio"></span><span class="pc-htitle">A案・テンポ重視 情報ギュッと型</span><span class="rbadge">おすすめ</span></div>
-            <div class="pc-desc-pg">駅徒歩5分・南向きを大きくインパクト表示→間取り→水回り→CTA</div>
-          </div>
-          <div class="proposal-card-pg" onclick="pickProposalPg(this)">
-            <div class="pc-head"><span class="pc-radio"></span><span class="pc-htitle">B案・ストーリー型 ルームツアー</span></div>
-            <div class="pc-desc-pg">エントランスから入室→各部屋を順に紹介→周辺環境→CTA</div>
-          </div>
-          <div class="proposal-card-pg" onclick="pickProposalPg(this)">
-            <div class="pc-head"><span class="pc-radio"></span><span class="pc-htitle">C案・比較訴求型 Before/After</span></div>
-            <div class="pc-desc-pg">他物件との比較ポイント→設備の充実度→入居者の声→CTA</div>
-          </div>
-        </div>
-        <div class="regen-section">
-          <div class="regen-label">他の案を生成する</div>
-          <div class="regen-row"><input class="regen-input" id="regenProposalInput" type="text" placeholder="例：もっとカジュアルな案、比較型を増やして"><button class="regen-btn" onclick="regenProposal()"><i class="ti ti-refresh"></i> 再生成</button></div>
-        </div>
-      </div>
-
-      <div class="screen" id="sc_plan">
-        <div class="h1">企画内容を選ぶ</div>
-        <div class="h1sub">AIが投稿案をもとに企画内容を作りました。気に入ったものを選んでください。</div>
-        <div class="plan-cards-page">
-          <div class="plan-card-pg" onclick="pickPlanPg(this)">
-            <div class="pc-head"><span class="pc-radio"></span><span class="pc-htitle">駅徒歩5分の好立地を活かした内見誘導リール</span><span class="pc-type">実演型</span><i class="ti ti-bookmark pc-bmark"></i></div>
-            <div class="pc-section">物件の魅力を体感させる映像</div>
-            <ul class="pc-bullets"><li>エントランスから玄関までの実際の動線を撮影し「駅徒歩5分」を体感</li><li>南向きリビングの日当たりを朝・昼の2カットで比較</li><li>水回り・収納を開閉アクションで広さを実演</li></ul>
-          </div>
-          <div class="plan-card-pg sel" onclick="pickPlanPg(this)">
-            <div class="pc-head"><span class="pc-radio"></span><span class="pc-htitle">この物件が選ばれる3つの理由</span><span class="pc-type">結論先出し型</span><i class="ti ti-bookmark pc-bmark"></i></div>
-            <div class="pc-section">数字で訴求する物件スペック</div>
-            <ul class="pc-bullets"><li>冒頭3秒で「駅徒歩5分・南向き・即入居OK」を大文字テロップ</li><li>各理由を1シーンずつ映像+テロップで深掘り</li><li>最後に「プロフから内見予約」のCTAカード</li></ul>
-          </div>
-          <div class="plan-card-pg" onclick="pickPlanPg(this)">
-            <div class="pc-head"><span class="pc-radio"></span><span class="pc-htitle">築浅 vs 築古リノベ 同価格帯で比べてみた</span><span class="pc-type">ビフォーアフター型</span><i class="ti ti-bookmark pc-bmark"></i></div>
-            <div class="pc-section">比較で際立つ物件の優位性</div>
-            <ul class="pc-bullets"><li>同エリア・同家賃帯の築古物件との設備比較</li><li>キッチン・バス・収納の3ポイントを左右分割画面で並べる</li><li>「この差でこの家賃」のコスパ訴求で内見動機を作る</li></ul>
-          </div>
-        </div>
-        <div class="regen-section">
-          <div class="regen-label">他の企画内容を生成する</div>
-          <div class="regen-row"><input class="regen-input" id="regenPlanInput" type="text" placeholder="例：もっと実演型を増やして、トーンを明るくして"><button class="regen-btn" onclick="regenPlan()"><i class="ti ti-refresh"></i> 再生成</button></div>
+            <div class="chatcomposer" style="border-radius:0;"><div class="chatcomposer-inner"><textarea rows="1" placeholder="例：物件紹介のカルーセルを作りたい"></textarea><div class="chatcomposer-bar"><div class="chat-plus-wrap"><button onclick="toggleChatPlusMenu(event)" class="cmp-plus"><i class="ti ti-plus"></i></button><div class="chat-plus-menu" id="chatPlusMenu"><div class="cpm-item" onclick="closeChatPlusMenu()"><i class="ti ti-file-text"></i>資料を追加</div><div class="cpm-item" onclick="closeChatPlusMenu()"><i class="ti ti-file-upload"></i>写真・ファイルの追加</div><div class="cpm-item" onclick="closeChatPlusMenu()"><i class="ti ti-folder"></i>いいねドライブから追加</div></div></div><button class="cmp-send"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg></button></div></div></div>
         </div>
       </div>
 
@@ -783,14 +717,12 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 </div>
 <script>
 /* ===== 画面遷移 ===== */
-var SCR=['sns','method','route','count','base','proposal','plan','editor','finish'];
+var SCR=['sns','method','route','count','base','editor','finish'];
 var META={
   sns:{big:1,sub:0}, method:{big:2,sub:0},
   route:{big:2,sub:1},
   count:{big:2,sub:2},
   base:{big:2,sub:3},
-  proposal:{big:2,sub:4},
-  plan:{big:2,sub:5},
   editor:{big:3,sub:0}, finish:{big:4,sub:0}
 };
 var i=0;
@@ -814,10 +746,10 @@ function renderSub(){
   var box=document.getElementById('subnav');
   if(!sub){box.style.display='none';return;}
   box.style.display='flex';
-  var items=[[1,'作り方を選ぶ'],[2,'枚数を選ぶ'],[3,'素材を選ぶ'],[4,'企画案を選択'],[5,'企画内容を選択']];
+  var items=[[1,'作り方を選ぶ'],[2,'枚数を選ぶ'],[3,'企画を考える']];
   box.innerHTML=items.map(function(it,idx){
-    var on=(it[0]<=sub)?'on':'';
-    return '<span class="snn '+on+'"><span class="c">'+it[0]+'</span>'+it[1]+'</span>'+(idx<items.length-1?'<span class="snline"></span>':'');
+    var n=it[0];var cls=n<sub?'done':(n===sub?'now':'');var ni=n<sub?'<i class="ti ti-check"></i>':n;
+    return '<span class="snn '+cls+'"><span class="c">'+ni+'</span><span class="tx">'+it[1]+'</span></span>'+(idx<items.length-1?'<span class="snline "+(n<sub?'done':'')+'"></span>':'');
   }).join('');
 }
 function show(){
@@ -865,62 +797,76 @@ function pickCard(el,g){el.parentElement.querySelectorAll('.'+g).forEach(functio
 function pickRow(el){el.closest('.selstack').querySelectorAll('.selrow').forEach(function(o){o.classList.remove('sel');});el.classList.add('sel');}
 /* ===== 予測変換チャット ===== */
 var TREE={
-  start:{sug:[['物件を紹介したい','q_bukken'],['ファンを増やしたい','q_fan'],['お知らせしたい','q_news'],['まだ決まっていない','q_und']]},
+  saved_ask:{ai:'保存した企画内容を使用しますか？',sug:[['はい、保存した企画内容を使う','saved_yes'],['いいえ、新しく考える','start']]},
+  saved_yes:{ai:'保存した企画内容を読み込みました！「次へ：投稿を編集」で進めます。',type:'done_saved',sug:[]},
+  start:{ai:'どんな投稿を作りますか？',sug:[['物件を紹介したい','q_bukken'],['ファンを増やしたい','q_fan'],['お知らせしたい','q_news'],['まだ決まっていない','q_und']]},
   q_bukken:{ai:'ええですね！どの物件を紹介しますか？',sug:[['駅徒歩5分の南向き1LDK','q_point'],['リノベ済みの築古物件','q_point'],['ペット可の物件','q_point']]},
   q_fan:{ai:'いいですね！どんな切り口で？',sug:[['スタッフの日常','q_point'],['お役立ち情報','q_point'],['お客様の声','q_point']]},
   q_news:{ai:'承知しました！何のお知らせですか？',sug:[['キャンペーン告知','q_point'],['新店舗オープン','q_point'],['営業時間の変更','q_point']]},
   q_und:{ai:'大丈夫、一緒に決めましょう。何のアカウントですか？',sug:[['不動産の物件紹介','q_bukken'],['お店の集客','q_fan']]},
   q_point:{ai:'なるほど！一番推したいポイントは？',sug:[['とにかく駅が近い','q_target'],['日当たりの良さ','q_target'],['即入居できる','q_target']]},
-  q_target:{ai:'誰に一番届けたいですか？',sug:[['20〜30代の一人暮らし','q_dir_done'],['カップル・新婚','q_dir_done'],['ファミリー層','q_dir_done']]},
-  q_proposals:{ai:'方向性がまとまりました！投稿案を考えています…',type:'generating',genTarget:'q_proposals_show',sug:[]},
-  q_proposals_show:{ai:'3つの投稿案を作りました。気になる案を選んでください。',type:'proposals',proposals:[
-    {id:'a',badge:'おすすめ',title:'A案・テンポ重視 情報ギュッと型',desc:'駅徒歩5分・南向きを大きくインパクト表示→間取り→水回り→CTA',next:'q_detail_a'},
-    {id:'b',title:'B案・ストーリー型 ルームツアー',desc:'エントランスから入室→各部屋を順に紹介→周辺環境→CTA',next:'q_detail_b'},
-    {id:'c',title:'C案・比較訴求型 Before/After',desc:'他物件との比較ポイント→設備の充実度→入居者の声→CTA',next:'q_detail_c'}
+  q_target:{ai:'誰に一番届けたいですか？',sug:[['20〜30代の一人暮らし','q_proposals'],['カップル・新婚','q_proposals'],['ファミリー層','q_proposals']]},
+  /* --- 企画案 --- */
+  q_proposals:{ai:'方向性がまとまりました！企画案を考えています…',type:'generating',genTarget:'q_proposals_show',sug:[]},
+  q_proposals_show:{ai:'3つの企画案を作りました。気になる案を選んでください。',type:'proposals',proposals:[
+    {id:'a',badge:'おすすめ',title:'A案・推し設備カルーセル型',desc:'1枚目で「駅徒歩5分・南向き」をドンと見せる→設備→CTA',next:'q_plans_gen'},
+    {id:'b',title:'B案・暮らし提案ストーリー型',desc:'この部屋での1日をスライドで追体験→周辺環境→CTA',next:'q_plans_gen'},
+    {id:'c',title:'C案・比較訴求 Before/After型',desc:'同エリア物件との比較→設備の充実度→CTA',next:'q_plans_gen'}
   ],sug:[['もう少し別の案を出して','q_proposals2']]},
-  q_proposals2:{ai:'投稿案を追加で考えています…',type:'generating',genTarget:'q_proposals2_show',sug:[]},
+  q_proposals2:{ai:'企画案を追加で考えています…',type:'generating',genTarget:'q_proposals2_show',sug:[]},
   q_proposals2_show:{ai:'別の切り口で2案作りました。',type:'proposals',proposals:[
-    {id:'d',title:'D案・Q&A型 よくある質問に答える',desc:'「駅から何分？」「日当たりは？」を1つずつ回答→CTA',next:'q_detail_a'},
-    {id:'e',title:'E案・数字で訴求型',desc:'「徒歩5分」「南向き」「即入居」を数字カードで次々と→CTA',next:'q_detail_a'}
+    {id:'d',title:'D案・Q&A型 よくある質問に答える',desc:'「駅から何分？」「日当たりは？」を1枚ずつ回答→CTA',next:'q_plans_gen'},
+    {id:'e',title:'E案・数字で訴求型',desc:'「徒歩5分」「南向き」「即入居」を数字カードで次々と→CTA',next:'q_plans_gen'}
   ],sug:[['最初の3案に戻る','q_proposals_show']]},
-  q_detail_a:{ai:'投稿案が決まりました！「次へ：企画内容を生成」で進めます。',type:'done_auto',sug:[]},
-  q_detail_b:{ai:'投稿案が決まりました！「次へ：企画内容を生成」で進めます。',type:'done_auto',sug:[]},
-  q_detail_c:{ai:'投稿案が決まりました！「次へ：企画内容を生成」で進めます。',type:'done_auto',sug:[]},
-
-  q_dir_done:{ai:'方向性がまとまりました！「次へ：企画案を生成」で企画案を見てみましょう。',type:'done_auto',sug:[]},
-  q_tone:{ai:'どんなトーンがいいですか？',sug:[['明るくポップに','q_detail_a'],['落ち着いて上品に','q_detail_a'],['エモーショナルに','q_detail_a']]},
-  q_scene:{ai:'了解です！シーン数を調整しました。他に変更点はありますか？',sug:[['これでOK','__done'],['他も変えたい','q_tone']]}
+  /* --- 企画内容 --- */
+  q_plans_gen:{ai:'企画案が決まりました！企画内容を作っています…',type:'generating',genTarget:'q_plans_show',sug:[]},
+  q_plans_show:{ai:'3つの企画内容を作りました。気に入ったものを選んでください。',type:'plans',plans:[
+    {title:'駅徒歩5分の好立地を活かした内見誘導カルーセル',typeBadge:'実写型',section:'物件の魅力を体感させる写真構成',bullets:['1枚目：外観＋キャッチコピーで駅近を訴求','2枚目：南向きリビングの日当たり写真','3枚目：水回り・収納のビフォーアフター','4枚目：CTA「内見予約はプロフから」']},
+    {title:'この物件が選ばれる3つの理由',typeBadge:'結論先出し型',section:'数字で訴求する物件スペック',bullets:['1枚目：「駅徒歩5分・南向き・即入居OK」を大文字テロップ','2-3枚目：各理由を写真+テロップで深掘り','4枚目：CTA「プロフから内見予約」']},
+    {title:'築浅 vs 築古リノベ 同価格帯で比べてみた',typeBadge:'ビフォーアフター型',section:'比較で際立つ物件の優位性',bullets:['1枚目：比較タイトル＋2物件の外観並列','2-3枚目：キッチン・バスの左右分割比較','4枚目：「この差でこの家賃」コスパ訴求→CTA']}
+  ],sug:[['もう少し別の内容を出して','q_plans_gen2']]},
+  q_plans_gen2:{ai:'企画内容を追加で考えています…',type:'generating',genTarget:'q_plans2_show',sug:[]},
+  q_plans2_show:{ai:'別の切り口で3つ作りました。',type:'plans',plans:[
+    {title:'南向きリビングの日当たりを時間帯で見せる',typeBadge:'タイムラプス型',section:'光の変化で部屋の魅力を伝える',bullets:['1枚目：朝の日差しカット','2枚目：昼の明るさカット','3枚目：夕方のカット','4枚目：CTA']},
+    {title:'内見前に知りたい5つのポイント',typeBadge:'解説型',section:'不安を解消して内見動機を作る',bullets:['駅距離・日当たり・水回り・収納・周辺環境の5項目','各ポイントを1枚ずつ写真+テロップで紹介','保存されやすい情報密度']},
+    {title:'住んだら変わる毎日のルーティン',typeBadge:'ライフスタイル型',section:'暮らしのイメージで感情を動かす',bullets:['朝：南向きの光で目覚める','昼：駅近だからランチも充実','夜：帰宅が早い→自分時間']}
+  ],sug:[['最初の3案に戻る','q_plans_show']]}
 };
-var cnode='start';
+var cnode='saved_ask';
 var genTimer=null;
 function chatRender(){
   var box=document.getElementById('sugbox');if(!box)return;
   var n=TREE[cnode];
-  if(cnode==='__done'){box.innerHTML='<div class="donemsg"><i class="ti ti-check"></i>方向性が決まりました。「次へ：企画案を生成」で進めます。</div>';enableNext();return;}
-  if(n&&n.type==='done_auto'){box.innerHTML='<div class="donemsg"><i class="ti ti-check"></i>方向性が決まりました。「次へ：企画案を生成」で進めます。</div>';enableNext();return;}
+  if(cnode==='__done'){box.innerHTML='<div class="donemsg"><i class="ti ti-check"></i>企画内容が決まりました。「次へ：投稿を編集」で進めます。</div>';enableNext();return;}
+  if(n&&n.type==='done_saved'){box.innerHTML='<div class="donemsg"><i class="ti ti-check"></i>保存した企画内容を読み込みました。「次へ：投稿を編集」で進めます。</div>';enableNext();return;}
   if(n.type==='plans'){
     var s=document.getElementById('stream');
     var cards='<div class="plan-cards">';
     n.plans.forEach(function(p,idx){
-      cards+='<div class="plan-card" onclick="pickPlan(this)"><div class="pc-head"><span class="pc-radio"></span><span class="pc-htitle">'+p.title+'</span><span class="pc-type">'+p.typeBadge+'</span><i class="ti ti-bookmark pc-bmark"></i></div><div class="pc-section">'+p.section+'</div><ul class="pc-bullets">';
+      cards+='<div class="plan-card" onclick="highlightPlan(this)"><div class="pc-head"><span class="pc-radio"></span><span class="pc-htitle">'+p.title+'</span><span class="pc-type">'+p.typeBadge+'</span><i class="ti ti-bookmark pc-bmark" onclick="event.stopPropagation();if(this.classList.toggle(\'active\')){this.classList.remove(\'ti-bookmark\');this.classList.add(\'ti-bookmark-filled\');}else{this.classList.remove(\'ti-bookmark-filled\');this.classList.add(\'ti-bookmark\');}"></i></div><div class="pc-section">'+p.section+'</div><ul class="pc-bullets">';
       p.bullets.forEach(function(b){cards+='<li>'+b+'</li>';});
       cards+='</ul></div>';
     });
     cards+='</div>';
     s.insertAdjacentHTML('beforeend',cards);
     chatScroll();
+    var regenNode=n.sug.length?n.sug[0][1]:null;
+    box.innerHTML='<button class="sug confirm-sug" onclick="confirmPlan()" disabled>この企画内容で決定</button>'+(regenNode?'<button class="sug" onclick="regenInChat(\''+regenNode+'\')">別の企画内容を出して</button>':'');
+    return;
   }
   if(n.type==='proposals'){
-    /* render proposal cards in stream */
     var s=document.getElementById('stream');
     var cards='<div class="proposal-cards">';
     n.proposals.forEach(function(p){
       var badge=p.badge?'<span class="pc-badge">'+p.badge+'</span>':'';
-      cards+='<div class="proposal-card" data-next="'+p.next+'" onclick="pickProposal(this.dataset.next,this)"><div class="pc-title">'+badge+p.title+'</div><div class="pc-desc">'+p.desc+'</div></div>';
+      cards+='<div class="proposal-card" data-next="'+p.next+'" onclick="highlightProposal(this)"><div class="pc-title">'+badge+p.title+'</div><div class="pc-desc">'+p.desc+'</div></div>';
     });
     cards+='</div>';
     s.insertAdjacentHTML('beforeend',cards);
     chatScroll();
+    var regenNode=n.sug.length?n.sug[0][1]:null;
+    box.innerHTML='<button class="sug confirm-sug" onclick="confirmProposal()" disabled>この企画案で決定</button>'+(regenNode?'<button class="sug" onclick="regenInChat(\''+regenNode+'\')">別の企画案を出して</button>':'');
+    return;
   }
   var sugHtml=n.sug.length?'<div class="suglabel"><i class="ti ti-sparkles"></i>AIのおすすめ（タップで送信）</div>'+n.sug.map(function(s,idx){return '<button class="sug" onclick="pickSug('+idx+')">'+s[0]+'</button>';}).join(''):'';
   box.innerHTML=sugHtml;
@@ -929,10 +875,11 @@ function pickTemplate(name){
   var s=document.getElementById('stream');
   s.insertAdjacentHTML('beforeend','<div class="tplmarker"><i class="ti ti-template"></i>テンプレート「'+name+'」を使用</div>');
   chatScroll();
-  /* skip direction chat, go straight to generating proposals */
-  cnode='q_dir_done';
+  /* skip direction chat, go straight to generating plans */
+  cnode='q_plans_gen';
   chatAdd('ai',TREE[cnode].ai);
-  chatRender();chatScroll();
+  var box=document.getElementById('sugbox');if(box)box.innerHTML='';
+  setTimeout(function(){showGenerating(TREE[cnode].genTarget);},300);
 }
 function showTooltip(el,msg){
   var old=el.querySelector('.btn-tooltip');if(old)old.remove();
@@ -1074,18 +1021,27 @@ function pickPlanPg(el){
   el.parentElement.querySelectorAll('.plan-card-pg').forEach(function(c){c.classList.remove('sel');});
   el.classList.add('sel');
 }
-function pickPlan(el){
+function highlightPlan(el){
   el.parentElement.querySelectorAll('.plan-card').forEach(function(c){c.classList.remove('sel');});
   el.classList.add('sel');
-  var title=el.querySelector('.pc-htitle').textContent;
+  var btn=document.querySelector('.confirm-sug');if(btn){btn.disabled=false;}
+}
+function confirmPlan(){
+  var sel=document.querySelector('.plan-card.sel');if(!sel)return;
+  var title=sel.querySelector('.pc-htitle').textContent;
   chatAdd('me','「'+title+'」を選択');
   cnode='__done';
-  setTimeout(function(){chatAdd('ai','企画内容が決まりました！「この企画内容で作成」で次のステップへ進めます。');chatRender();chatScroll();},160);
+  setTimeout(function(){chatAdd('ai','企画内容が決まりました！「次へ：投稿を編集」で進めましょう。');chatRender();chatScroll();},160);
 }
-function pickProposal(next,el){
+function highlightProposal(el){
   el.parentElement.querySelectorAll('.proposal-card').forEach(function(c){c.classList.remove('sel');});
   el.classList.add('sel');
-  var title=el.querySelector('.pc-title').textContent;
+  var btn=document.querySelector('.confirm-sug');if(btn){btn.disabled=false;}
+}
+function confirmProposal(){
+  var sel=document.querySelector('.proposal-card.sel');if(!sel)return;
+  var next=sel.dataset.next;
+  var title=sel.querySelector('.pc-title').textContent;
   chatAdd('me',title+'を選択');
   cnode=next;
   var nn=TREE[cnode];
@@ -1097,9 +1053,17 @@ function pickProposal(next,el){
     setTimeout(function(){chatAdd('ai',TREE[cnode].ai);chatRender();chatScroll();},160);
   }
 }
+function regenInChat(targetNode){
+  cnode=targetNode;
+  var nn=TREE[cnode];
+  chatAdd('me','別の案を出して');
+  chatAdd('ai',nn.ai);
+  var box=document.getElementById('sugbox');if(box)box.innerHTML='';
+  setTimeout(function(){showGenerating(nn.genTarget);},300);
+}
 function showGenerating(targetNode){
   var s=document.getElementById('stream');
-  var genLabel=targetNode.indexOf('plans')>=0?'企画内容を生成中…':'投稿案を生成中…';
+  var genLabel=targetNode.indexOf('plans')>=0?'企画内容を生成中…':'企画案を生成中…';
   s.insertAdjacentHTML('beforeend','<div class="gen-indicator" id="genInd"><div class="dot-pulse"><span></span><span></span><span></span></div>'+genLabel+'<button class="gen-cancel" onclick="cancelGen()">やめる</button></div>');
   chatScroll();
   genTimer=setTimeout(function(){
@@ -1134,19 +1098,20 @@ function pickSug(idx){
 }
 function chatAdd(who,text){
   var s=document.getElementById('stream');if(!s)return;
-  if(who==='ai'){s.insertAdjacentHTML('beforeend','<div class="bmsg"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAABtCAMAAABeOpmlAAACqVBMVEVMaXFdREU8GAc8GAZPMCxGGwNXJwVPFxkrCg46FgU+GghAHg9EIhU7FgQ7FgU6FgU9GQlEIxjVzszb1tVkJwI+Gww1FAY8GQlBIBEuDwRGJho+GglDIBJJKyKXiYFIKiGll489GQm0oIu7sKy1qKMxDAAuCgD66M356MzAuLX56Mz14sb558z558q7pIv7kxn6khn76cz66c38khn76Mz66Mz6kxv6kRn7lBr7kxv86s36khv////86s/6kxn9lBo6FAL19fUeHh78khf6kRc4EwEhISD458v66s74kRr66M37lBz66Ms9FgIwCwD6khj/mx7/9dgzDQD87NKbQgL/mB36jhIsCAD/8tby8vL/99w0EQIoBAD6kx0cHR6gQwMWFxjz8/MSEhP/lRv+8NT9lhw3DwD669H8/P2kRwT77dZBFwL+7dHoihz35cn4+fn/++EgAQBCIBHzkBzw7+8XGx1OHwNGJhdYOio6Gg4/MR5yMAPi0rlMKxzr3MNvU0JiRDNnSzs1LCFmMgeysrL/nyF1Wkn6pkL78Nr05syOdWKHbVt4PwrvjRxVHQGoXxJPMiZdQDLx4ccbGxuAZVKHSQ3QwKmzZRPihhudkYa+bhf7t2XCsJr7r1GRTw59Z12SOwfp5+b36dCvo5v7nC3LuKDi3t3MxcR2XlODNwJVNSKdVxF8fHt/b2WVgnrbyrOVfGjHdBe8po96enn6mCSokn2NenGjjHZEQj3QeBf64r7//+fm1r7Yxq363bT62av7y477w3wpKSf75cX7oTeroJPbgRqchHA2NDFiXVXt7Ov//vLVfRi4rKfGvbr6055WT0kJCw2KhXpZVk/8VCDgfRb/ViDsnD74Uh+3g0rNeyi4PhbcRRfyTBv+UR3+UB7mkzl+XD+meEeSLa6yAAAAqHRSTlMADsHPGP7+AwH+/nZR6PPcs0L+/v6C/Y5l/jamWiT+Lf6Z/v7+4+69of5pQIKE8f//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////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"><div class="bbub">'+text+'</div></div>');}
+  if(who==='ai'){s.insertAdjacentHTML('beforeend','<div class="bmsg">'+text+'</div>');}
   else{s.insertAdjacentHTML('beforeend','<div class="memsg">'+text+'</div>');}
 }
 function chatScroll(){var s=document.getElementById('stream');if(s)s.scrollTop=s.scrollHeight;}
 (function(){var h=location.hash;if(h){var m=h.match(/step=(\w+)/);if(m){var idx=SCR.indexOf(m[1]);if(idx>=0)i=idx;}}})();
 show();chatRender();
 
-/* Fix: Add fox to AI headers */document.querySelectorAll(".booth-hd,.ai-ex-hd,.aihd").forEach(function(h){if(h.querySelector("img"))return;var f=document.querySelector(".bmsg img,.airow img,.ai-msg-row img");if(!f)return;var i=f.cloneNode();i.style.cssText="width:32px;height:32px;border-radius:var(--radius-md);object-fit:cover;background:var(--color-primary-subtle);flex:none;";h.insertBefore(i,h.firstChild);});
+function toggleTplDrop(e){e.stopPropagation();document.getElementById('tplDropMenu').classList.toggle('show');}
+function closeTplDrop(){document.getElementById('tplDropMenu').classList.remove('show');}
 function toggleChatPlusMenu(e){e.stopPropagation();document.getElementById('chatPlusMenu').classList.toggle('show');}
 function closeChatPlusMenu(){document.getElementById('chatPlusMenu').classList.remove('show');}
 function toggleChatPlusMenu2(e){e.stopPropagation();document.getElementById('chatPlusMenu2').classList.toggle('show');}
 function closeChatPlusMenu2(){document.getElementById('chatPlusMenu2').classList.remove('show');}
-document.addEventListener('click',function(){closeChatPlusMenu();closeChatPlusMenu2();});
+document.addEventListener('click',function(){closeChatPlusMenu();closeChatPlusMenu2();closeTplDrop();});
 function applyAll(){document.querySelectorAll('.rev-chk').forEach(function(c){c.checked=true;});toast.success('反映可能な改善案を全て投稿文に反映しました');}
 function applySelected(){var n=document.querySelectorAll('.rev-chk:checked').length;if(n===0){toast.error('反映するレビューを選択してください');return;}toast.success(n+'件の改善案を投稿文に反映しました');}
 </script>

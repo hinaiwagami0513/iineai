@@ -178,6 +178,36 @@ body{background:var(--color-background);padding:0;margin:0;color:var(--color-for
 .chat-plus-menu .cpm-item{display:flex;align-items:center;gap:10px;padding:10px 16px;font-size:var(--text-body);color:var(--color-foreground);cursor:pointer;white-space:nowrap;}
 .chat-plus-menu .cpm-item:hover{background:var(--color-muted);}
 .chat-plus-menu .cpm-item i{font-size:18px;color:var(--color-muted-foreground);width:20px;text-align:center;}
+@media (max-width:430px) {
+  /* --- post_editor_wire.html mobile --- */
+  body{padding:0;}
+  .page-header{height:48px;padding:0 12px;}
+  .hdr-page{font-size:var(--text-body);}
+  .page-main{padding:12px;}
+  /* 3-column inline grid → single column stack */
+  div[style*="grid-template-columns:240px 1fr auto"]{
+    display:flex !important;
+    flex-direction:column !important;
+    gap:12px !important;
+  }
+  /* Left preview column: full width, compact height */
+  div[style*="grid-template-columns:240px 1fr auto"] > div:first-child{
+    width:100% !important;
+  }
+  div[style*="grid-template-columns:240px 1fr auto"] > div:first-child > div[style*="aspect-ratio:9/16"]{
+    aspect-ratio:unset !important;
+    height:160px !important;
+    max-height:160px !important;
+  }
+  /* AI panel: full width, max-height so it doesn't dominate */
+  .ai-panel-open,.ai-panel-closed{
+    width:100% !important;
+    max-height:360px;
+  }
+  .ai-expanded{max-height:340px;}
+  /* Tabs: tighter padding */
+  .ed-xtab{padding:10px 12px !important;font-size:var(--text-label) !important;}
+}
 </style></head><body>
 <div class="page-header">
   <div class="hdr-left"><a href="flow_video_script_wire.html"><i class="ti ti-arrow-left"></i></a><span class="hdr-page"><i class="ti ti-video"></i>投稿を編集</span></div>

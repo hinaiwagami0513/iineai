@@ -133,6 +133,26 @@ body{background:#0a0908;padding:18px;color:var(--color-editor-foreground);}
 .cost b{color:var(--color-primary);}
 .save{background:var(--color-primary);color:#fff;border:none;border-radius:var(--radius-md);padding:10px 18px;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;}
 .save:hover{background:var(--color-primary-hover);}
+/* template switcher */
+.tmpl-sw{position:relative;display:flex;align-items:center;}
+.tmpl-btn{display:flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--color-editor-border);border-radius:var(--radius-md);background:var(--color-editor-elevated);color:var(--color-editor-foreground);font-size:var(--text-label);font-weight:var(--font-weight-body-strong);cursor:pointer;white-space:nowrap;}
+.tmpl-btn .ti{font-size:14px;color:var(--color-editor-muted);}
+.tmpl-btn .tmpl-name{color:var(--color-primary);}
+.tmpl-btn .chevron{font-size:12px;color:var(--color-editor-muted);transition:transform .2s;}
+.tmpl-sw.open .chevron{transform:rotate(180deg);}
+.tmpl-dd{position:absolute;top:calc(100% + 6px);left:0;width:260px;background:var(--color-editor-surface);border:1px solid var(--color-editor-border);border-radius:var(--radius-lg);box-shadow:0 8px 24px rgba(0,0,0,.4);z-index:20;display:none;overflow:hidden;}
+.tmpl-sw.open .tmpl-dd{display:block;}
+.tmpl-dd-item{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;font-size:var(--text-label);color:var(--color-editor-foreground);border-bottom:1px solid var(--color-editor-border);}
+.tmpl-dd-item:last-child{border-bottom:none;}
+.tmpl-dd-item:hover{background:var(--color-editor-elevated);}
+.tmpl-dd-item.active{background:rgba(239,97,8,.08);}
+.tmpl-dd-item .tmpl-thumb{width:36px;height:36px;border-radius:var(--radius-sm);border:1px solid var(--color-editor-border);background:var(--color-editor-elevated);display:flex;align-items:center;justify-content:center;font-size:16px;color:var(--color-editor-muted);flex-shrink:0;}
+.tmpl-dd-item.active .tmpl-thumb{border-color:var(--color-primary);}
+.tmpl-dd-item .tmpl-info{flex:1;min-width:0;}
+.tmpl-dd-item .tmpl-info .tmpl-n{font-weight:var(--font-weight-body-strong);}
+.tmpl-dd-item .tmpl-info .tmpl-d{font-size:var(--text-meta);color:var(--color-editor-muted);margin-top:2px;}
+.tmpl-dd-item .tmpl-check{font-size:14px;color:var(--color-primary);display:none;}
+.tmpl-dd-item.active .tmpl-check{display:block;}
 .work{flex:1;display:grid;grid-template-columns:150px 1fr 320px;min-height:0;}
 .tools{border-right:1px solid var(--color-editor-border);padding:12px 8px;background:var(--color-editor-surface);overflow-y:auto;width:120px;flex:none;}
 .tgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
@@ -157,6 +177,17 @@ body{background:#0a0908;padding:18px;color:var(--color-editor-foreground);}
 .gen-instruct-input{width:100%;background:var(--color-editor-elevated);border:1.5px solid var(--color-editor-border);border-radius:var(--radius-md);padding:10px 12px;font-size:var(--text-label);color:var(--color-editor-foreground);min-height:56px;resize:vertical;font-family:inherit;line-height:1.6;box-sizing:border-box;transition:border-color .2s;}
 .gen-instruct-input::placeholder{color:var(--color-editor-muted);}
 .gen-instruct-input:focus{outline:none;border-color:var(--color-primary);background:rgba(239,97,8,.04);}
+/* 画像添付 */
+.gen-attach-bar{display:flex;align-items:center;gap:8px;margin-top:8px;}
+.gen-attach-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:var(--radius-md);border:1px solid var(--color-editor-border);background:var(--color-editor-elevated);color:var(--color-editor-muted);font-size:var(--text-label);cursor:pointer;transition:border-color .2s,color .2s;}
+.gen-attach-btn:hover{border-color:var(--color-primary);color:var(--color-primary);}
+.gen-attach-btn i{font-size:16px;}
+.gen-attach-preview{display:none;flex-wrap:wrap;gap:8px;margin-top:8px;}
+.gen-attach-preview.has-items{display:flex;}
+.gen-attach-thumb{position:relative;width:64px;height:64px;border-radius:var(--radius-md);overflow:hidden;border:1.5px solid var(--color-editor-border);background:var(--color-editor-elevated);}
+.gen-attach-thumb img{width:100%;height:100%;object-fit:cover;}
+.gen-attach-thumb .gen-attach-remove{position:absolute;top:-1px;right:-1px;width:20px;height:20px;border-radius:var(--radius-full);background:var(--color-editor-surface);border:1px solid var(--color-editor-border);color:var(--color-editor-muted);font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s,color .2s;}
+.gen-attach-thumb .gen-attach-remove:hover{background:var(--color-destructive);color:#fff;border-color:var(--color-destructive);}
 .tpl{font-size:var(--text-label);color:var(--color-primary);font-weight:var(--font-weight-body-strong);margin-bottom:10px;display:flex;align-items:center;gap:6px;cursor:pointer;}
 .thumbs{display:flex;gap:10px;margin-bottom:16px;}
 .cth{position:relative;width:66px;height:66px;border-radius:var(--radius-md);border:1.5px solid var(--color-editor-border);background:var(--color-editor-elevated);display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--color-editor-muted);cursor:pointer;}
@@ -188,8 +219,9 @@ body{background:#0a0908;padding:18px;color:var(--color-editor-foreground);}
 .script-toggle{display:flex;align-items:center;gap:8px;padding:11px 16px;cursor:pointer;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-editor-foreground);user-select:none;border-bottom:1px solid transparent;transition:background .15s;}
 .script-toggle:hover{background:var(--color-editor-elevated);}
 .script-toggle.open{border-bottom-color:var(--color-editor-border);}
-.script-toggle .ti-chevron-right{font-size:12px;color:var(--color-editor-muted);transition:transform .2s;}
+.script-toggle .ti-chevron-right{font-size:14px;color:var(--color-editor-muted);transition:transform .2s;}
 .script-toggle.open .ti-chevron-right{transform:rotate(90deg);}
+.script-toggle .script-hint{display:none;}
 .script-toggle .ti-notebook{font-size:15px;color:var(--color-primary);}
 .script-toggle .script-badge{font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-primary);background:rgba(239,97,8,.1);border:1px solid rgba(239,97,8,.2);border-radius:var(--radius-full);padding:2px 9px;margin-left:auto;}
 .script-body{display:none;padding:6px 8px 8px;max-height:40vh;overflow-y:auto;scrollbar-width:thin;}
@@ -246,6 +278,98 @@ body{background:#0a0908;padding:18px;color:var(--color-editor-foreground);}
 .chat-plus-menu .cpm-item{display:flex;align-items:center;gap:10px;padding:10px 16px;font-size:var(--text-body);color:var(--color-editor-foreground);cursor:pointer;white-space:nowrap;}
 .chat-plus-menu .cpm-item:hover{background:var(--color-editor-surface);}
 .chat-plus-menu .cpm-item i{font-size:18px;color:var(--color-editor-muted);width:20px;text-align:center;}
+@media (max-width:430px) {
+  /* --- image_editor_dark_wire.html mobile --- */
+  body{padding:8px;}
+  /* App wrapper: full width, auto height */
+  .app{
+    width:100% !important;
+    height:auto !important;
+    min-height:100svh;
+    border-radius:var(--radius-md);
+  }
+  /* Header: compact */
+  .hd{height:48px;padding:0 10px;gap:8px;}
+  .back{padding:6px 10px;font-size:var(--text-meta);}
+  .title{font-size:var(--text-label);}
+  .rbadge{display:none;}
+  .saved{display:none;}
+  .save{padding:8px 12px;font-size:var(--text-label);}
+  .cost{display:none;}
+  /* Work area 3-column → single column */
+  .work{
+    display:flex !important;
+    flex-direction:column !important;
+    min-height:0;
+  }
+  /* Left tools panel → horizontal scrollable strip */
+  .tools{
+    width:100% !important;
+    height:auto !important;
+    padding:8px !important;
+    border-right:none !important;
+    border-bottom:1px solid var(--color-editor-border);
+    overflow-y:hidden;
+    overflow-x:auto;
+    flex-shrink:0;
+  }
+  .tgrid{
+    display:flex !important;
+    flex-direction:row !important;
+    flex-wrap:nowrap;
+    gap:6px;
+    width:max-content;
+  }
+  .tool{
+    width:56px !important;
+    height:56px !important;
+    aspect-ratio:unset !important;
+    flex-shrink:0;
+  }
+  /* Center canvas: full width */
+  .center{
+    width:100% !important;
+    min-width:0;
+    padding:12px !important;
+    overflow-y:visible;
+  }
+  .ctop{flex-wrap:wrap;gap:6px;}
+  .ctop .r{flex-wrap:wrap;}
+  /* Gen instruct area: full width */
+  .gen-instruct{width:100%;}
+  .gen-instruct-input{min-height:48px;}
+  .genrow{grid-template-columns:1fr 1fr;gap:8px;}
+  /* Stage canvas: appropriate mobile height */
+  .stage{
+    min-height:260px !important;
+    border-radius:var(--radius-md);
+  }
+  .thumbs{flex-wrap:wrap;}
+  /* Script panel: collapsed by default on SP */
+  .script-panel{margin-top:10px;}
+  .script-toggle{padding:13px 16px;}
+  .script-toggle .ti-chevron-right{font-size:16px;}
+  .script-toggle .script-hint{display:inline;font-size:var(--text-meta);color:var(--color-editor-muted);margin-left:auto;}
+  .script-toggle.open .script-hint{display:none;}
+  .script-body{max-height:30vh;}
+  /* Right properties panel → full width below */
+  .right{
+    width:100% !important;
+    min-width:0;
+    border-left:none !important;
+    border-top:1px solid var(--color-editor-border);
+    max-height:360px;
+    overflow:hidden;
+  }
+  .rbody{padding:12px;}
+  .sizes{grid-template-columns:repeat(4,1fr);}
+  /* template switcher SP */
+  .tmpl-label{display:none;}
+  .tmpl-btn{padding:5px 10px;font-size:var(--text-meta);}
+  .tmpl-dd{width:220px;}
+  .tmpl-dd-item{padding:8px 10px;}
+  .tmpl-dd-item .tmpl-thumb{width:30px;height:30px;font-size:14px;}
+}
 </style></head><body>
 <div class="app">
   <div class="hd">
@@ -257,10 +381,15 @@ body{background:#0a0908;padding:18px;color:var(--color-editor-foreground);}
   <div class="work">
     <div class="tools"><div class="tgrid"><div class="tool " onclick="pickTool(this)"><i class="ti ti-robot"></i><span class="l">AIに指示</span></div><div class="tool on" onclick="pickTool(this)"><i class="ti ti-typography"></i><span class="l">テキスト</span></div><div class="tool " onclick="pickTool(this)"><i class="ti ti-photo"></i><span class="l">素材</span></div><div class="tool " onclick="pickTool(this)"><i class="ti ti-adjustments"></i><span class="l">色味調整</span></div><div class="tool " onclick="pickTool(this)"><i class="ti ti-filter"></i><span class="l">フィルター</span></div><div class="tool " onclick="pickTool(this)"><i class="ti ti-template"></i><span class="l">プリセット</span></div><div class="tool " onclick="pickTool(this)"><i class="ti ti-crop"></i><span class="l">切り抜き</span></div><div class="tool " onclick="pickTool(this)"><i class="ti ti-history"></i><span class="l">履歴</span></div></div></div>
     <div class="center">
-      <div class="ctop"><span class="pl">プレビュー</span><div class="r"><button class="gbtn"><i class="ti ti-arrows-left-right"></i>元画像と比較</button><button class="gbtn"><i class="ti ti-zoom-in"></i>ズーム</button></div></div>
+      <div class="ctop"><span class="pl">プレビュー</span><div class="r"><div class="tmpl-sw" id="tmplSw" onclick="this.classList.toggle('open')"><button class="tmpl-btn"><i class="ti ti-template"></i><span class="tmpl-label">テンプレ:</span> <span class="tmpl-name">シンプル白</span><i class="ti ti-chevron-down chevron"></i></button><div class="tmpl-dd" onclick="event.stopPropagation()"><div class="tmpl-dd-item active" onclick="pickTmpl(this,'シンプル白')"><div class="tmpl-thumb"><i class="ti ti-layout-board"></i></div><div class="tmpl-info"><div class="tmpl-n">シンプル白</div><div class="tmpl-d">白背景・ミニマルレイアウト</div></div><i class="ti ti-check tmpl-check"></i></div><div class="tmpl-dd-item" onclick="pickTmpl(this,'ポップ')"><div class="tmpl-thumb" style="background:#ffe8cc;"><i class="ti ti-sparkles"></i></div><div class="tmpl-info"><div class="tmpl-n">ポップ</div><div class="tmpl-d">カラフル・ストーリー映え</div></div><i class="ti ti-check tmpl-check"></i></div><div class="tmpl-dd-item" onclick="pickTmpl(this,'モダン黒')"><div class="tmpl-thumb" style="background:#1a1a1a;color:#aaa;"><i class="ti ti-moon"></i></div><div class="tmpl-info"><div class="tmpl-n">モダン黒</div><div class="tmpl-d">ダーク・高級感</div></div><i class="ti ti-check tmpl-check"></i></div><div class="tmpl-dd-item" onclick="pickTmpl(this,'ナチュラル')"><div class="tmpl-thumb" style="background:#e8f0e4;color:#5a7a4a;"><i class="ti ti-leaf"></i></div><div class="tmpl-info"><div class="tmpl-n">ナチュラル</div><div class="tmpl-d">アースカラー・柔らかい印象</div></div><i class="ti ti-check tmpl-check"></i></div></div></div><button class="gbtn"><i class="ti ti-arrows-left-right"></i>元画像と比較</button><button class="gbtn"><i class="ti ti-zoom-in"></i>ズーム</button></div></div>
       <!-- 指示入力エリア -->
       <div class="gen-instruct" id="genInstruct">
         <textarea class="gen-instruct-input" id="genInstructInput" placeholder="例：外観写真をメインに、駅徒歩5分を大きく表示して">外観写真をメインに配置。「駅徒歩5分・南向き1LDK」を大きく中央に。明るく清潔感のあるトーンで。</textarea>
+        <div class="gen-attach-bar">
+          <button class="gen-attach-btn" onclick="document.getElementById('genAttachFile').click()"><i class="ti ti-photo-plus"></i>画像を追加</button>
+          <input type="file" id="genAttachFile" accept="image/*" multiple style="display:none" onchange="handleGenAttach(this)">
+        </div>
+        <div class="gen-attach-preview" id="genAttachPreview"></div>
       </div>
       <div class="genrow">
         <button class="genbtn ghost" id="genSingle" onclick="startGenerate(1)"><i class="ti ti-sparkles"></i>この指示で生成</button>
@@ -275,7 +404,7 @@ body{background:#0a0908;padding:18px;color:var(--color-editor-foreground);}
       </div>
       <div class="stage"><div class="ph"><i class="ti ti-building-store"></i></div><div class="stage-gen-overlay" id="genOverlay"><div class="gen-ring"></div><div class="gen-label" id="genLabel">画像を生成中…</div><div class="gen-sublabel" id="genSublabel">1 / 1 枚目</div><div class="gen-progress"><div class="gen-progress-bar" id="genBar"></div></div><button class="gen-cancel-btn" onclick="cancelGenerate()">やめる</button></div></div>
       <div class="script-panel">
-        <div class="script-toggle open" onclick="toggleScript()"><i class="ti ti-chevron-right"></i><i class="ti ti-notebook"></i>この画像の台本<span class="script-badge">4枚構成</span></div>
+        <div class="script-toggle open" onclick="toggleScript()"><i class="ti ti-chevron-right"></i><i class="ti ti-notebook"></i>この画像の台本<span class="script-badge">4枚構成</span><span class="script-hint">タップで開く</span></div>
         <div class="script-body open" id="scriptBody">
           <div class="script-items">
             <div class="script-item active" data-slide="0" onclick="pickTh(document.querySelectorAll('.cth')[0],0)">
@@ -565,6 +694,29 @@ function pickAb(el){el.parentElement.querySelectorAll('.ab').forEach(a=>a.classL
 function pickFilter(el){el.parentElement.querySelectorAll('div').forEach(d=>{d.style.borderColor='var(--color-editor-border)';d.style.borderWidth='1px';});el.style.borderColor='var(--color-primary)';el.style.borderWidth='2px';}
 /* --- 画像生成 --- */
 var genTimers=[];
+/* --- 画像添付 --- */
+function handleGenAttach(input){
+  var preview=document.getElementById('genAttachPreview');
+  Array.from(input.files).forEach(function(file){
+    var reader=new FileReader();
+    reader.onload=function(e){
+      var thumb=document.createElement('div');
+      thumb.className='gen-attach-thumb';
+      thumb.innerHTML='<img src="'+e.target.result+'" alt="参考画像"><button class="gen-attach-remove" onclick="removeGenAttach(this)"><i class="ti ti-x"></i></button>';
+      preview.appendChild(thumb);
+      preview.classList.add('has-items');
+    };
+    reader.readAsDataURL(file);
+  });
+  input.value='';
+}
+function removeGenAttach(btn){
+  var thumb=btn.parentElement;
+  var preview=thumb.parentElement;
+  thumb.remove();
+  if(!preview.children.length) preview.classList.remove('has-items');
+}
+
 function startGenerate(count){
   var overlay=document.getElementById('genOverlay');
   var bar=document.getElementById('genBar');
@@ -623,7 +775,20 @@ function cancelGenerate(){
   document.getElementById('genBatch').classList.remove('generating');
   document.querySelectorAll('.cth.generating').forEach(function(t){t.classList.remove('generating');});
 }
+/* SP: close script panel by default */
+if(window.innerWidth<=430){
+  var tog=document.querySelector('.script-toggle');
+  var body=document.getElementById('scriptBody');
+  if(tog&&body){tog.classList.remove('open');body.classList.remove('open');}
+}
 /* ===== 戻り先の分岐 ===== */
+function pickTmpl(el,name){
+  document.querySelectorAll('.tmpl-dd-item').forEach(i=>i.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelector('.tmpl-name').textContent=name;
+  document.getElementById('tmplSw').classList.remove('open');
+}
+document.addEventListener('click',function(e){var sw=document.getElementById('tmplSw');if(sw&&!sw.contains(e.target))sw.classList.remove('open');});
 function goBack(){
   var params=new URLSearchParams(window.location.search);
   var from=params.get('from');

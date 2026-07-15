@@ -195,6 +195,34 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .pbar i{display:block;height:100%;background:var(--color-primary);border-radius:var(--radius-full);}
 .fab{width:60px;height:60px;border-radius:var(--radius-full);background:var(--color-primary);box-shadow:0 4px 14px rgba(239,97,8,.4);display:flex;align-items:center;justify-content:center;cursor:pointer;}
 .fab img{width:46px;height:46px;object-fit:contain;}
+@media (max-width:430px){
+  body{padding:0;}
+  .app{width:100%;height:auto;min-height:100vh;border-radius:0;border:none;flex-direction:column;}
+  /* ===== サイドバー → 下部固定ナビ ===== */
+  .sb{width:100%;height:60px;flex-direction:row;position:fixed;bottom:0;left:0;right:0;z-index:100;border-right:none;border-top:1px solid var(--color-border);overflow-x:auto;flex:none;}
+  .sbtop{display:none;}
+  .nav{display:flex;flex-direction:row;padding:0;overflow-x:auto;flex:1;gap:0;}
+  .ni{flex-direction:column;gap:2px;padding:6px 10px;font-size:10px;min-width:52px;align-items:center;}
+  .ni .ti{font-size:20px;}
+  .ni .cv{display:none;}
+  .foot{display:none;}
+  /* ===== メイン ===== */
+  .main{padding-bottom:70px;}
+  .hd{height:52px;padding:0 16px;}
+  .hd .pgic{font-size:20px;}
+  .hd .pgnm{font-size:var(--text-body);}
+  .content{padding:16px;}
+  .h1{font-size:var(--text-h3);margin-bottom:12px;}
+  .cards{grid-template-columns:1fr;gap:12px;margin-bottom:16px;}
+  .panel{padding:16px;}
+  /* ===== 右下コーナートレイ ===== */
+  .corner{right:12px;bottom:72px;}
+  .tray{width:calc(100vw - 24px);}
+  .fab{width:52px;height:52px;}
+  .fab img{width:40px;height:40px;}
+  /* ===== ポップオーバー ===== */
+  .pop{left:8px;right:8px;bottom:68px;}
+}
 </style></head><body>
 <div class="app">
   <!-- サイドバー -->
