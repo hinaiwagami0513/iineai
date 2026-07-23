@@ -139,20 +139,20 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .hdr-page .ti{color:var(--color-muted-foreground);font-size:20px;}
 .hdr-page .ti{color:var(--color-muted-foreground);font-size:18px;}
 /* 上部ステップ */
-.stepbar{display:flex;align-items:center;justify-content:center;padding:12px 24px;border-bottom:1px solid var(--color-border);background:var(--color-surface);}
-.st{display:flex;align-items:center;gap:8px;}
-.st .n{width:26px;height:26px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);}
-.st.done .n{background:var(--color-success);color:#fff;} .st.now .n{background:var(--color-primary);color:#fff;} .st.todo .n{background:var(--color-background);color:var(--color-muted-foreground);}
-.st .tx{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);white-space:nowrap;} .st.todo .tx{color:var(--color-muted-foreground);}
-.stline{flex:1;height:2px;background:var(--color-border);margin:0 10px;min-width:14px;} .stline.done{background:var(--color-success);}
+.stepbar{display:flex;align-items:center;justify-content:center;padding:20px 24px 20px;background:var(--color-card);gap:0;max-width:600px;margin:0 auto;width:100%;}
+.st{display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;z-index:1;}
+.st .n{width:28px;height:28px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);border:2px solid var(--color-border);background:var(--color-card);transition:all .2s;}
+.st.done .n{background:var(--color-success);color:#fff;border-color:var(--color-success);} .st.now .n{background:var(--color-primary);color:#fff;border-color:var(--color-primary);} .st.todo .n{background:var(--color-card);color:var(--color-muted-foreground);border-color:var(--color-border);}
+.st .tx{font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);white-space:nowrap;color:var(--color-muted-foreground);} .st.now .tx{color:var(--color-foreground);} .st.done .tx{color:var(--color-foreground);}
+.stline{flex:1;height:2px;background:var(--color-border);min-width:40px;margin:0 -4px;margin-bottom:20px;} .stline.done{background:var(--color-success);}
 .main{flex:1;min-width:0;display:flex;flex-direction:column;min-height:0;}
-#subnav{display:flex;align-items:center;justify-content:center;gap:0;padding:16px 24px;border-bottom:1px solid var(--color-border);background:var(--color-card);max-width:600px;margin:0 auto;width:100%;}
-.snn{display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;z-index:1;}
-.snn .c{width:28px;height:28px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);border:2px solid var(--color-border);background:var(--color-card);color:var(--color-muted-foreground);transition:all .2s;}
-.snn .tx{font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);white-space:nowrap;color:var(--color-muted-foreground);}
-.snn.done .c{background:var(--color-success);color:#fff;border-color:var(--color-success);} .snn.done .tx{color:var(--color-foreground);}
-.snn.now .c{background:var(--color-primary);color:#fff;border-color:var(--color-primary);} .snn.now .tx{color:var(--color-foreground);}
-.snline{flex:1;height:2px;background:var(--color-border);min-width:40px;margin:0 -4px;margin-bottom:20px;} .snline.done{background:var(--color-success);}
+#subnav{display:flex;align-items:center;justify-content:center;gap:6px;padding:10px 24px;border-bottom:1px solid var(--color-border);background:var(--color-card);}
+.snn{display:flex;align-items:center;gap:6px;}
+.snn .c{width:8px;height:8px;flex:none;border-radius:var(--radius-full);background:var(--color-border);transition:all .2s;}
+.snn .tx{font-size:var(--text-label);white-space:nowrap;color:var(--color-muted-foreground);}
+.snn.done .c{background:var(--color-success);} .snn.done .tx{color:var(--color-foreground);}
+.snn.now .c{background:var(--color-primary);width:10px;height:10px;} .snn.now .tx{color:var(--color-foreground);font-weight:var(--font-weight-body-strong);}
+.snline{width:20px;height:1px;background:var(--color-border);flex:none;} .snline.done{background:var(--color-success);}
 .canvas{flex:1;overflow-y:auto;padding:20px 30px 26px;min-height:0;}
 .screen{display:none;} .screen.on{display:block;}
 .h1{font-size:var(--text-h1);font-weight:var(--font-weight-h1);display:flex;align-items:center;gap:10px;}
@@ -378,7 +378,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
   .stepbar{overflow-x:auto;flex-wrap:nowrap;padding:10px 16px;gap:4px;max-width:100%;justify-content:flex-start;}
   .st .l{font-size:10px;}
   .stline{min-width:20px;}
-  #subnav{overflow-x:auto;flex-wrap:nowrap;padding:8px 16px;max-width:100%;justify-content:flex-start;}
+  #subnav{overflow-x:auto;flex-wrap:nowrap;padding:8px 14px;justify-content:flex-start;gap:4px;}
   .main{flex:1;min-height:0;overflow-y:auto;}
   .canvas{padding:16px;max-width:100%;}
   .g2{grid-template-columns:1fr;}
@@ -396,7 +396,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 </style></head><body>
 <div class="app">
   <div class="topbar"><div class="hdr-left"><span class="hdr-page"><i class="ti ti-template"></i>投稿作成</span><span class="tag" id="flowtag" style="display:none"></span></div><div class="hdr-right"><button class="helpbtn">?</button><button class="close"><i class="ti ti-list"></i></button></div></div>
-  <div class="stepbar" id="stepbar"></div>
+  <div style="border-bottom:1px solid var(--color-border);background:var(--color-card);"><div class="stepbar" id="stepbar"></div></div>
   <div class="main">
     <div id="subnav"></div>
     <div class="canvas">
@@ -640,8 +640,8 @@ function renderSub(){
   box.style.display='flex';
   var items=[[1,'作り方を選ぶ'],[2,'企画を考える']];
   box.innerHTML=items.map(function(it,idx){
-    var n=it[0];var cls=n<sub?'done':(n===sub?'now':'');var ni=n<sub?'<i class="ti ti-check"></i>':n;
-    return '<span class="snn '+cls+'"><span class="c">'+ni+'</span><span class="tx">'+it[1]+'</span></span>'+(idx<items.length-1?'<span class="snline "+(n<sub?'done':'')+'"></span>':'');
+    var n=it[0];var cls=n<sub?'done':(n===sub?'now':'');
+    return '<span class="snn '+cls+'"><span class="c"></span><span class="tx">'+it[1]+'</span></span>'+(idx<items.length-1?'<span class="snline '+(n<sub?'done':'')+'"></span>':'');
   }).join('');
 }
 function show(){

@@ -146,11 +146,13 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .st .tx{font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);white-space:nowrap;color:var(--color-muted-foreground);} .st.now .tx{color:var(--color-foreground);} .st.done .tx{color:var(--color-foreground);}
 .stline{flex:1;height:2px;background:var(--color-border);min-width:40px;margin:0 -4px;margin-bottom:20px;} .stline.done{background:var(--color-success);}
 .main{flex:1;min-width:0;display:flex;flex-direction:column;min-height:0;}
-#subnav{display:flex;align-items:center;gap:9px;padding:14px 30px 0;font-size:var(--text-label);color:var(--color-muted-foreground);}
-.snn{display:flex;align-items:center;gap:6px;font-weight:var(--font-weight-body-strong);}
-.snn .c{width:20px;height:20px;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:var(--text-meta);background:var(--color-background);color:var(--color-muted-foreground);}
-.snn.on{color:var(--color-primary);} .snn.on .c{background:var(--color-primary);color:#fff;}
-.snline{flex:none;width:30px;height:1px;background:var(--color-border);}
+#subnav{display:flex;align-items:center;justify-content:center;gap:6px;padding:10px 24px;border-bottom:1px solid var(--color-border);background:var(--color-card);}
+.snn{display:flex;align-items:center;gap:6px;}
+.snn .c{width:8px;height:8px;flex:none;border-radius:var(--radius-full);background:var(--color-border);transition:all .2s;}
+.snn .tx{font-size:var(--text-label);white-space:nowrap;color:var(--color-muted-foreground);}
+.snn.done .c{background:var(--color-success);} .snn.done .tx{color:var(--color-foreground);}
+.snn.now .c{background:var(--color-primary);width:10px;height:10px;} .snn.now .tx{color:var(--color-foreground);font-weight:var(--font-weight-body-strong);}
+.snline{width:20px;height:1px;background:var(--color-border);flex:none;} .snline.done{background:var(--color-success);}
 .canvas{flex:1;overflow-y:auto;padding:20px 30px 26px;min-height:0;}
 .screen{display:none;} .screen.on{display:block;}
 .h1{font-size:var(--text-h1);font-weight:var(--font-weight-h1);display:flex;align-items:center;gap:10px;}
@@ -374,7 +376,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
   .stline{min-width:24px;}
   .st .tx{font-size:10px;}
   /* ===== サブナビ ===== */
-  #subnav{padding:10px 12px 0;gap:6px;}
+  #subnav{padding:8px 14px;gap:4px;}
   /* ===== メイン・キャンバス ===== */
   .main{flex:1;min-height:0;overflow-y:auto;}
   .canvas{padding:14px 12px 16px;}
@@ -832,8 +834,9 @@ function renderSub(){
   box.style.display='flex';
   var items=[[1,'作り方を選ぶ'],[2,'素材を選ぶ'],[3,'企画案を選択'],[4,'企画内容を選択']];
   box.innerHTML=items.map(function(it,idx){
-    var on=(it[0]<=sub)?'on':'';
-    return '<span class="snn '+on+'"><span class="c">'+it[0]+'</span>'+it[1]+'</span>'+(idx<items.length-1?'<span class="snline"></span>':'');
+    var cls=(it[0]<sub)?'done':(it[0]===sub)?'now':'';
+    var line=(idx<items.length-1)?'<span class="snline'+(it[0]<sub?' done':'')+'"></span>':'';
+    return '<span class="snn '+cls+'"><span class="c"></span><span class="tx">'+it[1]+'</span></span>'+line;
   }).join('');
 }
 function show(){
@@ -1166,6 +1169,52 @@ function closeChatPlusMenu2(){document.getElementById('chatPlusMenu2').classList
 document.addEventListener('click',function(){closeChatPlusMenu();closeChatPlusMenu2();});
 function applyAll(){document.querySelectorAll('.rev-chk').forEach(function(c){c.checked=true;});toast.success('反映可能な改善案を全て投稿文に反映しました');}
 function applySelected(){var n=document.querySelectorAll('.rev-chk:checked').length;if(n===0){toast.error('反映するレビューを選択してください');return;}toast.success(n+'件の改善案を投稿文に反映しました');}
+/* ===== 承認フロー状態（URLハッシュで切替） ===== */
+(function(){
+  var h = location.hash.replace('#','');
+  if(h !== 'approval-waiting' && h !== 'approval-review') return;
+  // バナー挿入（shadcn Alert スタイル）
+  var bannerHTML = '';
+  if(h === 'approval-waiting'){
+    bannerHTML = '<div style="position:relative;display:flex;align-items:flex-start;gap:12px;margin:16px 22px 0;padding:16px;border-radius:var(--radius-md);border:1px solid var(--color-warning-border);background:var(--color-warning-subtle);color:var(--color-warning);font-size:var(--text-body);line-height:1.5;">'
+      + '<i class="ti ti-clock" style="font-size:16px;margin-top:1px;flex:none"></i>'
+      + '<div style="flex:1"><div style="font-weight:var(--font-weight-body-strong);margin-bottom:2px">確認待ち</div><div style="font-size:var(--text-label);opacity:.85">承認者の確認が完了するまで編集できません</div></div>'
+      + '<span onclick="alertDialog({title:\'確認依頼を取り下げますか？\',description:\'取り下げると再度編集できます。\',cancelLabel:\'キャンセル\',actionLabel:\'取り下げる\'},function(){toast(\'取り下げました\')})" style="cursor:pointer;color:var(--color-muted-foreground);font-size:var(--text-label);white-space:nowrap;margin-top:2px">取り下げる</span>'
+      + '</div>';
+  } else {
+    bannerHTML = '<div style="display:flex;align-items:flex-start;gap:12px;margin:16px 22px 0;padding:16px;border-radius:var(--radius-md);border:1px solid var(--color-info);background:var(--color-info-subtle);color:var(--color-info);font-size:var(--text-body);line-height:1.5;">'
+      + '<i class="ti ti-eye" style="font-size:16px;margin-top:1px;flex:none"></i>'
+      + '<div><div style="font-weight:var(--font-weight-body-strong);margin-bottom:2px">承認者として確認中</div><div style="font-size:var(--text-label);opacity:.85">内容を確認して承認してください</div></div>'
+      + '</div>';
+  }
+  var stepbarWrap = document.getElementById('stepbar').parentElement;
+  stepbarWrap.insertAdjacentHTML('afterend', bannerHTML);
+  // 作成者・確認待ち: オーバーレイで全面ロック
+  if(h === 'approval-waiting'){
+    var mainEl = document.querySelector('.main');
+    var overlayDiv = document.createElement('div');
+    overlayDiv.style.cssText = 'position:absolute;inset:0;z-index:5;pointer-events:auto;background:rgba(255,255,255,0.55);cursor:not-allowed;';
+    mainEl.style.position = 'relative';
+    mainEl.appendChild(overlayDiv);
+  }
+  // 承認者: 閲覧は自由、編集系のみ非活性
+  if(h === 'approval-review'){
+    document.querySelectorAll('input,textarea').forEach(function(el){ el.disabled = true; el.style.opacity = '0.5'; });
+    document.querySelectorAll('.lbtn,.regenbtn,.revrunbtn,.btn-primary[title]').forEach(function(el){ el.style.opacity = '0.4'; el.style.pointerEvents = 'none'; el.style.cursor = 'not-allowed'; });
+  }
+  // フッター変更
+  var foot = document.querySelector('.foot');
+  if(h === 'approval-waiting'){
+    foot.innerHTML = '<button class="btn btn-ghost"><i class="ti ti-arrow-left"></i>戻る</button><button class="btn btn-primary" style="opacity:.4;cursor:not-allowed;pointer-events:none"><i class="ti ti-send"></i>確認をお願いする</button>';
+    foot.style.position = 'relative';
+    foot.style.zIndex = '6';
+  } else {
+    foot.innerHTML = '<button class="btn btn-ghost"><i class="ti ti-arrow-left"></i>一覧に戻る</button><button class="btn" style="background:var(--color-success);color:#fff;border-color:var(--color-success)" onclick="toast.success(\'承認しました\')"><i class="ti ti-check"></i>承認する</button>';
+  }
+  // エディタ画面に遷移
+  var edIdx = SCR.indexOf('editor');
+  if(edIdx >= 0){ i = edIdx; show(); }
+})();
 </script>
 <script src="sonner.js"></script>
 </body></html>

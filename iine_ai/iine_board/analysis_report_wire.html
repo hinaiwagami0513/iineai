@@ -165,10 +165,11 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);font-family:"
 .acct-dd-item .dd-meta{font-size:var(--text-meta);color:var(--color-muted-foreground);}
 .acct-dd-item .dd-check{font-size:16px;color:var(--color-primary);}
 
-/* === tab nav === */
-.tab-nav{display:flex;gap:0;padding:0 28px;}
-.tab-nav a{padding:10px 16px;font-size:var(--text-body);color:var(--color-muted-foreground);text-decoration:none;border-bottom:2px solid transparent;cursor:pointer;}
-.tab-nav a.active{color:var(--color-foreground);border-bottom-color:var(--color-foreground);font-weight:700;}
+/* === tab nav (underline) === */
+.tab-nav{display:flex;gap:0;padding:0 32px;border-bottom:1px solid var(--color-border);background:var(--color-card);}
+.tab-nav a{padding:12px 16px;font-size:var(--text-body);font-weight:var(--font-weight-label);color:var(--color-muted-foreground);text-decoration:none;border-bottom:2px solid transparent;cursor:pointer;transition:color .15s,border-color .15s;white-space:nowrap;}
+.tab-nav a:hover{color:var(--color-foreground);}
+.tab-nav a.active{color:var(--color-foreground);font-weight:700;border-bottom-color:var(--color-primary);}
 
 /* === slide area === */
 .slide-area{padding:24px 28px;display:flex;flex-direction:column;gap:16px;}
@@ -486,6 +487,14 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);font-family:"
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- ===== TAB NAV ===== -->
+      <div class="tab-nav">
+        <a href="./analysis_metrics_wire.html">数値変化</a>
+        <a class="active" href="./analysis_report_wire.html">分析レポート</a>
+        <a href="./analysis_account_wire.html">アカウントデータ</a>
+        <a href="./analysis_posts_wire.html">投稿データ</a>
       </div>
 
       <!-- ===== SLIDE AREA (メイン・常に表示) ===== -->

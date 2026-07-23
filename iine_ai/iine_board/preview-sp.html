@@ -1,0 +1,61 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>SP Preview</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#1e1a17;display:flex;align-items:center;justify-content:center;min-height:100vh;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;}
+.phone{position:relative;width:390px;height:844px;border-radius:40px;border:6px solid #3a3632;background:#000;box-shadow:0 12px 60px rgba(0,0,0,.5);overflow:hidden;}
+.phone::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:126px;height:34px;background:#000;border-radius:0 0 18px 18px;z-index:10;}
+.phone iframe{width:100%;height:100%;border:0;border-radius:34px;}
+.bar{position:fixed;top:16px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:12px;background:rgba(42,40,38,.85);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:8px 16px;z-index:100;}
+.bar-title{font-size:13px;color:rgba(255,255,255,.7);max-width:300px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.bar-btn{display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.15);background:transparent;color:rgba(255,255,255,.7);font-size:12px;font-weight:600;cursor:pointer;text-decoration:none;transition:background .15s,color .15s;}
+.bar-btn:hover{background:rgba(255,255,255,.1);color:#fff;}
+.bar-btn.active{background:#ef6108;border-color:#ef6108;color:#fff;}
+.bar-sep{width:1px;height:20px;background:rgba(255,255,255,.12);}
+</style>
+</head><body>
+<div class="bar">
+  <span class="bar-title" id="barTitle">SP Preview</span>
+  <div class="bar-sep"></div>
+  <button class="bar-btn" onclick="toggleDevice('pc')" id="btnPc">PC</button>
+  <button class="bar-btn active" onclick="toggleDevice('sp')" id="btnSp">SP</button>
+  <div class="bar-sep"></div>
+  <a class="bar-btn" id="openRaw" href="#" target="_blank">Raw</a>
+</div>
+<div class="phone" id="phoneFrame">
+  <iframe id="preview" src="about:blank"></iframe>
+</div>
+<script>
+var params=new URLSearchParams(location.search);
+var src=params.get('src')||'';
+var title=params.get('title')||src.replace(/\.\//,'').replace(/_wire\.html.*/,'').replace(/_/g,' ');
+document.getElementById('barTitle').textContent=title;
+document.getElementById('openRaw').href=src;
+if(src) document.getElementById('preview').src=src;
+
+function toggleDevice(d){
+  var phone=document.getElementById('phoneFrame');
+  var btnPc=document.getElementById('btnPc');
+  var btnSp=document.getElementById('btnSp');
+  if(d==='pc'){
+    phone.style.width='100vw';
+    phone.style.height='100vh';
+    phone.style.borderRadius='0';
+    phone.style.border='none';
+    phone.style.boxShadow='none';
+    phone.querySelector('iframe').style.borderRadius='0';
+    btnPc.classList.add('active');
+    btnSp.classList.remove('active');
+  } else {
+    phone.style.width='390px';
+    phone.style.height='844px';
+    phone.style.borderRadius='40px';
+    phone.style.border='6px solid #3a3632';
+    phone.style.boxShadow='0 12px 60px rgba(0,0,0,.5)';
+    phone.querySelector('iframe').style.borderRadius='34px';
+    btnSp.classList.add('active');
+    btnPc.classList.remove('active');
+  }
+}
+</script>
+</body></html>
