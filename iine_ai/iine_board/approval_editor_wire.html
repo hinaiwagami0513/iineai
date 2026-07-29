@@ -213,17 +213,17 @@ const states = [
   },
   {
     banner: `
-      <div style="display:flex;align-items:flex-start;gap:12px;margin:16px 20px 0;padding:16px;border-radius:var(--radius-md);border:1px solid var(--color-info);background:var(--color-info-subtle);color:var(--color-info);font-size:var(--text-body);line-height:1.5;">
-        <i class="ti ti-eye" style="font-size:16px;margin-top:1px;flex:none"></i>
-        <div><div style="font-weight:var(--weight-strong);margin-bottom:2px">承認者として確認中</div><div style="font-size:var(--text-label);opacity:.85">内容を確認して承認してください</div></div>
+      <div style="display:flex;align-items:flex-start;gap:12px;margin:16px 20px 0;padding:16px;border-radius:var(--radius-md);border:1px solid var(--color-info);background:var(--color-info-subtle);font-size:var(--text-body);line-height:1.5;">
+        <i class="ti ti-pencil" style="font-size:16px;margin-top:2px;flex:none;color:var(--color-info)"></i>
+        <div><div style="font-weight:var(--weight-strong);margin-bottom:2px;color:var(--color-foreground)">承認者として確認中</div><div style="font-size:var(--text-label);color:var(--color-muted-foreground)">内容を確認・編集して承認してください</div></div>
       </div>
     `,
-    overlay: 'readonly',
+    overlay: '',
     footer: `
       <button class="btn btn-ghost" onclick="toast('一覧に戻る')"><i class="ti ti-arrow-left"></i>一覧に戻る</button>
       <button class="btn btn-success" onclick="handleApprove()"><i class="ti ti-check"></i>承認する</button>
     `,
-    disabled: true
+    disabled: false
   }
 ];
 

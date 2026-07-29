@@ -839,26 +839,30 @@ function renderSub(){
     return '<span class="snn '+cls+'"><span class="c"></span><span class="tx">'+it[1]+'</span></span>'+line;
   }).join('');
 }
+var _approvalHash = location.hash.replace('#','');
+var _isApproval = (_approvalHash === 'approval-request' || _approvalHash === 'approval-waiting' || _approvalHash === 'approval-review');
 function show(){
   document.querySelectorAll('.screen').forEach(function(e){e.classList.remove('on');});
   document.getElementById('sc_'+SCR[i]).classList.add('on');
-  var bk=document.getElementById('back');if(i===0){bk.innerHTML='キャンセル';bk.style.visibility='visible';}else{bk.innerHTML='<i class="ti ti-arrow-left"></i> 戻る';bk.style.visibility='visible';}
-  var nx=document.getElementById('next');
-  nx.innerHTML=(i===SCR.length-1)?'完了 <i class="ti ti-check"></i>':(SCR[i]==='base'?(savedPlan?'次へ：企画内容を生成 <i class="ti ti-arrow-right"></i>':'次へ：企画案を生成 <i class="ti ti-arrow-right"></i>'):(SCR[i]==='proposal'?'次へ：企画内容を生成 <i class="ti ti-arrow-right"></i>':(SCR[i]==='plan'?'この企画内容で作成 <i class="ti ti-arrow-right"></i>':(SCR[i]==='editor'?'確認へ進む <i class="ti ti-arrow-right"></i>':'次へ <i class="ti ti-arrow-right"></i>'))));
-  /* disable next on base until a method is used */
-  if(SCR[i]==='base'&&!baseReady){
-    nx.classList.add('btn-disabled');
-    nx.onclick=function(e){e.preventDefault();showTooltip(nx,'素材を選択してください');};
-  }else{
-    nx.classList.remove('btn-disabled');
-    nx.onclick=function(){nav(1);};
+  if(!_isApproval){
+    var bk=document.getElementById('back');if(i===0){bk.innerHTML='キャンセル';bk.style.visibility='visible';}else{bk.innerHTML='<i class="ti ti-arrow-left"></i> 戻る';bk.style.visibility='visible';}
+    var nx=document.getElementById('next');
+    nx.innerHTML=(i===SCR.length-1)?'完了 <i class="ti ti-check"></i>':(SCR[i]==='base'?(savedPlan?'次へ：企画内容を生成 <i class="ti ti-arrow-right"></i>':'次へ：企画案を生成 <i class="ti ti-arrow-right"></i>'):(SCR[i]==='proposal'?'次へ：企画内容を生成 <i class="ti ti-arrow-right"></i>':(SCR[i]==='plan'?'この企画内容で作成 <i class="ti ti-arrow-right"></i>':(SCR[i]==='editor'?'確認へ進む <i class="ti ti-arrow-right"></i>':'次へ <i class="ti ti-arrow-right"></i>'))));
+    /* disable next on base until a method is used */
+    if(SCR[i]==='base'&&!baseReady){
+      nx.classList.add('btn-disabled');
+      nx.onclick=function(e){e.preventDefault();showTooltip(nx,'素材を選択してください');};
+    }else{
+      nx.classList.remove('btn-disabled');
+      nx.onclick=function(){nav(1);};
+    }
   }
   /* tag updates */
   var tag=document.getElementById("flowtag");var tagEl=tag;
   if(i<=2){tagEl.style.display="none";}
   else{tagEl.style.display="";tagEl.textContent="画像（台本）";}
   /* finish画面ではフッター非表示 */
-  document.querySelector('.foot').style.display=(SCR[i]==='finish')?'none':'flex';
+  if(!_isApproval) document.querySelector('.foot').style.display=(SCR[i]==='finish')?'none':'flex';
   renderStep();renderSub();
   var cv=document.querySelector('.canvas');if(cv)cv.scrollTop=0;
 }
@@ -1172,23 +1176,25 @@ function applySelected(){var n=document.querySelectorAll('.rev-chk:checked').len
 /* ===== 承認フロー状態（URLハッシュで切替） ===== */
 (function(){
   var h = location.hash.replace('#','');
-  if(h !== 'approval-waiting' && h !== 'approval-review') return;
+  if(h !== 'approval-request' && h !== 'approval-waiting' && h !== 'approval-review') return;
   // バナー挿入（shadcn Alert スタイル）
   var bannerHTML = '';
-  if(h === 'approval-waiting'){
+  if(h === 'approval-request'){
+    // バナーなし（通常編集と同じ見た目、フッターだけ変わる）
+  } else if(h === 'approval-waiting'){
     bannerHTML = '<div style="position:relative;display:flex;align-items:flex-start;gap:12px;margin:16px 22px 0;padding:16px;border-radius:var(--radius-md);border:1px solid var(--color-warning-border);background:var(--color-warning-subtle);color:var(--color-warning);font-size:var(--text-body);line-height:1.5;">'
       + '<i class="ti ti-clock" style="font-size:16px;margin-top:1px;flex:none"></i>'
       + '<div style="flex:1"><div style="font-weight:var(--font-weight-body-strong);margin-bottom:2px">確認待ち</div><div style="font-size:var(--text-label);opacity:.85">承認者の確認が完了するまで編集できません</div></div>'
       + '<span onclick="alertDialog({title:\'確認依頼を取り下げますか？\',description:\'取り下げると再度編集できます。\',cancelLabel:\'キャンセル\',actionLabel:\'取り下げる\'},function(){toast(\'取り下げました\')})" style="cursor:pointer;color:var(--color-muted-foreground);font-size:var(--text-label);white-space:nowrap;margin-top:2px">取り下げる</span>'
       + '</div>';
   } else {
-    bannerHTML = '<div style="display:flex;align-items:flex-start;gap:12px;margin:16px 22px 0;padding:16px;border-radius:var(--radius-md);border:1px solid var(--color-info);background:var(--color-info-subtle);color:var(--color-info);font-size:var(--text-body);line-height:1.5;">'
-      + '<i class="ti ti-eye" style="font-size:16px;margin-top:1px;flex:none"></i>'
-      + '<div><div style="font-weight:var(--font-weight-body-strong);margin-bottom:2px">承認者として確認中</div><div style="font-size:var(--text-label);opacity:.85">内容を確認して承認してください</div></div>'
+    bannerHTML = '<div style="display:flex;align-items:flex-start;gap:12px;margin:16px 22px 0;padding:16px;border-radius:var(--radius-md);border:1px solid var(--color-info);background:var(--color-info-subtle);font-size:var(--text-body);line-height:1.5;">'
+      + '<i class="ti ti-pencil" style="font-size:16px;margin-top:2px;flex:none;color:var(--color-info)"></i>'
+      + '<div><div style="font-weight:var(--font-weight-body-strong);margin-bottom:2px;color:var(--color-foreground)">承認者として確認中</div><div style="font-size:var(--text-label);color:var(--color-muted-foreground)">内容を確認・編集して承認してください</div></div>'
       + '</div>';
   }
   var stepbarWrap = document.getElementById('stepbar').parentElement;
-  stepbarWrap.insertAdjacentHTML('afterend', bannerHTML);
+  if(bannerHTML) stepbarWrap.insertAdjacentHTML('afterend', bannerHTML);
   // 作成者・確認待ち: オーバーレイで全面ロック
   if(h === 'approval-waiting'){
     var mainEl = document.querySelector('.main');
@@ -1197,23 +1203,26 @@ function applySelected(){var n=document.querySelectorAll('.rev-chk:checked').len
     mainEl.style.position = 'relative';
     mainEl.appendChild(overlayDiv);
   }
-  // 承認者: 閲覧は自由、編集系のみ非活性
-  if(h === 'approval-review'){
-    document.querySelectorAll('input,textarea').forEach(function(el){ el.disabled = true; el.style.opacity = '0.5'; });
-    document.querySelectorAll('.lbtn,.regenbtn,.revrunbtn,.btn-primary[title]').forEach(function(el){ el.style.opacity = '0.4'; el.style.pointerEvents = 'none'; el.style.cursor = 'not-allowed'; });
-  }
-  // フッター変更
+  // エディタ画面の生成/差替ボタンだけ非表示（承認フローでは不要）
+  document.querySelectorAll('#sc_editor a.grad').forEach(function(el){ el.style.display = 'none'; });
+  document.querySelectorAll('#sc_editor div').forEach(function(el){
+    var t = (el.textContent||'').trim();
+    if(t === '画像を差し替える') el.style.display = 'none';
+  });
+  // エディタ画面に遷移（show()より先に呼ぶ）
+  var edIdx = SCR.indexOf('editor');
+  if(edIdx >= 0){ i = edIdx; show(); }
+  // フッター変更（show()の後に実行して上書きを防ぐ）
   var foot = document.querySelector('.foot');
-  if(h === 'approval-waiting'){
+  if(h === 'approval-request'){
+    foot.innerHTML = '<button class="btn btn-ghost"><i class="ti ti-arrow-left"></i>戻る</button><button class="btn btn-primary" onclick="toast.success(\'確認依頼を送信しました\');this.disabled=true;this.style.opacity=\'.4\';this.style.cursor=\'not-allowed\';this.style.pointerEvents=\'none\';this.innerHTML=\'<i class=ti ti-check style=font-size:16px></i>確認依頼済み\';"><i class="ti ti-send"></i>確認をお願いする</button>';
+  } else if(h === 'approval-waiting'){
     foot.innerHTML = '<button class="btn btn-ghost"><i class="ti ti-arrow-left"></i>戻る</button><button class="btn btn-primary" style="opacity:.4;cursor:not-allowed;pointer-events:none"><i class="ti ti-send"></i>確認をお願いする</button>';
     foot.style.position = 'relative';
     foot.style.zIndex = '6';
   } else {
     foot.innerHTML = '<button class="btn btn-ghost"><i class="ti ti-arrow-left"></i>一覧に戻る</button><button class="btn" style="background:var(--color-success);color:#fff;border-color:var(--color-success)" onclick="toast.success(\'承認しました\')"><i class="ti ti-check"></i>承認する</button>';
   }
-  // エディタ画面に遷移
-  var edIdx = SCR.indexOf('editor');
-  if(edIdx >= 0){ i = edIdx; show(); }
 })();
 </script>
 <script src="sonner.js"></script>

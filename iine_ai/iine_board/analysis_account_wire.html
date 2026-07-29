@@ -212,6 +212,15 @@ body{font-family:"Noto Sans JP",sans-serif;background:#e6e5e3;padding:20px;min-h
 .pill{padding:6px 16px;border-radius:var(--radius-full);font-size:var(--text-label);font-weight:var(--font-weight-label);border:1px solid var(--color-border);background:var(--color-card);cursor:pointer;color:var(--color-muted-foreground);white-space:nowrap;transition:all .15s;}
 .pill.active{background:var(--color-primary);color:#fff;border-color:var(--color-primary);font-weight:var(--font-weight-body-strong);}
 .pill:hover:not(.active){background:var(--color-surface);}
+.metric-panel{display:none;padding-top:16px;}
+.metric-panel.active{display:block;}
+.metric-summary{display:flex;align-items:baseline;gap:12px;margin-bottom:4px;}
+.metric-big{font-size:32px;font-weight:var(--font-weight-h1);letter-spacing:-0.02em;line-height:1;}
+.metric-unit{font-size:var(--text-body);font-weight:var(--font-weight-body);color:var(--color-muted-foreground);margin-left:2px;}
+.metric-delta{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);display:flex;align-items:center;gap:4px;}
+.metric-delta.positive{color:var(--color-success);}
+.metric-delta.negative{color:var(--color-destructive);}
+.metric-delta.neutral{color:var(--color-muted-foreground);}
 
 /* advice */
 .section-card.advice{background:var(--color-primary-subtle);border-color:#ffd8b0;}
@@ -222,9 +231,12 @@ body{font-family:"Noto Sans JP",sans-serif;background:#e6e5e3;padding:20px;min-h
 .advice-item-body{font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.5;}
 
 /* details accordion */
-.advice-details{margin-top:16px;}
-.advice-details-toggle{cursor:pointer;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);color:var(--color-primary);display:flex;align-items:center;gap:4px;list-style:none;padding:8px 0;}
+.advice-details{margin-top:16px;border:none;outline:none;}
+.advice-details-toggle{cursor:pointer;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);color:var(--color-primary);display:flex;align-items:center;gap:4px;list-style:none;padding:8px 0;border:none;outline:none;}
 .advice-details-toggle::-webkit-details-marker{display:none;}
+.advice-details-toggle::marker{display:none;content:"";}
+.advice-details-toggle:focus{outline:none;}
+.advice-details-toggle:focus-visible{outline:2px solid var(--color-ring);outline-offset:2px;border-radius:var(--radius-sm);}
 .advice-details-toggle .ti{font-size:14px;transition:transform .2s;}
 .advice-details[open] .advice-details-toggle .ti{transform:rotate(180deg);}
 .advice-details-body{padding-top:16px;display:flex;flex-direction:column;gap:16px;}
@@ -232,7 +244,7 @@ body{font-family:"Noto Sans JP",sans-serif;background:#e6e5e3;padding:20px;min-h
 /* priority cards */
 .priority-card{background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:20px;}
 .priority-card-hd{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);margin-bottom:8px;display:flex;align-items:center;gap:8px;}
-.priority-num{width:24px;height:24px;border-radius:var(--radius-full);background:var(--color-foreground);color:#fff;display:flex;align-items:center;justify-content:center;font-size:var(--text-meta);font-weight:700;flex:none;}
+.priority-num{width:24px;height:24px;border-radius:var(--radius-full);background:var(--color-background);border:1.5px solid var(--color-border-strong);color:var(--color-foreground);display:flex;align-items:center;justify-content:center;font-size:var(--text-meta);font-weight:700;flex:none;}
 .priority-card p{font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.6;margin-bottom:8px;}
 .priority-card ul{font-size:var(--text-label);line-height:1.6;padding-left:20px;margin-bottom:8px;color:var(--color-foreground);}
 .priority-card li{margin-bottom:4px;}
@@ -280,7 +292,7 @@ body{font-family:"Noto Sans JP",sans-serif;background:#e6e5e3;padding:20px;min-h
       <a class="sb-btn" href="#"><i class="ti ti-layout-dashboard"></i> ダッシュボード</a>
       <a class="sb-btn" href="#"><i class="ti ti-file-text"></i> 投稿一覧</a>
       <a class="sb-btn" href="#"><i class="ti ti-calendar"></i> カレンダー</a>
-      <a class="sb-btn active" href="#"><i class="ti ti-chart-bar"></i> 分析</a>
+      <a class="sb-btn active" href="./analysis_visual_wire.html"><i class="ti ti-chart-bar"></i> 分析</a>
       <a class="sb-btn" href="#"><i class="ti ti-folder"></i> いいねAIドライブ</a>
       <a class="sb-btn" href="#"><i class="ti ti-settings"></i> 設定</a>
       <a class="sb-btn" href="#"><i class="ti ti-dots"></i> その他</a>
@@ -335,6 +347,7 @@ body{font-family:"Noto Sans JP",sans-serif;background:#e6e5e3;padding:20px;min-h
 
       <!-- Tab navigation -->
       <div class="tab-nav">
+        <a href="./analysis_visual_wire.html">ビジュアルレポート</a>
         <a href="./analysis_metrics_wire.html">数値変化</a>
         <a href="./analysis_report_wire.html">分析レポート</a>
         <a class="active" href="./analysis_account_wire.html">アカウントデータ</a>
@@ -396,18 +409,160 @@ body{font-family:"Noto Sans JP",sans-serif;background:#e6e5e3;padding:20px;min-h
         <!-- ===== 2. 指標サブタブ（データの詳細） ===== -->
         <div class="section-card">
           <div class="section-card-title" style="margin-bottom:12px;">指標ごとのデータ</div>
-          <div class="pill-tabs">
-            <button class="pill active">フォロワー数</button>
-            <button class="pill">投稿数</button>
-            <button class="pill">リーチ</button>
-            <button class="pill">表示回数</button>
-            <button class="pill">反応率</button>
-            <button class="pill">フォロワー増減</button>
-            <button class="pill">いいね数</button>
-            <button class="pill">コメント数</button>
+          <div class="pill-tabs" id="metricTabs">
+            <button class="pill active" data-metric="followers">フォロワー数</button>
+            <button class="pill" data-metric="posts">投稿数</button>
+            <button class="pill" data-metric="reach">リーチ</button>
+            <button class="pill" data-metric="impressions">表示回数</button>
+            <button class="pill" data-metric="engagement">反応率</button>
+            <button class="pill" data-metric="follower-delta">フォロワー増減</button>
+            <button class="pill" data-metric="likes">いいね数</button>
+            <button class="pill" data-metric="comments">コメント数</button>
           </div>
-          <div style="padding:24px 0 8px;text-align:center;color:var(--color-muted-foreground);font-size:var(--text-body);">
-            上のタブを押すと、各指標のグラフが表示されます
+
+          <!-- metric panels -->
+          <div class="metric-panel active" data-panel="followers">
+            <div class="metric-summary">
+              <div class="metric-big">6<span class="metric-unit">人</span></div>
+              <div class="metric-delta positive"><i class="ti ti-trending-up"></i> +1 (前週比)</div>
+            </div>
+            <div class="bar-chart">
+              <div class="bar-col"><div class="bar-val">5</div><div class="bar" style="height:83px"></div><div class="bar-label">6/22週</div></div>
+              <div class="bar-col"><div class="bar-val">5</div><div class="bar" style="height:83px"></div><div class="bar-label">6/29週</div></div>
+              <div class="bar-col"><div class="bar-val">6</div><div class="bar hi" style="height:100px"></div><div class="bar-label">7/6週</div></div>
+              <div class="bar-col"><div class="bar-val">6</div><div class="bar hi" style="height:100px"></div><div class="bar-label">7/13週</div></div>
+              <div class="bar-col"><div class="bar-val">6</div><div class="bar hi" style="height:100px"></div><div class="bar-label">7/20週</div></div>
+            </div>
+            <div class="trend-row">
+              <img src="./assets/iine-fox-happy.png" style="width:24px;height:24px;object-fit:contain;">
+              <span style="font-size:var(--text-label);color:var(--color-muted-foreground);">30日間で +1人（+20%）増加しています</span>
+            </div>
+          </div>
+
+          <div class="metric-panel" data-panel="posts">
+            <div class="metric-summary">
+              <div class="metric-big">38<span class="metric-unit">件</span></div>
+              <div class="metric-delta positive"><i class="ti ti-trending-up"></i> +3 (前週比)</div>
+            </div>
+            <div class="bar-chart">
+              <div class="bar-col"><div class="bar-val">32</div><div class="bar" style="height:68px"></div><div class="bar-label">6/22週</div></div>
+              <div class="bar-col"><div class="bar-val">34</div><div class="bar" style="height:72px"></div><div class="bar-label">6/29週</div></div>
+              <div class="bar-col"><div class="bar-val">35</div><div class="bar" style="height:75px"></div><div class="bar-label">7/6週</div></div>
+              <div class="bar-col"><div class="bar-val">37</div><div class="bar" style="height:80px"></div><div class="bar-label">7/13週</div></div>
+              <div class="bar-col"><div class="bar-val">38</div><div class="bar hi" style="height:100px"></div><div class="bar-label">7/20週</div></div>
+            </div>
+            <div class="trend-row">
+              <img src="./assets/iine-fox-happy.png" style="width:24px;height:24px;object-fit:contain;">
+              <span style="font-size:var(--text-label);color:var(--color-muted-foreground);">30日間で +6件投稿。週1〜2本ペースです</span>
+            </div>
+          </div>
+
+          <div class="metric-panel" data-panel="reach">
+            <div class="metric-summary">
+              <div class="metric-big">127<span class="metric-unit">回</span></div>
+              <div class="metric-delta positive"><i class="ti ti-trending-up"></i> +42 (前週比)</div>
+            </div>
+            <div class="bar-chart">
+              <div class="bar-col"><div class="bar-val">18</div><div class="bar" style="height:14px"></div><div class="bar-label">6/22週</div></div>
+              <div class="bar-col"><div class="bar-val">22</div><div class="bar" style="height:17px"></div><div class="bar-label">6/29週</div></div>
+              <div class="bar-col"><div class="bar-val">35</div><div class="bar" style="height:28px"></div><div class="bar-label">7/6週</div></div>
+              <div class="bar-col"><div class="bar-val">52</div><div class="bar" style="height:41px"></div><div class="bar-label">7/13週</div></div>
+              <div class="bar-col"><div class="bar-val">127</div><div class="bar hi" style="height:100px"></div><div class="bar-label">7/20週</div></div>
+            </div>
+            <div class="trend-row">
+              <img src="./assets/iine-fox-happy.png" style="width:24px;height:24px;object-fit:contain;">
+              <span style="font-size:var(--text-label);color:var(--color-muted-foreground);">リーチが急伸中。直近の投稿が好調です</span>
+            </div>
+          </div>
+
+          <div class="metric-panel" data-panel="impressions">
+            <div class="metric-summary">
+              <div class="metric-big">203<span class="metric-unit">回</span></div>
+              <div class="metric-delta positive"><i class="ti ti-trending-up"></i> +68 (前週比)</div>
+            </div>
+            <div class="bar-chart">
+              <div class="bar-col"><div class="bar-val">30</div><div class="bar" style="height:15px"></div><div class="bar-label">6/22週</div></div>
+              <div class="bar-col"><div class="bar-val">38</div><div class="bar" style="height:19px"></div><div class="bar-label">6/29週</div></div>
+              <div class="bar-col"><div class="bar-val">55</div><div class="bar" style="height:27px"></div><div class="bar-label">7/6週</div></div>
+              <div class="bar-col"><div class="bar-val">80</div><div class="bar" style="height:39px"></div><div class="bar-label">7/13週</div></div>
+              <div class="bar-col"><div class="bar-val">203</div><div class="bar hi" style="height:100px"></div><div class="bar-label">7/20週</div></div>
+            </div>
+            <div class="trend-row">
+              <img src="./assets/iine-fox-happy.png" style="width:24px;height:24px;object-fit:contain;">
+              <span style="font-size:var(--text-label);color:var(--color-muted-foreground);">表示回数が大幅に増加しています</span>
+            </div>
+          </div>
+
+          <div class="metric-panel" data-panel="engagement">
+            <div class="metric-summary">
+              <div class="metric-big">0.2<span class="metric-unit">%</span></div>
+              <div class="metric-delta negative"><i class="ti ti-trending-down"></i> -0.1pt (前週比)</div>
+            </div>
+            <div class="bar-chart">
+              <div class="bar-col"><div class="bar-val">0.4%</div><div class="bar hi" style="height:100px"></div><div class="bar-label">6/22週</div></div>
+              <div class="bar-col"><div class="bar-val">0.3%</div><div class="bar" style="height:75px"></div><div class="bar-label">6/29週</div></div>
+              <div class="bar-col"><div class="bar-val">0.3%</div><div class="bar" style="height:75px"></div><div class="bar-label">7/6週</div></div>
+              <div class="bar-col"><div class="bar-val">0.3%</div><div class="bar" style="height:75px"></div><div class="bar-label">7/13週</div></div>
+              <div class="bar-col"><div class="bar-val">0.2%</div><div class="bar" style="height:50px"></div><div class="bar-label">7/20週</div></div>
+            </div>
+            <div class="trend-row">
+              <img src="./assets/iine-fox-sad.png" style="width:24px;height:24px;object-fit:contain;">
+              <span style="font-size:var(--text-label);color:var(--color-muted-foreground);">反応率が低下傾向。CTA追加で改善を目指しましょう</span>
+            </div>
+          </div>
+
+          <div class="metric-panel" data-panel="follower-delta">
+            <div class="metric-summary">
+              <div class="metric-big">+1<span class="metric-unit">人</span></div>
+              <div class="metric-delta neutral"><i class="ti ti-minus"></i> 変化なし (前週比)</div>
+            </div>
+            <div class="bar-chart">
+              <div class="bar-col"><div class="bar-val">0</div><div class="bar" style="height:10px"></div><div class="bar-label">6/22週</div></div>
+              <div class="bar-col"><div class="bar-val">0</div><div class="bar" style="height:10px"></div><div class="bar-label">6/29週</div></div>
+              <div class="bar-col"><div class="bar-val">+1</div><div class="bar hi" style="height:100px"></div><div class="bar-label">7/6週</div></div>
+              <div class="bar-col"><div class="bar-val">0</div><div class="bar" style="height:10px"></div><div class="bar-label">7/13週</div></div>
+              <div class="bar-col"><div class="bar-val">0</div><div class="bar" style="height:10px"></div><div class="bar-label">7/20週</div></div>
+            </div>
+            <div class="trend-row">
+              <img src="./assets/iine-fox-happy.png" style="width:24px;height:24px;object-fit:contain;">
+              <span style="font-size:var(--text-label);color:var(--color-muted-foreground);">30日間でフォロワー +1人。離脱はゼロです</span>
+            </div>
+          </div>
+
+          <div class="metric-panel" data-panel="likes">
+            <div class="metric-summary">
+              <div class="metric-big">12<span class="metric-unit">件</span></div>
+              <div class="metric-delta positive"><i class="ti ti-trending-up"></i> +5 (前週比)</div>
+            </div>
+            <div class="bar-chart">
+              <div class="bar-col"><div class="bar-val">1</div><div class="bar" style="height:8px"></div><div class="bar-label">6/22週</div></div>
+              <div class="bar-col"><div class="bar-val">2</div><div class="bar" style="height:17px"></div><div class="bar-label">6/29週</div></div>
+              <div class="bar-col"><div class="bar-val">2</div><div class="bar" style="height:17px"></div><div class="bar-label">7/6週</div></div>
+              <div class="bar-col"><div class="bar-val">7</div><div class="bar" style="height:58px"></div><div class="bar-label">7/13週</div></div>
+              <div class="bar-col"><div class="bar-val">12</div><div class="bar hi" style="height:100px"></div><div class="bar-label">7/20週</div></div>
+            </div>
+            <div class="trend-row">
+              <img src="./assets/iine-fox-happy.png" style="width:24px;height:24px;object-fit:contain;">
+              <span style="font-size:var(--text-label);color:var(--color-muted-foreground);">いいね数が増加傾向。ビジュアル投稿が効いています</span>
+            </div>
+          </div>
+
+          <div class="metric-panel" data-panel="comments">
+            <div class="metric-summary">
+              <div class="metric-big">3<span class="metric-unit">件</span></div>
+              <div class="metric-delta positive"><i class="ti ti-trending-up"></i> +2 (前週比)</div>
+            </div>
+            <div class="bar-chart">
+              <div class="bar-col"><div class="bar-val">0</div><div class="bar" style="height:10px"></div><div class="bar-label">6/22週</div></div>
+              <div class="bar-col"><div class="bar-val">0</div><div class="bar" style="height:10px"></div><div class="bar-label">6/29週</div></div>
+              <div class="bar-col"><div class="bar-val">1</div><div class="bar" style="height:33px"></div><div class="bar-label">7/6週</div></div>
+              <div class="bar-col"><div class="bar-val">1</div><div class="bar" style="height:33px"></div><div class="bar-label">7/13週</div></div>
+              <div class="bar-col"><div class="bar-val">3</div><div class="bar hi" style="height:100px"></div><div class="bar-label">7/20週</div></div>
+            </div>
+            <div class="trend-row">
+              <img src="./assets/iine-fox-happy.png" style="width:24px;height:24px;object-fit:contain;">
+              <span style="font-size:var(--text-label);color:var(--color-muted-foreground);">コメントが増え始めています。質問CTAが有効です</span>
+            </div>
           </div>
         </div>
 
@@ -525,12 +680,15 @@ body{font-family:"Noto Sans JP",sans-serif;background:#e6e5e3;padding:20px;min-h
 </div><!-- /app -->
 
 <script>
-// Pill tabs toggle
-document.querySelectorAll('.pill-tabs .pill').forEach(function(btn) {
+// Metric tabs toggle
+document.querySelectorAll('#metricTabs .pill').forEach(function(btn) {
   btn.addEventListener('click', function() {
-    document.querySelectorAll('.pill-tabs .pill').forEach(function(b) { b.classList.remove('active'); });
+    document.querySelectorAll('#metricTabs .pill').forEach(function(b) { b.classList.remove('active'); });
     btn.classList.add('active');
-    toast.info(btn.textContent + 'のデータを表示');
+    var metric = btn.getAttribute('data-metric');
+    document.querySelectorAll('.metric-panel').forEach(function(p) { p.classList.remove('active'); });
+    var target = document.querySelector('.metric-panel[data-panel="' + metric + '"]');
+    if (target) target.classList.add('active');
   });
 });
 </script>

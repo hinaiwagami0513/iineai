@@ -300,7 +300,17 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
         </div>
       </div>
 
-      <!-- 2 アップロード＋投稿文生成ON/OFF -->
+      <!-- 2 作成方法 -->
+      <div class="screen" id="sc_method">
+        <div class="h1">作成方法を選ぶ</div><div class="h1sub">どうやって投稿を作りますか？</div>
+        <div class="g3" style="margin-top:16px">
+          <div class="opt method" onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><i class="ti ti-photo mi"></i><div class="ot">画像を作成</div><div class="od">画像の投稿を作成</div></div>
+          <div class="opt method" onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><i class="ti ti-video mi"></i><div class="ot">動画を作成</div><div class="od">縦動画を作成</div></div>
+          <div class="opt method sel" onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><i class="ti ti-upload mi"></i><div class="ot">完成品から作る</div><div class="od">手持ちをアップ</div></div>
+        </div>
+      </div>
+
+      <!-- 3 アップロード＋投稿文生成ON/OFF -->
       <div class="screen" id="sc_upload">
         <div class="h1">完成品をアップロード</div><div class="h1sub"><i class="ti ti-upload" style="color:var(--color-muted-foreground)"></i>手持ちの画像・動画をアップして、投稿文を生成するか選んでください</div>
 
@@ -480,15 +490,15 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 <script>
 /* ===== 画面遷移 ===== */
 var genOn=true;
-var SCR_ON=['sns','upload','gen','editor','finish'];
-var SCR_OFF=['sns','upload','editor','finish'];
+var SCR_ON=['sns','method','upload','gen','editor','finish'];
+var SCR_OFF=['sns','method','upload','editor','finish'];
 var META_ON={
-  sns:{big:1,sub:0}, upload:{big:2,sub:0},
-  gen:{big:3,sub:0}, editor:{big:4,sub:0}, finish:{big:5,sub:0}
+  sns:{big:1,sub:0}, method:{big:2,sub:0}, upload:{big:3,sub:0},
+  gen:{big:4,sub:0}, editor:{big:5,sub:0}, finish:{big:6,sub:0}
 };
 var META_OFF={
-  sns:{big:1,sub:0}, upload:{big:2,sub:0},
-  editor:{big:3,sub:0}, finish:{big:4,sub:0}
+  sns:{big:1,sub:0}, method:{big:2,sub:0}, upload:{big:3,sub:0},
+  editor:{big:4,sub:0}, finish:{big:5,sub:0}
 };
 function getSCR(){return genOn?SCR_ON:SCR_OFF;}
 function getMETA(){return genOn?META_ON:META_OFF;}
@@ -497,8 +507,8 @@ function renderStep(){
   var scr=getSCR();var meta=getMETA();
   var big=meta[scr[i]].big;
   var steps=genOn
-    ?[[1,'アカウント選択'],[2,'素材アップ'],[3,'投稿文生成'],[4,'仕上げる'],[5,'完成']]
-    :[[1,'アカウント選択'],[2,'素材アップ'],[3,'仕上げる'],[4,'完成']];
+    ?[[1,'アカウント選択'],[2,'作成方法'],[3,'素材アップ'],[4,'投稿文生成'],[5,'仕上げる'],[6,'完成']]
+    :[[1,'アカウント選択'],[2,'作成方法'],[3,'素材アップ'],[4,'仕上げる'],[5,'完成']];
   var last=steps[steps.length-1][0];
   var h='';
   steps.forEach(function(s,idx){

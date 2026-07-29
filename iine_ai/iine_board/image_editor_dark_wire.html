@@ -32,6 +32,8 @@
 .ti-arrow-down-left:before{content:"\ea13"}
 .ti-arrow-down-right:before{content:"\ea15"}
 .ti-square:before{content:"\eb2c"}
+.ti-arrow-back-up:before{content:"\eb77"}
+.ti-arrow-forward-up:before{content:"\eb78"}
 
 :root {
   --color-primary: #ef6108;
@@ -123,8 +125,8 @@ body{background:#0a0908;padding:18px;color:var(--color-editor-foreground);}
 .ti{line-height:1;}
 .grad{background:linear-gradient(135deg,var(--color-primary),var(--color-primary-light))!important;color:#fff!important;}
 .hd{height:60px;flex:none;display:flex;align-items:center;gap:14px;padding:0 20px;border-bottom:1px solid var(--color-editor-border);background:var(--color-editor-surface);}
-.back{display:flex;align-items:center;gap:7px;background:var(--color-editor-elevated);border:1px solid var(--color-editor-border);color:var(--color-editor-foreground);border-radius:var(--radius-md);padding:8px 13px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);cursor:pointer;}
-.back .ti{font-size:15px;}
+.iconbtn{width:36px;height:36px;border-radius:var(--radius-md);border:1px solid var(--color-editor-border);background:var(--color-editor-elevated);color:var(--color-editor-foreground);display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;}
+.iconbtn:hover{background:var(--color-editor-border);}
 .title{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);}
 .rbadge{font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-primary);background:rgba(239,97,8,.14);border-radius:var(--radius-full);padding:3px 10px;}
 .saved{font-size:var(--text-label);color:var(--color-editor-muted);}
@@ -153,13 +155,12 @@ body{background:#0a0908;padding:18px;color:var(--color-editor-foreground);}
 .tmpl-dd-item .tmpl-info .tmpl-d{font-size:var(--text-meta);color:var(--color-editor-muted);margin-top:2px;}
 .tmpl-dd-item .tmpl-check{font-size:14px;color:var(--color-primary);display:none;}
 .tmpl-dd-item.active .tmpl-check{display:block;}
-.work{flex:1;display:grid;grid-template-columns:150px 1fr 320px;min-height:0;}
-.tools{border-right:1px solid var(--color-editor-border);padding:12px 8px;background:var(--color-editor-surface);overflow-y:auto;width:120px;flex:none;}
-.tgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
-.tool{aspect-ratio:1;border:1px solid var(--color-editor-border);background:var(--color-editor-elevated);border-radius:var(--radius-md);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;cursor:pointer;color:var(--color-editor-foreground);}
-.tool .ti{font-size:19px;color:var(--color-editor-muted);}
-.tool .l{font-size:9px;font-weight:var(--font-weight-body-strong);}
-.tool.on{border-color:var(--color-primary);background:rgba(239,97,8,.14);}
+.work{flex:1;display:grid;grid-template-columns:72px 1fr 320px;min-height:0;}
+.tools{border-right:1px solid var(--color-editor-border);padding:8px 0;background:var(--color-editor-surface);overflow-y:auto;width:72px;flex:none;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.tool{width:56px;padding:8px 0;border:none;background:transparent;border-radius:var(--radius-md);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;color:var(--color-editor-foreground);}
+.tool .ti{font-size:22px;color:var(--color-editor-muted);}
+.tool .l{font-size:10px;font-weight:var(--font-weight-body-strong);color:var(--color-editor-muted);white-space:nowrap;}
+.tool.on{background:rgba(239,97,8,.14);}
 .tool.on .ti,.tool.on .l{color:var(--color-primary);}
 .center{display:flex;flex-direction:column;min-width:0;padding:18px 22px;overflow-y:auto;}
 .ctop{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
@@ -189,7 +190,7 @@ body{background:#0a0908;padding:18px;color:var(--color-editor-foreground);}
 .gen-attach-thumb .gen-attach-remove{position:absolute;top:-1px;right:-1px;width:20px;height:20px;border-radius:var(--radius-full);background:var(--color-editor-surface);border:1px solid var(--color-editor-border);color:var(--color-editor-muted);font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s,color .2s;}
 .gen-attach-thumb .gen-attach-remove:hover{background:var(--color-destructive);color:#fff;border-color:var(--color-destructive);}
 .tpl{font-size:var(--text-label);color:var(--color-primary);font-weight:var(--font-weight-body-strong);margin-bottom:10px;display:flex;align-items:center;gap:6px;cursor:pointer;}
-.thumbs{display:flex;gap:10px;margin-bottom:16px;}
+.thumbs{display:flex;gap:10px;margin-top:12px;margin-bottom:16px;}
 .cth{position:relative;width:66px;height:66px;border-radius:var(--radius-md);border:1.5px solid var(--color-editor-border);background:var(--color-editor-elevated);display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--color-editor-muted);cursor:pointer;}
 .cth.sel{border-color:var(--color-primary);background:rgba(239,97,8,.14);}
 .cth .n{position:absolute;bottom:4px;right:4px;width:16px;height:16px;border-radius:var(--radius-sm);background:rgba(0,0,0,.6);color:#fff;font-size:9px;font-weight:var(--font-weight-body-strong);display:flex;align-items:center;justify-content:center;}
@@ -290,7 +291,7 @@ body{background:#0a0908;padding:18px;color:var(--color-editor-foreground);}
   }
   /* Header: compact */
   .hd{height:48px;padding:0 10px;gap:8px;}
-  .back{padding:6px 10px;font-size:var(--text-meta);}
+  .iconbtn{width:30px;height:30px;font-size:14px;}
   .title{font-size:var(--text-label);}
   .rbadge{display:none;}
   .saved{display:none;}
@@ -312,18 +313,13 @@ body{background:#0a0908;padding:18px;color:var(--color-editor-foreground);}
     overflow-y:hidden;
     overflow-x:auto;
     flex-shrink:0;
-  }
-  .tgrid{
-    display:flex !important;
     flex-direction:row !important;
-    flex-wrap:nowrap;
-    gap:6px;
-    width:max-content;
+    gap:2px !important;
   }
   .tool{
     width:56px !important;
-    height:56px !important;
-    aspect-ratio:unset !important;
+    height:auto !important;
+    padding:8px 0 !important;
     flex-shrink:0;
   }
   /* Center canvas: full width */
@@ -373,36 +369,37 @@ body{background:#0a0908;padding:18px;color:var(--color-editor-foreground);}
 </style></head><body>
 <div class="app">
   <div class="hd">
-    <button class="back"><i class="ti ti-arrow-left"></i>制作ルーム一覧へ</button>
-    <span class="title">駅徒歩5分・南向き1LDK</span><span class="rbadge">画像編集ルーム</span>
-    <span class="saved">自動保存済み ・ たった今</span>
-    <div class="hr"><span class="cost">保存時に <b>3pt</b> 消費</span><button class="save" id="saveBtn" onclick="goBack()">保存して投稿へ</button></div>
+    <button class="iconbtn" onclick="goBack()"><i class="ti ti-arrow-left"></i></button>
+    <button class="iconbtn"><i class="ti ti-arrow-back-up"></i></button>
+    <button class="iconbtn"><i class="ti ti-arrow-forward-up"></i></button>
+    <span class="title">駅徒歩5分・南向き1LDK</span>
+    <span class="rbadge">画像編集ルーム</span>
+    <span class="saved">自動保存済み</span>
+    <div class="hr">
+      <span class="cost">保存時に <b>3pt</b> 消費</span>
+      <button class="save" id="saveBtn" onclick="goBack()">保存して投稿へ</button>
+    </div>
   </div>
   <div class="work">
-    <div class="tools"><div class="tgrid"><div class="tool " onclick="pickTool(this)"><i class="ti ti-robot"></i><span class="l">AIに指示</span></div><div class="tool on" onclick="pickTool(this)"><i class="ti ti-typography"></i><span class="l">テキスト</span></div><div class="tool " onclick="pickTool(this)"><i class="ti ti-photo"></i><span class="l">素材</span></div><div class="tool " onclick="pickTool(this)"><i class="ti ti-adjustments"></i><span class="l">色味調整</span></div><div class="tool " onclick="pickTool(this)"><i class="ti ti-filter"></i><span class="l">フィルター</span></div><div class="tool " onclick="pickTool(this)"><i class="ti ti-template"></i><span class="l">プリセット</span></div><div class="tool " onclick="pickTool(this)"><i class="ti ti-crop"></i><span class="l">切り抜き</span></div><div class="tool " onclick="pickTool(this)"><i class="ti ti-history"></i><span class="l">履歴</span></div></div></div>
+    <div class="tools">
+      <div class="tool on" onclick="pickTool(this,'rp-ai')"><i class="ti ti-robot"></i><span class="l">AI生成</span></div>
+      <div class="tool" onclick="pickTool(this,'rp-text')"><i class="ti ti-typography"></i><span class="l">テキスト</span></div>
+      <div class="tool" onclick="pickTool(this,'rp-material')"><i class="ti ti-photo"></i><span class="l">素材</span></div>
+      <div class="tool" onclick="pickTool(this,'rp-adjust')"><i class="ti ti-adjustments"></i><span class="l">調整</span></div>
+      <div class="tool" onclick="pickTool(this,'rp-filter')"><i class="ti ti-filter"></i><span class="l">フィルター</span></div>
+      <div class="tool" onclick="pickTool(this,'rp-preset')"><i class="ti ti-template"></i><span class="l">プリセット</span></div>
+      <div class="tool" onclick="pickTool(this,'rp-crop')"><i class="ti ti-crop"></i><span class="l">切り抜き</span></div>
+      <div class="tool" onclick="pickTool(this,'rp-history')"><i class="ti ti-history"></i><span class="l">履歴</span></div>
+    </div>
     <div class="center">
       <div class="ctop"><span class="pl">プレビュー</span><div class="r"><div class="tmpl-sw" id="tmplSw" onclick="this.classList.toggle('open')"><button class="tmpl-btn"><i class="ti ti-template"></i><span class="tmpl-label">テンプレ:</span> <span class="tmpl-name">シンプル白</span><i class="ti ti-chevron-down chevron"></i></button><div class="tmpl-dd" onclick="event.stopPropagation()"><div class="tmpl-dd-item active" onclick="pickTmpl(this,'シンプル白')"><div class="tmpl-thumb"><i class="ti ti-layout-board"></i></div><div class="tmpl-info"><div class="tmpl-n">シンプル白</div><div class="tmpl-d">白背景・ミニマルレイアウト</div></div><i class="ti ti-check tmpl-check"></i></div><div class="tmpl-dd-item" onclick="pickTmpl(this,'ポップ')"><div class="tmpl-thumb" style="background:#ffe8cc;"><i class="ti ti-sparkles"></i></div><div class="tmpl-info"><div class="tmpl-n">ポップ</div><div class="tmpl-d">カラフル・ストーリー映え</div></div><i class="ti ti-check tmpl-check"></i></div><div class="tmpl-dd-item" onclick="pickTmpl(this,'モダン黒')"><div class="tmpl-thumb" style="background:#1a1a1a;color:#aaa;"><i class="ti ti-moon"></i></div><div class="tmpl-info"><div class="tmpl-n">モダン黒</div><div class="tmpl-d">ダーク・高級感</div></div><i class="ti ti-check tmpl-check"></i></div><div class="tmpl-dd-item" onclick="pickTmpl(this,'ナチュラル')"><div class="tmpl-thumb" style="background:#e8f0e4;color:#5a7a4a;"><i class="ti ti-leaf"></i></div><div class="tmpl-info"><div class="tmpl-n">ナチュラル</div><div class="tmpl-d">アースカラー・柔らかい印象</div></div><i class="ti ti-check tmpl-check"></i></div></div></div><button class="gbtn"><i class="ti ti-arrows-left-right"></i>元画像と比較</button><button class="gbtn"><i class="ti ti-zoom-in"></i>ズーム</button></div></div>
-      <!-- 指示入力エリア -->
-      <div class="gen-instruct" id="genInstruct">
-        <textarea class="gen-instruct-input" id="genInstructInput" placeholder="例：外観写真をメインに、駅徒歩5分を大きく表示して">外観写真をメインに配置。「駅徒歩5分・南向き1LDK」を大きく中央に。明るく清潔感のあるトーンで。</textarea>
-        <div class="gen-attach-bar">
-          <button class="gen-attach-btn" onclick="document.getElementById('genAttachFile').click()"><i class="ti ti-photo-plus"></i>画像を追加</button>
-          <input type="file" id="genAttachFile" accept="image/*" multiple style="display:none" onchange="handleGenAttach(this)">
-        </div>
-        <div class="gen-attach-preview" id="genAttachPreview"></div>
-      </div>
-      <div class="genrow">
-        <button class="genbtn ghost" id="genSingle" onclick="startGenerate(1)"><i class="ti ti-sparkles"></i>この指示で生成</button>
-        <button class="genbtn grad" id="genBatch" onclick="startGenerate(4)"><i class="ti ti-sparkles"></i>4枚まとめて生成</button>
-      </div>
-      <div class="ghint">指示を入力してAIが画像を生成します（残り30回）。「まとめて生成」なら4枚を一括で作成。</div>
+      <div class="stage"><div class="ph"><i class="ti ti-building-store"></i></div><div class="stage-gen-overlay" id="genOverlay"><div class="gen-ring"></div><div class="gen-label" id="genLabel">画像を生成中…</div><div class="gen-sublabel" id="genSublabel">1 / 1 枚目</div><div class="gen-progress"><div class="gen-progress-bar" id="genBar"></div></div><button class="gen-cancel-btn" onclick="cancelGenerate()">やめる</button></div></div>
       <div class="thumbs">
         <div class="cth sel" onclick="pickTh(this,0)"><span class="ed">編集済</span><i class="ti ti-building-store"></i><span class="n">1</span></div>
         <div class="cth" onclick="pickTh(this,1)"><i class="ti ti-photo"></i><span class="n">2</span></div>
         <div class="cth" onclick="pickTh(this,2)"><i class="ti ti-droplet"></i><span class="n">3</span></div>
         <div class="cth" onclick="pickTh(this,3)"><i class="ti ti-key"></i><span class="n">4</span></div>
       </div>
-      <div class="stage"><div class="ph"><i class="ti ti-building-store"></i></div><div class="stage-gen-overlay" id="genOverlay"><div class="gen-ring"></div><div class="gen-label" id="genLabel">画像を生成中…</div><div class="gen-sublabel" id="genSublabel">1 / 1 枚目</div><div class="gen-progress"><div class="gen-progress-bar" id="genBar"></div></div><button class="gen-cancel-btn" onclick="cancelGenerate()">やめる</button></div></div>
       <div class="script-panel">
         <div class="script-toggle open" onclick="toggleScript()"><i class="ti ti-chevron-right"></i><i class="ti ti-notebook"></i>この画像の台本<span class="script-badge">4枚構成</span><span class="script-hint">タップで開く</span></div>
         <div class="script-body open" id="scriptBody">
@@ -441,16 +438,35 @@ body{background:#0a0908;padding:18px;color:var(--color-editor-foreground);}
       <div class="hist">編集履歴：まだ編集していません</div>
     </div>
     <div class="right">
+      <div class="rtabs" id="rightTabs">
+        <div class="rt on" onclick="pickRightTab(this,'rprop')"><i class="ti ti-typography"></i> プロパティ</div>
+        <div class="rt" onclick="pickRightTab(this,'rai')"><img src="./assets/iine-fox-face.png" alt="" style="width:16px;height:16px;border-radius:var(--radius-full);object-fit:contain;"> AIアシスト</div>
+      </div>
       <!-- AIに指示 -->
-      <div class="rpanel" id="rp-ai" style="display:none;flex-direction:column;flex:1;min-height:0;">
+      <div class="rpanel" id="rp-ai" style="display:flex;flex-direction:column;flex:1;min-height:0;">
         <div class="rbody" style="flex:1;overflow-y:auto;">
-          <div class="aihd"><img src="./assets/iine-fox-face.png" alt="AI" style="width:36px;height:36px;flex:none;border-radius:var(--radius-md);object-fit:contain;"><div style="flex:1;"><span class="t">AIアシスト</span><div style="font-size:var(--text-label);color:var(--color-editor-muted);margin-top:1px;">何でも相談してください</div></div><span class="on2">● 利用可能</span></div>
-          <div class="stream"><div class="emsg me">背景をもっと明るくして</div></div>
+          <div class="rh">AIで画像生成</div>
+          <div class="gen-instruct">
+            <textarea class="gen-instruct-input" id="genInstructInput" placeholder="例：外観写真をメインに、駅徒歩5分を大きく表示して">外観写真をメインに配置。「駅徒歩5分・南向き1LDK」を大きく中央に。明るく清潔感のあるトーンで。</textarea>
+            <div class="gen-attach-bar">
+              <button class="gen-attach-btn" onclick="document.getElementById('genAttachFile').click()"><i class="ti ti-photo-plus"></i>画像を追加</button>
+              <input type="file" id="genAttachFile" accept="image/*" multiple style="display:none" onchange="handleGenAttach(this)">
+            </div>
+            <div class="gen-attach-preview" id="genAttachPreview"></div>
+          </div>
+          <div class="genrow" style="grid-template-columns:1fr;">
+            <button class="genbtn grad" id="genSingle" onclick="startGenerate(1)"><i class="ti ti-sparkles"></i>この指示で生成</button>
+          </div>
+          <button class="genbtn ghost" id="genBatch" onclick="startGenerate(4)" style="width:100%;margin-bottom:14px;"><i class="ti ti-sparkles"></i>4枚まとめて生成</button>
+          <div style="border-top:1px solid var(--color-editor-border);padding-top:14px;margin-top:6px;">
+            <div class="aihd"><img src="./assets/iine-fox-face.png" alt="AI" style="width:36px;height:36px;flex:none;border-radius:var(--radius-md);object-fit:contain;"><div style="flex:1;"><span class="t">AIアシスト</span><div style="font-size:var(--text-label);color:var(--color-editor-muted);margin-top:1px;">何でも相談してください</div></div><span class="on2">● 利用可能</span></div>
+            <div class="stream"><div class="emsg me">背景をもっと明るくして</div></div>
+          </div>
         </div>
-        <div class="rcomp"><div style="background:var(--color-editor-elevated);border:1px solid var(--color-editor-border);border-radius:18px;overflow:hidden;"><div style="padding:12px 16px 4px;"><input placeholder="自分で入力してもOK" style="width:100%;border:none;background:transparent;padding:0;font-size:var(--text-body);outline:none;color:var(--color-editor-foreground);"></div><div style="display:flex;align-items:center;justify-content:space-between;padding:6px 8px 8px;"><button style="width:34px;height:34px;flex:none;border:1px solid var(--color-editor-border);border-radius:var(--radius-full);background:var(--color-editor-bg);color:var(--color-editor-muted);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="ti ti-plus"></i></button><button style="width:34px;height:34px;flex:none;border:none;border-radius:var(--radius-full);background:var(--color-primary);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg></button></div></div></div>
+        <div class="rcomp"><div style="background:var(--color-editor-elevated);border:1px solid var(--color-editor-border);border-radius:18px;overflow:hidden;"><div style="padding:12px 16px 4px;"><input placeholder="AIに指示を入力" style="width:100%;border:none;background:transparent;padding:0;font-size:var(--text-body);outline:none;color:var(--color-editor-foreground);"></div><div style="display:flex;align-items:center;justify-content:space-between;padding:6px 8px 8px;"><button style="width:34px;height:34px;flex:none;border:1px solid var(--color-editor-border);border-radius:var(--radius-full);background:var(--color-editor-bg);color:var(--color-editor-muted);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;"><i class="ti ti-plus"></i></button><button style="width:34px;height:34px;flex:none;border:none;border-radius:var(--radius-full);background:var(--color-primary);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;"><svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg></button></div></div></div>
       </div>
       <!-- テキスト -->
-      <div class="rpanel" id="rp-text" style="display:block;">
+      <div class="rpanel" id="rp-text" style="display:none;">
         <div class="rbody">
           <div class="rh">テキスト追加・編集</div>
           <div class="fl">テキスト</div>
@@ -478,7 +494,6 @@ body{background:#0a0908;padding:18px;color:var(--color-editor-foreground);}
       <div class="rpanel" id="rp-material" style="display:none;">
         <div class="rbody" id="mat-top">
           <div class="rh">素材を追加</div>
-          <div class="rsub">回転・透明度・グラデーションは配置後に調整可</div>
           <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;">
             <div class="mat-btn" style="border:1px solid var(--color-editor-border);border-radius:var(--radius-md);padding:12px 4px;text-align:center;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:64px;" onclick="matSub('mat-image')"><i class="ti ti-photo" style="font-size:20px;color:var(--color-editor-muted);margin-bottom:4px;"></i><span style="font-size:var(--text-meta);color:var(--color-editor-foreground);line-height:1.3;">画像挿入</span></div>
             <div class="mat-btn" style="border:1px solid var(--color-editor-border);border-radius:var(--radius-md);padding:12px 4px;text-align:center;cursor:pointer;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:64px;" onclick="matSub('mat-shape')"><i class="ti ti-square" style="font-size:20px;color:var(--color-editor-muted);margin-bottom:4px;"></i><span style="font-size:var(--text-meta);color:var(--color-editor-foreground);line-height:1.3;">図形</span></div>
@@ -494,7 +509,6 @@ body{background:#0a0908;padding:18px;color:var(--color-editor-foreground);}
           <div class="mat-sub" id="mat-image" style="display:none;">
             <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px;cursor:pointer;color:var(--color-primary);font-size:var(--text-label);font-weight:var(--font-weight-body-strong);" onclick="matBack()"><i class="ti ti-arrow-left"></i>素材に戻る</div>
             <div class="rh">画像を挿入</div>
-            <div class="rsub">アップロードまたはAI生成。ワイプ風の切り抜きマスク付き</div>
             <div style="border:1px dashed var(--color-editor-border);border-radius:var(--radius-lg);padding:28px 16px;text-align:center;margin:12px 0;">
               <i class="ti ti-upload" style="font-size:24px;color:var(--color-editor-muted);display:block;margin-bottom:8px;"></i>
               <div style="font-size:var(--text-body);font-weight:var(--font-weight-body-strong);color:var(--color-editor-foreground);">ドラッグ&ドロップ</div>
@@ -522,7 +536,6 @@ body{background:#0a0908;padding:18px;color:var(--color-editor-foreground);}
           <div class="mat-sub" id="mat-grid" style="display:none;">
             <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px;cursor:pointer;color:var(--color-primary);font-size:var(--text-label);font-weight:var(--font-weight-body-strong);" onclick="matBack()"><i class="ti ti-arrow-left"></i>素材に戻る</div>
             <div class="rh">グリッドレイアウト</div>
-            <div class="rsub">画像を分割配置するレイアウトを選択</div>
             <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px;">
               <div style="aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);display:grid;grid-template-columns:1fr 1fr;gap:2px;padding:6px;cursor:pointer;"><div style="background:var(--color-editor-muted);border-radius:2px;"></div><div style="background:var(--color-editor-muted);border-radius:2px;"></div></div>
               <div style="aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:2px;padding:6px;cursor:pointer;"><div style="background:var(--color-editor-muted);border-radius:2px;"></div><div style="background:var(--color-editor-muted);border-radius:2px;"></div><div style="background:var(--color-editor-muted);border-radius:2px;"></div><div style="background:var(--color-editor-muted);border-radius:2px;"></div></div>
@@ -532,7 +545,6 @@ body{background:#0a0908;padding:18px;color:var(--color-editor-foreground);}
           <div class="mat-sub" id="mat-mosaic" style="display:none;">
             <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px;cursor:pointer;color:var(--color-primary);font-size:var(--text-label);font-weight:var(--font-weight-body-strong);" onclick="matBack()"><i class="ti ti-arrow-left"></i>素材に戻る</div>
             <div class="rh">モザイク</div>
-            <div class="rsub">ブラシでなぞった範囲にモザイクを適用</div>
             <div class="fl">ブラシサイズ</div>
             <div class="sizes"><div class="sz" onclick="pickSz(this)">10px</div><div class="sz on" onclick="pickSz(this)">25px</div><div class="sz" onclick="pickSz(this)">50px</div><div class="sz" onclick="pickSz(this)">80px</div></div>
             <div class="fl">強度</div>
@@ -541,7 +553,6 @@ body{background:#0a0908;padding:18px;color:var(--color-editor-foreground);}
           <div class="mat-sub" id="mat-frame" style="display:none;">
             <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px;cursor:pointer;color:var(--color-primary);font-size:var(--text-label);font-weight:var(--font-weight-body-strong);" onclick="matBack()"><i class="ti ti-arrow-left"></i>素材に戻る</div>
             <div class="rh">図形フレーム</div>
-            <div class="rsub">形を選ぶと写真がその形に切り抜かれます</div>
             <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px;">
               <div style="aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;"><div style="width:28px;height:28px;background:var(--color-editor-muted);border-radius:50%;"></div></div>
               <div style="aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;"><i class="ti ti-star" style="font-size:26px;color:var(--color-editor-muted);"></i></div>
@@ -576,7 +587,6 @@ body{background:#0a0908;padding:18px;color:var(--color-editor-foreground);}
           <div class="mat-sub" id="mat-bgremove" style="display:none;">
             <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px;cursor:pointer;color:var(--color-primary);font-size:var(--text-label);font-weight:var(--font-weight-body-strong);" onclick="matBack()"><i class="ti ti-arrow-left"></i>素材に戻る</div>
             <div class="rh">AI背景削除</div>
-            <div class="rsub">AIが被写体を自動検出し、背景を透過または差し替えます</div>
             <button class="addbtn" style="margin-top:16px;"><i class="ti ti-sparkles"></i> 背景を削除する</button>
             <div class="fl" style="margin-top:16px;">背景を差し替え</div>
             <div class="swatches"><span class="sw on" onclick="pickSw(this)" style="background:transparent;border:1px dashed var(--color-editor-border);"></span><span class="sw" onclick="pickSw(this)" style="background:#f5f3f0"></span><span class="sw" onclick="pickSw(this)" style="background:#1e1a17"></span><span class="sw" onclick="pickSw(this)" style="background:#ef6108"></span><span class="sw" onclick="pickSw(this)" style="background:#2f6ad9"></span></div>
@@ -584,7 +594,6 @@ body{background:#0a0908;padding:18px;color:var(--color-editor-foreground);}
           <div class="mat-sub" id="mat-replace" style="display:none;">
             <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px;cursor:pointer;color:var(--color-primary);font-size:var(--text-label);font-weight:var(--font-weight-body-strong);" onclick="matBack()"><i class="ti ti-arrow-left"></i>素材に戻る</div>
             <div class="rh">範囲置換</div>
-            <div class="rsub">ブラシで範囲を塗り、テキストで指示するとAIが自然に差し替えます</div>
             <div class="fl">ブラシサイズ</div>
             <div class="sizes"><div class="sz" onclick="pickSz(this)">10px</div><div class="sz on" onclick="pickSz(this)">25px</div><div class="sz" onclick="pickSz(this)">50px</div><div class="sz" onclick="pickSz(this)">80px</div></div>
             <div class="fl">どう変える？</div>
@@ -594,7 +603,7 @@ body{background:#0a0908;padding:18px;color:var(--color-editor-foreground);}
         </div>
       </div>
       <!-- 色味調整 -->
-      <div class="rpanel" id="rp-color" style="display:none;">
+      <div class="rpanel" id="rp-adjust" style="display:none;">
         <div class="rbody">
           <div class="rh">色味調整</div>
           <div style="margin-top:8px;">
@@ -633,7 +642,6 @@ body{background:#0a0908;padding:18px;color:var(--color-editor-foreground);}
       <div class="rpanel" id="rp-preset" style="display:none;">
         <div class="rbody">
           <div class="rh">プリセット</div>
-          <div class="rsub">デザインを固定して他の画像にも適用できます</div>
           <div style="display:flex;flex-direction:column;gap:8px;margin-top:12px;">
             <div style="border:1px solid var(--color-primary);border-radius:var(--radius-md);padding:12px 14px;cursor:pointer;background:rgba(239,97,8,.08);"><div style="font-size:var(--text-body);font-weight:var(--font-weight-body-strong);color:var(--color-primary);display:flex;align-items:center;gap:6px;"><i class="ti ti-star"></i>現在のデザインを保存</div><div style="font-size:var(--text-label);color:var(--color-editor-muted);margin-top:4px;">フォント・色・配置をプリセットとして保存</div></div>
             <div style="font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-editor-foreground);margin-top:8px;">保存済みプリセット</div>
@@ -678,14 +686,48 @@ body{background:#0a0908;padding:18px;color:var(--color-editor-foreground);}
   </div>
 </div>
 <script>
-var TOOL_PANEL={
-  'AIに指示':'rp-ai','テキスト':'rp-text','素材':'rp-material',
-  '色味調整':'rp-color','フィルター':'rp-filter','プリセット':'rp-preset',
-  '切り抜き':'rp-crop','履歴':'rp-history'
-};
 function showPanel(id){document.querySelectorAll('.rpanel').forEach(p=>{p.style.display='none';});var el=document.getElementById(id);if(el)el.style.display=(id==='rp-ai'?'flex':'block');}
 function pickTh(el,n){document.querySelectorAll('.cth').forEach(t=>t.classList.remove('sel'));el.classList.add('sel');var icons=['ti-building-store','ti-photo','ti-droplet','ti-key'];var ph=document.querySelector('.ph i');if(ph){ph.className='ti '+icons[n];}document.querySelector('.hist').textContent=n===0?'編集履歴：テキスト追加 x2':'編集履歴：まだ編集していません';highlightScript(n);}
-function pickTool(el){document.querySelectorAll('.tool').forEach(t=>t.classList.remove('on'));el.classList.add('on');var lbl=el.querySelector('.l').textContent;var pid=TOOL_PANEL[lbl];if(pid)showPanel(pid);}
+function pickTool(el, panelId) {
+  document.querySelectorAll('.tool').forEach(t => t.classList.remove('on'));
+  el.classList.add('on');
+  if (panelId) {
+    document.querySelectorAll('.rpanel').forEach(p => p.style.display = 'none');
+    var target = document.getElementById(panelId);
+    if (target) target.style.display = (panelId === 'rp-ai' ? 'flex' : 'block');
+    // Switch right tabs to property mode
+    var tabs = document.querySelectorAll('.rtabs .rt');
+    if (panelId === 'rp-ai') {
+      tabs.forEach(t => t.classList.remove('on'));
+      if (tabs[1]) tabs[1].classList.add('on');
+    } else {
+      tabs.forEach(t => t.classList.remove('on'));
+      if (tabs[0]) tabs[0].classList.add('on');
+    }
+  }
+}
+function pickRightTab(el, mode) {
+  document.querySelectorAll('.rtabs .rt').forEach(t => t.classList.remove('on'));
+  el.classList.add('on');
+  document.querySelectorAll('.rpanel').forEach(p => p.style.display = 'none');
+  if (mode === 'rai') {
+    var ai = document.getElementById('rp-ai');
+    if (ai) ai.style.display = 'flex';
+  } else {
+    var onTool = document.querySelector('.tool.on');
+    if (onTool) {
+      var oc = onTool.getAttribute('onclick');
+      var m = oc && oc.match(/'(rp-[^']+)'/);
+      var pid = m ? m[1] : 'rp-text';
+      if (pid === 'rp-ai') pid = 'rp-text';
+      var target = document.getElementById(pid);
+      if (target) target.style.display = 'block';
+    } else {
+      var def = document.getElementById('rp-text');
+      if (def) def.style.display = 'block';
+    }
+  }
+}
 function matSub(id){document.getElementById('mat-top').style.display='none';document.querySelectorAll('.mat-sub').forEach(function(s){s.style.display='none';});var el=document.getElementById(id);if(el)el.style.display='block';}
 function matBack(){document.getElementById('mat-top').style.display='block';document.querySelectorAll('.mat-sub').forEach(function(s){s.style.display='none';});}
 function pickSz(el){el.parentElement.querySelectorAll('.sz').forEach(s=>s.classList.remove('on'));el.classList.add('on');}
