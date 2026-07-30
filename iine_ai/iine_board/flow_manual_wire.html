@@ -155,18 +155,17 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .h1sub{font-size:var(--text-label);color:var(--color-muted-foreground);margin:6px 0 16px;display:flex;align-items:center;gap:6px;}
 /* SNS/方法カード */
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
-.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
 .opt{position:relative;border:1.5px solid var(--color-border);background:var(--color-card);border-radius:var(--radius-md);padding:16px;cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.05);}
 .opt:hover{border-color:var(--color-border-strong);} .opt.sel{border-color:var(--color-primary);background:var(--color-primary-subtle);}
-.ochk{position:absolute;top:12px;right:12px;width:22px;height:22px;border-radius:var(--radius-full);background:var(--color-primary);color:#fff;display:none;align-items:center;justify-content:center;font-size:13px;}
-.opt.sel .ochk{display:flex;}
+.ochk{display:none!important;}
 .acct{display:flex;align-items:center;gap:12px;}
 .av{width:42px;height:42px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:19px;}
 .acname{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);} .acmeta{font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:1px;}
 .plat{margin-left:auto;display:flex;align-items:center;gap:5px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);border-radius:var(--radius-full);padding:3px 10px;}
-.method .mi{font-size:25px;display:block;margin-bottom:10px;color:var(--color-muted-foreground);}
+.method .mi{font-size:48px;display:block;margin-bottom:16px;color:var(--color-muted-foreground);}
 .method.sel .mi{color:var(--color-primary);}
-.method .ot{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);} .method .od{font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:4px;line-height:1.6;}
+.method .ot{font-size:var(--text-h3);font-weight:var(--font-weight-h3);}
 /* アコーディオン */
 .mcard{border:1.5px solid var(--color-border);border-radius:var(--radius-lg);background:var(--color-card);overflow:hidden;margin-bottom:11px;}
 .mcard.reco{border:2px solid var(--color-primary);} .mcard.open{border-color:var(--color-primary);}
@@ -304,9 +303,9 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
       <div class="screen" id="sc_method">
         <div class="h1">作成方法を選ぶ</div><div class="h1sub">どうやって投稿を作りますか？</div>
         <div class="g3" style="margin-top:16px">
-          <div class="opt method" onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><i class="ti ti-photo mi"></i><div class="ot">画像を作成</div><div class="od">画像の投稿を作成</div></div>
-          <div class="opt method" onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><i class="ti ti-video mi"></i><div class="ot">動画を作成</div><div class="od">縦動画を作成</div></div>
-          <div class="opt method sel" onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><i class="ti ti-upload mi"></i><div class="ot">完成品から作る</div><div class="od">手持ちをアップ</div></div>
+          <div class="opt method" onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><i class="ti ti-photo mi"></i><div class="ot">画像を作成</div></div>
+          <div class="opt method" onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><i class="ti ti-video mi"></i><div class="ot">動画を作成</div></div>
+          <div class="opt method sel" onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><i class="ti ti-upload mi"></i><div class="ot">完成品から作る</div></div>
         </div>
       </div>
 
@@ -319,7 +318,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
           <div class="upzone" id="upzone">
             <i class="ti ti-cloud-upload upi"></i>
             <div class="upt">ここにドラッグ＆ドロップ</div>
-            <div class="upd">またはクリックしてファイルを選択<br>JPG / PNG / MP4 / MOV（最大10ファイル）</div>
+            <div class="upd">JPG / PNG / MP4 / MOV（最大10ファイル）</div>
           </div>
           <div class="upthumb" id="upthumb">
             <div class="item"><i class="ti ti-photo"></i><span class="del"><i class="ti ti-x"></i></span></div>
@@ -331,7 +330,6 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
         <div class="sw-row" id="swRow">
           <div>
             <div class="sw-label">投稿文も同時に生成する</div>
-            <div class="sw-desc">ONにすると、AIが画像・動画に合った投稿文を自動生成します</div>
           </div>
           <label class="sw">
             <input type="checkbox" id="genToggle" checked onchange="toggleGen()">
