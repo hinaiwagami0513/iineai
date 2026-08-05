@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>数値変化 — いいねAI 分析</title>
+<title>データ分析 — いいねAI 分析</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap">
@@ -361,13 +361,19 @@ body {
   border-bottom-color: var(--color-primary);
 }
 
+/* sub tab nav (shadcn pill / segmented style) */
+.sub-tab-nav{display:inline-flex;gap:4px;margin:16px 32px 20px;padding:4px;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-md);}
+.sub-tab-nav a,.sub-tab-nav span{padding:7px 18px;font-size:var(--text-label);font-weight:var(--font-weight-label);color:var(--color-muted-foreground);text-decoration:none;border-radius:var(--radius-sm);cursor:pointer;transition:all .15s;white-space:nowrap;}
+.sub-tab-nav a:hover{color:var(--color-foreground);background:var(--color-background);}
+.sub-tab-nav .active{color:var(--color-primary);font-weight:var(--font-weight-body-strong);background:var(--color-primary-subtle);border:1px solid rgba(239,97,8,.2);}
+
 /* ─── Period toggle row ─── */
 .period-row {
   display: flex;
   align-items: center;
   gap: 10px;
   padding: 16px 32px;
-  background: var(--color-card);
+  background: var(--color-background);
   border-bottom: 1px solid var(--color-border);
   flex-wrap: wrap;
 }
@@ -537,6 +543,17 @@ body {
   gap: 8px;
   margin-bottom: 4px;
 }
+.mc-hd .mc-icon {
+  width: 32px; height: 32px; border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; flex-shrink: 0;
+}
+.mc-hd .mc-icon.green { background: var(--color-success-subtle); color: var(--color-success); }
+.mc-hd .mc-icon.red { background: var(--color-destructive-subtle); color: var(--color-destructive); }
+.mc-hd .mc-icon.blue { background: hsl(208,100%,97%); color: hsl(210,92%,45%); }
+.mc-hd .mc-icon.orange { background: var(--color-primary-subtle); color: var(--color-primary); }
+.mc-hd .mc-icon.purple { background: var(--color-accent-purple-subtle); color: var(--color-accent-purple); }
+.mc-hd .mc-icon.neutral { background: var(--color-background); color: var(--color-muted-foreground); }
 .mc-hd .ti { font-size: 16px; color: var(--color-muted-foreground); }
 .mc-name {
   flex: 1;
@@ -865,13 +882,16 @@ body {
         </div>
       </div>
 
-      <!-- Tab nav -->
       <div class="tab-nav">
         <a href="./analysis_visual_wire.html">ビジュアルレポート</a>
-        <a class="active" href="./analysis_metrics_wire.html">数値変化</a>
-        <a href="./analysis_report_wire.html">分析レポート</a>
-        <a href="./analysis_account_wire.html">アカウントデータ</a>
-        <a href="./analysis_posts_wire.html">投稿データ</a>
+        <a class="active" href="./analysis_report_wire.html">分析レポート</a>
+        <a href="./analysis_posts_wire.html">投稿レポート</a>
+      </div>
+
+      <div class="sub-tab-nav">
+        <a href="./analysis_account_wire.html">アカウント推移</a>
+        <a href="./analysis_report_wire.html">AIレポート</a>
+        <span class="active">数値変化</span>
       </div>
 
       <!-- Period toggle row -->
@@ -930,52 +950,16 @@ body {
 
             <!-- 1. フォロワー数 -->
             <div class="mc">
-              <div class="mc-hd"><i class="ti ti-users"></i> <span class="mc-name">フォロワー数</span> <span class="mc-badge up"><i class="ti ti-trending-up"></i> +200%</span></div>
+              <div class="mc-hd"><div class="mc-icon green"><i class="ti ti-users"></i></div> <span class="mc-name">フォロワー数</span> <span class="mc-badge up"><i class="ti ti-trending-up"></i> +200%</span></div>
               <div class="mc-desc">いいねAI導入後に増加したフォロワー数</div>
               <div class="mc-row"><span class="mc-label">導入前</span><div class="mc-bar"><div class="mc-bar-fill before" style="width:33%"></div></div><span class="mc-val">2人</span></div>
               <div class="mc-row"><span class="mc-label" style="color:var(--color-primary);font-weight:700">導入後</span><div class="mc-bar"><div class="mc-bar-fill after" style="width:100%"></div></div><span class="mc-val after">6人</span></div>
               <div class="mc-diff"><img src="./assets/iine-fox-happy.png" class="mc-fox" alt=""><div class="mc-diff-val up">+4人</div></div>
             </div>
 
-            <!-- 2. 投稿数 -->
+            <!-- 2. エンゲージメント率 -->
             <div class="mc">
-              <div class="mc-hd"><i class="ti ti-photo"></i> <span class="mc-name">投稿数</span> <span class="mc-badge up"><i class="ti ti-trending-up"></i> +3件</span></div>
-              <div class="mc-desc">運用された投稿数の変化（連携初月と直近1ヶ月の比較）</div>
-              <div class="mc-row"><span class="mc-label">導入前</span><div class="mc-bar"><div class="mc-bar-fill before" style="width:0%"></div></div><span class="mc-val">0件</span></div>
-              <div class="mc-row"><span class="mc-label" style="color:var(--color-primary);font-weight:700">導入後</span><div class="mc-bar"><div class="mc-bar-fill after" style="width:100%"></div></div><span class="mc-val after">3件</span></div>
-              <div class="mc-diff"><img src="./assets/iine-fox-happy.png" class="mc-fox" alt=""><div class="mc-diff-val up">+3件</div></div>
-            </div>
-
-            <!-- 3. インプレッション数 -->
-            <div class="mc">
-              <div class="mc-hd"><i class="ti ti-eye"></i> <span class="mc-name">インプレッション数</span> <span class="mc-badge down"><i class="ti ti-trending-down"></i> -98.4%</span></div>
-              <div class="mc-desc">コンテンツの表示回数</div>
-              <div class="mc-row"><span class="mc-label">導入前</span><div class="mc-bar"><div class="mc-bar-fill before" style="width:100%"></div></div><span class="mc-val">387回</span></div>
-              <div class="mc-row"><span class="mc-label" style="color:var(--color-primary);font-weight:700">導入後</span><div class="mc-bar"><div class="mc-bar-fill after" style="width:2%"></div></div><span class="mc-val after">6回</span></div>
-              <div class="mc-diff"><img src="./assets/iine-fox-sad.png" class="mc-fox" alt=""><div class="mc-diff-val down">-381回</div></div>
-            </div>
-
-            <!-- 4. 平均いいね数 -->
-            <div class="mc">
-              <div class="mc-hd"><i class="ti ti-heart"></i> <span class="mc-name">平均いいね数</span> <span class="mc-badge down"><i class="ti ti-trending-down"></i> -100%</span></div>
-              <div class="mc-desc">1投稿あたりの平均いいね数</div>
-              <div class="mc-row"><span class="mc-label">導入前</span><div class="mc-bar"><div class="mc-bar-fill before" style="width:0%"></div></div><span class="mc-val">0</span></div>
-              <div class="mc-row"><span class="mc-label" style="color:var(--color-primary);font-weight:700">導入後</span><div class="mc-bar"><div class="mc-bar-fill after" style="width:0%"></div></div><span class="mc-val after">0</span></div>
-              <div class="mc-diff"><img src="./assets/iine-fox-face.png" class="mc-fox" alt=""><div class="mc-diff-val neutral">0</div></div>
-            </div>
-
-            <!-- 5. コメント数 -->
-            <div class="mc">
-              <div class="mc-hd"><i class="ti ti-message-circle"></i> <span class="mc-name">コメント数</span> <span class="mc-badge down"><i class="ti ti-trending-down"></i> -100%</span></div>
-              <div class="mc-desc">投稿へのコメント総数</div>
-              <div class="mc-row"><span class="mc-label">導入前</span><div class="mc-bar"><div class="mc-bar-fill before" style="width:100%"></div></div><span class="mc-val">2件</span></div>
-              <div class="mc-row"><span class="mc-label" style="color:var(--color-primary);font-weight:700">導入後</span><div class="mc-bar"><div class="mc-bar-fill after" style="width:0%"></div></div><span class="mc-val after">0件</span></div>
-              <div class="mc-diff"><img src="./assets/iine-fox-sad.png" class="mc-fox" alt=""><div class="mc-diff-val down">-2件</div></div>
-            </div>
-
-            <!-- 6. エンゲージメント率 -->
-            <div class="mc">
-              <div class="mc-hd"><i class="ti ti-chart-bar"></i> <span class="mc-name">エンゲージメント率</span> <span class="mc-badge down"><i class="ti ti-trending-down"></i> -100%</span></div>
+              <div class="mc-hd"><div class="mc-icon purple"><i class="ti ti-chart-bar"></i></div> <span class="mc-name">エンゲージメント率</span> <span class="mc-badge down"><i class="ti ti-trending-down"></i> -100%</span></div>
               <div class="mc-desc">フォロワーに対するインタラクション率</div>
               <div class="mc-row"><span class="mc-label">導入前</span><div class="mc-bar"><div class="mc-bar-fill before" style="width:83%"></div></div><span class="mc-val">8.3%</span></div>
               <div class="mc-row"><span class="mc-label" style="color:var(--color-primary);font-weight:700">導入後</span><div class="mc-bar"><div class="mc-bar-fill after" style="width:0%"></div></div><span class="mc-val after">0.0%</span></div>
@@ -984,7 +968,7 @@ body {
 
             <!-- 7. HP誘導数 -->
             <div class="mc">
-              <div class="mc-hd"><i class="ti ti-external-link"></i> <span class="mc-name">HP誘導数</span> <span class="mc-badge neutral">データなし</span></div>
+              <div class="mc-hd"><div class="mc-icon neutral"><i class="ti ti-external-link"></i></div> <span class="mc-name">HP誘導数</span> <span class="mc-badge neutral">データなし</span></div>
               <div class="mc-desc">投稿・プロフィール経由のHP流入数（X・Instagram）</div>
               <div class="mc-row"><span class="mc-label">導入前</span><div class="mc-bar"><div class="mc-bar-fill before" style="width:0%"></div></div><span class="mc-val">—</span></div>
               <div class="mc-row"><span class="mc-label" style="color:var(--color-primary);font-weight:700">導入後</span><div class="mc-bar"><div class="mc-bar-fill after" style="width:0%"></div></div><span class="mc-val after">—</span></div>

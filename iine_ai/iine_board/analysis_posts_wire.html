@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>投稿データ — いいねAI 分析</title>
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>投稿レポート — いいねAI 分析</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
 <script src="sonner.js?v=20260723"></script>
 <style>
@@ -150,28 +150,49 @@ body { font-family: 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif; -webk
 .sb-account .more { margin-left: auto; color: var(--color-muted-foreground); font-size: 16px; cursor: pointer; }
 
 /* ── Content area ── */
-.content { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+.content { flex: 1; overflow-y: auto; display: flex; flex-direction: column; background: var(--color-background); }
 
-/* ── Account header ── */
-.acct-hd { padding: 24px 32px 20px; border-bottom: 1px solid var(--color-border); display: flex; align-items: center; gap: 16px; }
-.acct-hd .sns-icon { width: 44px; height: 44px; border-radius: var(--radius-sm); background: var(--color-sns-instagram-subtle); color: var(--color-sns-instagram); display: flex; align-items: center; justify-content: center; font-size: 24px; flex: none; }
-.acct-hd .acct-info { flex: 1; }
-.acct-hd .acct-name { font-size: var(--text-h3); font-weight: var(--font-weight-h3); line-height: 1.3; }
-.acct-hd .acct-handle { font-size: var(--text-label); color: var(--color-muted-foreground); margin-top: 2px; }
-.acct-hd .acct-stats { display: flex; gap: 28px; margin-left: auto; }
-.acct-hd .stat { text-align: center; }
-.acct-hd .stat-val { font-size: var(--text-body-strong); font-weight: var(--font-weight-body-strong); }
-.acct-hd .stat-lbl { font-size: var(--text-label); color: var(--color-muted-foreground); margin-top: 2px; }
+/* ── Account header (横一列・分析レポート準拠) ── */
+.acct-hd { background: var(--color-card); padding: 16px 32px; display: flex; align-items: center; gap: 16px; border-bottom: 1px solid var(--color-border); }
+.acct-row { display: flex; align-items: center; gap: 10px; flex: 1; min-width: 0; }
+.acct-icon { width: 36px; height: 36px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 20px; flex: none; }
+.acct-icon.ig { background: var(--color-sns-instagram-subtle); color: var(--color-sns-instagram); }
+.acct-name { font-size: var(--text-h3); font-weight: 700; }
+.acct-handle { font-size: var(--text-label); color: var(--color-muted-foreground); }
+.acct-stats { display: flex; gap: 8px; }
+.acct-stat { background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-full); padding: 4px 16px; font-size: var(--text-label); display: flex; align-items: center; gap: 6px; }
+.acct-stat .v { font-size: var(--text-h2); font-weight: 900; }
+.acct-switcher { position: relative; }
+.acct-sw-btn { display: flex; align-items: center; gap: 6px; padding: 6px 10px; border: 1px solid var(--color-border); border-radius: var(--radius-md); background: var(--color-card); cursor: pointer; font-size: var(--text-label); color: var(--color-muted-foreground); white-space: nowrap; }
+.acct-sw-btn:hover { background: var(--color-surface); }
+.acct-sw-btn .ti { font-size: 16px; transition: transform .2s; }
+.acct-switcher.open .chevron { transform: rotate(180deg); }
+.acct-dropdown { display: none; position: absolute; top: calc(100% + 6px); right: 0; min-width: 280px; background: var(--color-card); border: 1px solid var(--color-border); border-radius: var(--radius-lg); box-shadow: 0 8px 24px rgba(0,0,0,.12); padding: 6px; z-index: 50; }
+.acct-switcher.open .acct-dropdown { display: block; }
+.acct-dd-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: var(--radius-md); cursor: pointer; transition: background .1s; }
+.acct-dd-item:hover { background: var(--color-background); }
+.acct-dd-item.active { background: var(--color-primary-subtle); }
+.dd-icon { width: 32px; height: 32px; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; font-size: 16px; flex: none; }
+.dd-info { flex: 1; }
+.dd-name { font-size: var(--text-body); font-weight: var(--font-weight-body-strong); }
+.dd-meta { font-size: var(--text-meta); color: var(--color-muted-foreground); margin-top: 2px; }
+.dd-check { color: var(--color-primary); font-size: 16px; }
 
 /* ── Tab nav (underline) ── */
 .tab-nav { display: flex; align-items: center; gap: 0; padding: 0 32px; border-bottom: 1px solid var(--color-border); background: var(--color-card); overflow-x: auto; }
 .tab-nav::-webkit-scrollbar { display: none; }
 .tab-nav a { padding: 12px 16px; font-size: var(--text-body); font-weight: var(--font-weight-label); color: var(--color-muted-foreground); text-decoration: none; border-bottom: 2px solid transparent; cursor: pointer; transition: color .15s, border-color .15s; white-space: nowrap; }
 .tab-nav a:hover { color: var(--color-foreground); }
-.tab-nav a.active { color: var(--color-foreground); font-weight: var(--font-weight-body-strong); border-bottom-color: var(--color-foreground); }
+.tab-nav a.active { color: var(--color-primary); font-weight: var(--font-weight-body-strong); border-bottom-color: var(--color-primary); }
 .tab-more { margin-left: auto; }
 .tab-more-btn { width: 36px; height: 36px; border-radius: var(--radius-sm); border: 1px solid var(--color-border); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--color-muted-foreground); font-size: 18px; transition: background .15s; }
 .tab-more-btn:hover { background: var(--color-background); }
+
+/* sub tab nav (shadcn pill / segmented style) */
+.sub-tab-nav{display:inline-flex;gap:4px;margin:16px 32px 20px;padding:4px;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-md);}
+.sub-tab-nav a,.sub-tab-nav span{padding:7px 18px;font-size:var(--text-label);font-weight:var(--font-weight-label);color:var(--color-muted-foreground);text-decoration:none;border-radius:var(--radius-sm);cursor:pointer;transition:all .15s;white-space:nowrap;}
+.sub-tab-nav a:hover{color:var(--color-foreground);background:var(--color-background);}
+.sub-tab-nav .active{color:var(--color-primary);font-weight:var(--font-weight-body-strong);background:var(--color-primary-subtle);border:1px solid rgba(239,97,8,.2);}
 
 /* ── Month summary ── */
 .month-summary { padding: 24px 32px 0; }
@@ -195,9 +216,9 @@ body { font-family: 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif; -webk
 
 /* ── Ranking number ── */
 .rank-num { width: 40px; height: 40px; border-radius: var(--radius-full); display: flex; align-items: center; justify-content: center; font-size: 18px; font-weight: var(--font-weight-h1); flex: none; border: 2px solid var(--color-border); color: var(--color-muted-foreground); background: var(--color-card); }
-.rank-num.r1 { width: 48px; height: 48px; background: var(--color-primary); color: var(--color-on-primary); border-color: var(--color-primary); font-size: 22px; }
-.rank-num.r2 { background: var(--color-primary-subtle); color: var(--color-primary); border-color: var(--color-primary); }
-.rank-num.r3 { background: var(--color-primary-subtle); color: var(--color-primary); border-color: var(--color-primary); }
+.rank-num.r1 { width: 48px; height: 48px; background: linear-gradient(135deg, #ffd700, #b8860b); color: #fff; border-color: #b8860b; font-size: 22px; box-shadow: 0 2px 8px rgba(184,134,11,.3); }
+.rank-num.r2 { background: linear-gradient(135deg, #e8e8e8, #a8a8a8); color: #fff; border-color: #a8a8a8; }
+.rank-num.r3 { background: linear-gradient(135deg, #e8a87c, #b87333); color: #fff; border-color: #b87333; }
 
 /* ── Post card enhancements ── */
 .post-top-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -205,7 +226,7 @@ body { font-family: 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif; -webk
 .post-badge.feed { background: var(--color-sns-instagram); color: #fff; font-size: var(--text-body); padding: 5px 14px; }
 
 /* ── Best post highlight ── */
-.best-post { border: 2px solid var(--color-primary); background: linear-gradient(135deg, #fff2e2 0%, #ffe4c4 100%); position: relative; box-shadow: 0 4px 20px rgba(239,97,8,.15); }
+.best-post { border: 2px solid var(--color-primary); background: var(--color-card); position: relative; }
 .best-ribbon { position: absolute; top: -1px; right: 20px; background: var(--color-primary); color: var(--color-on-primary); font-size: var(--text-body); font-weight: var(--font-weight-body-strong); padding: 6px 14px 8px; border-radius: 0 0 var(--radius-md) var(--radius-md); display: flex; align-items: center; gap: 5px; }
 .best-ribbon .ti { font-size: 15px; }
 
@@ -433,19 +454,38 @@ body { font-family: 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif; -webk
 
       <!-- Account header -->
       <div class="acct-hd">
-        <div class="sns-icon"><i class="ti ti-brand-instagram"></i></div>
-        <div class="acct-info">
-          <div class="acct-name">アリスト</div>
-          <div class="acct-handle">@aarrssttss</div>
-        </div>
-        <div class="acct-stats">
-          <div class="stat">
-            <div class="stat-val">1,204</div>
-            <div class="stat-lbl">フォロワー</div>
+        <div class="acct-row">
+          <div class="acct-icon ig"><i class="ti ti-brand-instagram"></i></div>
+          <span class="acct-name">アリスト</span>
+          <span class="acct-handle">@aarrssttss</span>
+          <div class="acct-stats">
+            <div class="acct-stat">フォロワー <span class="v">6</span>人</div>
+            <div class="acct-stat">投稿数 <span class="v">23</span>件</div>
           </div>
-          <div class="stat">
-            <div class="stat-val">87</div>
-            <div class="stat-lbl">投稿数</div>
+        </div>
+        <div class="acct-switcher" id="acctSwitcher">
+          <button class="acct-sw-btn" onclick="document.getElementById('acctSwitcher').classList.toggle('open')">
+            <i class="ti ti-arrows-left-right"></i> 切替
+            <i class="ti ti-chevron-down chevron"></i>
+          </button>
+          <div class="acct-dropdown">
+            <div class="acct-dd-item active">
+              <div class="dd-icon" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram);"><i class="ti ti-brand-instagram"></i></div>
+              <div class="dd-info"><div class="dd-name">アリスト</div><div class="dd-meta">@aarrssttss / フォロワー 6人</div></div>
+              <i class="ti ti-check dd-check"></i>
+            </div>
+            <div class="acct-dd-item">
+              <div class="dd-icon" style="background:var(--color-sns-x-subtle);color:var(--color-sns-x);"><i class="ti ti-brand-x"></i></div>
+              <div class="dd-info"><div class="dd-name">SS</div><div class="dd-meta">フォロワー 0人 / 投稿数 3件</div></div>
+            </div>
+            <div class="acct-dd-item">
+              <div class="dd-icon" style="background:var(--color-sns-tiktok-subtle);color:var(--color-sns-tiktok);"><i class="ti ti-brand-tiktok"></i></div>
+              <div class="dd-info"><div class="dd-name">multiple_ss</div><div class="dd-meta">フォロワー 1人 / 投稿数 6件</div></div>
+            </div>
+            <div class="acct-dd-item">
+              <div class="dd-icon" style="background:var(--color-sns-youtube-subtle);color:var(--color-sns-youtube);"><i class="ti ti-brand-youtube"></i></div>
+              <div class="dd-info"><div class="dd-name" style="color:var(--color-muted-foreground);">--</div><div class="dd-meta">未連携</div></div>
+            </div>
           </div>
         </div>
       </div>
@@ -453,13 +493,16 @@ body { font-family: 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif; -webk
       <!-- Tab navigation -->
       <div class="tab-nav">
         <a href="./analysis_visual_wire.html">ビジュアルレポート</a>
-        <a href="./analysis_metrics_wire.html">数値変化</a>
         <a href="./analysis_report_wire.html">分析レポート</a>
-        <a href="./analysis_account_wire.html">アカウントデータ</a>
-        <a class="active" href="./analysis_posts_wire.html">投稿データ</a>
+        <a class="active" href="./analysis_posts_wire.html">投稿レポート</a>
         <div class="tab-more">
           <button class="tab-more-btn" onclick="toast('メニューを開きます')"><i class="ti ti-dots"></i></button>
         </div>
+      </div>
+
+      <div class="sub-tab-nav">
+        <span class="active">投稿一覧</span>
+        <a href="./analysis_post_metrics_wire.html">数値変化</a>
       </div>
 
       <!-- Year / Month selector -->

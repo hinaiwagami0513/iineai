@@ -171,6 +171,12 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);font-family:"
 .tab-nav a:hover{color:var(--color-foreground);}
 .tab-nav a.active{color:var(--color-foreground);font-weight:700;border-bottom-color:var(--color-primary);}
 
+/* sub tab nav (shadcn pill / segmented style) */
+.sub-tab-nav{display:inline-flex;gap:4px;margin:16px 32px 20px;padding:4px;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-md);}
+.sub-tab-nav a,.sub-tab-nav span{padding:7px 18px;font-size:var(--text-label);font-weight:var(--font-weight-label);color:var(--color-muted-foreground);text-decoration:none;border-radius:var(--radius-sm);cursor:pointer;transition:all .15s;white-space:nowrap;}
+.sub-tab-nav a:hover{color:var(--color-foreground);background:var(--color-background);}
+.sub-tab-nav .active{color:var(--color-primary);font-weight:var(--font-weight-body-strong);background:var(--color-primary-subtle);border:1px solid rgba(239,97,8,.2);}
+
 /* === slide area === */
 .slide-area{padding:24px 28px;display:flex;flex-direction:column;gap:16px;}
 .slide-title-row{display:flex;align-items:center;justify-content:space-between;}
@@ -195,6 +201,11 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);font-family:"
 
 /* === slide card === */
 .slide{min-width:320px;max-width:320px;scroll-snap-align:start;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:28px 24px;display:flex;flex-direction:column;gap:16px;position:relative;flex-shrink:0;}
+.slide.t-score{background:linear-gradient(180deg,var(--color-primary-subtle) 0%,var(--color-card) 40%);}
+.slide.t-up{background:linear-gradient(180deg,var(--color-success-subtle) 0%,var(--color-card) 40%);}
+.slide.t-down{background:linear-gradient(180deg,var(--color-destructive-subtle) 0%,var(--color-card) 40%);}
+.slide.t-info{background:linear-gradient(180deg,hsl(208,100%,97%) 0%,var(--color-card) 40%);}
+.slide.t-star{background:linear-gradient(180deg,var(--color-warning-subtle) 0%,var(--color-card) 40%);}
 .slide-num{position:absolute;top:16px;right:16px;font-size:var(--text-meta);color:var(--color-muted-foreground);font-weight:500;}
 
 /* slide header */
@@ -492,10 +503,14 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);font-family:"
       <!-- ===== TAB NAV ===== -->
       <div class="tab-nav">
         <a href="./analysis_visual_wire.html">ビジュアルレポート</a>
-        <a href="./analysis_metrics_wire.html">数値変化</a>
         <a class="active" href="./analysis_report_wire.html">分析レポート</a>
-        <a href="./analysis_account_wire.html">アカウントデータ</a>
-        <a href="./analysis_posts_wire.html">投稿データ</a>
+        <a href="./analysis_posts_wire.html">投稿レポート</a>
+      </div>
+
+      <div class="sub-tab-nav">
+        <a href="./analysis_account_wire.html">アカウント推移</a>
+        <span class="active">AIレポート</span>
+        <a href="./analysis_metrics_wire.html">数値変化</a>
       </div>
 
       <!-- ===== SLIDE AREA (メイン・常に表示) ===== -->
@@ -517,7 +532,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);font-family:"
           <div class="carousel-track" id="track" data-tab="総合">
 
             <!-- SLIDE 1: 総合スコア -->
-            <div class="slide">
+            <div class="slide t-score">
               <div class="slide-num">1 / 5</div>
               <div class="sl-hd">
                 <div class="sl-icon neutral"><i class="ti ti-chart-bar"></i></div>
@@ -540,7 +555,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);font-family:"
             </div>
 
             <!-- SLIDE 2: 一番伸びた -->
-            <div class="slide">
+            <div class="slide t-up">
               <div class="slide-num">2 / 5</div>
               <div class="sl-hd">
                 <div class="sl-icon up"><i class="ti ti-arrow-up"></i></div>
@@ -569,7 +584,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);font-family:"
             </div>
 
             <!-- SLIDE 3: 課題 -->
-            <div class="slide">
+            <div class="slide t-down">
               <div class="slide-num">3 / 5</div>
               <div class="sl-hd">
                 <div class="sl-icon down"><i class="ti ti-arrow-down"></i></div>
@@ -600,7 +615,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);font-family:"
             </div>
 
             <!-- SLIDE 4: ベスト投稿 -->
-            <div class="slide">
+            <div class="slide t-star">
               <div class="slide-num">4 / 5</div>
               <div class="sl-hd">
                 <div class="sl-icon star"><i class="ti ti-star"></i></div>
@@ -638,7 +653,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);font-family:"
             </div>
 
             <!-- SLIDE 5: やること -->
-            <div class="slide">
+            <div class="slide t-info">
               <div class="slide-num">5 / 5</div>
               <div class="sl-hd">
                 <div class="sl-icon info"><i class="ti ti-clipboard-list"></i></div>
@@ -1049,11 +1064,11 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);font-family:"
           </div>
         </div>
 
-        <!-- ACC 4: 投稿データ一覧 -->
+        <!-- ACC 4: 投稿レポート一覧 -->
         <div class="acc" onclick="this.classList.toggle('open')">
           <div class="acc-hd">
             <div class="acc-icon" style="background:var(--color-info-subtle);color:var(--color-info);"><i class="ti ti-list-details"></i></div>
-            <div class="acc-title">投稿データ一覧</div>
+            <div class="acc-title">投稿レポート一覧</div>
             <div class="acc-preview">23件</div>
             <span class="acc-toggle"><span class="toggle-label"></span><i class="ti ti-chevron-down"></i></span>
           </div>

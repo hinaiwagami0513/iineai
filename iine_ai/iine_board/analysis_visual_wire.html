@@ -773,6 +773,9 @@ body {
   .metric-list { grid-template-columns: 1fr; }
   .mc { padding: 16px; }
   .summary-value { font-size: var(--text-h2); }
+
+  /* slide cards SP: 1 column */
+  .vr-slide-grid { grid-template-columns: 1fr; gap: 16px; }
 }
 
 /* ─── Visual Report Page ─── */
@@ -880,7 +883,7 @@ body {
   align-items: start;
 }
 
-/* section card */
+/* section card (legacy) */
 .vr-card {
   background: var(--color-card);
   border: 1px solid var(--color-border);
@@ -901,6 +904,56 @@ body {
   color: var(--color-muted-foreground);
   margin-bottom: 10px;
 }
+
+/* ===== Slide cards grid ===== */
+.vr-slide-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+.vr-slide-card {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: box-shadow .15s, border-color .15s;
+}
+.vr-slide-card:hover {
+  box-shadow: 0 4px 20px rgba(0,0,0,.08);
+  border-color: var(--color-border-strong);
+}
+.vr-slide-img {
+  overflow: hidden;
+  background: #fdf6ef;
+}
+.vr-slide-img img {
+  width: 100%;
+  display: block;
+}
+.vr-slide-footer {
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.vr-slide-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--text-meta);
+  font-weight: var(--font-weight-body-strong);
+  color: var(--color-primary);
+  text-decoration: none;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  transition: background .15s;
+  width: fit-content;
+}
+.vr-slide-link:hover {
+  background: rgba(239,97,8,.15);
+}
+.vr-slide-link .ti { font-size: 14px; }
 
 /* Funnel */
 .vr-funnel {
@@ -1201,28 +1254,106 @@ body {
       <!-- Tab nav -->
       <div class="tab-nav">
         <a class="active" href="./analysis_visual_wire.html">ビジュアルレポート</a>
-        <a href="./analysis_metrics_wire.html">数値変化</a>
         <a href="./analysis_report_wire.html">分析レポート</a>
-        <a href="./analysis_account_wire.html">アカウントデータ</a>
-        <a href="./analysis_posts_wire.html">投稿データ</a>
+        <a href="./analysis_posts_wire.html">投稿レポート</a>
       </div>
 
       <!-- Visual Report page body -->
-      <div style="padding:24px 28px;display:flex;flex-direction:column;gap:16px;">
+      <div style="padding:24px 28px;display:flex;flex-direction:column;gap:20px;">
 
         <!-- Notice + controls -->
-        <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
           <div style="font-size:var(--text-label);color:var(--color-muted-foreground);display:flex;align-items:center;gap:6px;"><i class="ti ti-sparkles"></i>毎月自動で生成されるビジュアルレポートです</div>
           <div style="display:flex;align-items:center;gap:8px;">
-            <button style="display:flex;align-items:center;gap:4px;padding:6px 12px;border-radius:var(--radius-sm);border:1px solid var(--color-border);background:var(--color-card);font-size:var(--text-label);cursor:pointer;color:var(--color-foreground);"><i class="ti ti-chevron-left" style="font-size:14px;"></i>2024年5月<i class="ti ti-chevron-right" style="font-size:14px;"></i></button>
-            <button style="display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:var(--radius-sm);border:none;background:var(--color-primary);color:#fff;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);cursor:pointer;"><i class="ti ti-download" style="font-size:14px;"></i>画像として保存</button>
+            <button style="display:flex;align-items:center;gap:4px;padding:6px 12px;border-radius:var(--radius-sm);border:1px solid var(--color-border);background:var(--color-card);font-size:var(--text-label);cursor:pointer;color:var(--color-foreground);"><i class="ti ti-chevron-left" style="font-size:14px;"></i>2026年7月<i class="ti ti-chevron-right" style="font-size:14px;"></i></button>
+            <button style="display:flex;align-items:center;gap:6px;padding:6px 14px;border-radius:var(--radius-sm);border:none;background:var(--color-primary);color:#fff;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);cursor:pointer;"><i class="ti ti-download" style="font-size:14px;"></i>全画像を保存</button>
           </div>
         </div>
 
-        <!-- Report image -->
-        <div style="border:1px solid var(--color-border);border-radius:var(--radius-md);overflow:hidden;">
-          <img src="./assets/visual-report-sample.jpg" style="width:100%;display:block;" alt="ビジュアルレポート 2024年5月">
-        </div>
+        <!-- ===== 8枚カードグリッド ===== -->
+        <div class="vr-slide-grid">
+
+          <!-- 1. 主要指標 -->
+          <div class="vr-slide-card">
+            <div class="vr-slide-img">
+              <img src="./assets/vr-01-metrics.png" alt="今月の主要指標">
+            </div>
+            <div class="vr-slide-footer">
+              <a href="./analysis_account_wire.html" class="vr-slide-link"><i class="ti ti-chart-bar"></i>アカウント推移で見る<i class="ti ti-chevron-right" style="font-size:12px;"></i></a>
+            </div>
+          </div>
+
+          <!-- 2. 今月の流れ -->
+          <div class="vr-slide-card">
+            <div class="vr-slide-img">
+              <img src="./assets/vr-02-funnel.png" alt="今月の流れ">
+            </div>
+            <div class="vr-slide-footer">
+              <a href="./analysis_account_wire.html" class="vr-slide-link"><i class="ti ti-chart-bar"></i>アカウント推移で見る<i class="ti ti-chevron-right" style="font-size:12px;"></i></a>
+            </div>
+          </div>
+
+          <!-- 3. フォロワー推移 -->
+          <div class="vr-slide-card">
+            <div class="vr-slide-img">
+              <img src="./assets/vr-03-followers.png" alt="フォロワー推移">
+            </div>
+            <div class="vr-slide-footer">
+              <a href="./analysis_account_wire.html" class="vr-slide-link"><i class="ti ti-chart-bar"></i>アカウント推移で見る<i class="ti ti-chevron-right" style="font-size:12px;"></i></a>
+            </div>
+          </div>
+
+          <!-- 4. 人気投稿 TOP3 -->
+          <div class="vr-slide-card">
+            <div class="vr-slide-img">
+              <img src="./assets/vr-04-top-posts.png" alt="人気投稿 TOP3">
+            </div>
+            <div class="vr-slide-footer">
+              <a href="./analysis_posts_wire.html" class="vr-slide-link"><i class="ti ti-article"></i>投稿レポートで見る<i class="ti ti-chevron-right" style="font-size:12px;"></i></a>
+            </div>
+          </div>
+
+          <!-- 5. ベスト投稿時間 -->
+          <div class="vr-slide-card">
+            <div class="vr-slide-img">
+              <img src="./assets/vr-05-best-time.png" alt="ベスト投稿時間">
+            </div>
+            <div class="vr-slide-footer">
+              <a href="./analysis_report_wire.html" class="vr-slide-link"><i class="ti ti-report-analytics"></i>AIレポートで見る<i class="ti ti-chevron-right" style="font-size:12px;"></i></a>
+            </div>
+          </div>
+
+          <!-- 6. リールで伸びる要素 -->
+          <div class="vr-slide-card">
+            <div class="vr-slide-img">
+              <img src="./assets/vr-06-reels.png" alt="リールで伸びる要素">
+            </div>
+            <div class="vr-slide-footer">
+              <a href="./analysis_report_wire.html" class="vr-slide-link"><i class="ti ti-report-analytics"></i>AIレポートで見る<i class="ti ti-chevron-right" style="font-size:12px;"></i></a>
+            </div>
+          </div>
+
+          <!-- 7. ハッシュタグ -->
+          <div class="vr-slide-card">
+            <div class="vr-slide-img">
+              <img src="./assets/vr-07-hashtags.png" alt="ハッシュタグ分析">
+            </div>
+            <div class="vr-slide-footer">
+              <a href="./analysis_report_wire.html" class="vr-slide-link"><i class="ti ti-report-analytics"></i>AIレポートで見る<i class="ti ti-chevron-right" style="font-size:12px;"></i></a>
+            </div>
+          </div>
+
+          <!-- 8. 次のアクション -->
+          <div class="vr-slide-card">
+            <div class="vr-slide-img">
+              <img src="./assets/vr-08-actions.png" alt="次のアクション">
+            </div>
+            <div class="vr-slide-footer">
+              <a href="./analysis_report_wire.html" class="vr-slide-link"><i class="ti ti-report-analytics"></i>AIレポートで見る<i class="ti ti-chevron-right" style="font-size:12px;"></i></a>
+            </div>
+          </div>
+
+        </div><!-- /grid -->
 
       </div><!-- /page body -->
 
