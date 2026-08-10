@@ -358,6 +358,57 @@ body{background:#0a0908;padding:18px;color:var(--color-editor-foreground);}
 .ab{aspect-ratio:1;border:1px solid var(--color-editor-border);background:var(--color-editor-elevated);color:var(--color-editor-muted);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer;}
 .ab.on{border-color:var(--color-primary);background:rgba(239,97,8,.14);color:var(--color-primary);}
 .addbtn{width:100%;background:var(--color-primary);color:#fff;border:none;border-radius:var(--radius-md);padding:13px;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;margin-top:18px;}
+/* ===== 素材（スタンプ） =====
+   スタンプは全てインラインSVGで描く。アイコンフォントに寄せるとサブセット漏れで
+   豆腐になるうえ、SVGでないとブランドカラーへの一括リカラーができないため。 */
+.stsearch{position:relative;margin-bottom:10px;}
+.stsearch input{width:100%;box-sizing:border-box;background:var(--color-editor-elevated);border:1px solid var(--color-editor-border);border-radius:var(--radius-md);color:var(--color-editor-foreground);font-size:var(--text-label);padding:8px 10px 8px 30px;}
+.stsearch input::placeholder{color:var(--color-editor-muted);}
+.stsearch .sti{position:absolute;left:9px;top:50%;transform:translateY(-50%);width:14px;height:14px;color:var(--color-editor-muted);pointer-events:none;}
+/* カテゴリは横スクロールのチップ。数が増えてもタブ幅を圧迫しない */
+.chiprow{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:4px;scrollbar-width:none;}
+.chiprow::-webkit-scrollbar{display:none;}
+.chip{flex:none;font-size:11px;font-weight:500;color:var(--color-editor-muted);background:var(--color-editor-elevated);border:1px solid var(--color-editor-border);border-radius:var(--radius-full);padding:5px 11px;cursor:pointer;white-space:nowrap;}
+.chip.on{color:#fff;background:var(--color-primary);border-color:var(--color-primary);font-weight:var(--font-weight-body-strong);}
+.stgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px;}
+.sttile{aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);background:var(--color-editor-elevated);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;}
+.sttile:hover{border-color:var(--color-primary);}
+.sttile svg{width:66%;height:66%;display:block;}
+.stnote{font-size:var(--text-meta);color:var(--color-editor-muted);margin-top:10px;line-height:1.6;}
+.stempty{grid-column:1/-1;text-align:center;color:var(--color-editor-muted);font-size:var(--text-meta);padding:26px 0;}
+/* ===== AI生成スタンプ ===== */
+.aibox{background:var(--color-editor-elevated);border:1px solid var(--color-editor-border);border-radius:var(--radius-lg);padding:12px;margin-top:10px;}
+.aiprompt{width:100%;box-sizing:border-box;background:var(--color-editor-surface);border:1px solid var(--color-editor-border);border-radius:var(--radius-md);color:var(--color-editor-foreground);font-size:var(--text-label);padding:9px 10px;resize:vertical;min-height:56px;font-family:inherit;}
+.aiprompt::placeholder{color:var(--color-editor-muted);}
+.aibtns{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px;}
+.aibtn{border:none;border-radius:var(--radius-md);padding:10px 6px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);cursor:pointer;background:var(--color-primary);color:#fff;}
+.aibtn.sub{background:var(--color-editor-surface);color:var(--color-editor-foreground);border:1px solid var(--color-editor-border);}
+.aibtn:disabled{opacity:.5;cursor:default;}
+/* 生成中は🦊ローディング（既存のおまかせ演出と同じ作法） */
+.genfox{display:none;align-items:center;gap:9px;margin-top:10px;font-size:var(--text-label);color:var(--color-editor-muted);}
+.genfox.on{display:flex;}
+.genfox .fx{width:22px;height:22px;flex:none;animation:fxspin 1s linear infinite;}
+@keyframes fxspin{to{transform:rotate(360deg);}}
+.styleref{display:none;align-items:center;gap:8px;background:rgba(239,97,8,.12);border:1px solid var(--color-primary);border-radius:var(--radius-md);padding:6px 8px;margin-bottom:8px;font-size:var(--text-meta);color:var(--color-editor-foreground);}
+.styleref.on{display:flex;}
+.styleref svg{width:22px;height:22px;flex:none;}
+.styleref button{margin-left:auto;background:none;border:none;color:var(--color-editor-muted);cursor:pointer;font-size:13px;line-height:1;padding:2px;}
+/* ===== マイ素材（保存して使い回す） ===== */
+.mygrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;}
+.mycard{position:relative;aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);background:var(--color-editor-elevated);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;}
+.mycard:hover{border-color:var(--color-primary);}
+.mycard svg{width:62%;height:62%;display:block;}
+.mbadge{position:absolute;top:3px;left:3px;font-size:9px;line-height:1;padding:2px 4px;border-radius:3px;background:rgba(0,0,0,.62);color:#fff;pointer-events:none;}
+.mypin{position:absolute;top:2px;right:2px;width:18px;height:18px;border:none;border-radius:var(--radius-full);background:rgba(0,0,0,.62);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;opacity:0;}
+.mycard:hover .mypin,.mycard.pinned .mypin{opacity:1;}
+.mycard.pinned .mypin{background:var(--color-primary);}
+.mypin svg{width:11px;height:11px;}
+.mystyle{position:absolute;bottom:2px;right:2px;width:18px;height:18px;border:none;border-radius:var(--radius-full);background:rgba(0,0,0,.62);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;font-size:9px;line-height:1;opacity:0;}
+.mycard:hover .mystyle{opacity:1;}
+.mystyle:hover{background:var(--color-primary);}
+.myrow{display:flex;gap:6px;margin-top:10px;}
+.myrow button{flex:1;border:1px solid var(--color-editor-border);background:var(--color-editor-elevated);color:var(--color-editor-foreground);border-radius:var(--radius-md);padding:8px 4px;font-size:11px;cursor:pointer;}
+.myrow button:hover{border-color:var(--color-primary);}
 /* ===== グラフのデータ入力 =====
    カンマ区切りの2本の入力だと、どの値がどのラベルか読み解く必要があった。
    1項目＝1行にして、割合バーで大小もその場で見えるようにする。 */
@@ -729,6 +780,7 @@ body{background:#0a0908;padding:18px;color:var(--color-editor-foreground);}
           <div class="ppane" id="mat-add">
             <div class="psubs">
               <span class="psub on" onclick="pickPSub(this,'mat-image')">画像</span>
+              <span class="psub" onclick="pickPSub(this,'mat-stamp')">スタンプ</span>
               <span class="psub" onclick="pickPSub(this,'mat-shape')">図形</span>
               <span class="psub" onclick="pickPSub(this,'mat-graph')">グラフ</span>
               <span class="psub" onclick="pickPSub(this,'mat-table')">表</span>
@@ -743,6 +795,79 @@ body{background:#0a0908;padding:18px;color:var(--color-editor-foreground);}
             </div>
             <button class="addbtn">いいねドライブから選択</button>
           </div>
+            <!-- ===== スタンプ =====
+                 カテゴリは横スクロールのチップ。「マイ素材」は生成物を保存して
+                 使い回す場所で、同じスタンプを再生成せずに置き直せるようにする。 -->
+            <div class="psubpane" id="mat-stamp" style="display:none;">
+              <div class="rh">スタンプを追加</div>
+              <div class="stsearch" style="margin-top:10px;display:none;">
+                <svg class="sti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5 L21 21"/></svg>
+                <input id="stQ" type="text" placeholder="スタンプを検索（例：セール／矢印）" oninput="renderStamps()">
+              </div>
+              <!-- AI生成が売りなので先頭。既定でもここに着地させる -->
+              <div class="chiprow" id="stChips">
+                <span class="chip on" data-cat="ai" onclick="pickChip(this,'ai')">✨AI生成</span>
+                <span class="chip" data-cat="my" onclick="pickChip(this,'my')">マイ素材</span>
+                <span class="chip" data-cat="osusume" onclick="pickChip(this,'osusume')">おすすめ</span>
+                <span class="chip" data-cat="fukidashi" onclick="pickChip(this,'fukidashi')">吹き出し</span>
+                <span class="chip" data-cat="kazari" onclick="pickChip(this,'kazari')">装飾</span>
+                <span class="chip" data-cat="yajirushi" onclick="pickChip(this,'yajirushi')">矢印</span>
+                <span class="chip" data-cat="label" onclick="pickChip(this,'label')">ラベル</span>
+              </div>
+
+              <!-- 通常カテゴリ -->
+              <div id="stBrowse" style="display:none;">
+                <div class="stgrid" id="stGrid"></div>
+                <div class="fl">色</div>
+                <div class="swatches" id="stSw"><span class="sw on" onclick="pickSw(this)" style="background:#ef6108"></span><span class="sw" onclick="pickSw(this)" style="background:#f5f3f0"></span><span class="sw" onclick="pickSw(this)" style="background:#2a2826"></span><span class="sw" onclick="pickSw(this)" style="background:#d94a4a"></span><span class="sw" onclick="pickSw(this)" style="background:#2f6ad9"></span><span class="sw" onclick="pickSw(this)" style="background:#12960a"></span></div>
+                <div class="stnote">スタンプはすべてベクターなので、色を選んでから置くとブランドカラーで揃います。</div>
+              </div>
+
+              <!-- AI生成（既定タブ） -->
+              <div id="stAi">
+                <div class="styleref" id="stStyleRef">
+                  <span id="stStyleRefThumb"></span>
+                  <span>この素材のスタイルで生成します</span>
+                  <button onclick="clearStyleRef()" title="解除">✕</button>
+                </div>
+                <div class="aibox">
+                  <textarea class="aiprompt" id="aiPrompt" placeholder="どんなスタンプが欲しいですか？&#10;例：期間限定セールを煽る吹き出し"></textarea>
+                  <div class="chiprow" style="margin-top:8px;margin-bottom:0;">
+                    <span class="chip" onclick="setAiPrompt(this)">セール</span>
+                    <span class="chip" onclick="setAiPrompt(this)">新商品</span>
+                    <span class="chip" onclick="setAiPrompt(this)">限定</span>
+                    <span class="chip" onclick="setAiPrompt(this)">予約受付中</span>
+                    <span class="chip" onclick="setAiPrompt(this)">ありがとう</span>
+                  </div>
+                  <div class="aibtns">
+                    <button class="aibtn" id="aiBtn1" onclick="aiGenStamp(1)">生成して置く</button>
+                    <button class="aibtn sub" id="aiBtn4" onclick="aiGenStamp(4)">セットで4種生成</button>
+                  </div>
+                  <div class="genfox" id="aiFox">
+                    <svg class="fx" viewBox="0 0 24 24" fill="none" stroke="var(--color-primary)" stroke-width="2" stroke-linecap="round"><path d="M12 3 a9 9 0 1 1 -6.4 2.6" opacity=".9"/><path d="M5.6 5.6 L4.2 2.4 L7.6 3.4 Z" fill="var(--color-primary)" stroke="none"/></svg>
+                    <span id="aiFoxLabel">スタンプを生成中…</span>
+                  </div>
+                </div>
+                <div class="stnote">
+                  生成したスタンプは<b>自動でマイ素材といいねドライブに保存</b>されます。<br>
+                  同じ言葉でも毎回かたちは変わるので、使い回したいものは保存済みから置き直すか、
+                  「セットで4種生成」でシリーズごと作ると見た目が揃います。
+                </div>
+              </div>
+
+              <!-- マイ素材（保存済み） -->
+              <div id="stMy" style="display:none;">
+                <div class="mygrid" id="myGrid"></div>
+                <div class="myrow">
+                  <button onclick="switchStampTab('ai')">✨ AIで新しく作る</button>
+                  <button onclick="toast.info('いいねドライブの素材を読み込みます')">ドライブから読み込む</button>
+                </div>
+                <div class="stnote">
+                  ピン留めした素材は先頭に固定され、ブランド素材としていいねドライブにも並びます。<br>
+                  素材を選んで「このスタイルで生成」を押すと、見た目を揃えたまま別の文言で作れます。
+                </div>
+              </div>
+            </div>
             <div class="psubpane" id="mat-shape" style="display:none;">
             <div class="rh">図形を追加</div>
             <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px;">
@@ -750,10 +875,12 @@ body{background:#0a0908;padding:18px;color:var(--color-editor-foreground);}
               <div style="aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;" onclick="addShapeObj('circle')" title="この図形を追加"><div style="width:28px;height:28px;background:var(--color-editor-muted);border-radius:50%;"></div></div>
               <div style="aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;" onclick="addShapeObj('tri')" title="この図形を追加"><div style="width:0;height:0;border-left:14px solid transparent;border-right:14px solid transparent;border-bottom:24px solid var(--color-editor-muted);"></div></div>
               <div style="aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;" onclick="addShapeObj('line')" title="この図形を追加"><div style="width:28px;height:2px;background:var(--color-editor-muted);"></div></div>
-              <div style="aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;"><div style="width:28px;height:28px;border:2px solid var(--color-editor-muted);border-radius:8px;background:transparent;"></div></div>
-              <div style="aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;"><i class="ti ti-star" style="font-size:22px;color:var(--color-editor-muted);"></i></div>
-              <div style="aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;"><i class="ti ti-heart" style="font-size:22px;color:var(--color-editor-muted);"></i></div>
-              <div style="aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;"><i class="ti ti-arrow-right" style="font-size:22px;color:var(--color-editor-muted);"></i></div>
+              <!-- 星・ハートはアイコンフォントのサブセットに無く豆腐になっていたのでSVGに置換し、
+                   合わせて未接続だったサムネイルにも追加処理を繋ぐ -->
+              <div style="aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;" onclick="addShapeObj('round')" title="この図形を追加"><div style="width:28px;height:28px;border:2px solid var(--color-editor-muted);border-radius:8px;background:transparent;"></div></div>
+              <div style="aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;" onclick="addStampObj('kazari',0)" title="この図形を追加"><svg viewBox="0 0 100 100" style="width:24px;height:24px;fill:var(--color-editor-muted);"><path d="M50 6 61 38 95 38 68 58 78 92 50 71 22 92 32 58 5 38 39 38Z"/></svg></div>
+              <div style="aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;" onclick="addStampObj('kazari',1)" title="この図形を追加"><svg viewBox="0 0 100 100" style="width:24px;height:24px;fill:var(--color-editor-muted);"><path d="M50 88C22 68 8 52 8 35A21 21 0 0 1 50 26 21 21 0 0 1 92 35c0 17-14 33-42 53Z"/></svg></div>
+              <div style="aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;" onclick="addStampObj('yajirushi',0)" title="この図形を追加"><svg viewBox="0 0 100 100" style="width:24px;height:24px;fill:var(--color-editor-muted);"><path d="M6 42h56V22l32 28-32 28V58H6Z"/></svg></div>
             </div>
             <div class="fl" style="margin-top:14px;">塗りつぶし色</div>
             <div class="swatches"><span class="sw on" onclick="pickSw(this)" style="background:#ef6108"></span><span class="sw" onclick="pickSw(this)" style="background:#f5f3f0"></span><span class="sw" onclick="pickSw(this)" style="background:#2a2826"></span><span class="sw" onclick="pickSw(this)" style="background:#d94a4a"></span><span class="sw" onclick="pickSw(this)" style="background:#2f6ad9"></span><span class="sw" onclick="pickSw(this)" style="background:#12960a"></span></div>
@@ -1175,6 +1302,7 @@ var LY_SVG={
 function lyIcon(d){return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+d+'</svg>';}
 /* レイヤー名は中身から起こす（テキストは本文、それ以外は種別） */
 function layerName(el){
+  if(el.dataset&&el.dataset.name)return el.dataset.name; /* スタンプは素材名をそのまま出す */
   var tp=el.querySelector('textPath');
   if(tp)return tp.textContent;
   var t=Array.from(el.childNodes).filter(n=>n.nodeType===3).map(n=>n.textContent).join('').trim();
@@ -1437,10 +1565,273 @@ function addShapeObj(kind){
   if(kind==='rect'){box.style.cssText='width:70px;height:48px;border-radius:3px;background:'+fill+';';}
   else if(kind==='circle'){box.style.cssText='width:56px;height:56px;border-radius:50%;background:'+fill+';';}
   else if(kind==='tri'){box.style.cssText='width:0;height:0;border-left:32px solid transparent;border-right:32px solid transparent;border-bottom:54px solid '+fill+';';}
+  else if(kind==='round'){box.style.cssText='width:70px;height:48px;border-radius:12px;border:3px solid '+fill+';background:transparent;';}
   else{box.style.cssText='width:80px;height:3px;background:'+fill+';';}
   el.appendChild(box);
   placeObj(el);
   toast.info('図形を追加しました');
+}
+
+/* ===== スタンプ =====
+   すべてインラインSVG。fill/strokeは currentColor に寄せてあるので、
+   置くときに color を差し替えるだけでブランドカラーに揃う。
+   本番はここに Fluent Emoji(MIT) や Iconify(ライセンス絞り込み) を足す想定。 */
+var STAMPS={
+  fukidashi:[
+    {n:'丸吹き出し',s:'<ellipse cx="50" cy="40" rx="44" ry="30" fill="currentColor"/><path d="M32 64 24 94 52 70Z" fill="currentColor"/>'},
+    {n:'角吹き出し',s:'<rect x="6" y="12" width="88" height="52" rx="10" fill="currentColor"/><path d="M28 62 22 92 52 66Z" fill="currentColor"/>'},
+    {n:'もくもく',s:'<circle cx="34" cy="40" r="20" fill="currentColor"/><circle cx="62" cy="34" r="24" fill="currentColor"/><circle cx="74" cy="54" r="16" fill="currentColor"/><circle cx="42" cy="58" r="16" fill="currentColor"/><circle cx="28" cy="76" r="8" fill="currentColor"/><circle cx="18" cy="90" r="5" fill="currentColor"/>'},
+    {n:'ギザギザ',s:'<path d="M50 2 60 22 80 12 76 34 96 36 82 52 98 66 78 70 84 92 62 84 52 98 40 82 22 92 22 70 4 64 18 50 4 34 24 30 20 10 40 18Z" fill="currentColor"/>'},
+    {n:'二重吹き出し',s:'<ellipse cx="50" cy="40" rx="44" ry="29" fill="none" stroke="currentColor" stroke-width="7"/><ellipse cx="50" cy="40" rx="35" ry="21" fill="none" stroke="currentColor" stroke-width="3"/><path d="M34 64 26 92 54 68Z" fill="currentColor"/>'},
+    {n:'叫び',s:'<path d="M50 6 66 24 90 18 84 42 98 56 78 64 80 88 58 78 48 96 36 78 14 84 16 62 2 50 20 38 12 16 36 22Z" fill="none" stroke="currentColor" stroke-width="6" stroke-linejoin="round"/>'}
+  ],
+  kazari:[
+    {n:'星',s:'<path d="M50 6 61 38 95 38 68 58 78 92 50 71 22 92 32 58 5 38 39 38Z" fill="currentColor"/>'},
+    {n:'ハート',s:'<path d="M50 88C22 68 8 52 8 35A21 21 0 0 1 50 26 21 21 0 0 1 92 35c0 17-14 33-42 53Z" fill="currentColor"/>'},
+    {n:'キラキラ',s:'<path d="M50 4C54 30 70 46 96 50 70 54 54 70 50 96 46 70 30 54 4 50 30 46 46 30 50 4Z" fill="currentColor"/>'},
+    {n:'集中線',s:'<path d="M50 2 57 28 76 10 71 34 94 26 79 46 98 54 76 60 88 82 65 74 66 98 50 80 34 98 35 74 12 82 24 60 2 54 21 46 6 26 29 34 24 10 43 28Z" fill="currentColor"/>'},
+    {n:'王冠',s:'<path d="M8 74h84l6-46-25 17L50 18 27 45 2 28Z" fill="currentColor"/><rect x="8" y="80" width="84" height="10" rx="3" fill="currentColor"/>'},
+    {n:'リボン',s:'<path d="M16 24h68v42H16Z" fill="currentColor"/><path d="M16 24 2 33v30l14-9Z" fill="currentColor" opacity=".65"/><path d="M84 24l14 9v30l-14-9Z" fill="currentColor" opacity=".65"/>'},
+    {n:'マステ',s:'<path d="M3 32 97 17v34L3 66Z" fill="currentColor" opacity=".55"/>'},
+    {n:'ブラシ',s:'<path d="M4 54c18-22 34 10 50-8 14-16 28 12 42-6v24c-14 18-28-10-42 6-16 18-32-14-50 4Z" fill="currentColor"/>'}
+  ],
+  yajirushi:[
+    {n:'右矢印',s:'<path d="M6 42h56V22l32 28-32 28V58H6Z" fill="currentColor"/>'},
+    {n:'太矢印',s:'<path d="M22 8 74 50 22 92 4 76 38 50 4 24Z" fill="currentColor"/>'},
+    {n:'カーブ矢印',s:'<path d="M10 82C22 40 50 24 82 36" fill="none" stroke="currentColor" stroke-width="9" stroke-linecap="round"/><path d="M90 39 60 44 74 18Z" fill="currentColor"/>'},
+    {n:'下矢印',s:'<path d="M40 6h20v50h22L50 96 8 56h32Z" fill="currentColor"/>'},
+    {n:'二重矢印',s:'<path d="M8 14 50 50 8 86V62L26 50 8 38Z" fill="currentColor"/><path d="M52 14 94 50 52 86V62L70 50 52 38Z" fill="currentColor"/>'},
+    {n:'手書き矢印',s:'<path d="M6 70C34 66 58 52 70 26" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round"/><path d="M76 14 78 44 52 32Z" fill="currentColor"/>'}
+  ],
+  label:[
+    {n:'帯ラベル',s:'<rect x="4" y="32" width="92" height="36" rx="6" fill="currentColor"/>'},
+    {n:'タグ',s:'<path d="M6 22h58l30 28-30 28H6Z" fill="currentColor"/><circle cx="24" cy="50" r="7" fill="var(--color-editor-stage)"/>'},
+    {n:'値札',s:'<path d="M52 4 96 48 48 96 4 52V4Z" fill="currentColor"/><circle cx="26" cy="26" r="9" fill="var(--color-editor-stage)"/>'},
+    {n:'丸バッジ',s:'<circle cx="50" cy="50" r="44" fill="currentColor"/><circle cx="50" cy="50" r="35" fill="none" stroke="var(--color-editor-stage)" stroke-width="4"/>'},
+    {n:'ギザバッジ',s:'<path d="M50 2 61 12 75 7 80 21 95 24 93 39 104 50 93 61 95 76 80 79 75 93 61 88 50 98 39 88 25 93 20 79 5 76 7 61 -4 50 7 39 5 24 20 21 25 7 39 12Z" fill="currentColor"/>'},
+    {n:'下線マーカー',s:'<path d="M4 58c26-15 66-15 92 0-26 15-66 15-92 0Z" fill="currentColor" opacity=".8"/>'}
+  ]
+};
+/* おすすめは各カテゴリの頭を混ぜて出す（初回に何を置けるか一目で分かるように） */
+function stampList(cat){
+  if(cat==='osusume'){
+    return [['kazari',0],['kazari',2],['fukidashi',0],['yajirushi',0],
+            ['label',1],['kazari',4],['fukidashi',3],['label',5]]
+      .map(function(p){var o=STAMPS[p[0]][p[1]];return {n:o.n,s:o.s,cat:p[0],i:p[1]};});
+  }
+  return (STAMPS[cat]||[]).map(function(o,i){return {n:o.n,s:o.s,cat:cat,i:i};});
+}
+var _stCat='osusume';
+function stColor(){
+  var sw=document.querySelector('#stSw .sw.on');
+  return sw?sw.style.background:'var(--color-primary)';
+}
+function renderStamps(){
+  var g=document.getElementById('stGrid'); if(!g)return;
+  var q=((document.getElementById('stQ')||{}).value||'').trim();
+  var items;
+  if(q){ /* 検索中はカテゴリ横断で探す（どこにあるか覚えていなくても辿り着けるように） */
+    items=[];
+    Object.keys(STAMPS).forEach(function(c){
+      STAMPS[c].forEach(function(o,i){if(o.n.indexOf(q)>=0)items.push({n:o.n,s:o.s,cat:c,i:i});});
+    });
+  }else{ items=stampList(_stCat); }
+  g.innerHTML=items.length?items.map(function(o){
+    return '<div class="sttile" title="'+o.n+'" onclick="addStampObj(\''+o.cat+'\','+o.i+')">'+
+           '<svg viewBox="-5 -5 110 110" style="color:var(--color-editor-muted);">'+o.s+'</svg></div>';
+  }).join(''):'<div class="stempty">「'+q+'」に一致するスタンプがありません</div>';
+}
+/* スタンプを制作面へ。色は選択中のスウォッチを currentColor として流し込む */
+function addStampObj(cat,i){
+  var o=(STAMPS[cat]||[])[i]; if(!o)return;
+  var el=document.createElement('div');
+  el.style.padding='0';
+  el.dataset.name=o.n;
+  el.innerHTML='<svg width="72" height="72" viewBox="-5 -5 110 110" style="display:block;color:'+stColor()+';">'+o.s+'</svg>';
+  placeObj(el);
+  toast.info(o.n+'を追加しました');
+}
+/* ===== カテゴリ切替（通常／AI生成／マイ素材で中身を差し替える） ===== */
+function pickChip(el,cat){
+  el.parentElement.querySelectorAll('.chip').forEach(function(c){c.classList.remove('on');});
+  el.classList.add('on');
+  applyStampTab(cat);
+}
+/* チップは data-cat で引く。並べ替えても壊れないようにインデックス依存にしない */
+function switchStampTab(cat){
+  document.querySelectorAll('#stChips .chip').forEach(function(c){
+    c.classList.toggle('on',c.dataset.cat===cat);
+  });
+  applyStampTab(cat);
+}
+function applyStampTab(cat){
+  var isAi=(cat==='ai'), isMy=(cat==='my');
+  document.getElementById('stBrowse').style.display=(isAi||isMy)?'none':'block';
+  document.getElementById('stAi').style.display=isAi?'block':'none';
+  document.getElementById('stMy').style.display=isMy?'block':'none';
+  document.querySelector('#mat-stamp .stsearch').style.display=(isAi||isMy)?'none':'block';
+  if(!isAi&&!isMy){_stCat=cat;renderStamps();}
+  if(isMy)renderMyMat();
+}
+/* ===== AI生成スタンプ =====
+   同じ言葉でも毎回かたちが変わる＝統一感が崩れる、という問題があるので
+   ①生成物は必ずマイ素材に保存 ②セット生成 ③スタイル参照 の3つで揃えられるようにする。 */
+var AI_BASES=['fukidashi:0','fukidashi:1','fukidashi:3','fukidashi:4','label:0','label:1','kazari:5','label:4'];
+var AI_COLORS=['#ef6108','#d94a4a','#2f6ad9','#12960a','#e8b931','#9724ba'];
+var _aiSeed=0, _styleRef=null;
+function setAiPrompt(el){
+  var t=document.getElementById('aiPrompt');
+  t.value=el.textContent+'のスタンプ';
+  t.focus();
+}
+/* セット生成の文言。土台と色は固定したまま言葉だけ変えるのでシリーズとして揃う */
+var SET_WORDS=['NEW','SALE','限定','人気'];
+/* 見た目を作る。スタイル参照があれば土台と色を固定し、文言だけ差し替える */
+function buildAiSticker(label,variant,forceText){
+  var base,color;
+  /* 画像参照(_styleRef.img)はモックでは再現できないので、その場合は通常抽選に戻す */
+  if(_styleRef&&_styleRef.base){ base=_styleRef.base; color=_styleRef.color; }
+  else{
+    _aiSeed=(_aiSeed*9301+49297)%233280;
+    base=AI_BASES[(_aiSeed+variant*3)%AI_BASES.length];
+    color=AI_COLORS[(Math.floor(_aiSeed/7)+variant)%AI_COLORS.length];
+  }
+  var p=base.split(':'), shape=STAMPS[p[0]][+p[1]].s;
+  var txt=(forceText||label||'NEW').slice(0,4);
+  /* ステッカーらしさは白フチ＋影で出す */
+  return {base:base,color:color,text:txt,
+    svg:'<g style="color:'+color+';filter:drop-shadow(0 2px 3px rgba(0,0,0,.35));">'+shape+'</g>'+
+        '<text x="50" y="47" text-anchor="middle" dominant-baseline="middle" '+
+        'style="font-size:'+(txt.length>3?17:22)+'px;font-weight:800;fill:#fff;stroke:'+color+';stroke-width:.6;paint-order:stroke;">'+txt+'</text>'};
+}
+/* 生成プロキシ(dev-server.js)が居れば本物を、居なければ図形合成のモックを使う。
+   これでスタンドアロンHTMLとして配ってもワイヤーとして成立する。 */
+var STAMP_API=(location.protocol==='file:'?'http://127.0.0.1:5173':'')+'/api/stamp';
+function genStampReal(prompt,ref){
+  var ctl=new AbortController();
+  var to=setTimeout(function(){ctl.abort();},60000); /* 画像生成は数秒〜数十秒かかる */
+  return fetch(STAMP_API,{method:'POST',headers:{'content-type':'application/json'},
+      body:JSON.stringify({prompt:prompt,ref:ref||null}),signal:ctl.signal})
+    .then(function(r){return r.json();})
+    .then(function(d){clearTimeout(to);if(!d||!d.ok)throw new Error((d&&d.error)||'生成に失敗しました');return d.image;})
+    .catch(function(e){clearTimeout(to);throw e;});
+}
+function aiGenStamp(count){
+  var t=document.getElementById('aiPrompt');
+  var prompt=(t.value||'').trim();
+  if(!prompt){toast.info('どんなスタンプが欲しいか入力してください');t.focus();return;}
+  var fox=document.getElementById('aiFox');
+  var b1=document.getElementById('aiBtn1'), b4=document.getElementById('aiBtn4');
+  document.getElementById('aiFoxLabel').textContent=count>1?'スタンプを4種生成中…':'スタンプを生成中…';
+  fox.classList.add('on'); b1.disabled=true; b4.disabled=true;
+  /* まず実生成を試す。ダメならモックへ落とす（理由はトーストで出す） */
+  var words=count>1?SET_WORDS.slice(0,count):[null];
+  Promise.all(words.map(function(w){
+    return genStampReal(prompt+(w?'（文言は「'+w+'」）':''),_styleRef&&_styleRef.img);
+  })).then(function(imgs){
+    fox.classList.remove('on'); b1.disabled=false; b4.disabled=false;
+    imgs.forEach(function(src,v){
+      var name=(count>1?prompt.slice(0,6)+'／'+words[v]:prompt.slice(0,8));
+      MYMAT.unshift({name:name,img:src,ai:true,pinned:false});
+      var el=document.createElement('div');
+      el.style.padding='0';
+      el.dataset.name=name;
+      el.innerHTML='<img src="'+src+'" width="120" style="display:block;">';
+      placeObj(el);
+    });
+    renderMyMat();
+    toast.info(count>1?'4種を生成してマイ素材に保存しました':'生成してマイ素材に保存しました');
+  }).catch(function(e){
+    toast.info('生成できないのでダミーで代用します（'+(e.message||e)+'）');
+    aiGenStampMock(count,prompt,fox,b1,b4);
+  });
+}
+/* 生成プロキシが無いときの代用。手持ちの図形を組み合わせて置くだけで、モデルは呼ばない。 */
+function aiGenStampMock(count,prompt,fox,b1,b4){
+  setTimeout(function(){
+    fox.classList.remove('on'); b1.disabled=false; b4.disabled=false;
+    /* セット生成のときだけ土台を固定して、シリーズとして見た目を揃える */
+    var lockedRef=_styleRef, made=[];
+    for(var v=0;v<count;v++){
+      if(count>1&&v===0&&!_styleRef){var first=buildAiSticker(prompt,0);_styleRef={base:first.base,color:first.color};}
+      var word=count>1?SET_WORDS[v%SET_WORDS.length]:null;
+      var st=buildAiSticker(prompt,v,word);
+      var name=count>1?prompt.slice(0,6)+'／'+word:prompt.slice(0,8);
+      MYMAT.unshift({name:name,svg:st.svg,ai:true,pinned:false,base:st.base,color:st.color});
+      made.push(st);
+    }
+    if(count>1)_styleRef=lockedRef;
+    /* 1案即反映。まとめて生成でも全部置いてから並べ替えられるほうが早い */
+    made.forEach(function(st){
+      var el=document.createElement('div');
+      el.style.padding='0';
+      el.dataset.name='AI:'+st.text;
+      el.innerHTML='<svg width="84" height="84" viewBox="-6 -6 112 112" style="display:block;">'+st.svg+'</svg>';
+      placeObj(el);
+    });
+    renderMyMat();
+    toast.info(count>1?'4種を生成してマイ素材に保存しました':'生成してマイ素材に保存しました');
+  },1400);
+}
+function clearStyleRef(){
+  _styleRef=null;
+  document.getElementById('stStyleRef').classList.remove('on');
+  toast.info('スタイル参照を解除しました');
+}
+/* ===== マイ素材 =====
+   保存済みは「生成し直さずに同じものを置く」ための場所。ピン留めは先頭固定。 */
+var MYMAT=[
+  {name:'ブランド枠',svg:'<g style="color:#ef6108;">'+STAMPS.label[3].s+'</g><text x="50" y="47" text-anchor="middle" dominant-baseline="middle" style="font-size:20px;font-weight:800;fill:#fff;">NEW</text>',ai:false,pinned:true,base:'label:3',color:'#ef6108'},
+  {name:'セール吹き出し',svg:'<g style="color:#d94a4a;filter:drop-shadow(0 2px 3px rgba(0,0,0,.35));">'+STAMPS.fukidashi[3].s+'</g><text x="50" y="47" text-anchor="middle" dominant-baseline="middle" style="font-size:17px;font-weight:800;fill:#fff;">SALE</text>',ai:true,pinned:false,base:'fukidashi:3',color:'#d94a4a'}
+];
+/* 保存済みは実生成のPNGと、代用のSVGが混在しうる */
+function matThumb(m){
+  return m.img?'<img src="'+m.img+'" alt="'+m.name+'" style="width:62%;height:62%;object-fit:contain;display:block;">'
+              :'<svg viewBox="-6 -6 112 112">'+m.svg+'</svg>';
+}
+function renderMyMat(){
+  var g=document.getElementById('myGrid'); if(!g)return;
+  var list=MYMAT.map(function(m,i){return {m:m,i:i};});
+  list.sort(function(a,b){return (b.m.pinned?1:0)-(a.m.pinned?1:0);});
+  g.innerHTML=list.length?list.map(function(x){
+    return '<div class="mycard'+(x.m.pinned?' pinned':'')+'" title="'+x.m.name+'（クリックで配置）" onclick="useMyMat('+x.i+')">'+
+      matThumb(x.m)+
+      (x.m.ai?'<span class="mbadge">✨AI</span>':'<span class="mbadge">ブランド</span>')+
+      '<button class="mypin" title="ピン留め" onclick="event.stopPropagation();pinMyMat('+x.i+')">'+
+      '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2 22 10l-5 1-4 4 1 6-3 1-3-6-5 3-1-2 5-4-5-4 1-2 6 2 4-4Z"/></svg></button>'+
+      '<button class="mystyle" title="このスタイルで生成" onclick="event.stopPropagation();styleFromMyMat('+x.i+')">✨</button>'+
+      '</div>';
+  }).join(''):'<div class="stempty" style="grid-column:1/-1;">保存済みの素材はまだありません</div>';
+}
+/* 保存済みは毎回まったく同じものが出る（ここが再生成との違い） */
+function useMyMat(i){
+  var m=MYMAT[i]; if(!m)return;
+  var el=document.createElement('div');
+  el.style.padding='0';
+  el.dataset.name=m.name;
+  el.innerHTML=m.img?'<img src="'+m.img+'" width="120" style="display:block;">'
+                    :'<svg width="84" height="84" viewBox="-6 -6 112 112" style="display:block;">'+m.svg+'</svg>';
+  placeObj(el);
+  toast.info(m.name+'を配置しました');
+}
+function pinMyMat(i){
+  var m=MYMAT[i]; if(!m)return;
+  m.pinned=!m.pinned;
+  renderMyMat();
+  toast.info(m.pinned?'ピン留めしました（ブランド素材として先頭に固定）':'ピン留めを解除しました');
+}
+/* 保存済みを土台にして生成＝文言だけ変えても見た目が揃う */
+function styleFromMyMat(i){
+  var m=MYMAT[i]; if(!m)return;
+  /* 実生成の素材は画像そのものを参照として送る。代用SVGは土台と色を固定する。 */
+  _styleRef=m.img?{img:m.img}:{base:m.base,color:m.color};
+  var ref=document.getElementById('stStyleRef');
+  document.getElementById('stStyleRefThumb').innerHTML=m.img
+    ?'<img src="'+m.img+'" style="width:22px;height:22px;object-fit:contain;">'
+    :'<svg viewBox="-6 -6 112 112" style="width:22px;height:22px;">'+m.svg+'</svg>';
+  ref.classList.add('on');
+  switchStampTab('ai');
+  toast.info('「'+m.name+'」のスタイルで生成します');
 }
 
 /* 同じ枠内の選択肢を1つだけonにする（書式・文字の形など） */
@@ -1606,6 +1997,10 @@ function goBack(){
   if(from==='manual'){location.href='flow_manual_wire.html#editor';}
   else{location.href='post_editor_image_wire.html';}
 }
+/* スタンプ一覧の初期描画。既定タブはAI生成（HTMLの初期表示と状態を揃える） */
+renderStamps();
+renderMyMat();
+switchStampTab('ai');
 </script>
 
 <!-- 複製メニュー：このシート / 他のシート / 他の投稿 -->
