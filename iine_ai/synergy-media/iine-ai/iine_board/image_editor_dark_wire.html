@@ -371,7 +371,7 @@ body{background:#0a0908;padding:18px;color:var(--color-editor-foreground);}
 .chip{flex:none;font-size:11px;font-weight:500;color:var(--color-editor-muted);background:var(--color-editor-elevated);border:1px solid var(--color-editor-border);border-radius:var(--radius-full);padding:5px 11px;cursor:pointer;white-space:nowrap;}
 .chip.on{color:#fff;background:var(--color-primary);border-color:var(--color-primary);font-weight:var(--font-weight-body-strong);}
 .stgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px;}
-.sttile{aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);background:var(--color-editor-elevated);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;}
+.sttile{position:relative;aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);background:var(--color-editor-elevated);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;}
 .sttile:hover{border-color:var(--color-primary);}
 .sttile svg{width:66%;height:66%;display:block;}
 .stnote{font-size:var(--text-meta);color:var(--color-editor-muted);margin-top:10px;line-height:1.6;}
@@ -398,11 +398,19 @@ body{background:#0a0908;padding:18px;color:var(--color-editor-foreground);}
 .mycard{position:relative;aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);background:var(--color-editor-elevated);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;}
 .mycard:hover{border-color:var(--color-primary);}
 .mycard svg{width:62%;height:62%;display:block;}
+/* 配置済みオブジェクトから保存したものは中身がHTMLなので縮めて見せる */
+.mhtml{display:flex;align-items:center;justify-content:center;transform:scale(.5);transform-origin:center;pointer-events:none;}
 .mbadge{position:absolute;top:3px;left:3px;font-size:9px;line-height:1;padding:2px 4px;border-radius:3px;background:rgba(0,0,0,.62);color:#fff;pointer-events:none;}
-.mypin{position:absolute;top:2px;right:2px;width:18px;height:18px;border:none;border-radius:var(--radius-full);background:rgba(0,0,0,.62);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;opacity:0;}
-.mycard:hover .mypin,.mycard.pinned .mypin{opacity:1;}
-.mycard.pinned .mypin{background:var(--color-primary);}
-.mypin svg{width:11px;height:11px;}
+/* ===== お気に入り（⭐） =====
+   スタンプ／図形のタイル・マイ素材のカード・配置済みオブジェクトの操作バーで
+   同じ⭐に揃える。押した時点でマイ素材に入り、⭐付きが先頭に固定される。 */
+.favbtn{position:absolute;top:2px;right:2px;width:18px;height:18px;border:none;border-radius:var(--radius-full);background:rgba(0,0,0,.62);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;opacity:0;transition:opacity .12s,background .12s;}
+.favbtn svg{width:11px;height:11px;}
+.favbtn:hover{background:var(--color-primary);}
+.favbtn.on{opacity:1;background:var(--color-primary);}
+.sttile:hover .favbtn,.shtile:hover .favbtn,.mycard:hover .favbtn{opacity:1;}
+/* 図形タイルはインラインstyleで組んであるので、⭐を置く受け皿だけ足す */
+.shtile{position:relative;}
 .mystyle{position:absolute;bottom:2px;right:2px;width:18px;height:18px;border:none;border-radius:var(--radius-full);background:rgba(0,0,0,.62);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;font-size:9px;line-height:1;opacity:0;}
 .mycard:hover .mystyle{opacity:1;}
 .mystyle:hover{background:var(--color-primary);}
@@ -429,6 +437,41 @@ body{background:#0a0908;padding:18px;color:var(--color-editor-foreground);}
 .gdadd{width:100%;background:transparent;border:1px dashed var(--color-editor-border);color:var(--color-editor-muted);border-radius:var(--radius-md);padding:9px;font-size:var(--text-label);cursor:pointer;}
 .gdadd:hover{border-color:var(--color-primary);color:var(--color-primary);}
 .gdsum{display:flex;justify-content:space-between;font-size:var(--text-meta);color:var(--color-editor-muted);margin:8px 2px 0;}
+/* ===== 表の編集（スプレッドシート風） =====
+   行数・列数を数字で入れるだけだと、置いてみるまで中身が分からなかった。
+   パネルの中に実物のかたちのグリッドを出して、そこへ直接打ち込ませる。
+   行番号・列記号・選択の当たり方はスプレッドシートに寄せて、迷わず触れるようにする。 */
+.tblbar{display:flex;align-items:center;gap:4px;margin:8px 0 6px;}
+.tblbar button{width:26px;height:26px;flex:none;border:1px solid var(--color-editor-border);background:var(--color-editor-elevated);color:var(--color-editor-muted);border-radius:var(--radius-sm);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;font-size:11px;font-weight:700;}
+.tblbar button:hover{border-color:var(--color-primary);color:var(--color-primary);}
+.tblbar button.on{background:var(--color-primary);border-color:var(--color-primary);color:#fff;}
+.tblbar button.danger:hover{border-color:var(--color-destructive);color:var(--color-destructive);}
+.tblbar button svg{width:13px;height:13px;}
+.tblbar .sep{width:1px;height:16px;background:var(--color-editor-border);margin:0 2px;flex:none;}
+.tblbar .swpop{position:relative;}
+.tblbar .swmenu{display:none;position:absolute;top:calc(100% + 5px);left:0;z-index:30;background:var(--color-editor-elevated);border:1px solid var(--color-editor-border);border-radius:var(--radius-md);box-shadow:0 4px 16px rgba(0,0,0,.35);padding:7px;gap:6px;flex-wrap:wrap;width:132px;}
+.tblbar .swmenu.open{display:flex;}
+.tblbar .swmenu span{width:22px;height:22px;border-radius:var(--radius-full);cursor:pointer;border:2px solid transparent;}
+.tblbar .swmenu span:hover{border-color:#fff;}
+.tblwrap{border:1px solid var(--color-editor-border);border-radius:var(--radius-md);overflow:auto;background:var(--color-editor-elevated);max-height:230px;}
+table.tbledit{border-collapse:separate;border-spacing:0;font-size:11px;}
+table.tbledit th,table.tbledit td{border-right:1px solid var(--color-editor-border);border-bottom:1px solid var(--color-editor-border);padding:0;}
+/* 行番号と列記号。ここを押すと行・列まるごと選べる（削除もここ起点） */
+.tbledit .tbhd{position:sticky;background:var(--color-editor-surface);color:var(--color-editor-muted);font-size:9px;font-weight:600;text-align:center;cursor:pointer;user-select:none;min-width:20px;height:19px;}
+.tbledit thead .tbhd{top:0;z-index:2;}
+.tbledit tbody .tbhd{left:0;z-index:1;}
+.tbledit .tbhd.corner{left:0;top:0;z-index:3;cursor:default;}
+.tbledit .tbhd:not(.corner):hover{color:var(--color-primary);background:rgba(239,97,8,.12);}
+.tbledit .cell{min-width:64px;max-width:120px;height:27px;padding:4px 7px;outline:none;color:var(--color-editor-foreground);white-space:nowrap;overflow:hidden;cursor:text;}
+.tbledit .cell.sel{box-shadow:inset 0 0 0 2px var(--color-primary);}
+/* 罫線オフでも編集中は薄い目安線を残す（完全に消すとどこを打っているか分からなくなる） */
+table.tbledit.noborder td.cell{border-right-color:rgba(255,255,255,.05);border-bottom-color:rgba(255,255,255,.05);}
+.tblfoot{display:flex;gap:6px;margin-top:6px;}
+.tblfoot button{flex:1;background:transparent;border:1px dashed var(--color-editor-border);color:var(--color-editor-muted);border-radius:var(--radius-md);padding:8px 4px;font-size:11px;cursor:pointer;}
+.tblfoot button:hover{border-color:var(--color-primary);color:var(--color-primary);}
+.tblhint{font-size:var(--text-meta);color:var(--color-editor-muted);font-weight:400;margin-left:6px;}
+.tblstyle{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
+.tblstyle .fmtbtn{padding:8px 4px;font-size:11px;}
 /* ===== 調整スライダー（既存の見た目そのままに、掴んで動かせるようにした） ===== */
 .adjsl{margin-bottom:16px;}
 .adjsl-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
@@ -863,7 +906,7 @@ body{background:#0a0908;padding:18px;color:var(--color-editor-foreground);}
                   <button onclick="toast.info('いいねドライブの素材を読み込みます')">ドライブから読み込む</button>
                 </div>
                 <div class="stnote">
-                  ピン留めした素材は先頭に固定され、ブランド素材としていいねドライブにも並びます。<br>
+                  ⭐お気に入りにした素材は先頭に固定され、ブランド素材としていいねドライブにも並びます。<br>
                   素材を選んで「このスタイルで生成」を押すと、見た目を揃えたまま別の文言で作れます。
                 </div>
               </div>
@@ -871,16 +914,16 @@ body{background:#0a0908;padding:18px;color:var(--color-editor-foreground);}
             <div class="psubpane" id="mat-shape" style="display:none;">
             <div class="rh">図形を追加</div>
             <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px;">
-              <div style="aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;" onclick="addShapeObj('rect')" title="この図形を追加"><div style="width:28px;height:28px;background:var(--color-editor-muted);border-radius:2px;"></div></div>
-              <div style="aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;" onclick="addShapeObj('circle')" title="この図形を追加"><div style="width:28px;height:28px;background:var(--color-editor-muted);border-radius:50%;"></div></div>
-              <div style="aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;" onclick="addShapeObj('tri')" title="この図形を追加"><div style="width:0;height:0;border-left:14px solid transparent;border-right:14px solid transparent;border-bottom:24px solid var(--color-editor-muted);"></div></div>
-              <div style="aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;" onclick="addShapeObj('line')" title="この図形を追加"><div style="width:28px;height:2px;background:var(--color-editor-muted);"></div></div>
+              <div class="shtile" style="aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;" onclick="addShapeObj('rect')" title="この図形を追加"><div style="width:28px;height:28px;background:var(--color-editor-muted);border-radius:2px;"></div><button class="favbtn" title="お気に入りに追加" onclick="event.stopPropagation();favShape('rect')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4l-5.8 3.1 1.1-6.5-4.7-4.6 6.5-.9Z"/></svg></button></div>
+              <div class="shtile" style="aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;" onclick="addShapeObj('circle')" title="この図形を追加"><div style="width:28px;height:28px;background:var(--color-editor-muted);border-radius:50%;"></div><button class="favbtn" title="お気に入りに追加" onclick="event.stopPropagation();favShape('circle')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4l-5.8 3.1 1.1-6.5-4.7-4.6 6.5-.9Z"/></svg></button></div>
+              <div class="shtile" style="aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;" onclick="addShapeObj('tri')" title="この図形を追加"><div style="width:0;height:0;border-left:14px solid transparent;border-right:14px solid transparent;border-bottom:24px solid var(--color-editor-muted);"></div><button class="favbtn" title="お気に入りに追加" onclick="event.stopPropagation();favShape('tri')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4l-5.8 3.1 1.1-6.5-4.7-4.6 6.5-.9Z"/></svg></button></div>
+              <div class="shtile" style="aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;" onclick="addShapeObj('line')" title="この図形を追加"><div style="width:28px;height:2px;background:var(--color-editor-muted);"></div><button class="favbtn" title="お気に入りに追加" onclick="event.stopPropagation();favShape('line')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4l-5.8 3.1 1.1-6.5-4.7-4.6 6.5-.9Z"/></svg></button></div>
               <!-- 星・ハートはアイコンフォントのサブセットに無く豆腐になっていたのでSVGに置換し、
                    合わせて未接続だったサムネイルにも追加処理を繋ぐ -->
-              <div style="aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;" onclick="addShapeObj('round')" title="この図形を追加"><div style="width:28px;height:28px;border:2px solid var(--color-editor-muted);border-radius:8px;background:transparent;"></div></div>
-              <div style="aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;" onclick="addStampObj('kazari',0)" title="この図形を追加"><svg viewBox="0 0 100 100" style="width:24px;height:24px;fill:var(--color-editor-muted);"><path d="M50 6 61 38 95 38 68 58 78 92 50 71 22 92 32 58 5 38 39 38Z"/></svg></div>
-              <div style="aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;" onclick="addStampObj('kazari',1)" title="この図形を追加"><svg viewBox="0 0 100 100" style="width:24px;height:24px;fill:var(--color-editor-muted);"><path d="M50 88C22 68 8 52 8 35A21 21 0 0 1 50 26 21 21 0 0 1 92 35c0 17-14 33-42 53Z"/></svg></div>
-              <div style="aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;" onclick="addStampObj('yajirushi',0)" title="この図形を追加"><svg viewBox="0 0 100 100" style="width:24px;height:24px;fill:var(--color-editor-muted);"><path d="M6 42h56V22l32 28-32 28V58H6Z"/></svg></div>
+              <div class="shtile" style="aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;" onclick="addShapeObj('round')" title="この図形を追加"><div style="width:28px;height:28px;border:2px solid var(--color-editor-muted);border-radius:8px;background:transparent;"></div><button class="favbtn" title="お気に入りに追加" onclick="event.stopPropagation();favShape('round')"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4l-5.8 3.1 1.1-6.5-4.7-4.6 6.5-.9Z"/></svg></button></div>
+              <div class="shtile" style="aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;" onclick="addStampObj('kazari',0)" title="この図形を追加"><svg viewBox="0 0 100 100" style="width:24px;height:24px;fill:var(--color-editor-muted);"><path d="M50 6 61 38 95 38 68 58 78 92 50 71 22 92 32 58 5 38 39 38Z"/></svg><button class="favbtn" title="お気に入りに追加" onclick="event.stopPropagation();favStamp('kazari',0)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4l-5.8 3.1 1.1-6.5-4.7-4.6 6.5-.9Z"/></svg></button></div>
+              <div class="shtile" style="aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;" onclick="addStampObj('kazari',1)" title="この図形を追加"><svg viewBox="0 0 100 100" style="width:24px;height:24px;fill:var(--color-editor-muted);"><path d="M50 88C22 68 8 52 8 35A21 21 0 0 1 50 26 21 21 0 0 1 92 35c0 17-14 33-42 53Z"/></svg><button class="favbtn" title="お気に入りに追加" onclick="event.stopPropagation();favStamp('kazari',1)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4l-5.8 3.1 1.1-6.5-4.7-4.6 6.5-.9Z"/></svg></button></div>
+              <div class="shtile" style="aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;" onclick="addStampObj('yajirushi',0)" title="この図形を追加"><svg viewBox="0 0 100 100" style="width:24px;height:24px;fill:var(--color-editor-muted);"><path d="M6 42h56V22l32 28-32 28V58H6Z"/></svg><button class="favbtn" title="お気に入りに追加" onclick="event.stopPropagation();favStamp('yajirushi',0)"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4l-5.8 3.1 1.1-6.5-4.7-4.6 6.5-.9Z"/></svg></button></div>
             </div>
             <div class="fl" style="margin-top:14px;">塗りつぶし色</div>
             <div class="swatches"><span class="sw on" onclick="pickSw(this)" style="background:#ef6108"></span><span class="sw" onclick="pickSw(this)" style="background:#f5f3f0"></span><span class="sw" onclick="pickSw(this)" style="background:#2a2826"></span><span class="sw" onclick="pickSw(this)" style="background:#d94a4a"></span><span class="sw" onclick="pickSw(this)" style="background:#2f6ad9"></span><span class="sw" onclick="pickSw(this)" style="background:#12960a"></span></div>
@@ -911,11 +954,39 @@ body{background:#0a0908;padding:18px;color:var(--color-editor-foreground);}
           </div>
             <div class="psubpane" id="mat-table" style="display:none;">
             <div class="rh">表を追加</div>
-            <div style="display:flex;gap:12px;margin:12px 0;">
-              <div style="flex:1;"><div class="fl">行数</div><input class="finput" value="3" style="text-align:center;"></div>
-              <div style="flex:1;"><div class="fl">列数</div><input class="finput" value="3" style="text-align:center;"></div>
+            <div class="fl" style="margin-top:12px;">データ<span class="tblhint">セルを直接入力・Tabで次へ</span></div>
+            <!-- 選択したセル（または行・列）にその場で書式を当てる -->
+            <div class="tblbar">
+              <button id="tbBold" title="太字" onclick="tblFmt('b')">B</button>
+              <button id="tbAL" title="左寄せ" onclick="tblFmt('a','left')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h10M4 18h13"/></svg></button>
+              <button id="tbAC" title="中央寄せ" onclick="tblFmt('a','center')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M7 12h10M6 18h12"/></svg></button>
+              <button id="tbAR" title="右寄せ" onclick="tblFmt('a','right')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M10 12h10M7 18h13"/></svg></button>
+              <span class="sep"></span>
+              <span class="swpop">
+                <button title="セルの背景色" onclick="event.stopPropagation();this.nextElementSibling.classList.toggle('open')"><svg viewBox="0 0 24 24" fill="currentColor"><rect x="3" y="3" width="18" height="18" rx="3"/></svg></button>
+                <span class="swmenu" id="tbBgMenu" onclick="event.stopPropagation()"></span>
+              </span>
+              <button title="書式をクリア" onclick="tblFmt('clear')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 5l14 14M19 5L5 19"/></svg></button>
+              <span class="sep"></span>
+              <button class="danger" title="選択した行・列を削除" onclick="tblDel()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button>
             </div>
-            <button class="addbtn">表を追加</button>
+            <div class="tblwrap"><table class="tbledit" id="tblEdit"></table></div>
+            <div class="tblfoot">
+              <button onclick="tblAdd('row')">＋ 行</button>
+              <button onclick="tblAdd('col')">＋ 列</button>
+            </div>
+            <div class="gdsum"><span id="tblSize">3行 × 3列</span><span id="tblPick">セル未選択</span></div>
+            <div class="stnote">スプレッドシートでコピーして、そのまま貼り付け（⌘V）できます。<br>行番号・列記号をクリックすると行・列ごと選べます。</div>
+
+            <div class="fl" style="margin-top:14px;">見出しの色</div>
+            <div class="swatches" id="tblHeadSw"></div>
+            <div class="fl" style="margin-top:14px;">見た目</div>
+            <div class="tblstyle">
+              <div class="fmtbtn on" onclick="tblToggle(this,'head')">見出し行</div>
+              <div class="fmtbtn on" onclick="tblToggle(this,'stripe')">縞模様</div>
+              <div class="fmtbtn on" onclick="tblToggle(this,'border')">罫線</div>
+            </div>
+            <button class="addbtn" onclick="addTableObj()">表を追加</button>
           </div>
           </div>
 
@@ -1129,6 +1200,8 @@ var OBJ_BTNS=[
   {act:'dup',   label:'複製',    svg:'<rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>'},
   {act:'front', label:'前面へ',  svg:'<path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3 14l9 5 9-5"/>'},
   {act:'back',  label:'背面へ',  svg:'<path d="M3 10l9 5 9-5"/><path d="M12 3l9 5-9 5-9-5 9-5z" opacity=".4"/>'},
+  /* 置いたあとで「これ使い回したい」と思う瞬間がいちばん多いので、操作バーにも⭐を出す */
+  {act:'fav',   label:'お気に入り',svg:'<path d="M12 3l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.8l-5.8 3.1 1.1-6.5-4.7-4.6 6.5-.9Z"/>'},
   {act:'group', label:'グループ化',svg:'<rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/><path d="M11 7h4a2 2 0 0 1 2 2v4" stroke-dasharray="2 2"/>'},
   {act:'del',   label:'削除',    svg:'<path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>'}
 ];
@@ -1170,6 +1243,7 @@ function objAction(act,el,ev){
     renderLayers();
     return;
   }
+  if(act==='fav'){favFromObjs(sel.length?sel:[el]);return;}
   if(act==='dup'){openDupMenu(el,ev);return;}
   if(act==='__dupHere'){
     sel.forEach(function(o){
@@ -1287,6 +1361,242 @@ function gdDel(i){
   gdRender();
 }
 gdRender();
+
+/* ===== 表の編集 =====
+   行数・列数だけを指定させると、置いてみるまで中身が分からない。
+   実物のかたちのグリッドをパネルに出して、そこへ直接打ち込ませる。
+   入力中はDOMを作り直さない（作り直すとキャレットが飛ぶ）ので、
+   構造が変わるとき＝tblRender / 見た目だけ変わるとき＝tblPaint、と入口を分ける。 */
+var TBL_SW=['#ef6108','#2f6ad9','#12960a','#e8b931','#9724ba','#d94a4a','#2a2826','#f5f3f0'];
+var TBL={
+  head:true,stripe:true,border:true,
+  headBg:'#ef6108',
+  rows:[['物件名','家賃','広さ'],
+        ['南向き1LDK','8.2万','35㎡'],
+        ['駅前ワンルーム','6.5万','22㎡']],
+  fmt:{}   /* 'r,c' → {b:太字, a:寄せ, bg:背景色} */
+};
+var _tblSel=null;    /* {r0,c0,r1,c1} 選択範囲。行・列まるごとの選択もこの形で持つ */
+var _tblAnchor=null; /* Shift+クリックの起点 */
+function tblEsc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function tblCols(){return TBL.rows[0]?TBL.rows[0].length:0;}
+/* 列記号はスプレッドシートと同じ A,B,C… */
+function tblColName(c){var s='';c++;while(c>0){var m=(c-1)%26;s=String.fromCharCode(65+m)+s;c=Math.floor((c-1)/26);}return s;}
+function tblKey(r,c){return r+','+c;}
+function tblFmtOf(r,c){return TBL.fmt[tblKey(r,c)]||{};}
+function tblIsSel(r,c){
+  var s=_tblSel; if(!s)return false;
+  return r>=s.r0&&r<=s.r1&&c>=s.c0&&c<=s.c1;
+}
+/* 見出し行・縞模様・個別書式をこの順に重ねる（個別が最後＝いちばん強い） */
+function tblCellStyle(r,c){
+  var f=tblFmtOf(r,c),st='';
+  if(TBL.head&&r===0){st+='background:'+TBL.headBg+';color:#fff;font-weight:700;';}
+  else if(TBL.stripe&&r%2===0){st+='background:rgba(255,255,255,.035);';}
+  if(f.bg)st+='background:'+f.bg+';';
+  if(f.b)st+='font-weight:700;';
+  if(f.a)st+='text-align:'+f.a+';';
+  return st;
+}
+function tblRender(){
+  var t=document.getElementById('tblEdit'); if(!t)return;
+  var cols=tblCols(),h='<thead><tr><th class="tbhd corner"></th>';
+  for(var c=0;c<cols;c++)h+='<th class="tbhd" title="列を選択" onclick="tblPick(\'col\','+c+')">'+tblColName(c)+'</th>';
+  h+='</tr></thead><tbody>';
+  TBL.rows.forEach(function(row,r){
+    h+='<tr><th class="tbhd" title="行を選択" onclick="tblPick(\'row\','+r+')">'+(r+1)+'</th>';
+    row.forEach(function(v,c){
+      h+='<td class="cell" data-r="'+r+'" data-c="'+c+'" contenteditable="true" spellcheck="false"'+
+         ' onmousedown="tblDown(event,'+r+','+c+')" oninput="tblSet('+r+','+c+',this.textContent)"'+
+         ' onkeydown="tblNav(event,'+r+','+c+')">'+tblEsc(v)+'</td>';
+    });
+    h+='</tr>';
+  });
+  t.innerHTML=h+'</tbody>';
+  t.classList.toggle('noborder',!TBL.border);
+  tblPaint();
+}
+/* 中身は触らず、色と選択枠だけ塗り直す */
+function tblPaint(){
+  document.querySelectorAll('#tblEdit td.cell').forEach(function(td){
+    var r=+td.dataset.r,c=+td.dataset.c;
+    td.setAttribute('style',tblCellStyle(r,c));
+    td.classList.toggle('sel',tblIsSel(r,c));
+  });
+  var sz=document.getElementById('tblSize'),pk=document.getElementById('tblPick');
+  if(sz)sz.textContent=TBL.rows.length+'行 × '+tblCols()+'列';
+  if(pk){
+    var s=_tblSel;
+    pk.textContent=!s?'セル未選択'
+      :(s.r0===s.r1&&s.c0===s.c1)?tblColName(s.c0)+(s.r0+1)+' を選択中'
+      :((s.r1-s.r0+1)+'×'+(s.c1-s.c0+1)+' セルを選択中');
+  }
+  /* 書式ボタンの点灯を選択セルに合わせる */
+  var f=_tblSel?tblFmtOf(_tblSel.r0,_tblSel.c0):{};
+  var on={b:'tbBold',left:'tbAL',center:'tbAC',right:'tbAR'};
+  ['tbBold','tbAL','tbAC','tbAR'].forEach(function(id){
+    var b=document.getElementById(id); if(b)b.classList.remove('on');
+  });
+  if(f.b){var bb=document.getElementById(on.b); if(bb)bb.classList.add('on');}
+  if(f.a){var ab=document.getElementById(on[f.a]); if(ab)ab.classList.add('on');}
+}
+function tblSet(r,c,v){TBL.rows[r][c]=v;}
+function tblSelect(r0,c0,r1,c1){
+  _tblSel={r0:Math.min(r0,r1),c0:Math.min(c0,c1),r1:Math.max(r0,r1),c1:Math.max(c0,c1)};
+  tblPaint();
+}
+function tblDown(e,r,c){
+  if(e.shiftKey&&_tblAnchor){e.preventDefault();tblSelect(_tblAnchor.r,_tblAnchor.c,r,c);return;}
+  _tblAnchor={r:r,c:c};
+  tblSelect(r,c,r,c);
+}
+/* 行番号・列記号からの選択。ここを起点に削除もできる */
+function tblPick(kind,i){
+  _tblAnchor=null;
+  if(kind==='row')tblSelect(i,0,i,tblCols()-1);
+  else tblSelect(0,i,TBL.rows.length-1,i);
+}
+/* Tabで右、Enterで下。contenteditableの既定（タブ文字・改行）は殺す */
+function tblNav(e,r,c){
+  var cols=tblCols(),nr=r,nc=c;
+  if(e.key==='Tab'){e.preventDefault();nc=c+(e.shiftKey?-1:1);
+    if(nc>=cols){nc=0;nr=r+1;} if(nc<0){nc=cols-1;nr=r-1;}}
+  else if(e.key==='Enter'){e.preventDefault();nr=r+(e.shiftKey?-1:1);}
+  else return;
+  var next=document.querySelector('#tblEdit td.cell[data-r="'+nr+'"][data-c="'+nc+'"]');
+  if(!next)return;
+  next.focus();
+  _tblAnchor={r:nr,c:nc};
+  tblSelect(nr,nc,nr,nc);
+  /* キャレットは末尾に置く（全選択されると打ち直しになるため） */
+  var rg=document.createRange();rg.selectNodeContents(next);rg.collapse(false);
+  var sel=window.getSelection();sel.removeAllRanges();sel.addRange(rg);
+}
+/* 選択範囲へ書式を当てる。同じ値をもう一度押すと解除 */
+function tblFmt(k,v){
+  if(!_tblSel){toast.info('セルを選んでから書式を押してください');return;}
+  var s=_tblSel,first=tblFmtOf(s.r0,s.c0);
+  var off=(k==='b')?!!first.b:(k==='a')?first.a===v:false;
+  for(var r=s.r0;r<=s.r1;r++)for(var c=s.c0;c<=s.c1;c++){
+    var key=tblKey(r,c);
+    if(k==='clear'){delete TBL.fmt[key];continue;}
+    var f=TBL.fmt[key]||(TBL.fmt[key]={});
+    if(k==='b')f.b=!off;
+    else if(k==='a'){if(off)delete f.a;else f.a=v;}
+    else f[k]=v;
+  }
+  tblPaint();
+}
+function tblAdd(kind){
+  if(kind==='row')TBL.rows.push(TBL.rows[0].map(function(){return '';}));
+  else TBL.rows.forEach(function(r){r.push('');});
+  tblRender();
+}
+/* 選択が行まるごと／列まるごとのときはその行・列を消す。セル範囲なら中身だけ消す */
+function tblDel(){
+  var s=_tblSel;
+  if(!s){toast.info('削除する行・列を選んでください');return;}
+  var wholeRow=(s.c0===0&&s.c1===tblCols()-1), wholeCol=(s.r0===0&&s.r1===TBL.rows.length-1);
+  if(wholeRow&&!wholeCol){
+    if(TBL.rows.length-(s.r1-s.r0+1)<1){toast.info('行は1つ以上必要です');return;}
+    TBL.rows.splice(s.r0,s.r1-s.r0+1);
+    TBL.fmt={};_tblSel=null;tblRender();
+    toast.info('行を削除しました');return;
+  }
+  if(wholeCol){
+    if(tblCols()-(s.c1-s.c0+1)<1){toast.info('列は1つ以上必要です');return;}
+    TBL.rows.forEach(function(r){r.splice(s.c0,s.c1-s.c0+1);});
+    TBL.fmt={};_tblSel=null;tblRender();
+    toast.info('列を削除しました');return;
+  }
+  for(var r=s.r0;r<=s.r1;r++)for(var c=s.c0;c<=s.c1;c++)TBL.rows[r][c]='';
+  tblRender();
+  toast.info('セルの中身を消しました');
+}
+function tblToggle(el,k){
+  TBL[k]=!TBL[k];
+  el.classList.toggle('on',TBL[k]);
+  tblRender();
+}
+function tblHeadColor(el,col){
+  el.parentElement.querySelectorAll('.sw').forEach(function(s){s.classList.remove('on');});
+  el.classList.add('on');
+  TBL.headBg=col;
+  if(!TBL.head){TBL.head=true;document.querySelectorAll('#mat-table .tblstyle .fmtbtn')[0].classList.add('on');}
+  tblPaint();
+}
+/* 見出し色とセル背景色は同じ色を使うので、スウォッチはまとめて組み立てる */
+(function(){
+  var hs=document.getElementById('tblHeadSw'),bm=document.getElementById('tbBgMenu');
+  if(hs)hs.innerHTML=TBL_SW.map(function(c,i){
+    return '<span class="sw'+(i===0?' on':'')+'" style="background:'+c+'" onclick="tblHeadColor(this,\''+c+'\')"></span>';
+  }).join('');
+  if(bm)bm.innerHTML=TBL_SW.concat(['transparent']).map(function(c){
+    return '<span style="background:'+c+(c==='transparent'?';border-color:var(--color-editor-border)':'')+
+           '" title="'+(c==='transparent'?'背景なし':c)+'" onclick="tblCellBg(\''+c+'\')"></span>';
+  }).join('');
+  document.addEventListener('click',function(){
+    var m=document.getElementById('tbBgMenu'); if(m)m.classList.remove('open');
+  });
+})();
+function tblCellBg(col){
+  document.getElementById('tbBgMenu').classList.remove('open');
+  if(!_tblSel){toast.info('セルを選んでから色を選んでください');return;}
+  var s=_tblSel;
+  for(var r=s.r0;r<=s.r1;r++)for(var c=s.c0;c<=s.c1;c++){
+    var f=TBL.fmt[tblKey(r,c)]||(TBL.fmt[tblKey(r,c)]={});
+    if(col==='transparent')delete f.bg; else f.bg=col;
+  }
+  tblPaint();
+}
+/* スプレッドシートからのコピペ。タブ区切り＝列、改行＝行として流し込み、
+   足りない行・列はその場で足す（貼る前にサイズを合わせる手間をなくす） */
+(function(){
+  var t=document.getElementById('tblEdit'); if(!t)return;
+  t.addEventListener('paste',function(e){
+    var txt=(e.clipboardData||window.clipboardData).getData('text')||'';
+    if(txt.indexOf('\t')<0&&txt.indexOf('\n')<0)return; /* 単セルの文字列は既定の貼り付けに任せる */
+    e.preventDefault();
+    var td=e.target.closest('.cell'); if(!td)return;
+    var r0=+td.dataset.r,c0=+td.dataset.c;
+    var grid=txt.replace(/\r/g,'').replace(/\n$/,'').split('\n').map(function(line){return line.split('\t');});
+    var needR=r0+grid.length, needC=c0+Math.max.apply(null,grid.map(function(g){return g.length;}));
+    while(TBL.rows.length<needR)TBL.rows.push(TBL.rows[0].map(function(){return '';}));
+    while(tblCols()<needC)TBL.rows.forEach(function(r){r.push('');});
+    grid.forEach(function(line,i){line.forEach(function(v,j){TBL.rows[r0+i][c0+j]=v;});});
+    tblRender();
+    tblSelect(r0,c0,r0+grid.length-1,needC-1);
+    toast.info(grid.length+'行 × '+(needC-c0)+'列を貼り付けました');
+  });
+})();
+/* 制作面に置く表。パネルで見えているものと同じ見た目にする */
+function tblHtml(){
+  var bd=TBL.border?'1px solid rgba(0,0,0,.14)':'none';
+  var h='<table style="border-collapse:collapse;font-size:11px;background:#fff;color:#2a2826;border-radius:4px;overflow:hidden;">';
+  TBL.rows.forEach(function(row,r){
+    h+='<tr>';
+    row.forEach(function(v,c){
+      var f=tblFmtOf(r,c),st='padding:5px 9px;border:'+bd+';white-space:nowrap;';
+      if(TBL.head&&r===0)st+='background:'+TBL.headBg+';color:#fff;font-weight:700;';
+      else if(TBL.stripe&&r%2===0)st+='background:rgba(0,0,0,.045);';
+      if(f.bg)st+='background:'+f.bg+';';
+      if(f.b)st+='font-weight:700;';
+      if(f.a)st+='text-align:'+f.a+';';
+      h+='<td style="'+st+'">'+tblEsc(v)+'</td>';
+    });
+    h+='</tr>';
+  });
+  return h+'</table>';
+}
+function addTableObj(){
+  var el=document.createElement('div');
+  el.style.padding='0';
+  el.dataset.name='表';
+  el.innerHTML=tblHtml();
+  placeObj(el);
+  toast.info(TBL.rows.length+'行 × '+tblCols()+'列の表を追加しました');
+}
+tblRender();
 
 /* ===== レイヤー一覧 =====
    キャンバスのDOM順がそのまま重なり順なので、逆順（手前が上）で並べる。 */
@@ -1638,7 +1948,8 @@ function renderStamps(){
   }else{ items=stampList(_stCat); }
   g.innerHTML=items.length?items.map(function(o){
     return '<div class="sttile" title="'+o.n+'" onclick="addStampObj(\''+o.cat+'\','+o.i+')">'+
-           '<svg viewBox="-5 -5 110 110" style="color:var(--color-editor-muted);">'+o.s+'</svg></div>';
+           '<svg viewBox="-5 -5 110 110" style="color:var(--color-editor-muted);">'+o.s+'</svg>'+
+           favBtnHtml('favStamp(\''+o.cat+'\','+o.i+')',isFav(o.cat+':'+o.i))+'</div>';
   }).join(''):'<div class="stempty">「'+q+'」に一致するスタンプがありません</div>';
 }
 /* スタンプを制作面へ。色は選択中のスウォッチを currentColor として流し込む */
@@ -1732,7 +2043,7 @@ function aiGenStamp(count){
     fox.classList.remove('on'); b1.disabled=false; b4.disabled=false;
     imgs.forEach(function(src,v){
       var name=(count>1?prompt.slice(0,6)+'／'+words[v]:prompt.slice(0,8));
-      MYMAT.unshift({name:name,img:src,ai:true,pinned:false});
+      MYMAT.unshift({name:name,img:src,ai:true,fav:false});
       var el=document.createElement('div');
       el.style.padding='0';
       el.dataset.name=name;
@@ -1757,7 +2068,7 @@ function aiGenStampMock(count,prompt,fox,b1,b4){
       var word=count>1?SET_WORDS[v%SET_WORDS.length]:null;
       var st=buildAiSticker(prompt,v,word);
       var name=count>1?prompt.slice(0,6)+'／'+word:prompt.slice(0,8);
-      MYMAT.unshift({name:name,svg:st.svg,ai:true,pinned:false,base:st.base,color:st.color});
+      MYMAT.unshift({name:name,svg:st.svg,ai:true,fav:false,base:st.base,color:st.color});
       made.push(st);
     }
     if(count>1)_styleRef=lockedRef;
@@ -1779,29 +2090,101 @@ function clearStyleRef(){
   toast.info('スタイル参照を解除しました');
 }
 /* ===== マイ素材 =====
-   保存済みは「生成し直さずに同じものを置く」ための場所。ピン留めは先頭固定。 */
+   保存済みは「生成し直さずに同じものを置く」ための場所。
+   ⭐お気に入りを付けたものが先頭に固定され、いいねドライブにブランド素材として並ぶ。 */
 var MYMAT=[
-  {name:'ブランド枠',svg:'<g style="color:#ef6108;">'+STAMPS.label[3].s+'</g><text x="50" y="47" text-anchor="middle" dominant-baseline="middle" style="font-size:20px;font-weight:800;fill:#fff;">NEW</text>',ai:false,pinned:true,base:'label:3',color:'#ef6108'},
-  {name:'セール吹き出し',svg:'<g style="color:#d94a4a;filter:drop-shadow(0 2px 3px rgba(0,0,0,.35));">'+STAMPS.fukidashi[3].s+'</g><text x="50" y="47" text-anchor="middle" dominant-baseline="middle" style="font-size:17px;font-weight:800;fill:#fff;">SALE</text>',ai:true,pinned:false,base:'fukidashi:3',color:'#d94a4a'}
+  {name:'ブランド枠',svg:'<g style="color:#ef6108;">'+STAMPS.label[3].s+'</g><text x="50" y="47" text-anchor="middle" dominant-baseline="middle" style="font-size:20px;font-weight:800;fill:#fff;">NEW</text>',ai:false,fav:true,key:'label:3',base:'label:3',color:'#ef6108'},
+  {name:'セール吹き出し',svg:'<g style="color:#d94a4a;filter:drop-shadow(0 2px 3px rgba(0,0,0,.35));">'+STAMPS.fukidashi[3].s+'</g><text x="50" y="47" text-anchor="middle" dominant-baseline="middle" style="font-size:17px;font-weight:800;fill:#fff;">SALE</text>',ai:true,fav:false,base:'fukidashi:3',color:'#d94a4a'}
 ];
-/* 保存済みは実生成のPNGと、代用のSVGが混在しうる */
+/* 保存済みは実生成のPNG・代用のSVG・配置済みオブジェクトのHTMLが混在しうる */
 function matThumb(m){
-  return m.img?'<img src="'+m.img+'" alt="'+m.name+'" style="width:62%;height:62%;object-fit:contain;display:block;">'
-              :'<svg viewBox="-6 -6 112 112">'+m.svg+'</svg>';
+  if(m.img)return '<img src="'+m.img+'" alt="'+m.name+'" style="width:62%;height:62%;object-fit:contain;display:block;">';
+  if(m.html)return '<span class="mhtml">'+m.html+'</span>';
+  return '<svg viewBox="-6 -6 112 112">'+m.svg+'</svg>';
+}
+/* ===== お気に入り（⭐） =====
+   タイル・カード・操作バーで同じ⭐を使うので、ボタンの見た目はここに集約する。 */
+var FAV_STAR='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.6l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.4l-5.8 3.1 1.1-6.5-4.7-4.6 6.5-.9Z"/></svg>';
+function favBtnHtml(call,on){
+  return '<button class="favbtn'+(on?' on':'')+'" title="'+(on?'お気に入り解除':'お気に入りに追加')+
+         '" onclick="event.stopPropagation();'+call+'">'+FAV_STAR+'</button>';
+}
+/* 同じ素材を二重に登録しない。key（例 kazari:0 / shape:rect）で引く。
+   base は「生成のスタイル土台」を指す別物なので同一判定には使わない。 */
+function favIndex(key){
+  for(var i=0;i<MYMAT.length;i++){if(MYMAT[i].key===key)return i;}
+  return -1;
+}
+function isFav(key){var i=favIndex(key);return i>=0&&MYMAT[i].fav;}
+/* ⭐を押した本体。未登録なら追加、登録済みならお気に入りを外す */
+function favToggle(key,build){
+  var i=favIndex(key);
+  if(i<0){
+    MYMAT.unshift(build());
+    toast.info('お気に入りに追加しました（マイ素材に保存）');
+  }else{
+    MYMAT[i].fav=!MYMAT[i].fav;
+    toast.info(MYMAT[i].fav?'お気に入りに追加しました':'お気に入りを外しました');
+  }
+  /* 同じ素材はスタンプ一覧と図形タブの両方に出るので、⭐はまとめて塗り直す */
+  renderMyMat();
+  refreshFavStars();
+}
+/* スタンプ一覧・図形タブのスタンプ流用タイルから */
+function favStamp(cat,i){
+  var o=(STAMPS[cat]||[])[i]; if(!o)return;
+  var col=stColor();
+  favToggle(cat+':'+i,function(){
+    return {name:o.n,svg:'<g style="color:'+col+';">'+o.s+'</g>',ai:false,fav:true,
+            key:cat+':'+i,base:cat+':'+i,color:col};
+  });
+}
+/* 図形タブの基本図形から。サムネ用のSVGはここで持つ */
+var SHAPE_MAT={
+  rect:  {n:'四角',  s:'<rect x="10" y="26" width="80" height="48" rx="4" fill="currentColor"/>'},
+  circle:{n:'丸',    s:'<circle cx="50" cy="50" r="40" fill="currentColor"/>'},
+  tri:   {n:'三角',  s:'<path d="M50 12 92 84H8Z" fill="currentColor"/>'},
+  round: {n:'角丸枠',s:'<rect x="14" y="30" width="72" height="42" rx="12" fill="none" stroke="currentColor" stroke-width="8"/>'},
+  line:  {n:'線',    s:'<rect x="6" y="46" width="88" height="8" rx="4" fill="currentColor"/>'}
+};
+function favShape(kind){
+  var o=SHAPE_MAT[kind]; if(!o)return;
+  var col=(document.querySelector('#mat-shape .swatches .sw.on')||{style:{}}).style.background||'var(--color-primary)';
+  favToggle('shape:'+kind,function(){
+    /* 図形はスタンプの土台ではないので base は持たせない（＝✨スタイル参照の対象外） */
+    return {name:o.n,svg:'<g style="color:'+col+';">'+o.s+'</g>',ai:false,fav:true,
+            key:'shape:'+kind,color:col};
+  });
+}
+/* 配置済みオブジェクトの操作バーから。見たままを丸ごと保存する。
+   同じ図形を2回保存しても別物として並べたいので、keyは通し番号で振る */
+var _favSeq=0;
+function favFromObjs(objs){
+  var added=0;
+  objs.forEach(function(el){
+    var clone=el.cloneNode(true);
+    clone.querySelectorAll('.objbar').forEach(function(b){b.remove();});
+    clone.removeAttribute('class');clone.removeAttribute('onclick');
+    clone.style.left='';clone.style.top='';clone.style.position='';
+    MYMAT.unshift({name:layerName(el),html:clone.outerHTML,ai:false,fav:true,key:'obj:'+(_favSeq++)});
+    added++;
+  });
+  if(!added)return;
+  renderMyMat();
+  toast.info(added>1?added+'個をお気に入りに追加しました（マイ素材に保存）':'お気に入りに追加しました（マイ素材に保存）');
 }
 function renderMyMat(){
   var g=document.getElementById('myGrid'); if(!g)return;
   var list=MYMAT.map(function(m,i){return {m:m,i:i};});
-  list.sort(function(a,b){return (b.m.pinned?1:0)-(a.m.pinned?1:0);});
+  list.sort(function(a,b){return (b.m.fav?1:0)-(a.m.fav?1:0);});
   g.innerHTML=list.length?list.map(function(x){
-    return '<div class="mycard'+(x.m.pinned?' pinned':'')+'" title="'+x.m.name+'（クリックで配置）" onclick="useMyMat('+x.i+')">'+
+    return '<div class="mycard" title="'+x.m.name+'（クリックで配置）" onclick="useMyMat('+x.i+')">'+
       matThumb(x.m)+
       (x.m.ai?'<span class="mbadge">✨AI</span>':'<span class="mbadge">ブランド</span>')+
-      '<button class="mypin" title="ピン留め" onclick="event.stopPropagation();pinMyMat('+x.i+')">'+
-      '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M14 2 22 10l-5 1-4 4 1 6-3 1-3-6-5 3-1-2 5-4-5-4 1-2 6 2 4-4Z"/></svg></button>'+
-      '<button class="mystyle" title="このスタイルで生成" onclick="event.stopPropagation();styleFromMyMat('+x.i+')">✨</button>'+
+      favBtnHtml('favMyMat('+x.i+',this)',!!x.m.fav)+
+      ((x.m.img||x.m.base)?'<button class="mystyle" title="このスタイルで生成" onclick="event.stopPropagation();styleFromMyMat('+x.i+')">✨</button>':'')+
       '</div>';
-  }).join(''):'<div class="stempty" style="grid-column:1/-1;">保存済みの素材はまだありません</div>';
+  }).join(''):'<div class="stempty" style="grid-column:1/-1;">保存済みの素材はまだありません。<br>スタンプ・図形の⭐か、置いた素材の⭐から追加できます。</div>';
 }
 /* 保存済みは毎回まったく同じものが出る（ここが再生成との違い） */
 function useMyMat(i){
@@ -1810,15 +2193,29 @@ function useMyMat(i){
   el.style.padding='0';
   el.dataset.name=m.name;
   el.innerHTML=m.img?'<img src="'+m.img+'" width="120" style="display:block;">'
-                    :'<svg width="84" height="84" viewBox="-6 -6 112 112" style="display:block;">'+m.svg+'</svg>';
+              :m.html?m.html
+              :'<svg width="84" height="84" viewBox="-6 -6 112 112" style="display:block;">'+m.svg+'</svg>';
   placeObj(el);
   toast.info(m.name+'を配置しました');
 }
-function pinMyMat(i){
+function favMyMat(i,btn){
   var m=MYMAT[i]; if(!m)return;
-  m.pinned=!m.pinned;
+  m.fav=!m.fav;
+  if(btn)btn.classList.toggle('on',m.fav);
   renderMyMat();
-  toast.info(m.pinned?'ピン留めしました（ブランド素材として先頭に固定）':'ピン留めを解除しました');
+  refreshFavStars();
+  toast.info(m.fav?'お気に入りに追加しました（先頭に固定）':'お気に入りを外しました');
+}
+/* マイ素材側で⭐を外したら、スタンプ・図形タイルの⭐も合わせる */
+function refreshFavStars(){
+  document.querySelectorAll('#stGrid .favbtn,#mat-shape .favbtn').forEach(function(b){
+    var m=/fav(?:Stamp|Shape)\('([^']+)'(?:,(\d+))?/.exec(b.getAttribute('onclick')||'');
+    if(!m)return;
+    var base=m[2]!==undefined?m[1]+':'+m[2]:'shape:'+m[1];
+    var on=isFav(base);
+    b.classList.toggle('on',on);
+    b.title=on?'お気に入り解除':'お気に入りに追加';
+  });
 }
 /* 保存済みを土台にして生成＝文言だけ変えても見た目が揃う */
 function styleFromMyMat(i){
