@@ -10,13 +10,13 @@ import {
   IconMessageChatbot,
   IconMoodSmile,
   IconSend2,
+  IconX,
 } from '@tabler/icons-react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import {
   STARTERS,
   inquiryDraft,
@@ -95,6 +95,7 @@ export function HelpAssistant() {
   const [busy, setBusy] = useState(false);
   const [copied, setCopied] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const lastQuery = [...turns].reverse().find((t) => t.kind === 'user')?.text ?? '';
   const stage = turns.length ? turns[turns.length - 1].kind : 'idle';
@@ -149,31 +150,54 @@ export function HelpAssistant() {
   }
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild>
+    // modal を付けない = 背面のページをそのまま操作できる。
+    // 外側クリックでも閉じない（読みながら画面を触るのが普通の使い方なので）。
+    <Popover open={open} onOpenChange={setOpen} modal={false}>
+      <PopoverTrigger asChild>
         <Button
           size="lg"
           className="fixed bottom-5 right-5 z-40 h-13 gap-2 rounded-full px-5 shadow-lg"
-          aria-label="わからないことを聞く"
+          aria-label={open ? '閉じる' : 'わからないことを聞く'}
         >
-          <IconMessageChatbot className="size-5" />
-          <span className="hidden sm:inline">わからないことを聞く</span>
+          {open ? <IconX className="size-5" /> : <IconMessageChatbot className="size-5" />}
+          <span className="hidden sm:inline">
+            {open ? '閉じる' : 'わからないことを聞く'}
+          </span>
         </Button>
-      </SheetTrigger>
+      </PopoverTrigger>
 
-      <SheetContent side="right" className="flex w-full flex-col gap-0 p-0 sm:max-w-[440px]">
-        <SheetHeader className="flex-none border-b">
-          <SheetTitle className="flex items-center gap-2.5">
-            <Image
-              src={asset('/img/fox-support.png')}
-              alt=""
-              width={30}
-              height={30}
-              className="size-7.5 object-contain"
-            />
-            わからないことを聞く
-          </SheetTitle>
-        </SheetHeader>
+      <PopoverContent
+        side="top"
+        align="end"
+        sideOffset={12}
+        collisionPadding={16}
+        onInteractOutside={(e) => e.preventDefault()}
+        onOpenAutoFocus={(e) => {
+          // 勝手にスクロールさせずに入力欄へ
+          e.preventDefault();
+          inputRef.current?.focus({ preventScroll: true });
+        }}
+        className="flex h-[min(600px,70svh)] w-[calc(100vw-2rem)] flex-col gap-0 overflow-hidden p-0 shadow-xl sm:w-[400px]"
+      >
+        <div className="flex flex-none items-center gap-2.5 border-b px-4 py-3">
+          <Image
+            src={asset('/img/fox-support.png')}
+            alt=""
+            width={30}
+            height={30}
+            className="size-7.5 object-contain"
+          />
+          <p className="flex-1 text-[15px] font-bold">わからないことを聞く</p>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="-mr-1 size-8"
+            onClick={() => setOpen(false)}
+            aria-label="閉じる"
+          >
+            <IconX className="size-4" />
+          </Button>
+        </div>
 
         <ScrollArea className="min-h-0 flex-1">
           <div className="space-y-4 p-4">
@@ -377,6 +401,7 @@ export function HelpAssistant() {
             className="flex gap-2"
           >
             <Input
+              ref={inputRef}
               value={value}
               onChange={(e) => setValue(e.target.value)}
               placeholder="例: 予約した時間に投稿されない"
@@ -397,8 +422,7 @@ export function HelpAssistant() {
           </p>
         </div>
 
-        <Separator />
-      </SheetContent>
-    </Sheet>
+      </PopoverContent>
+    </Popover>
   );
 }

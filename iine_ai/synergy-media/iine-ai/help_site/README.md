@@ -59,7 +59,8 @@ public/img/
 
 Accordion（FAQ）/ Alert（注意・ポイント・参考）/ Badge（カテゴリ・新機能・プラン）/
 Breadcrumb / Button / Card（カテゴリ・STEP・できること・関連）/ Collapsible（左ナビ）/
-Command + Dialog（⌘K 検索）/ Input / ScrollArea（左ナビ）/ Separator / Sheet（SPナビ）/
+Command + Dialog（⌘K 検索）/ Input / Popover（アシスタントの浮きカード）/
+ScrollArea（左ナビ・アシスタント）/ Separator / Sheet（SPナビ）/
 Table（比較表）/ Tooltip
 
 ### shadcn に入れた手当て
@@ -102,7 +103,11 @@ Table（比較表）/ Tooltip
 
 ## ヘルプアシスタント
 
-右下の「わからないことを聞く」。聞かれたことに 3段で答える。
+右下の「わからないことを聞く」。**非モーダルの浮きカード**（shadcn Popover / `modal={false}`）。
+開いたまま背面のページをスクロール・クリックできる。外側クリックでは閉じない
+（読みながら画面を触るのが普通の使い方なので）。閉じるのはヘッダーの × か右下のボタン。
+
+聞かれたことに 3段で答える。
 
 1. **該当箇所を出す** — 見出し単位で検索して、記事の「この節」まで案内する。
    用語（リーチ・CTA 等）を聞かれたときは、探させずに定義を先に言い切る。
