@@ -133,6 +133,16 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .jb:hover{border-color:var(--color-primary);color:var(--color-primary);}
 .close{width:36px;height:36px;border:1px solid var(--color-border);border-radius:var(--radius-sm);background:var(--color-card);color:var(--color-muted-foreground);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .helpbtn{width:32px;height:32px;border:1.5px solid var(--color-primary);border-radius:var(--radius-full);background:var(--color-card);color:var(--color-primary);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;display:flex;align-items:center;justify-content:center;text-decoration:none;}.helpbtn{transition:background .15s,color .15s,border-color .15s;}.helpbtn:hover{background:var(--color-primary);color:var(--color-on-primary);border-color:var(--color-primary);}
+/* === ヘルプ導線 === */
+/* 項目の横に置く小さい「?」。ヘッダーの「?」より一段弱く見せる */
+.help-inline{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;margin-left:8px;
+  border:1.5px solid var(--color-primary);border-radius:var(--radius-full);
+  color:var(--color-primary);background:var(--color-card);
+  font-size:11px;font-weight:var(--font-weight-body-strong);line-height:1;
+  text-decoration:none;vertical-align:middle;flex:none;
+  transition:background .15s,color .15s;}
+.help-inline:hover{background:var(--color-primary);color:var(--color-on-primary);}
+
 .hdr-left{display:flex;align-items:center;gap:10px;}
 .hdr-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
 .hdr-page{font-size:var(--text-h3);font-weight:var(--font-weight-h3);display:flex;align-items:center;gap:8px;}
@@ -401,9 +411,82 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
   /* Editor: main + ai-panel stacks vertically */
   #sc_editor [style*="grid-template-columns:240px"]{display:flex !important;flex-direction:column !important;}
   .ai-panel-open,.ai-panel-closed{width:100% !important;}
-  #sc_finish>div{flex-direction:column !important;gap:24px !important;padding:24px 16px !important;}
-  #sc_finish>div>div:last-child{width:100% !important;max-width:320px;margin:0 auto;}
+  .donebody>div{flex-direction:column !important;gap:24px !important;padding:24px 16px !important;}
+  .donebody>div>div:last-child{width:100% !important;max-width:320px;margin:0 auto;}
 }
+
+/* ===== 完成モーダル =====
+   ステップ4の別ページをやめてモーダルにした。編集画面を閉じずに結果だけ見せる。 */
+.donemask{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:900;}
+.donemask.open{display:block;}
+.donemodal{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:901;
+  width:820px;max-width:calc(100vw - 40px);max-height:90vh;overflow-y:auto;
+  background:var(--color-card);border-radius:var(--radius-xl);box-shadow:0 24px 64px rgba(0,0,0,.24);}
+.donemodal.open{display:block;}
+.doneclose{position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:var(--radius-sm);
+  border:1px solid var(--color-border);background:var(--color-card);color:var(--color-muted-foreground);
+  font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1;}
+.doneclose:hover{background:var(--color-background);}
+@media(max-width:768px){ .donemodal{width:calc(100vw - 24px);max-height:88vh;} }
+
+/* ===== まとめて作る（同時オプション） =====
+   別ルートを増やさず、企画を考えるところに件数だけ足す。
+   1件のときは今までどおり。複数なら編集を挟まず一覧で受け取る。 */
+.bulkbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:14px;padding:12px 16px;
+  border:1px solid var(--color-border);border-radius:var(--radius-lg);background:var(--color-surface);}
+.bulkbar .bl{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);}
+.bulkseg{display:inline-flex;border:1px solid var(--color-border-strong);border-radius:var(--radius-md);overflow:hidden;background:var(--color-card);}
+.bulkseg button{border:none;background:transparent;padding:9px 18px;font-family:inherit;font-size:var(--text-body);
+  font-weight:var(--font-weight-body-strong);color:var(--color-foreground);cursor:pointer;}
+.bulkseg button+button{border-left:1px solid var(--color-border);}
+.bulkseg button.on{background:var(--color-primary);color:var(--color-on-primary);}
+.bulkhint{font-size:var(--text-label);color:var(--color-muted-foreground);margin-left:auto;}
+/* 完成モーダルの複数カード一覧 */
+.bulklist{padding:28px 32px;}
+.bulkhd{text-align:center;margin-bottom:20px;}
+.bulkhd img{width:96px;height:96px;object-fit:contain;display:block;margin:0 auto 10px;}
+.bulkhd .t{font-size:var(--text-h2);font-weight:var(--font-weight-h2);}
+.bulkhd .s{font-size:var(--text-body);color:var(--color-muted-foreground);margin-top:6px;}
+.bulkgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px;}
+.bulkcard{border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden;background:var(--color-card);}
+.bulkcard .th{aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.85);font-size:26px;}
+.bulkcard .bd{padding:11px 12px;}
+.bulkcard .ttl{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);line-height:1.5;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.9em;}
+.bulkcard .cap{font-size:var(--text-meta);color:var(--color-muted-foreground);line-height:1.7;margin-top:6px;
+  white-space:pre-wrap;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
+.bulkcard .ed{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;border-radius:var(--radius-sm);
+  border:1px solid var(--color-border);background:transparent;font-family:inherit;font-size:var(--text-meta);
+  font-weight:var(--font-weight-body-strong);color:var(--color-foreground);cursor:pointer;}
+.bulkcard .ed:hover{border-color:var(--color-primary);color:var(--color-primary);background:var(--color-primary-subtle);}
+.bulkfoot{display:flex;gap:12px;justify-content:center;}
+@media(max-width:768px){ .bulkgrid{grid-template-columns:1fr 1fr;} .bulklist{padding:20px 16px;} }
+
+/* ===== まとめて作る: 生成前の確認 =====
+   一気に作ると最後まで中身が見えないので、作る前に案を並べて見せる。 */
+.bulkcheck-sub{font-size:var(--text-body);color:var(--color-muted-foreground);margin:-6px 0 16px;}
+.bcgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.bccard{border:1.5px solid var(--color-border);border-radius:var(--radius-lg);background:var(--color-card);
+  overflow:hidden;display:flex;flex-direction:column;transition:border-color .15s,opacity .15s;}
+.bccard.off{opacity:.5;border-style:dashed;}
+.bccard.on{border-color:var(--color-primary);}
+.bctop{display:flex;align-items:flex-start;gap:9px;padding:13px 14px 0;}
+.bccheck{width:22px;height:22px;flex:none;border-radius:var(--radius-sm);border:1.5px solid var(--color-border-strong);
+  background:var(--color-card);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  color:transparent;font-size:14px;}
+.bccard.on .bccheck{background:var(--color-primary);border-color:var(--color-primary);color:#fff;}
+.bcttl{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);line-height:1.5;}
+.bcbody{padding:8px 14px 0;font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.7;
+  white-space:pre-wrap;flex:1;}
+.bcmeta{display:flex;flex-wrap:wrap;gap:6px;padding:10px 14px 0;}
+.bcpill{font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);
+  background:var(--color-background);border-radius:var(--radius-full);padding:2px 9px;}
+.bcfoot{padding:12px 14px 13px;}
+.bcredo{display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:var(--radius-sm);
+  border:1px solid var(--color-border);background:transparent;font-family:inherit;font-size:var(--text-meta);
+  font-weight:var(--font-weight-body-strong);color:var(--color-foreground);cursor:pointer;}
+.bcredo:hover{border-color:var(--color-primary);color:var(--color-primary);background:var(--color-primary-subtle);}
+@media(max-width:768px){ .bcgrid{grid-template-columns:1fr;} }
 </style></head><body>
 <div class="app">
   <div class="topbar"><div class="hdr-left"><span class="hdr-page"><i class="ti ti-template"></i>投稿作成</span><span class="tag" id="flowtag" style="display:none"></span></div><div class="hdr-right"><a class="helpbtn" href="https://hinaiwagami0513.github.io/iineai/help/create/image/" target="_blank" rel="noopener" title="このページのヘルプ（投稿作成 > 画像を作成）" aria-label="このページのヘルプ">?</a><button class="close"><i class="ti ti-list"></i></button></div></div>
@@ -414,7 +497,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 
       <!-- 1 SNS -->
       <div class="screen on" id="sc_sns">
-        <div class="h1">投稿するアカウントを選択</div>
+        <div class="h1">投稿するアカウントを選択<a class="help-inline" href="https://hinaiwagami0513.github.io/iineai/help/create/overview/#select" target="_blank" rel="noopener" title="ヘルプ: アカウントと作成方法" aria-label="この項目のヘルプ">?</a></div>
         <div class="g2" style="margin-top:16px">
           <div class="opt acct " onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><div class="av" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i></div><div><div class="acname">@sumika_fudosan</div><div class="acmeta">フォロワー 1.2万</div></div><span class="plat" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i>Instagram</span></div>
           <div class="opt acct " onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><div class="av" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i></div><div><div class="acname">@minato_chintai</div><div class="acmeta">フォロワー 3,400</div></div><span class="plat" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i>Instagram</span></div>
@@ -425,7 +508,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 
       <!-- 2 作成方法 -->
       <div class="screen" id="sc_method">
-        <div class="h1">作成方法を選ぶ</div>
+        <div class="h1">作成方法を選ぶ<a class="help-inline" href="https://hinaiwagami0513.github.io/iineai/help/create/overview/#select" target="_blank" rel="noopener" title="ヘルプ: アカウントと作成方法" aria-label="この項目のヘルプ">?</a></div>
         <div class="g3" style="margin-top:16px">
           <div class="opt method sel" onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><i class="ti ti-photo mi"></i><div class="ot">画像を作成</div></div>
           <div class="opt method" onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><i class="ti ti-video mi"></i><div class="ot">動画を作成</div></div>
@@ -435,7 +518,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 
       <!-- 台本から / 素材から 選択 -->
       <div class="screen" id="sc_route">
-        <div class="h1">どちらの方法で作りますか？</div>
+        <div class="h1">どちらの方法で作りますか？<a class="help-inline" href="https://hinaiwagami0513.github.io/iineai/help/create/image/#two" target="_blank" rel="noopener" title="ヘルプ: 台本から / 素材から" aria-label="この項目のヘルプ">?</a></div>
         <div class="g2" style="margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:640px;margin:16px auto 0;">
           <div class="opt method sel" onclick="pickCard(this,'opt')" style="padding:32px 20px;text-align:center;">
             <span class="ochk"><i class="ti ti-check"></i></span>
@@ -453,7 +536,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 
       <!-- 枚数を選択 -->
       <div class="screen" id="sc_count">
-        <div class="h1">画像の枚数を選ぶ</div>
+        <div class="h1">画像の枚数を選ぶ<a class="help-inline" href="https://hinaiwagami0513.github.io/iineai/help/create/image/#count" target="_blank" rel="noopener" title="ヘルプ: 画像の枚数" aria-label="この項目のヘルプ">?</a></div>
         <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;max-width:560px;margin:14px auto 0;">
           <div class="opt method" onclick="pickCount(this)" style="padding:20px 10px;text-align:center;"><div style="font-size:var(--text-h1);font-weight:var(--font-weight-h1);">1</div><div style="font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:4px;">枚</div></div>
           <div class="opt method" onclick="pickCount(this)" style="padding:20px 10px;text-align:center;"><div style="font-size:var(--text-h1);font-weight:var(--font-weight-h1);">4</div><div style="font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:4px;">枚</div></div>
@@ -469,7 +552,14 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 
       <!-- 何をベースに（アコーディオン＋チャット） -->
       <div class="screen" id="sc_base">
-        <div class="h1">企画を考える</div>
+        <div class="h1">企画を考える<a class="help-inline" href="https://hinaiwagami0513.github.io/iineai/help/create/planning/#three" target="_blank" rel="noopener" title="ヘルプ: 企画の立てかた" aria-label="この項目のヘルプ">?</a></div>
+        <div class="bulkbar">
+          <span class="bl">まとめて作る</span>
+          <div class="bulkseg" id="bulkSeg">
+            <button class="on" data-n="1">1件</button><button data-n="3">3件</button><button data-n="5">5件</button>
+          </div>
+          <span class="bulkhint" id="bulkHint">1件だけ作ります</span>
+        </div>
         <div id="m_kw" style="border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden;">
             <div class="booth" style="border:none;border-radius:0;">
               <div class="booth-hd"><img src="./assets/iine-fox-face.png" alt="AIアシスト"><div style="flex:1;"><div class="bt">AIアシスタント</div><div class="bs">● オンライン</div></div><div class="tpl-drop-wrap"><button onclick="toggleTplDrop(event)" class="tpl-drop-btn"><i class="ti ti-layout-grid"></i></button><div class="tpl-drop-menu" id="tplDropMenu"><div class="tpl-drop-label">テンプレから作る</div><div class="tpl-drop-item" onclick="pickTemplate('物件紹介カルーセル');closeTplDrop()"><i class="ti ti-layout-grid"></i>物件紹介カルーセル</div><div class="tpl-drop-item" onclick="pickTemplate('ビフォーアフター');closeTplDrop()"><i class="ti ti-photo"></i>ビフォーアフター</div><div class="tpl-drop-item" onclick="pickTemplate('スペック訴求');closeTplDrop()"><i class="ti ti-businessplan"></i>スペック訴求</div><div class="tpl-drop-divider"></div><div class="tpl-drop-item" onclick="closeTplDrop()"><i class="ti ti-template"></i>テンプレ一覧・新規作成</div></div></div></div>
@@ -478,6 +568,13 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
             </div>
             <div class="chatcomposer" style="border-radius:0;"><div class="chatcomposer-inner"><textarea rows="1" placeholder="例：物件紹介のカルーセルを作りたい"></textarea><div class="chatcomposer-bar"><div class="chat-plus-wrap"><button onclick="toggleChatPlusMenu(event)" class="cmp-plus"><i class="ti ti-plus"></i></button><div class="chat-plus-menu" id="chatPlusMenu"><div class="cpm-item" onclick="closeChatPlusMenu()"><i class="ti ti-file-text"></i>資料を追加</div><div class="cpm-item" onclick="closeChatPlusMenu()"><i class="ti ti-file-upload"></i>写真・ファイルの追加</div><div class="cpm-item" onclick="closeChatPlusMenu()"><i class="ti ti-folder"></i>いいねドライブから追加</div></div></div><button class="cmp-send"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5"/><path d="M5 12l7-7 7 7"/></svg></button></div></div></div>
         </div>
+      </div>
+
+      <!-- まとめて作るときだけ通る: 生成前に案を確認する -->
+      <div class="screen" id="sc_bulkcheck">
+        <div class="h1">この案で作りますか？<a class="help-inline" href="https://hinaiwagami0513.github.io/iineai/help/create/image/#plan" target="_blank" rel="noopener" title="ヘルプ: 企画を決める" aria-label="この項目のヘルプ">?</a></div>
+        <div class="bulkcheck-sub">いらない案はチェックを外してください。作り直しもできます。</div>
+        <div class="bcgrid" id="bcGrid"></div>
       </div>
 
       <div class="screen" id="sc_editor">
@@ -671,41 +768,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
         </div>
       </div>
 
-      <div class="screen" id="sc_finish">
-        <div style="display:flex;gap:40px;align-items:center;justify-content:center;padding:32px 20px;">
-          <!-- Left: celebration -->
-          <div style="text-align:center;max-width:360px;">
-            <img src="./assets/iine-fox-celebrate.png" alt="お祝いキツネ" style="width:160px;height:160px;object-fit:contain;margin:0 auto 20px;display:block;">
-            <div style="font-size:var(--text-h1);font-weight:var(--font-weight-h1);margin-bottom:10px;">投稿の準備ができました！</div>
-            <div style="font-size:var(--text-body);color:var(--color-muted-foreground);line-height:1.7;margin-bottom:24px;">いつでも予約・投稿できます。<br>おつかれさまでした。</div>
-            <div style="display:flex;gap:12px;justify-content:center;"><button class="btn btn-ghost" style="display:inline-flex;align-items:center;gap:6px;padding:12px 20px;border:1px solid var(--color-border);border-radius:var(--radius-md);background:var(--color-surface);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;color:var(--color-foreground);"><i class="ti ti-list"></i>一覧へ戻る</button><button class="btn btn-primary grad" style="display:inline-flex;align-items:center;gap:6px;padding:12px 20px;border:none;border-radius:var(--radius-md);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;color:#fff;"><i class="ti ti-calendar-event"></i>投稿を予約する</button></div>
-          </div>
-          <!-- Right: phone preview -->
-          <div style="width:320px;flex:none;">
-            <div style="border:3px solid #222;border-radius:28px;overflow:hidden;background:#000;padding:8px 0 0;">
-              <!-- phone status bar -->
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px 6px;font-size:10px;color:#fff;"><span>9:41</span><div style="display:flex;gap:4px;align-items:center;"><i class="ti ti-wifi" style="font-size:12px;"></i><i class="ti ti-battery-4" style="font-size:14px;"></i></div></div>
-              <!-- Instagram-like post -->
-              <div style="background:#fff;">
-                <!-- header -->
-                <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;"><div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--color-primary),var(--color-primary-light));"></div><div><div style="font-size:10px;font-weight:700;">your_account</div><div style="font-size:8px;color:#999;">東京都</div></div><i class="ti ti-dots" style="margin-left:auto;font-size:14px;color:#666;"></i></div>
-                <!-- image area -->
-                <div style="aspect-ratio:1;background:linear-gradient(135deg,#f0e6d3,#e8d5b8);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;"><i class="ti ti-video" style="font-size:32px;color:var(--color-primary);opacity:.6;"></i><span style="font-size:9px;color:var(--color-muted-foreground);">駅徒歩5分・南向き1LDK</span></div>
-                <!-- action icons -->
-                <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;"><i class="ti ti-heart" style="font-size:18px;"></i><i class="ti ti-message-circle" style="font-size:18px;"></i><i class="ti ti-send" style="font-size:18px;"></i><i class="ti ti-bookmark" style="margin-left:auto;font-size:18px;"></i></div>
-                <!-- likes -->
-                <div style="padding:0 12px 4px;font-size:9px;font-weight:700;">128 likes</div>
-                <!-- caption -->
-                <div style="padding:0 12px 10px;font-size:9px;line-height:1.5;"><b>your_account</b> 駅徒歩5分の南向き1LDK、新着です。日当たり良好・即入居OK。<span style="color:var(--color-primary);">#賃貸 #お部屋探し</span></div>
-              </div>
-              <!-- phone bottom bar -->
-              <div style="background:#fff;padding:6px 0 10px;display:flex;justify-content:center;gap:24px;"><i class="ti ti-home" style="font-size:16px;"></i><i class="ti ti-search" style="font-size:16px;"></i><i class="ti ti-square-plus" style="font-size:16px;"></i><i class="ti ti-movie" style="font-size:16px;"></i><i class="ti ti-user" style="font-size:16px;"></i></div>
-            </div>
-          </div>
-        </div>
-      </div>
 
-    </div>
     <div class="foot">
       <button class="btn btn-ghost" id="back" onclick="nav(-1)"><i class="ti ti-arrow-left"></i>戻る</button>
       <button class="btn btn-primary" id="next" onclick="nav(1)">次へ</button>
@@ -714,27 +777,27 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 </div>
 <script>
 /* ===== 画面遷移 ===== */
-var SCR=['sns','method','route','count','base','editor','finish'];
+var SCR=['sns','method','route','count','base','bulkcheck','editor'];   // 完成はモーダル（doneModal）で出すので画面には持たない
 var META={
   sns:{big:1,sub:0}, method:{big:2,sub:0},
   route:{big:2,sub:1},
   count:{big:2,sub:2},
-  base:{big:2,sub:3},
-  editor:{big:3,sub:0}, finish:{big:4,sub:0}
+  base:{big:2,sub:3}, bulkcheck:{big:2,sub:3},
+  editor:{big:3,sub:0}
 };
 var i=0;
 var baseReady=false;
 var savedPlan=false;
 function renderStep(){
   var big=META[SCR[i]].big;
-  var steps=[[1,'何を投稿する？'],[2,'何をどう作る？'],[3,'投稿を編集'],[4,'完成']];
+  var steps=[[1,'何を投稿する？'],[2,'何をどう作る？'],[3,'投稿を編集']];
   var h='';
   steps.forEach(function(s,idx){
     var n=s[0];
     var cls=n<big?'done':(n===big?'now':'todo');
     var ni=n<big?'<i class="ti ti-check"></i>':n;
     h+='<div class="st '+cls+'"><div class="n">'+ni+'</div><span class="tx">'+s[1]+'</span></div>';
-    if(n<4)h+='<div class="stline '+(n<big?'done':'')+'"></div>';
+    if(n<steps.length)h+='<div class="stline '+(n<big?'done':'')+'"></div>';
   });
   document.getElementById('stepbar').innerHTML=h;
 }
@@ -754,11 +817,26 @@ function show(){
   document.getElementById('sc_'+SCR[i]).classList.add('on');
   var bk=document.getElementById('back');if(i===0){bk.innerHTML='キャンセル';bk.style.visibility='visible';}else{bk.innerHTML='<i class="ti ti-arrow-left"></i> 戻る';bk.style.visibility='visible';}
   var nx=document.getElementById('next');
-  nx.innerHTML=(i===SCR.length-1)?'完了 <i class="ti ti-check"></i>':(SCR[i]==='base'?(savedPlan?'次へ：企画内容を生成 <i class="ti ti-arrow-right"></i>':'次へ：企画案を生成 <i class="ti ti-arrow-right"></i>'):(SCR[i]==='proposal'?'次へ：企画内容を生成 <i class="ti ti-arrow-right"></i>':(SCR[i]==='plan'?'この企画内容で作成 <i class="ti ti-arrow-right"></i>':(SCR[i]==='editor'?'確認へ進む <i class="ti ti-arrow-right"></i>':'次へ <i class="ti ti-arrow-right"></i>'))));
+  nx.innerHTML=(SCR[i]==='editor')?'これで完成 <i class="ti ti-check"></i>':(SCR[i]==='base'?(savedPlan?'次へ：企画内容を生成 <i class="ti ti-arrow-right"></i>':'次へ：企画案を生成 <i class="ti ti-arrow-right"></i>'):(SCR[i]==='proposal'?'次へ：企画内容を生成 <i class="ti ti-arrow-right"></i>':(SCR[i]==='plan'?'この企画内容で作成 <i class="ti ti-arrow-right"></i>':(SCR[i]==='editor'?'これで完成 <i class="ti ti-check"></i>':'次へ <i class="ti ti-arrow-right"></i>'))));
   /* disable next on base until a method is used */
   if(SCR[i]==='base'&&!baseReady){
     nx.classList.add('btn-disabled');
     nx.onclick=function(e){e.preventDefault();showTooltip(nx,'素材を選択してください');};
+  }else if(SCR[i]==='base'&&BULK>1){
+    // まとめて作るときは、いきなり作らず先に案を見せる
+    nx.innerHTML=BULK+'件の案を見る <i class="ti ti-arrow-right"></i>';
+    nx.classList.remove('btn-disabled');
+    nx.onclick=function(){ buildPlans(); renderBulkCheck(); nav(1); };
+  }else if(SCR[i]==='bulkcheck'){
+    var n=bulkPicked();
+    nx.innerHTML=(n?n+'件を作る <i class="ti ti-sparkles"></i>':'案を1つ以上選んでください');
+    if(!n){ nx.classList.add('btn-disabled'); nx.onclick=function(e){e.preventDefault();}; }
+    else { nx.classList.remove('btn-disabled'); nx.onclick=function(){ openDone(); }; }
+  }else if(SCR[i]==='editor'){
+    // 最後は次のページに行かず、その場でモーダルを出す。
+    // openDone は後ろのscriptで定義されるので、参照はクリック時まで遅らせる
+    nx.classList.remove('btn-disabled');
+    nx.onclick=function(){ openDone(); };
   }else{
     nx.classList.remove('btn-disabled');
     nx.onclick=function(){nav(1);};
@@ -770,7 +848,7 @@ function show(){
   renderStep();renderSub();
   var cv=document.querySelector('.canvas');if(cv)cv.scrollTop=0;
 }
-function nav(d){var prev=i;i=Math.max(0,Math.min(SCR.length-1,i+d));if(SCR[i]==='base'&&i!==prev)baseReady=false;if(savedPlan&&SCR[i]==='proposal'){i+=(d>0?1:-1);}function pickSlide(n){
+function nav(d){var prev=i;i=Math.max(0,Math.min(SCR.length-1,i+d));/* 1件のときは確認画面を通らない。複数のときは1件ずつの編集を通らない */while((SCR[i]==='bulkcheck'&&BULK<=1)||(SCR[i]==='editor'&&BULK>1)){var ni=i+(d>=0?1:-1);if(ni<0||ni>SCR.length-1)break;i=ni;}if(SCR[i]==='base'&&i!==prev)baseReady=false;if(savedPlan&&SCR[i]==='proposal'){i+=(d>0?1:-1);}function pickSlide(n){
   document.querySelectorAll('.img-slide').forEach(function(s){s.style.display='none';});
   var sl=document.getElementById('slide'+n);if(sl)sl.style.display='block';
   document.querySelectorAll('.imgtb').forEach(function(t){t.style.border='1px solid var(--color-border)';t.style.background='var(--color-surface)';t.style.color='var(--color-muted-foreground)';t.style.fontWeight='';});
@@ -1139,4 +1217,178 @@ function applyAll(){document.querySelectorAll('.rev-chk').forEach(function(c){c.
 function applySelected(){var n=document.querySelectorAll('.rev-chk:checked').length;if(n===0){toast.error('反映するレビューを選択してください');return;}toast.success(n+'件の改善案を投稿文に反映しました');}
 </script>
 <script src="sonner.js"></script>
+
+<!-- 完成はページ遷移ではなくモーダルで出す（編集画面を閉じずに結果だけ見せる） -->
+<div class="donemask" id="doneMask"></div>
+<div class="donemodal" id="doneModal" role="dialog" aria-modal="true" aria-label="投稿の準備ができました">
+  <button class="doneclose" id="doneClose" aria-label="閉じる"><i class="ti ti-x"></i></button>
+      <div class="donebody">
+        <div style="display:flex;gap:40px;align-items:center;justify-content:center;padding:32px 20px;">
+          <!-- Left: celebration -->
+          <div style="text-align:center;max-width:360px;">
+            <img src="./assets/iine-fox-celebrate.png" alt="お祝いキツネ" style="width:160px;height:160px;object-fit:contain;margin:0 auto 20px;display:block;">
+            <div style="font-size:var(--text-h1);font-weight:var(--font-weight-h1);margin-bottom:10px;">投稿の準備ができました！</div>
+            <div style="font-size:var(--text-body);color:var(--color-muted-foreground);line-height:1.7;margin-bottom:24px;">いつでも予約・投稿できます。<br>おつかれさまでした。</div>
+            <div style="display:flex;gap:12px;justify-content:center;"><button class="btn btn-ghost" style="display:inline-flex;align-items:center;gap:6px;padding:12px 20px;border:1px solid var(--color-border);border-radius:var(--radius-md);background:var(--color-surface);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;color:var(--color-foreground);"><i class="ti ti-list"></i>一覧へ戻る</button><button class="btn btn-primary grad" style="display:inline-flex;align-items:center;gap:6px;padding:12px 20px;border:none;border-radius:var(--radius-md);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;color:#fff;"><i class="ti ti-calendar-event"></i>投稿を予約する</button></div>
+          </div>
+          <!-- Right: phone preview -->
+          <div style="width:320px;flex:none;">
+            <div style="border:3px solid #222;border-radius:28px;overflow:hidden;background:#000;padding:8px 0 0;">
+              <!-- phone status bar -->
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px 6px;font-size:10px;color:#fff;"><span>9:41</span><div style="display:flex;gap:4px;align-items:center;"><i class="ti ti-wifi" style="font-size:12px;"></i><i class="ti ti-battery-4" style="font-size:14px;"></i></div></div>
+              <!-- Instagram-like post -->
+              <div style="background:#fff;">
+                <!-- header -->
+                <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;"><div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--color-primary),var(--color-primary-light));"></div><div><div style="font-size:10px;font-weight:700;">your_account</div><div style="font-size:8px;color:#999;">東京都</div></div><i class="ti ti-dots" style="margin-left:auto;font-size:14px;color:#666;"></i></div>
+                <!-- image area -->
+                <div style="aspect-ratio:1;background:linear-gradient(135deg,#f0e6d3,#e8d5b8);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;"><i class="ti ti-video" style="font-size:32px;color:var(--color-primary);opacity:.6;"></i><span style="font-size:9px;color:var(--color-muted-foreground);">駅徒歩5分・南向き1LDK</span></div>
+                <!-- action icons -->
+                <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;"><i class="ti ti-heart" style="font-size:18px;"></i><i class="ti ti-message-circle" style="font-size:18px;"></i><i class="ti ti-send" style="font-size:18px;"></i><i class="ti ti-bookmark" style="margin-left:auto;font-size:18px;"></i></div>
+                <!-- likes -->
+                <div style="padding:0 12px 4px;font-size:9px;font-weight:700;">128 likes</div>
+                <!-- caption -->
+                <div style="padding:0 12px 10px;font-size:9px;line-height:1.5;"><b>your_account</b> 駅徒歩5分の南向き1LDK、新着です。日当たり良好・即入居OK。<span style="color:var(--color-primary);">#賃貸 #お部屋探し</span></div>
+              </div>
+              <!-- phone bottom bar -->
+              <div style="background:#fff;padding:6px 0 10px;display:flex;justify-content:center;gap:24px;"><i class="ti ti-home" style="font-size:16px;"></i><i class="ti ti-search" style="font-size:16px;"></i><i class="ti ti-square-plus" style="font-size:16px;"></i><i class="ti ti-movie" style="font-size:16px;"></i><i class="ti ti-user" style="font-size:16px;"></i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+</div>
+
+<script>
+/* 完成モーダルの開閉 */
+function openDone(){ if(typeof renderBulkDone==='function')renderBulkDone();
+  document.getElementById('doneMask').classList.add('open');
+  document.getElementById('doneModal').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeDone(){ document.getElementById('doneMask').classList.remove('open');
+  document.getElementById('doneModal').classList.remove('open'); document.body.style.overflow=''; }
+document.getElementById('doneClose').addEventListener('click',closeDone);
+document.getElementById('doneMask').addEventListener('click',closeDone);
+document.addEventListener('keydown',function(e){ if(e.key==='Escape')closeDone(); });
+</script>
+
+<script>
+/* ===== まとめて作る =====
+   件数1なら従来どおり（企画→編集→完成）。
+   2件以上は1件ずつ編集させず、生成した一覧をそのまま受け取る形にする。 */
+var BULK=1;
+(function(){
+  var seg=document.getElementById('bulkSeg'); if(!seg)return;
+  seg.addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    seg.querySelectorAll('button').forEach(function(x){x.classList.remove('on');});
+    b.classList.add('on'); BULK=parseInt(b.dataset.n,10);
+    document.getElementById('bulkHint').textContent =
+      BULK===1 ? '1件だけ作ります' : BULK+'件を一度に作ります。1件ずつの編集はあとから';
+    if(typeof show==='function')show();
+  });
+})();
+
+var BULK_SAMPLES=[
+  {t:'駅徒歩5分・南向き1LDK 新着物件', g:'linear-gradient(135deg,#fde1c4,#e8a063)',
+   body:'駅から歩いて5分。南向きで日当たりのいい1LDKが空きました。\n即入居OK・内見はプロフィールから。', tags:['新着物件','駅近','4シーン']},
+  {t:'角部屋・浴室乾燥つき 2LDKのご紹介', g:'linear-gradient(135deg,#d4e8d0,#7ab07e)',
+   body:'両面採光の角部屋。浴室乾燥つきで雨の日も洗濯に困りません。\nファミリー向けの2LDKです。', tags:['角部屋','設備','3シーン']},
+  {t:'ペット可・築浅マンションまとめ', g:'linear-gradient(135deg,#fce7f3,#d87aa8)',
+   body:'ワンちゃん・ネコちゃんと暮らせる築浅物件を集めました。\n足洗い場つきの物件もあります。', tags:['ペット可','まとめ','5シーン']},
+  {t:'初期費用をおさえたい方へ 3選', g:'linear-gradient(135deg,#e6f1fb,#6da8d0)',
+   body:'敷金・礼金ゼロの物件を3つ選びました。\n引っ越し費用をおさえたい方はぜひ。', tags:['初期費用','3選','4シーン']},
+  {t:'在宅ワーク向け 書斎スペースのある部屋', g:'linear-gradient(135deg,#f5e7f8,#a070b8)',
+   body:'仕事に集中できる小部屋つきのお部屋。\nネット無料・宅配ボックスありです。', tags:['在宅ワーク','設備','4シーン']}
+];
+/* 複数のときは完成モーダルの中身を一覧に差し替える */
+function renderBulkDone(){
+  var body=document.querySelector('#doneModal .donebody');
+  var list=document.getElementById('bulkDone');
+  if(BULK<=1){ if(body)body.style.display=''; if(list)list.style.display='none'; return; }
+  if(body)body.style.display='none';
+  if(!list){
+    list=document.createElement('div'); list.className='bulklist'; list.id='bulkDone';
+    document.getElementById('doneModal').appendChild(list);
+  }
+  list.style.display='';
+  // 確認画面で選んだ案だけを出す
+  var made=(typeof BULK_PLANS!=='undefined'&&BULK_PLANS.length)
+    ? BULK_PLANS.filter(function(p){return p.on;})
+    : BULK_SAMPLES.slice(0,BULK).map(function(s){return {title:s.t,g:s.g,body:s.body,tags:s.tags};});
+  list.innerHTML=
+    '<div class="bulkhd"><img src="./assets/iine-fox-celebrate.png" alt="">'+
+      '<div class="t">'+made.length+'件できました！</div>'+
+      '<div class="s">中身はここで確認できます。直さなくてもそのまま予約できます。</div></div>'+
+    '<div class="bulkgrid">'+made.map(function(s){
+      return '<div class="bulkcard"><div class="th" style="background:'+s.g+'"><i class="ti ti-photo"></i></div>'+
+        '<div class="bd"><div class="ttl">'+s.title+'</div>'+
+        '<div class="cap">'+s.body+'</div>'+
+        '<button class="ed"><i class="ti ti-pencil"></i>編集する</button></div></div>';
+    }).join('')+'</div>'+
+    '<div class="bulkfoot">'+
+      '<button class="btn btn-ghost" style="padding:12px 20px;border:1px solid var(--color-border);border-radius:var(--radius-md);background:transparent;font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;">一覧へ戻る</button>'+
+      '<button class="btn btn-primary" style="padding:12px 22px;border:none;border-radius:var(--radius-md);background:var(--color-primary);color:#fff;font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;">'+made.length+'件まとめて予約する</button>'+
+    '</div>';
+}
+</script>
+
+<!-- ヘルプ導線: いま開いている画面に対応するヘルプへヘッダーの「?」を向け直す。
+     画面切替の関数に手を入れず、.screen の class 変化を見て追従する。 -->
+<script>
+(function(){
+  var BASE = "https://hinaiwagami0513.github.io/iineai/help";
+  var MAP  = {"bulkcheck": ["/create/image/#plan", "企画を決める"], "sns": ["/create/overview/#select", "アカウントと作成方法"], "method": ["/create/overview/#select", "アカウントと作成方法"], "route": ["/create/image/#two", "台本から / 素材から"], "count": ["/create/image/#count", "画像の枚数"], "base": ["/create/planning/#three", "企画の立てかた"], "editor": ["/create/image/#edit", "画像を生成して仕上げる"]};
+  var FALLBACK = ["/create/image/", "画像を作成する"];
+  var hdr = document.querySelector('a.helpbtn, a.help');
+  if (!hdr) return;
+
+  function sync(){
+    var on = document.querySelector('.screen.on');
+    var key = on ? on.id.replace(/^sc_/, '') : null;
+    var e = (key && MAP[key]) || FALLBACK;
+    hdr.href = BASE + e[0];
+    hdr.title = 'このページのヘルプ（' + e[1] + '）';
+  }
+
+  var obs = new MutationObserver(sync);
+  document.querySelectorAll('.screen').forEach(function(el){
+    obs.observe(el, { attributes: true, attributeFilter: ['class'] });
+  });
+  sync();
+})();
+</script>
+
+<script>
+/* ===== まとめて作る: 生成前の確認 ===== */
+var BULK_PLANS=[];
+function buildPlans(){
+  BULK_PLANS = BULK_SAMPLES.slice(0,BULK).map(function(s,idx){
+    return {title:s.t, g:s.g, body:s.body, tags:s.tags, on:true, seq:idx+1};
+  });
+}
+function renderBulkCheck(){
+  var g=document.getElementById('bcGrid'); if(!g)return;
+  g.innerHTML=BULK_PLANS.map(function(p,i){
+    return '<div class="bccard '+(p.on?'on':'off')+'" data-i="'+i+'">'+
+      '<div class="bctop"><button class="bccheck" data-tg="'+i+'" aria-label="この案を使う"><i class="ti ti-check"></i></button>'+
+        '<div class="bcttl">'+p.title+'</div></div>'+
+      '<div class="bcbody">'+p.body+'</div>'+
+      '<div class="bcmeta">'+p.tags.map(function(t){return '<span class="bcpill">'+t+'</span>';}).join('')+'</div>'+
+      '<div class="bcfoot"><button class="bcredo" data-redo="'+i+'"><i class="ti ti-refresh"></i>作り直す</button></div>'+
+    '</div>';
+  }).join('');
+}
+function bulkPicked(){ return BULK_PLANS.filter(function(p){return p.on;}).length; }
+document.addEventListener('click',function(e){
+  var t=e.target.closest?e.target.closest('.bccheck'):null;
+  if(t){ var p=BULK_PLANS[+t.dataset.tg]; p.on=!p.on; renderBulkCheck(); if(typeof show==='function')show(); return; }
+  var r=e.target.closest?e.target.closest('.bcredo'):null;
+  if(r){ var i2=+r.dataset.redo; var p2=BULK_PLANS[i2];
+    p2.title=p2.title+'（作り直し）';
+    p2.body='別の切り口で書き直しました。'+p2.body;
+    renderBulkCheck();
+    if(typeof toast!=='undefined')toast('案'+(i2+1)+'を作り直しました');
+    return; }
+});
+</script>
 </body></html>

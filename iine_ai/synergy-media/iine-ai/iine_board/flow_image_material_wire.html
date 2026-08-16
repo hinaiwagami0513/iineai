@@ -133,6 +133,16 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .jb:hover{border-color:var(--color-primary);color:var(--color-primary);}
 .close{width:36px;height:36px;border:1px solid var(--color-border);border-radius:var(--radius-sm);background:var(--color-card);color:var(--color-muted-foreground);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .helpbtn{width:32px;height:32px;border:1.5px solid var(--color-primary);border-radius:var(--radius-full);background:var(--color-card);color:var(--color-primary);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;display:flex;align-items:center;justify-content:center;text-decoration:none;}.helpbtn{transition:background .15s,color .15s,border-color .15s;}.helpbtn:hover{background:var(--color-primary);color:var(--color-on-primary);border-color:var(--color-primary);}
+/* === ヘルプ導線 === */
+/* 項目の横に置く小さい「?」。ヘッダーの「?」より一段弱く見せる */
+.help-inline{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;margin-left:8px;
+  border:1.5px solid var(--color-primary);border-radius:var(--radius-full);
+  color:var(--color-primary);background:var(--color-card);
+  font-size:11px;font-weight:var(--font-weight-body-strong);line-height:1;
+  text-decoration:none;vertical-align:middle;flex:none;
+  transition:background .15s,color .15s;}
+.help-inline:hover{background:var(--color-primary);color:var(--color-on-primary);}
+
 .hdr-left{display:flex;align-items:center;gap:10px;}
 .hdr-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
 .hdr-page{font-size:var(--text-h3);font-weight:var(--font-weight-h3);display:flex;align-items:center;gap:8px;}
@@ -412,9 +422,23 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
   #sc_editor [style*="grid-template-columns:240px"]{display:flex !important;flex-direction:column !important;}
   .ai-panel-open,.ai-panel-closed{width:100% !important;}
   /* Finish screen: stack left/right vertically */
-  #sc_finish>div{flex-direction:column !important;gap:24px !important;padding:24px 16px !important;}
-  #sc_finish>div>div:last-child{width:100% !important;max-width:320px;margin:0 auto;}
+  .donebody>div{flex-direction:column !important;gap:24px !important;padding:24px 16px !important;}
+  .donebody>div>div:last-child{width:100% !important;max-width:320px;margin:0 auto;}
 }
+
+/* ===== 完成モーダル =====
+   ステップ4の別ページをやめてモーダルにした。編集画面を閉じずに結果だけ見せる。 */
+.donemask{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:900;}
+.donemask.open{display:block;}
+.donemodal{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:901;
+  width:820px;max-width:calc(100vw - 40px);max-height:90vh;overflow-y:auto;
+  background:var(--color-card);border-radius:var(--radius-xl);box-shadow:0 24px 64px rgba(0,0,0,.24);}
+.donemodal.open{display:block;}
+.doneclose{position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:var(--radius-sm);
+  border:1px solid var(--color-border);background:var(--color-card);color:var(--color-muted-foreground);
+  font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1;}
+.doneclose:hover{background:var(--color-background);}
+@media(max-width:768px){ .donemodal{width:calc(100vw - 24px);max-height:88vh;} }
 </style></head><body>
 <div class="app">
   <div class="topbar"><div class="hdr-left"><span class="hdr-page"><i class="ti ti-template"></i>投稿作成</span><span class="tag" id="flowtag" style="display:none"></span></div><div class="hdr-right"><a class="helpbtn" href="https://hinaiwagami0513.github.io/iineai/help/create/image/" target="_blank" rel="noopener" title="このページのヘルプ（投稿作成 > 画像を作成）" aria-label="このページのヘルプ">?</a><button class="close"><i class="ti ti-list"></i></button></div></div>
@@ -425,7 +449,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 
       <!-- 1 SNS -->
       <div class="screen on" id="sc_sns">
-        <div class="h1">投稿するアカウントを選択</div>
+        <div class="h1">投稿するアカウントを選択<a class="help-inline" href="https://hinaiwagami0513.github.io/iineai/help/create/overview/#select" target="_blank" rel="noopener" title="ヘルプ: アカウントと作成方法" aria-label="この項目のヘルプ">?</a></div>
         <div class="g2" style="margin-top:16px">
           <div class="opt acct " onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><div class="av" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i></div><div><div class="acname">@sumika_fudosan</div><div class="acmeta">フォロワー 1.2万</div></div><span class="plat" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i>Instagram</span></div>
           <div class="opt acct " onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><div class="av" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i></div><div><div class="acname">@minato_chintai</div><div class="acmeta">フォロワー 3,400</div></div><span class="plat" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i>Instagram</span></div>
@@ -436,7 +460,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 
       <!-- 2 作成方法 -->
       <div class="screen" id="sc_method">
-        <div class="h1">作成方法を選ぶ</div>
+        <div class="h1">作成方法を選ぶ<a class="help-inline" href="https://hinaiwagami0513.github.io/iineai/help/create/overview/#select" target="_blank" rel="noopener" title="ヘルプ: アカウントと作成方法" aria-label="この項目のヘルプ">?</a></div>
         <div class="g3" style="margin-top:16px">
           <div class="opt method sel" onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><i class="ti ti-photo mi"></i><div class="ot">画像を作成</div></div>
           <div class="opt method" onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><i class="ti ti-video mi"></i><div class="ot">動画を作成</div></div>
@@ -446,7 +470,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 
       <!-- 台本から / 素材から 選択 -->
       <div class="screen" id="sc_route">
-        <div class="h1">どちらの方法で作りますか？</div>
+        <div class="h1">どちらの方法で作りますか？<a class="help-inline" href="https://hinaiwagami0513.github.io/iineai/help/create/image/#two" target="_blank" rel="noopener" title="ヘルプ: 台本から / 素材から" aria-label="この項目のヘルプ">?</a></div>
         <div class="g2" style="margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:640px;margin:16px auto 0;">
           <div class="opt method" onclick="pickCard(this,'opt')" style="padding:32px 20px;text-align:center;">
             <span class="ochk"><i class="ti ti-check"></i></span>
@@ -462,7 +486,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
       </div>
       <!-- 4 素材をアップ -->
       <div class="screen" id="sc_upload">
-        <div class="h1">素材をアップロード</div>
+        <div class="h1">素材をアップロード<a class="help-inline" href="https://hinaiwagami0513.github.io/iineai/help/create/image/#two" target="_blank" rel="noopener" title="ヘルプ: 素材から作る" aria-label="この項目のヘルプ">?</a></div>
         <div style="display:inline-flex;gap:4px;padding:4px;background:var(--color-background);border-radius:var(--radius-md);margin-top:16px;margin-bottom:16px;">
           <div class="uptab on" onclick="upTab(0,this)" style="padding:8px 20px;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;border-radius:var(--radius-sm);background:var(--color-card);color:var(--color-foreground);box-shadow:0 1px 2px rgb(0 0 0/.06);">PCからアップロード</div>
           <div class="uptab" onclick="upTab(1,this)" style="padding:8px 20px;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;border-radius:var(--radius-sm);background:transparent;color:var(--color-muted-foreground);">いいねドライブから選択</div>
@@ -562,7 +586,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 
       <!-- 5 チャットで台本と設定 -->
       <div class="screen" id="sc_chat">
-        <div class="h1">チャットで構成と設定を決める</div>
+        <div class="h1">チャットで構成と設定を決める<a class="help-inline" href="https://hinaiwagami0513.github.io/iineai/help/create/planning/#chat" target="_blank" rel="noopener" title="ヘルプ: AIと相談して決める" aria-label="この項目のヘルプ">?</a></div>
         <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;min-height:480px;">
           <!-- Left: Chat panel -->
           <div style="border:1px solid var(--color-border);border-radius:var(--radius-lg);background:#f0ede9;display:flex;flex-direction:column;overflow:hidden;">
@@ -839,41 +863,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
         </div>
       </div>
 
-      <div class="screen" id="sc_finish">
-        <div style="display:flex;gap:40px;align-items:center;justify-content:center;padding:32px 20px;">
-          <!-- Left: celebration -->
-          <div style="text-align:center;max-width:360px;">
-            <img src="./assets/iine-fox-celebrate.png" alt="お祝いキツネ" style="width:160px;height:160px;object-fit:contain;margin:0 auto 20px;display:block;">
-            <div style="font-size:var(--text-h1);font-weight:var(--font-weight-h1);margin-bottom:10px;">投稿の準備ができました！</div>
-            <div style="font-size:var(--text-body);color:var(--color-muted-foreground);line-height:1.7;margin-bottom:24px;">いつでも予約・投稿できます。<br>おつかれさまでした。</div>
-            <div style="display:flex;gap:12px;justify-content:center;"><button class="btn btn-ghost" style="display:inline-flex;align-items:center;gap:6px;padding:12px 20px;border:1px solid var(--color-border);border-radius:var(--radius-md);background:var(--color-surface);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;color:var(--color-foreground);"><i class="ti ti-list"></i>一覧へ戻る</button><button class="btn btn-primary grad" style="display:inline-flex;align-items:center;gap:6px;padding:12px 20px;border:none;border-radius:var(--radius-md);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;color:#fff;"><i class="ti ti-calendar-event"></i>投稿を予約する</button></div>
-          </div>
-          <!-- Right: phone preview -->
-          <div style="width:320px;flex:none;">
-            <div style="border:3px solid #222;border-radius:28px;overflow:hidden;background:#000;padding:8px 0 0;">
-              <!-- phone status bar -->
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px 6px;font-size:10px;color:#fff;"><span>9:41</span><div style="display:flex;gap:4px;align-items:center;"><i class="ti ti-wifi" style="font-size:12px;"></i><i class="ti ti-battery-4" style="font-size:14px;"></i></div></div>
-              <!-- Instagram-like post -->
-              <div style="background:#fff;">
-                <!-- header -->
-                <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;"><div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--color-primary),var(--color-primary-light));"></div><div><div style="font-size:10px;font-weight:700;">your_account</div><div style="font-size:8px;color:#999;">東京都</div></div><i class="ti ti-dots" style="margin-left:auto;font-size:14px;color:#666;"></i></div>
-                <!-- image area -->
-                <div style="aspect-ratio:1;background:linear-gradient(135deg,#f0e6d3,#e8d5b8);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;"><i class="ti ti-video" style="font-size:32px;color:var(--color-primary);opacity:.6;"></i><span style="font-size:9px;color:var(--color-muted-foreground);">駅徒歩5分・南向き1LDK</span></div>
-                <!-- action icons -->
-                <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;"><i class="ti ti-heart" style="font-size:18px;"></i><i class="ti ti-message-circle" style="font-size:18px;"></i><i class="ti ti-send" style="font-size:18px;"></i><i class="ti ti-bookmark" style="margin-left:auto;font-size:18px;"></i></div>
-                <!-- likes -->
-                <div style="padding:0 12px 4px;font-size:9px;font-weight:700;">128 likes</div>
-                <!-- caption -->
-                <div style="padding:0 12px 10px;font-size:9px;line-height:1.5;"><b>your_account</b> 駅徒歩5分の南向き1LDK、新着です。日当たり良好・即入居OK。<span style="color:var(--color-primary);">#賃貸 #お部屋探し</span></div>
-              </div>
-              <!-- phone bottom bar -->
-              <div style="background:#fff;padding:6px 0 10px;display:flex;justify-content:center;gap:24px;"><i class="ti ti-home" style="font-size:16px;"></i><i class="ti ti-search" style="font-size:16px;"></i><i class="ti ti-square-plus" style="font-size:16px;"></i><i class="ti ti-movie" style="font-size:16px;"></i><i class="ti ti-user" style="font-size:16px;"></i></div>
-            </div>
-          </div>
-        </div>
-      </div>
 
-    </div>
     <div class="foot">
       <button class="btn btn-ghost" id="back" onclick="nav(-1)"><i class="ti ti-arrow-left"></i>戻る</button>
       <button class="btn btn-primary" id="next" onclick="nav(1)">次へ</button>
@@ -882,28 +872,28 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 </div>
 <script>
 /* ===== 画面遷移 ===== */
-var SCR=['sns','method','route','upload','chat','generate','editor','finish'];
+var SCR=['sns','method','route','upload','chat','generate','editor'];   // 完成はモーダル（doneModal）で出すので画面には持たない
 var META={
   sns:{big:1,sub:0}, method:{big:2,sub:0},
   route:{big:2,sub:1},
   upload:{big:2,sub:2},
   chat:{big:2,sub:3},
   generate:{big:2,sub:4},
-  editor:{big:3,sub:0}, finish:{big:4,sub:0}
+  editor:{big:3,sub:0}
 };
 var i=0;
 var baseReady=false;
 var savedPlan=false;
 function renderStep(){
   var big=META[SCR[i]].big;
-  var steps=[[1,'何を投稿する？'],[2,'何をどう作る？'],[3,'投稿を編集'],[4,'完成']];
+  var steps=[[1,'何を投稿する？'],[2,'何をどう作る？'],[3,'投稿を編集']];
   var h='';
   steps.forEach(function(s,idx){
     var n=s[0];
     var cls=n<big?'done':(n===big?'now':'todo');
     var ni=n<big?'<i class="ti ti-check"></i>':n;
     h+='<div class="st '+cls+'"><div class="n">'+ni+'</div><span class="tx">'+s[1]+'</span></div>';
-    if(n<4)h+='<div class="stline '+(n<big?'done':'')+'"></div>';
+    if(n<steps.length)h+='<div class="stline '+(n<big?'done':'')+'"></div>';
   });
   document.getElementById('stepbar').innerHTML=h;
 }
@@ -928,7 +918,7 @@ function show(){
   if(SCR[i]==='upload'){nx.innerHTML='次へ：AIと構成を決める <i class="ti ti-arrow-right"></i>';nx.classList.remove('btn-disabled');nx.onclick=function(){nav(1);};}
   else if(SCR[i]==='chat'){nx.innerHTML='次へ：画像を生成 <i class="ti ti-arrow-right"></i>';nx.classList.remove('btn-disabled');nx.onclick=function(){nav(1);};}
   else if(SCR[i]==='generate'){nx.style.visibility='hidden';}
-  else if(SCR[i]==='editor'){nx.innerHTML='確認へ進む <i class="ti ti-arrow-right"></i>';nx.classList.remove('btn-disabled');nx.onclick=function(){nav(1);};}
+  else if(SCR[i]==='editor'){nx.innerHTML='これで完成 <i class="ti ti-check"></i>';nx.classList.remove('btn-disabled');nx.onclick=function(){ openDone(); };}
   else if(i===SCR.length-1){nx.innerHTML='完了 <i class="ti ti-check"></i>';nx.classList.remove('btn-disabled');nx.onclick=function(){};}
   else{nx.innerHTML='次へ <i class="ti ti-arrow-right"></i>';nx.classList.remove('btn-disabled');nx.onclick=function(){nav(1);};}
   /* finish画面ではフッター非表示 */
@@ -1294,4 +1284,82 @@ function applyAll(){document.querySelectorAll('.rev-chk').forEach(function(c){c.
 function applySelected(){var n=document.querySelectorAll('.rev-chk:checked').length;if(n===0){toast.error('反映するレビューを選択してください');return;}toast.success(n+'件の改善案を投稿文に反映しました');}
 </script>
 <script src="sonner.js"></script>
+
+<!-- 完成はページ遷移ではなくモーダルで出す（編集画面を閉じずに結果だけ見せる） -->
+<div class="donemask" id="doneMask"></div>
+<div class="donemodal" id="doneModal" role="dialog" aria-modal="true" aria-label="投稿の準備ができました">
+  <button class="doneclose" id="doneClose" aria-label="閉じる"><i class="ti ti-x"></i></button>
+      <div class="donebody">
+        <div style="display:flex;gap:40px;align-items:center;justify-content:center;padding:32px 20px;">
+          <!-- Left: celebration -->
+          <div style="text-align:center;max-width:360px;">
+            <img src="./assets/iine-fox-celebrate.png" alt="お祝いキツネ" style="width:160px;height:160px;object-fit:contain;margin:0 auto 20px;display:block;">
+            <div style="font-size:var(--text-h1);font-weight:var(--font-weight-h1);margin-bottom:10px;">投稿の準備ができました！</div>
+            <div style="font-size:var(--text-body);color:var(--color-muted-foreground);line-height:1.7;margin-bottom:24px;">いつでも予約・投稿できます。<br>おつかれさまでした。</div>
+            <div style="display:flex;gap:12px;justify-content:center;"><button class="btn btn-ghost" style="display:inline-flex;align-items:center;gap:6px;padding:12px 20px;border:1px solid var(--color-border);border-radius:var(--radius-md);background:var(--color-surface);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;color:var(--color-foreground);"><i class="ti ti-list"></i>一覧へ戻る</button><button class="btn btn-primary grad" style="display:inline-flex;align-items:center;gap:6px;padding:12px 20px;border:none;border-radius:var(--radius-md);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;color:#fff;"><i class="ti ti-calendar-event"></i>投稿を予約する</button></div>
+          </div>
+          <!-- Right: phone preview -->
+          <div style="width:320px;flex:none;">
+            <div style="border:3px solid #222;border-radius:28px;overflow:hidden;background:#000;padding:8px 0 0;">
+              <!-- phone status bar -->
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px 6px;font-size:10px;color:#fff;"><span>9:41</span><div style="display:flex;gap:4px;align-items:center;"><i class="ti ti-wifi" style="font-size:12px;"></i><i class="ti ti-battery-4" style="font-size:14px;"></i></div></div>
+              <!-- Instagram-like post -->
+              <div style="background:#fff;">
+                <!-- header -->
+                <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;"><div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--color-primary),var(--color-primary-light));"></div><div><div style="font-size:10px;font-weight:700;">your_account</div><div style="font-size:8px;color:#999;">東京都</div></div><i class="ti ti-dots" style="margin-left:auto;font-size:14px;color:#666;"></i></div>
+                <!-- image area -->
+                <div style="aspect-ratio:1;background:linear-gradient(135deg,#f0e6d3,#e8d5b8);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;"><i class="ti ti-video" style="font-size:32px;color:var(--color-primary);opacity:.6;"></i><span style="font-size:9px;color:var(--color-muted-foreground);">駅徒歩5分・南向き1LDK</span></div>
+                <!-- action icons -->
+                <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;"><i class="ti ti-heart" style="font-size:18px;"></i><i class="ti ti-message-circle" style="font-size:18px;"></i><i class="ti ti-send" style="font-size:18px;"></i><i class="ti ti-bookmark" style="margin-left:auto;font-size:18px;"></i></div>
+                <!-- likes -->
+                <div style="padding:0 12px 4px;font-size:9px;font-weight:700;">128 likes</div>
+                <!-- caption -->
+                <div style="padding:0 12px 10px;font-size:9px;line-height:1.5;"><b>your_account</b> 駅徒歩5分の南向き1LDK、新着です。日当たり良好・即入居OK。<span style="color:var(--color-primary);">#賃貸 #お部屋探し</span></div>
+              </div>
+              <!-- phone bottom bar -->
+              <div style="background:#fff;padding:6px 0 10px;display:flex;justify-content:center;gap:24px;"><i class="ti ti-home" style="font-size:16px;"></i><i class="ti ti-search" style="font-size:16px;"></i><i class="ti ti-square-plus" style="font-size:16px;"></i><i class="ti ti-movie" style="font-size:16px;"></i><i class="ti ti-user" style="font-size:16px;"></i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+</div>
+
+<script>
+/* 完成モーダルの開閉 */
+function openDone(){ document.getElementById('doneMask').classList.add('open');
+  document.getElementById('doneModal').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeDone(){ document.getElementById('doneMask').classList.remove('open');
+  document.getElementById('doneModal').classList.remove('open'); document.body.style.overflow=''; }
+document.getElementById('doneClose').addEventListener('click',closeDone);
+document.getElementById('doneMask').addEventListener('click',closeDone);
+document.addEventListener('keydown',function(e){ if(e.key==='Escape')closeDone(); });
+</script>
+
+<!-- ヘルプ導線: いま開いている画面に対応するヘルプへヘッダーの「?」を向け直す。
+     画面切替の関数に手を入れず、.screen の class 変化を見て追従する。 -->
+<script>
+(function(){
+  var BASE = "https://hinaiwagami0513.github.io/iineai/help";
+  var MAP  = {"sns": ["/create/overview/#select", "アカウントと作成方法"], "method": ["/create/overview/#select", "アカウントと作成方法"], "route": ["/create/image/#two", "台本から / 素材から"], "upload": ["/create/image/#two", "素材から作る"], "chat": ["/create/planning/#chat", "AIと相談して決める"], "generate": ["/create/image/#edit", "画像を生成して仕上げる"], "editor": ["/create/image/#edit", "画像を生成して仕上げる"]};
+  var FALLBACK = ["/create/image/", "画像を作成する"];
+  var hdr = document.querySelector('a.helpbtn, a.help');
+  if (!hdr) return;
+
+  function sync(){
+    var on = document.querySelector('.screen.on');
+    var key = on ? on.id.replace(/^sc_/, '') : null;
+    var e = (key && MAP[key]) || FALLBACK;
+    hdr.href = BASE + e[0];
+    hdr.title = 'このページのヘルプ（' + e[1] + '）';
+  }
+
+  var obs = new MutationObserver(sync);
+  document.querySelectorAll('.screen').forEach(function(el){
+    obs.observe(el, { attributes: true, attributeFilter: ['class'] });
+  });
+  sync();
+})();
+</script>
 </body></html>
