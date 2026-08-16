@@ -22,7 +22,7 @@ import {
 } from '@/components/ui/command';
 import { Button } from '@/components/ui/button';
 import { allArticles } from '@/lib/content';
-import { search, snippet, type SearchDoc } from '@/lib/search-index';
+import { searchDocs, snippet, type Doc } from '@/lib/help-index';
 import { top } from '@/content/site';
 import { cn } from '@/lib/utils';
 
@@ -38,7 +38,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
 
-  const popular = useMemo<SearchDoc[]>(
+  const popular = useMemo<Doc[]>(
     () =>
       top.popular
         .slice(0, 6)
@@ -50,12 +50,12 @@ export function SearchProvider({ children }: { children: ReactNode }) {
           cat: a.category.title,
           desc: a.desc,
           keywords: '',
-          body: '',
+          text: '',
         })),
     []
   );
 
-  const hits = query.trim() ? search(query, 12) : popular;
+  const hits = query.trim() ? searchDocs(query, 12) : popular;
 
   const open = useCallback((initialQuery = '') => {
     setQuery(initialQuery);
@@ -116,7 +116,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
               >
                 <span className="text-sm font-bold">{hit.title}</span>
                 <span className="line-clamp-1 text-xs text-muted-foreground">
-                  {hit.cat} — {query.trim() ? snippet(hit, query) : hit.desc}
+                  {hit.cat} — {query.trim() ? snippet(hit.text || hit.desc, query) : hit.desc}
                 </span>
               </CommandItem>
             ))}

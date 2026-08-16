@@ -127,7 +127,7 @@ export default {
           t: 'steps',
           items: [
             { title: '社内で確認してもらう', body: '「確認をお願いする」を押すと、確認者に回ります。詳しくは [確認・承認フロー](manage/approval)。' },
-            { title: '予約日時を決める', body: '承認されると「予約完了」タブに移ります。詳しくは [予約投稿とカレンダー](manage/schedule)。' },
+            { title: '予約日時を決める', body: '承認されると「予約済み」タブに移ります。詳しくは [予約投稿とカレンダー](manage/schedule)。' },
             { title: '投稿後、数字を見る', body: '[投稿レポート](analytics/post-report) で伸びた投稿を確認します。' },
           ],
         },

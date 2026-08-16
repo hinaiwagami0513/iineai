@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Noto_Sans_JP } from 'next/font/google';
 
+import { HelpAssistant } from '@/components/help-assistant';
 import { SearchProvider } from '@/components/search-provider';
 import { SITE } from '@/content/site';
 
@@ -25,7 +26,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="ja" className={notoSansJp.variable}>
       <body className="antialiased">
-        <SearchProvider>{children}</SearchProvider>
+        <SearchProvider>
+          {children}
+          <HelpAssistant />
+        </SearchProvider>
       </body>
     </html>
   );

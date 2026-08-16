@@ -39,6 +39,7 @@ components/
   article-blocks              ブロックデータ → shadcn 部品への描画
   article-list / inline / helpful / icons
   search-provider             ⌘K の Command ダイアログ（アプリに1つ）
+  help-assistant              右下の「わからないことを聞く」（3段で答えるアシスタント）
 content/
   types.ts                    Block / Article / Category の型
   site.ts                     カテゴリの並び / 検索チップ / はじめの4ステップ / 人気記事
@@ -46,7 +47,9 @@ content/
   learning(4) growth(3) settings(2) contract(4) faq(3)   ← 全51記事
 lib/
   content.ts                  記事の平坦化・リンク解決・インライン記法のパース
-  search-index.ts             検索インデックスとスコアリング（かな/カナ・全半角を吸収）
+  help-index.ts               見出し単位のインデックス。⌘K検索とアシスタントの共通土台
+                              症状→対処 / FAQ / 用語集も別に索引する
+  assistant.ts                アシスタントの中身（3段の流れ + LLM接続点）
 public/img/
   logo-iine-ai.png            本番の logotype_japanese.png
   fox-support.png             iine_board/assets/iine-fox-face.png（ヘッドセット付き）
@@ -96,6 +99,27 @@ Table（比較表）/ Tooltip
 - 仕様の出どころは `iine-ai-vault/` と `iine_board/*_wire.html`。ワイヤーに無い機能を書かない。
 - **A系の shadcn 部品を手で再実装しない**（vault `component-procurement`）。
 - **左カラーライン（border-left の色帯装飾）を使わない**。区切りは面の色差・ボーダー・余白で。
+
+## ヘルプアシスタント
+
+右下の「わからないことを聞く」。聞かれたことに 3段で答える。
+
+1. **該当箇所を出す** — 見出し単位で検索して、記事の「この節」まで案内する。
+   用語（リーチ・CTA 等）を聞かれたときは、探させずに定義を先に言い切る。
+2. **原因と対処を出す**（「解決しない」を押したとき）— 各記事の「症状 → 対処」表と
+   FAQ から、考えられる原因を重複を除いて並べる。
+3. **問い合わせへ** — お問い合わせ文の下書きを組み立てる。1〜2で案内した内容は
+   「試したこと」として自動で入るので、サポート側が同じ確認を繰り返さずに済む。
+
+### 生成AIを繋ぐとき
+
+`lib/assistant.ts` の `registerLlm()` が唯一の接続点。**いまは未接続**。
+GitHub Pages はサーバーが無く、ブラウザから直接 API を叩くとキーが露出するため。
+
+本番（Next.js のサーバーあり）に載せるときは Route Handler を1本立てて、そこ経由で呼ぶ。
+該当セクションを `context` として渡してあるので、ヘルプの記述に基づいて答えさせること。
+繋がっていれば 2段目の回答が生成文に差し替わり、繋がっていなければヘルプ由来の回答に
+自動で落ちる（`SolveResult.origin` で判別できる）。
 
 ## 未対応
 
