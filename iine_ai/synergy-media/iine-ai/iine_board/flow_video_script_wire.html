@@ -481,31 +481,49 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
   font-weight:var(--font-weight-body-strong);color:var(--color-foreground);cursor:pointer;}
 .bulkseg button+button{border-left:1px solid var(--color-border);}
 .bulkseg button.on{background:var(--color-primary);color:var(--color-on-primary);}
-.bulkhint{font-size:var(--text-label);color:var(--color-muted-foreground);margin-left:auto;}
+.bulkhint{font-size:var(--text-body);color:var(--color-muted-foreground);margin-left:auto;}
 /* 完成モーダルの複数カード一覧 */
 .bulklist{padding:28px 32px;}
 .bulkhd{text-align:center;margin-bottom:20px;}
 .bulkhd img{width:96px;height:96px;object-fit:contain;display:block;margin:0 auto 10px;}
 .bulkhd .t{font-size:var(--text-h2);font-weight:var(--font-weight-h2);}
-.bulkhd .s{font-size:var(--text-body);color:var(--color-muted-foreground);margin-top:6px;}
+.bulkhd .s{font-size:var(--text-body-lg);color:var(--color-muted-foreground);margin-top:6px;}
 .bulkgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px;}
 .bulkcard{border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden;background:var(--color-card);}
 .bulkcard .th{aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,.85);font-size:26px;}
 .bulkcard .bd{padding:11px 12px;}
-.bulkcard .ttl{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);line-height:1.5;
+.bulkcard .ttl{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);line-height:1.5;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:2.9em;}
-.bulkcard .cap{font-size:var(--text-meta);color:var(--color-muted-foreground);line-height:1.7;margin-top:6px;
+.bulkcard .cap{font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.7;margin-top:6px;
   white-space:pre-wrap;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;}
-.bulkcard .ed{display:inline-flex;align-items:center;gap:4px;margin-top:8px;padding:5px 10px;border-radius:var(--radius-sm);
-  border:1px solid var(--color-border);background:transparent;font-family:inherit;font-size:var(--text-meta);
+.bulkcard .ed{display:inline-flex;align-items:center;gap:6px;margin-top:10px;padding:7px 12px;border-radius:var(--radius-sm);
+  border:1px solid var(--color-border);background:transparent;font-family:inherit;font-size:var(--text-label);
   font-weight:var(--font-weight-body-strong);color:var(--color-foreground);cursor:pointer;}
 .bulkcard .ed:hover{border-color:var(--color-primary);color:var(--color-primary);background:var(--color-primary-subtle);}
 .bulkfoot{display:flex;gap:12px;justify-content:center;}
+/* まとめて予約: 一括で日程を入れるバー＋カード内の日時 */
+.bulksched{display:flex;align-items:flex-end;gap:10px;flex-wrap:wrap;background:var(--color-surface);
+  border:1px solid var(--color-border);border-radius:var(--radius-md);padding:12px 14px;margin-bottom:16px;}
+.bulksched .f{display:flex;flex-direction:column;gap:4px;}
+.bulksched .f span{font-size:var(--text-label);color:var(--color-muted-foreground);}
+.bulksched input,.bulksched select{height:40px;padding:0 10px;border-radius:var(--radius-md);
+  border:1px solid var(--color-border-strong);background:var(--color-input);font-family:inherit;
+  font-size:var(--text-body);color:var(--color-foreground);}
+.bulksched .apply{height:40px;padding:0 16px;border-radius:var(--radius-md);border:1px solid var(--color-primary);
+  background:var(--color-primary-subtle);color:var(--color-primary);font-family:inherit;font-size:var(--text-body);
+  font-weight:var(--font-weight-body-strong);cursor:pointer;display:inline-flex;align-items:center;gap:6px;}
+.bulksched .apply:hover{background:var(--color-primary);color:#fff;}
+.bulksched .hint{font-size:var(--text-label);color:var(--color-muted-foreground);margin-left:auto;align-self:center;}
+.cardsched-view{display:flex;align-items:center;gap:6px;margin-top:9px;padding-top:9px;border-top:1px dashed var(--color-border);
+  font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-primary);}
+.cardsched-view .kari{font-size:var(--text-meta);font-weight:400;color:var(--color-muted-foreground);
+  background:var(--color-background);border-radius:var(--radius-full);padding:2px 7px;}
+@media(max-width:768px){ .bulksched{gap:8px;} }
 @media(max-width:768px){ .bulkgrid{grid-template-columns:1fr 1fr;} .bulklist{padding:20px 16px;} }
 
 /* ===== まとめて作る: 生成前の確認 =====
    一気に作ると最後まで中身が見えないので、作る前に案を並べて見せる。 */
-.bulkcheck-sub{font-size:var(--text-body);color:var(--color-muted-foreground);margin:-6px 0 16px;}
+.bulkcheck-sub{font-size:var(--text-body-lg);color:var(--color-muted-foreground);margin:-6px 0 16px;}
 .bcgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
 .bccard{border:1.5px solid var(--color-border);border-radius:var(--radius-lg);background:var(--color-card);
   overflow:hidden;display:flex;flex-direction:column;transition:border-color .15s,opacity .15s;}
@@ -516,18 +534,56 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
   background:var(--color-card);cursor:pointer;display:flex;align-items:center;justify-content:center;
   color:transparent;font-size:14px;}
 .bccard.on .bccheck{background:var(--color-primary);border-color:var(--color-primary);color:#fff;}
-.bcttl{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);line-height:1.5;}
-.bcbody{padding:8px 14px 0;font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.7;
+.bcttl{font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);line-height:1.5;}
+.bcbody{padding:8px 14px 0;font-size:var(--text-body);color:var(--color-muted-foreground);line-height:1.7;
   white-space:pre-wrap;flex:1;}
 .bcmeta{display:flex;flex-wrap:wrap;gap:6px;padding:10px 14px 0;}
-.bcpill{font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);
+.bcpill{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);
   background:var(--color-background);border-radius:var(--radius-full);padding:2px 9px;}
 .bcfoot{padding:12px 14px 13px;}
 .bcredo{display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:var(--radius-sm);
-  border:1px solid var(--color-border);background:transparent;font-family:inherit;font-size:var(--text-meta);
+  border:1px solid var(--color-border);background:transparent;font-family:inherit;font-size:var(--text-label);
   font-weight:var(--font-weight-body-strong);color:var(--color-foreground);cursor:pointer;}
 .bcredo:hover{border-color:var(--color-primary);color:var(--color-primary);background:var(--color-primary-subtle);}
 @media(max-width:768px){ .bcgrid{grid-template-columns:1fr;} }
+/* 案カードの中で投稿日時を決める。チェックを外した案は非活性 */
+.bcsched{display:flex;align-items:center;gap:6px;margin:0 14px;padding:10px 0 0;border-top:1px dashed var(--color-border);}
+.bcsched input{flex:1.5;}
+.bcsched select{flex:1;}
+.bcsched input,.bcsched select{min-width:0;height:34px;padding:0 6px;border-radius:var(--radius-sm);
+  border:1px solid var(--color-border-strong);background:var(--color-input);font-family:inherit;
+  font-size:var(--text-label);color:var(--color-foreground);}
+.bcsched .kari{font-size:var(--text-meta);color:var(--color-muted-foreground);background:var(--color-background);
+  border-radius:var(--radius-full);padding:2px 7px;flex:none;}
+.bccard.off .bcsched{opacity:.45;}
+.bcsched input:disabled,.bcsched select:disabled{cursor:not-allowed;background:var(--color-background);color:var(--color-muted-foreground);}
+/* ===== 予約日時ピッカー（完成画面の「投稿を予約する」から開く） ===== */
+.bk-mask{display:none;position:fixed;inset:0;background:rgb(0 0 0 / .28);z-index:950;}
+.bk-mask.open{display:block;}
+.bk-pop{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:951;width:360px;max-width:calc(100vw - 32px);box-sizing:border-box;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);box-shadow:0 12px 32px rgb(0 0 0 / .16);padding:18px;}
+.bk-pop.open{display:block;}
+.bk-hd{display:flex;align-items:center;gap:7px;font-size:var(--text-h3);font-weight:var(--font-weight-h3);margin-bottom:4px;}
+.bk-hd i{font-size:20px;color:var(--color-primary);}
+.bk-note{font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.6;margin-bottom:14px;}
+.bk-quick{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.bk-qbtn{padding:11px 8px;border-radius:var(--radius-md);border:1px solid var(--color-border);background:var(--color-surface);color:var(--color-foreground);font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);line-height:1.35;text-align:center;cursor:pointer;transition:all .15s;}
+.bk-qbtn span{display:block;font-size:var(--text-label);font-weight:var(--font-weight-label);color:var(--color-muted-foreground);margin-top:3px;}
+.bk-qbtn:hover,.bk-qbtn.on{border-color:var(--color-primary);background:var(--color-primary-subtle);color:var(--color-primary);}
+.bk-qbtn:hover span,.bk-qbtn.on span{color:var(--color-primary);}
+.bk-sep{display:flex;align-items:center;gap:10px;font-size:var(--text-label);color:var(--color-muted-foreground);margin-bottom:12px;}
+.bk-sep::before,.bk-sep::after{content:"";flex:1;height:1px;background:var(--color-border);}
+.bk-fields{display:flex;gap:8px;margin-bottom:14px;}
+.bk-fields input,.bk-fields select{flex:1;min-width:0;height:44px;padding:0 10px;box-sizing:border-box;border-radius:var(--radius-md);border:1px solid var(--color-border-strong);background:var(--color-input);color:var(--color-foreground);font-family:inherit;font-size:var(--text-body);}
+.bk-fields input:focus,.bk-fields select:focus{outline:2px solid var(--color-ring);outline-offset:1px;border-color:var(--color-primary);}
+.bk-actions{display:flex;gap:8px;}
+.bk-btn{flex:1;height:44px;border-radius:var(--radius-md);border:1px solid var(--color-border);background:transparent;color:var(--color-foreground);font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;}
+.bk-btn:hover{background:var(--color-background);}
+.bk-btn.primary{flex:1.7;background:var(--color-primary);color:var(--color-on-primary);border-color:var(--color-primary);}
+.bk-btn.primary:hover{background:var(--color-primary-hover);}
+.bk-done-note{margin-top:14px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-primary);}
+.bk-done-note i{font-size:15px;}
+@media(max-width:600px){ .bk-pop{width:calc(100vw - 24px);padding:16px;} .bk-quick{grid-template-columns:1fr;} }
+
 </style></head><body>
 <div class="app">
   <div class="topbar"><div class="hdr-left"><span class="hdr-page"><i class="ti ti-template"></i>投稿作成</span><span class="tag" id="flowtag" style="display:none"></span></div><div class="hdr-right"><a class="helpbtn" href="https://hinaiwagami0513.github.io/iineai/help/create/video/" target="_blank" rel="noopener" title="このページのヘルプ（投稿作成 > 動画を作成）" aria-label="このページのヘルプ">?</a><button class="close"><i class="ti ti-list"></i></button></div></div>
@@ -597,7 +653,16 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
       <!-- まとめて作るときだけ通る: 生成前に案を確認する -->
       <div class="screen" id="sc_bulkcheck">
         <div class="h1">この案で作りますか？<a class="help-inline" href="https://hinaiwagami0513.github.io/iineai/help/create/video/#pick" target="_blank" rel="noopener" title="ヘルプ: 台本案から選ぶ" aria-label="この項目のヘルプ">?</a></div>
-        <div class="bulkcheck-sub">いらない案はチェックを外してください。作り直しもできます。</div>
+        <div class="bulkcheck-sub">いらない案はチェックを外してください。作り直しもできます。投稿日時もここで決められます。</div>
+        <div class="bulksched">
+          <label class="f"><span>最初の日</span><input type="date" id="bcStart"></label>
+          <label class="f"><span>時刻</span><select id="bcTime"></select></label>
+          <label class="f"><span>間隔</span><select id="bcGap">
+            <option value="1">毎日</option><option value="2" selected>2日おき</option>
+            <option value="3">3日おき</option><option value="7">毎週おなじ曜日</option></select></label>
+          <button class="apply" onclick="bcApplyPattern()"><i class="ti ti-calendar-event"></i>カードにまとめて入れる</button>
+          <span class="hint">1件ずつ違う日にしたいときはカードの日時を変えてください</span>
+        </div>
         <div class="bcgrid" id="bcGrid"></div>
       </div>
 
@@ -758,6 +823,13 @@ function show(){
     nx.classList.remove('btn-disabled');
     nx.onclick=function(){ buildPlans(); renderBulkCheck(); nav(1); };
   }else if(SCR[i]==='bulkcheck'){
+    // 直リンクや画面ボードから直接この画面に来ても中身が出るようにする。
+    // 案の生成は冪等（すでにあれば作り直さない）
+    // このscriptより後ろで定義されるので、無い間は何もしない（定義後にshow()が呼び直される）
+    if(typeof buildPlans==='function'){
+      if(!BULK_PLANS.length){ if(BULK<2)BULK=3; syncBulkSeg(); buildPlans(); }
+      renderBulkCheck();
+    }
     var n=bulkPicked();
     nx.innerHTML=(n?n+'件を作る <i class="ti ti-sparkles"></i>':'案を1つ以上選んでください');
     if(!n){ nx.classList.add('btn-disabled'); nx.onclick=function(e){e.preventDefault();}; }
@@ -1421,22 +1493,140 @@ function renderBulkDone(){
   var made=(typeof BULK_PLANS!=='undefined'&&BULK_PLANS.length)
     ? BULK_PLANS.filter(function(p){return p.on;})
     : BULK_SAMPLES.slice(0,BULK).map(function(s){return {title:s.t,g:s.g,body:s.body,tags:s.tags};});
+  var slots=(typeof bcSlots==='function')?bcSlots():[];
   list.innerHTML=
     '<div class="bulkhd"><img src="./assets/iine-fox-celebrate.png" alt="">'+
       '<div class="t">'+made.length+'件できました！</div>'+
-      '<div class="s">中身はここで確認できます。直さなくてもそのまま予約できます。</div></div>'+
-    '<div class="bulkgrid">'+made.map(function(s){
+      '<div class="s">前の画面で決めた日時で仮予約します。直したいときは戻って変更できます。</div></div>'+
+    '<div class="bulkgrid">'+made.map(function(s,idx){
+      var lb=bcSlotLabel(slots[idx]);
       return '<div class="bulkcard"><div class="th" style="background:'+s.g+'"><i class="ti ti-photo"></i></div>'+
         '<div class="bd"><div class="ttl">'+s.title+'</div>'+
         '<div class="cap">'+s.body+'</div>'+
+        (lb?'<div class="cardsched-view"><i class="ti ti-calendar-event"></i>'+lb+'<span class="kari">仮</span></div>':'')+
         '<button class="ed"><i class="ti ti-pencil"></i>編集する</button></div></div>';
     }).join('')+'</div>'+
     '<div class="bulkfoot">'+
       '<button class="btn btn-ghost" style="padding:12px 20px;border:1px solid var(--color-border);border-radius:var(--radius-md);background:transparent;font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;">一覧へ戻る</button>'+
-      '<button class="btn btn-primary" style="padding:12px 22px;border:none;border-radius:var(--radius-md);background:var(--color-primary);color:#fff;font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;">'+made.length+'件まとめて予約する</button>'+
+      '<button class="btn btn-primary" style="padding:12px 22px;border:none;border-radius:var(--radius-md);background:var(--color-primary);color:#fff;font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;">'+made.length+'件をこの日程で予約する</button>'+
     '</div>';
 }
 </script>
+
+<script>
+/* ===== まとめて作る: 生成前の確認 ===== */
+var BULK_PLANS=[];
+var REDO_LEADS=[
+  '切り口を変えました。','もう少しやさしい言い方にしました。','数字を前に出しました。'
+];
+
+function buildPlans(){
+  BULK_PLANS = BULK_SAMPLES.slice(0,BULK).map(function(s,idx){
+    return {title:s.t, g:s.g, body:s.body, tags:s.tags, on:true, seq:idx+1,
+            redo:0, base:{title:s.t, body:s.body}};
+  });
+}
+function syncBulkSeg(){
+  var seg=document.getElementById('bulkSeg'); if(!seg)return;
+  seg.querySelectorAll('button').forEach(function(x){ x.classList.toggle('on', +x.dataset.n===BULK); });
+  var h=document.getElementById('bulkHint');
+  if(h)h.textContent = BULK===1 ? '1件だけ作ります' : BULK+'件を一度に作ります。1件ずつの編集はあとから';
+}
+function renderBulkCheck(){
+  var g=document.getElementById('bcGrid'); if(!g)return;
+  bcSeed();
+  g.innerHTML=BULK_PLANS.map(function(p,i){
+    var v=BC_SCHED[i]||{};
+    var dis=p.on?'':' disabled';
+    return '<div class="bccard '+(p.on?'on':'off')+'" data-i="'+i+'">'+
+      '<div class="bctop"><button class="bccheck" data-tg="'+i+'" aria-label="この案を使う"><i class="ti ti-check"></i></button>'+
+        '<div class="bcttl">'+p.title+'</div></div>'+
+      '<div class="bcbody">'+p.body+'</div>'+
+      '<div class="bcmeta">'+p.tags.map(function(t){return '<span class="bcpill">'+t+'</span>';}).join('')+'</div>'+
+      '<div class="bcsched"><input type="date" value="'+(v.d||'')+'"'+dis+' onchange="bcSet('+i+',\'d\',this.value)" title="'+(p.on?'投稿日':'チェックを入れると設定できます')+'">'+
+        '<select'+dis+' onchange="bcSet('+i+',\'t\',this.value)">'+bcTimeOptions(v.t||'19:00')+'</select>'+
+        '<span class="kari">仮</span></div>'+
+      '<div class="bcfoot"><button class="bcredo" data-redo="'+i+'"><i class="ti ti-refresh"></i>作り直す</button></div>'+
+    '</div>';
+  }).join('');
+}
+/* ===== 案カードごとの投稿日時（チェック済みのぶんだけ有効） ===== */
+var BC_SCHED={};
+function bcPad(n){return (n<10?'0':'')+n;}
+function bcDay(plus){
+  var d=(typeof SCH_BASE!=='undefined')?new Date(SCH_BASE):new Date();
+  d.setDate(d.getDate()+(plus||0));
+  return d.getFullYear()+'-'+bcPad(d.getMonth()+1)+'-'+bcPad(d.getDate());
+}
+function bcTimeOptions(sel){
+  var out='';
+  for(var h=0;h<24;h++)for(var m=0;m<60;m+=30){
+    var v=bcPad(h)+':'+bcPad(m);
+    out+='<option value="'+v+'"'+(v===sel?' selected':'')+'>'+v+'</option>';
+  }
+  return out;
+}
+/* 初期値は2日おき。チェックを外して戻しても入力ずみの値は消さない */
+function bcSeed(){
+  var n=0;
+  BULK_PLANS.forEach(function(p,i){
+    if(!BC_SCHED[i]){ BC_SCHED[i]={d:bcDay(1+n*2),t:'19:00'}; }
+    if(p.on)n++;
+  });
+}
+function bcSet(i,key,val){ BC_SCHED[i]=BC_SCHED[i]||{}; BC_SCHED[i][key]=val; }
+/* 上のバーの内容を、チェックが入っている案だけに順番に入れる */
+function bcApplyPattern(){
+  var v=document.getElementById('bcStart').value;
+  var t=document.getElementById('bcTime').value;
+  var gap=parseInt(document.getElementById('bcGap').value,10)||1;
+  if(!v){ if(typeof toast!=='undefined')toast('最初の日を選んでください'); return; }
+  var p=v.split('-'), n=0;
+  BULK_PLANS.forEach(function(pl,i){
+    if(!pl.on)return;
+    var d=new Date(+p[0],+p[1]-1,+p[2]+n*gap);
+    BC_SCHED[i]={d:d.getFullYear()+'-'+bcPad(d.getMonth()+1)+'-'+bcPad(d.getDate()),t:t};
+    n++;
+  });
+  renderBulkCheck();
+  if(typeof toast!=='undefined')toast.success(n+'件に日程を入れました');
+}
+/* チェックが入っている案の日時を、表示順にそろえて返す */
+function bcSlots(){
+  return BULK_PLANS.map(function(p,i){return p.on?(BC_SCHED[i]||{}):null;}).filter(Boolean);
+}
+function bcSlotLabel(v){
+  if(!v||!v.d)return '';
+  var p=v.d.split('-'), hm=(v.t||'19:00').split(':');
+  var d=new Date(+p[0],+p[1]-1,+p[2],+hm[0],+hm[1]);
+  var W=(typeof SCH_WD!=='undefined')?SCH_WD:['日','月','火','水','木','金','土'];
+  return (d.getMonth()+1)+'/'+d.getDate()+'('+W[d.getDay()]+') '+(v.t||'19:00');
+}
+/* 一括バーの初期値 */
+(function(){
+  var s=document.getElementById('bcStart'); if(!s)return;
+  s.value=bcDay(1);
+  var t=document.getElementById('bcTime'); if(t)t.innerHTML=bcTimeOptions('19:00');
+})();
+function bulkPicked(){ return BULK_PLANS.filter(function(p){return p.on;}).length; }
+/* 定義が揃ったので、直リンクで既に bulkcheck を表示している場合に描き直す */
+if(typeof show==='function')show();
+
+document.addEventListener('click',function(e){
+  var t=e.target.closest?e.target.closest('.bccheck'):null;
+  if(t){ var p=BULK_PLANS[+t.dataset.tg]; p.on=!p.on; renderBulkCheck(); if(typeof show==='function')show(); return; }
+  var r=e.target.closest?e.target.closest('.bcredo'):null;
+  if(r){ var i2=+r.dataset.redo; var p2=BULK_PLANS[i2];
+    // 元の案から作り直す。前回の結果に足していくと文言が積み上がる
+    p2.redo=(p2.redo||0)+1;
+    p2.title=p2.base.title+'（案'+(p2.redo+1)+'）';
+    p2.body=REDO_LEADS[(p2.redo-1)%REDO_LEADS.length]+p2.base.body;
+    renderBulkCheck();
+    if(typeof toast!=='undefined')toast('案'+(i2+1)+'を作り直しました');
+    return; }
+});
+</script>
+
 
 <!-- ヘルプ導線: いま開いている画面に対応するヘルプへヘッダーの「?」を向け直す。
      画面切替の関数に手を入れず、.screen の class 変化を見て追従する。 -->
@@ -1464,37 +1654,153 @@ function renderBulkDone(){
 })();
 </script>
 
+
+
+<!-- ===== 予約日時ピッカー（完成画面の「投稿を予約する」から開く） ===== -->
+<div class="bk-mask" id="bkMask"></div>
+<div class="bk-pop" id="bkPop" role="dialog" aria-modal="true" aria-label="投稿日時を決める">
+  <div class="bk-hd"><i class="ti ti-calendar-event"></i>投稿日時を決める</div>
+  <div class="bk-note">この日時になったら自動で投稿されます。あとから変更もできます。</div>
+  <div class="bk-quick" id="bkQuick"></div>
+  <div class="bk-sep">日時を指定する</div>
+  <div class="bk-fields">
+    <input type="date" id="bkDate">
+    <select id="bkTime"></select>
+  </div>
+  <div class="bk-actions">
+    <button class="bk-btn" type="button" id="bkCancel">やめる</button>
+    <button class="bk-btn primary" type="button" id="bkSave"><i class="ti ti-check"></i>この日時で予約する</button>
+  </div>
+</div>
 <script>
-/* ===== まとめて作る: 生成前の確認 ===== */
-var BULK_PLANS=[];
-function buildPlans(){
-  BULK_PLANS = BULK_SAMPLES.slice(0,BULK).map(function(s,idx){
-    return {title:s.t, g:s.g, body:s.body, tags:s.tags, on:true, seq:idx+1};
+/* 完成画面の「投稿を予約する」に予約日時ピッカーを配線。
+   UIは投稿一覧（post_list_wire.html）の予約日時ポップオーバーに合わせている。 */
+(function(){
+  var mask=document.getElementById('bkMask'),pop=document.getElementById('bkPop');
+  if(!mask||!pop)return;
+  var dateEl=document.getElementById('bkDate'),timeEl=document.getElementById('bkTime'),quickEl=document.getElementById('bkQuick');
+  var WD=['日','月','火','水','木','金','土'];
+  function p2(n){return (n<10?'0':'')+n;}
+  /* 時刻は30分刻み（自由入力より押し間違いが少ない） */
+  for(var h=0;h<24;h++){for(var mi=0;mi<60;mi+=30){
+    var o=document.createElement('option');o.value=p2(h)+':'+p2(mi);o.textContent=p2(h)+':'+p2(mi);timeEl.appendChild(o);
+  }}
+  /* かんたん選択（設問を作らず、押すだけで決まる導線）
+     曜日次第で候補が重なる（例: 日曜だと「明日の朝」と「来週の月曜」が同じ日時）ので、
+     過去と重複を弾いてから先頭4件を採る。足りないぶんは後ろの候補で埋まる。 */
+  function quickOptions(){
+    var b=new Date(),y=b.getFullYear(),m=b.getMonth(),d=b.getDate(),c=[];
+    function add(name,dt){
+      if(dt<=b)return;
+      for(var k=0;k<c.length;k++)if(c[k].date.getTime()===dt.getTime())return;
+      c.push({name:name,date:dt});
+    }
+    add('今日の夜',new Date(y,m,d,19,0));
+    add('明日の朝',new Date(y,m,d+1,9,0));
+    add('明日の夜',new Date(y,m,d+1,19,0));
+    var sat=new Date(y,m,d,10,0),gap=(6-sat.getDay()+7)%7;
+    if(gap===0&&sat<=b)gap=7;
+    sat.setDate(sat.getDate()+gap);
+    add('今週の土曜',sat);
+    var mon=new Date(y,m,d,9,0),g2=(1-mon.getDay()+7)%7||7;
+    mon.setDate(mon.getDate()+g2);
+    add('来週の月曜',mon);
+    var sat2=new Date(sat.getTime());sat2.setDate(sat2.getDate()+7);
+    add('来週の土曜',sat2);
+    return c.slice(0,4);
+  }
+  function setFields(d){
+    dateEl.value=d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());
+    timeEl.value=p2(d.getHours())+':'+p2(Math.floor(d.getMinutes()/30)*30);
+  }
+  function readFields(){
+    var m=(dateEl.value||'').match(/^(\d{4})-(\d{2})-(\d{2})$/),t=(timeEl.value||'').match(/^(\d{2}):(\d{2})$/);
+    return (m&&t)?new Date(+m[1],+m[2]-1,+m[3],+t[1],+t[2]):null;
+  }
+  function shortLabel(d){return (d.getMonth()+1)+'/'+d.getDate()+'('+WD[d.getDay()]+') '+p2(d.getHours())+':'+p2(d.getMinutes());}
+  function longLabel(d){return (d.getMonth()+1)+'月'+d.getDate()+'日('+WD[d.getDay()]+') '+p2(d.getHours())+':'+p2(d.getMinutes());}
+  var srcBtn=null;
+  function openBk(btn){
+    srcBtn=btn;
+    var opts=quickOptions();
+    setFields(opts[0].date);
+    quickEl.innerHTML='';
+    opts.forEach(function(q){
+      var b=document.createElement('button');
+      b.className='bk-qbtn';b.type='button';b.dataset.value=q.date.getTime();
+      b.innerHTML=q.name+'<span>'+shortLabel(q.date)+'</span>';
+      quickEl.appendChild(b);
+    });
+    mask.classList.add('open');pop.classList.add('open');
+  }
+  function closeBk(){mask.classList.remove('open');pop.classList.remove('open');srcBtn=null;}
+  quickEl.addEventListener('click',function(e){
+    var b=e.target.closest?e.target.closest('.bk-qbtn'):null;if(!b)return;
+    quickEl.querySelectorAll('.bk-qbtn').forEach(function(o){o.classList.remove('on');});
+    b.classList.add('on');
+    setFields(new Date(+b.dataset.value));
   });
+  mask.addEventListener('click',closeBk);
+  document.getElementById('bkCancel').addEventListener('click',closeBk);
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&pop.classList.contains('open'))closeBk();});
+  document.getElementById('bkSave').addEventListener('click',function(){
+    var d=readFields();
+    if(!d){if(typeof toast!=='undefined')toast.error('日時を選んでください');return;}
+    if(srcBtn){
+      /* 日時をボタン内に入れると隣の「一覧へ戻る」が折り返すので、下の行に出す */
+      srcBtn.innerHTML='<i class="ti ti-check"></i>予約済み';
+      srcBtn.style.opacity='.5';srcBtn.style.cursor='not-allowed';srcBtn.style.pointerEvents='none';srcBtn.style.whiteSpace='nowrap';
+      var row=srcBtn.parentElement,host=row&&row.parentElement;
+      if(host){
+        var note=host.querySelector('.bk-done-note');
+        if(!note){note=document.createElement('div');note.className='bk-done-note';host.insertBefore(note,row.nextSibling);}
+        note.innerHTML='<i class="ti ti-calendar-event"></i>'+longLabel(d)+' に投稿予定';
+      }
+    }
+    closeBk();
+    if(typeof toast!=='undefined')toast.success(longLabel(d)+'に予約しました');
+  });
+  /* 完成画面の「投稿を予約する」ボタンに配線 */
+  Array.prototype.forEach.call(document.querySelectorAll('button'),function(b){
+    if((b.textContent||'').trim()==='投稿を予約する')b.addEventListener('click',function(){openBk(b);});
+  });
+})();
+</script>
+
+<script>
+/* ワイヤー用の「今日」。実装時は new Date() */
+var SCH_BASE=new Date(2026,6,16);
+var SCH_WD=['日','月','火','水','木','金','土'];
+
+/* カードに入っている日程でまとめて予約する */
+function confirmBulkSchedule(){
+  var slots=(typeof bcSlots==='function')?bcSlots():[];
+  var rows=slots.map(function(v){
+    if(!v||!v.d)return null;
+    var p=v.d.split('-'), hm=(v.t||'19:00').split(':');
+    return new Date(+p[0],+p[1]-1,+p[2],+hm[0],+hm[1]);
+  }).filter(Boolean);
+  if(rows.length<slots.length){ if(typeof toast!=='undefined')toast('日付が入っていない案があります'); return; }
+  rows.sort(function(x,y){return x-y;});
+  var f=rows[0], l=rows[rows.length-1];
+  closeDone();
+  if(typeof toast!=='undefined')
+    toast.success(rows.length+'件を予約しました。'+(f.getMonth()+1)+'/'+f.getDate()+'〜'+(l.getMonth()+1)+'/'+l.getDate()+' に投稿されます');
+  setTimeout(function(){ location.href='./post_list_wire.html#ready'; },900);
 }
-function renderBulkCheck(){
-  var g=document.getElementById('bcGrid'); if(!g)return;
-  g.innerHTML=BULK_PLANS.map(function(p,i){
-    return '<div class="bccard '+(p.on?'on':'off')+'" data-i="'+i+'">'+
-      '<div class="bctop"><button class="bccheck" data-tg="'+i+'" aria-label="この案を使う"><i class="ti ti-check"></i></button>'+
-        '<div class="bcttl">'+p.title+'</div></div>'+
-      '<div class="bcbody">'+p.body+'</div>'+
-      '<div class="bcmeta">'+p.tags.map(function(t){return '<span class="bcpill">'+t+'</span>';}).join('')+'</div>'+
-      '<div class="bcfoot"><button class="bcredo" data-redo="'+i+'"><i class="ti ti-refresh"></i>作り直す</button></div>'+
-    '</div>';
-  }).join('');
-}
-function bulkPicked(){ return BULK_PLANS.filter(function(p){return p.on;}).length; }
+/* 完成一覧のボタンをつなぐ */
 document.addEventListener('click',function(e){
-  var t=e.target.closest?e.target.closest('.bccheck'):null;
-  if(t){ var p=BULK_PLANS[+t.dataset.tg]; p.on=!p.on; renderBulkCheck(); if(typeof show==='function')show(); return; }
-  var r=e.target.closest?e.target.closest('.bcredo'):null;
-  if(r){ var i2=+r.dataset.redo; var p2=BULK_PLANS[i2];
-    p2.title=p2.title+'（作り直し）';
-    p2.body='別の切り口で書き直しました。'+p2.body;
-    renderBulkCheck();
-    if(typeof toast!=='undefined')toast('案'+(i2+1)+'を作り直しました');
+  var b=e.target.closest?e.target.closest('#bulkDone .bulkfoot .btn-primary'):null;
+  if(b){ confirmBulkSchedule(); return; }
+  var back=e.target.closest?e.target.closest('#bulkDone .bulkfoot .btn-ghost'):null;
+  if(back){ location.href='./post_list_wire.html'; return; }
+  var ed=e.target.closest?e.target.closest('#bulkDone .ed'):null;
+  if(ed){ // その案の編集へ。モーダルを閉じて編集ステップを開く
+    closeDone();
+    var idx=SCR.indexOf('editor'); if(idx>=0){ i=idx; show(); }
+    if(typeof toast!=='undefined')toast('この投稿の編集を開きます');
     return; }
 });
 </script>
+<script src="shadcn-select.js"></script>
 </body></html>

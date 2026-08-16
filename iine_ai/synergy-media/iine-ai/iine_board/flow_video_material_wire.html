@@ -450,6 +450,32 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
   font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1;}
 .doneclose:hover{background:var(--color-background);}
 @media(max-width:768px){ .donemodal{width:calc(100vw - 24px);max-height:88vh;} }
+/* ===== 予約日時ピッカー（完成画面の「投稿を予約する」から開く） ===== */
+.bk-mask{display:none;position:fixed;inset:0;background:rgb(0 0 0 / .28);z-index:950;}
+.bk-mask.open{display:block;}
+.bk-pop{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:951;width:360px;max-width:calc(100vw - 32px);box-sizing:border-box;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);box-shadow:0 12px 32px rgb(0 0 0 / .16);padding:18px;}
+.bk-pop.open{display:block;}
+.bk-hd{display:flex;align-items:center;gap:7px;font-size:var(--text-h3);font-weight:var(--font-weight-h3);margin-bottom:4px;}
+.bk-hd i{font-size:20px;color:var(--color-primary);}
+.bk-note{font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.6;margin-bottom:14px;}
+.bk-quick{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.bk-qbtn{padding:11px 8px;border-radius:var(--radius-md);border:1px solid var(--color-border);background:var(--color-surface);color:var(--color-foreground);font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);line-height:1.35;text-align:center;cursor:pointer;transition:all .15s;}
+.bk-qbtn span{display:block;font-size:var(--text-label);font-weight:var(--font-weight-label);color:var(--color-muted-foreground);margin-top:3px;}
+.bk-qbtn:hover,.bk-qbtn.on{border-color:var(--color-primary);background:var(--color-primary-subtle);color:var(--color-primary);}
+.bk-qbtn:hover span,.bk-qbtn.on span{color:var(--color-primary);}
+.bk-sep{display:flex;align-items:center;gap:10px;font-size:var(--text-label);color:var(--color-muted-foreground);margin-bottom:12px;}
+.bk-sep::before,.bk-sep::after{content:"";flex:1;height:1px;background:var(--color-border);}
+.bk-fields{display:flex;gap:8px;margin-bottom:14px;}
+.bk-fields input,.bk-fields select{flex:1;min-width:0;height:44px;padding:0 10px;box-sizing:border-box;border-radius:var(--radius-md);border:1px solid var(--color-border-strong);background:var(--color-input);color:var(--color-foreground);font-family:inherit;font-size:var(--text-body);}
+.bk-fields input:focus,.bk-fields select:focus{outline:2px solid var(--color-ring);outline-offset:1px;border-color:var(--color-primary);}
+.bk-actions{display:flex;gap:8px;}
+.bk-btn{flex:1;height:44px;border-radius:var(--radius-md);border:1px solid var(--color-border);background:transparent;color:var(--color-foreground);font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;}
+.bk-btn:hover{background:var(--color-background);}
+.bk-btn.primary{flex:1.7;background:var(--color-primary);color:var(--color-on-primary);border-color:var(--color-primary);}
+.bk-btn.primary:hover{background:var(--color-primary-hover);}
+.bk-done-note{margin-top:14px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-primary);}
+.bk-done-note i{font-size:15px;}
+@media(max-width:600px){ .bk-pop{width:calc(100vw - 24px);padding:16px;} .bk-quick{grid-template-columns:1fr;} }
 </style></head><body>
 <div class="app">
   <div class="topbar"><div class="hdr-left"><span class="hdr-page"><i class="ti ti-template"></i>投稿作成</span><span class="tag" id="flowtag" style="display:none"></span></div><div class="hdr-right"><a class="helpbtn" href="https://hinaiwagami0513.github.io/iineai/help/create/video/" target="_blank" rel="noopener" title="このページのヘルプ（投稿作成 > 動画を作成）" aria-label="このページのヘルプ">?</a><button class="close"><i class="ti ti-list"></i></button></div></div>
@@ -1056,4 +1082,116 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape')closeDone()
   sync();
 })();
 </script>
+
+<!-- ===== 予約日時ピッカー（完成画面の「投稿を予約する」から開く） ===== -->
+<div class="bk-mask" id="bkMask"></div>
+<div class="bk-pop" id="bkPop" role="dialog" aria-modal="true" aria-label="投稿日時を決める">
+  <div class="bk-hd"><i class="ti ti-calendar-event"></i>投稿日時を決める</div>
+  <div class="bk-note">この日時になったら自動で投稿されます。あとから変更もできます。</div>
+  <div class="bk-quick" id="bkQuick"></div>
+  <div class="bk-sep">日時を指定する</div>
+  <div class="bk-fields">
+    <input type="date" id="bkDate">
+    <select id="bkTime"></select>
+  </div>
+  <div class="bk-actions">
+    <button class="bk-btn" type="button" id="bkCancel">やめる</button>
+    <button class="bk-btn primary" type="button" id="bkSave"><i class="ti ti-check"></i>この日時で予約する</button>
+  </div>
+</div>
+<script>
+/* 完成画面の「投稿を予約する」に予約日時ピッカーを配線。
+   UIは投稿一覧（post_list_wire.html）の予約日時ポップオーバーに合わせている。 */
+(function(){
+  var mask=document.getElementById('bkMask'),pop=document.getElementById('bkPop');
+  if(!mask||!pop)return;
+  var dateEl=document.getElementById('bkDate'),timeEl=document.getElementById('bkTime'),quickEl=document.getElementById('bkQuick');
+  var WD=['日','月','火','水','木','金','土'];
+  function p2(n){return (n<10?'0':'')+n;}
+  /* 時刻は30分刻み（自由入力より押し間違いが少ない） */
+  for(var h=0;h<24;h++){for(var mi=0;mi<60;mi+=30){
+    var o=document.createElement('option');o.value=p2(h)+':'+p2(mi);o.textContent=p2(h)+':'+p2(mi);timeEl.appendChild(o);
+  }}
+  /* かんたん選択（設問を作らず、押すだけで決まる導線）
+     曜日次第で候補が重なる（例: 日曜だと「明日の朝」と「来週の月曜」が同じ日時）ので、
+     過去と重複を弾いてから先頭4件を採る。足りないぶんは後ろの候補で埋まる。 */
+  function quickOptions(){
+    var b=new Date(),y=b.getFullYear(),m=b.getMonth(),d=b.getDate(),c=[];
+    function add(name,dt){
+      if(dt<=b)return;
+      for(var k=0;k<c.length;k++)if(c[k].date.getTime()===dt.getTime())return;
+      c.push({name:name,date:dt});
+    }
+    add('今日の夜',new Date(y,m,d,19,0));
+    add('明日の朝',new Date(y,m,d+1,9,0));
+    add('明日の夜',new Date(y,m,d+1,19,0));
+    var sat=new Date(y,m,d,10,0),gap=(6-sat.getDay()+7)%7;
+    if(gap===0&&sat<=b)gap=7;
+    sat.setDate(sat.getDate()+gap);
+    add('今週の土曜',sat);
+    var mon=new Date(y,m,d,9,0),g2=(1-mon.getDay()+7)%7||7;
+    mon.setDate(mon.getDate()+g2);
+    add('来週の月曜',mon);
+    var sat2=new Date(sat.getTime());sat2.setDate(sat2.getDate()+7);
+    add('来週の土曜',sat2);
+    return c.slice(0,4);
+  }
+  function setFields(d){
+    dateEl.value=d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());
+    timeEl.value=p2(d.getHours())+':'+p2(Math.floor(d.getMinutes()/30)*30);
+  }
+  function readFields(){
+    var m=(dateEl.value||'').match(/^(\d{4})-(\d{2})-(\d{2})$/),t=(timeEl.value||'').match(/^(\d{2}):(\d{2})$/);
+    return (m&&t)?new Date(+m[1],+m[2]-1,+m[3],+t[1],+t[2]):null;
+  }
+  function shortLabel(d){return (d.getMonth()+1)+'/'+d.getDate()+'('+WD[d.getDay()]+') '+p2(d.getHours())+':'+p2(d.getMinutes());}
+  function longLabel(d){return (d.getMonth()+1)+'月'+d.getDate()+'日('+WD[d.getDay()]+') '+p2(d.getHours())+':'+p2(d.getMinutes());}
+  var srcBtn=null;
+  function openBk(btn){
+    srcBtn=btn;
+    var opts=quickOptions();
+    setFields(opts[0].date);
+    quickEl.innerHTML='';
+    opts.forEach(function(q){
+      var b=document.createElement('button');
+      b.className='bk-qbtn';b.type='button';b.dataset.value=q.date.getTime();
+      b.innerHTML=q.name+'<span>'+shortLabel(q.date)+'</span>';
+      quickEl.appendChild(b);
+    });
+    mask.classList.add('open');pop.classList.add('open');
+  }
+  function closeBk(){mask.classList.remove('open');pop.classList.remove('open');srcBtn=null;}
+  quickEl.addEventListener('click',function(e){
+    var b=e.target.closest?e.target.closest('.bk-qbtn'):null;if(!b)return;
+    quickEl.querySelectorAll('.bk-qbtn').forEach(function(o){o.classList.remove('on');});
+    b.classList.add('on');
+    setFields(new Date(+b.dataset.value));
+  });
+  mask.addEventListener('click',closeBk);
+  document.getElementById('bkCancel').addEventListener('click',closeBk);
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&pop.classList.contains('open'))closeBk();});
+  document.getElementById('bkSave').addEventListener('click',function(){
+    var d=readFields();
+    if(!d){if(typeof toast!=='undefined')toast.error('日時を選んでください');return;}
+    if(srcBtn){
+      /* 日時をボタン内に入れると隣の「一覧へ戻る」が折り返すので、下の行に出す */
+      srcBtn.innerHTML='<i class="ti ti-check"></i>予約済み';
+      srcBtn.style.opacity='.5';srcBtn.style.cursor='not-allowed';srcBtn.style.pointerEvents='none';srcBtn.style.whiteSpace='nowrap';
+      var row=srcBtn.parentElement,host=row&&row.parentElement;
+      if(host){
+        var note=host.querySelector('.bk-done-note');
+        if(!note){note=document.createElement('div');note.className='bk-done-note';host.insertBefore(note,row.nextSibling);}
+        note.innerHTML='<i class="ti ti-calendar-event"></i>'+longLabel(d)+' に投稿予定';
+      }
+    }
+    closeBk();
+    if(typeof toast!=='undefined')toast.success(longLabel(d)+'に予約しました');
+  });
+  /* 完成画面の「投稿を予約する」ボタンに配線 */
+  Array.prototype.forEach.call(document.querySelectorAll('button'),function(b){
+    if((b.textContent||'').trim()==='投稿を予約する')b.addEventListener('click',function(){openBk(b);});
+  });
+})();
+</script>
+<script src="shadcn-select.js"></script>
 </body></html>
