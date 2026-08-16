@@ -132,7 +132,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .jb{font-size:var(--text-meta);border:1px solid var(--color-border);background:var(--color-card);border-radius:var(--radius-full);width:22px;height:22px;color:var(--color-muted-foreground);cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .jb:hover{border-color:var(--color-primary);color:var(--color-primary);}
 .close{width:36px;height:36px;border:1px solid var(--color-border);border-radius:var(--radius-sm);background:var(--color-card);color:var(--color-muted-foreground);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-.helpbtn{width:32px;height:32px;border:1.5px solid var(--color-primary);border-radius:var(--radius-full);background:var(--color-card);color:var(--color-primary);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.helpbtn{width:32px;height:32px;border:1.5px solid var(--color-primary);border-radius:var(--radius-full);background:var(--color-card);color:var(--color-primary);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;display:flex;align-items:center;justify-content:center;text-decoration:none;}.helpbtn{transition:background .15s,color .15s,border-color .15s;}.helpbtn:hover{background:var(--color-primary);color:var(--color-on-primary);border-color:var(--color-primary);}
 .hdr-left{display:flex;align-items:center;gap:10px;}
 .hdr-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
 .hdr-page{font-size:var(--text-h3);font-weight:var(--font-weight-h3);display:flex;align-items:center;gap:8px;}
@@ -251,6 +251,8 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .plan-card .pc-bmark{color:var(--color-muted-foreground);font-size:18px;cursor:pointer;margin-left:auto;}
 .plan-card .pc-section{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);color:var(--color-primary);margin-bottom:6px;}
 .plan-card .pc-bullets{list-style:disc;padding-left:18px;font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.8;}
+.plan-card .pc-saved{display:inline-flex;align-items:center;gap:5px;font-size:var(--text-meta);color:var(--color-muted-foreground);background:var(--color-muted);border-radius:var(--radius-full);padding:3px 10px;margin-bottom:10px;}
+.cards-past{opacity:.5;pointer-events:none;}
 .tplmarker{align-self:center;display:flex;align-items:center;gap:7px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-info);background:var(--color-info-subtle);border-radius:var(--radius-full);padding:8px 15px;}
 .donemsg{align-self:center;display:flex;align-items:center;gap:7px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-success);background:var(--color-success-subtle);border-radius:var(--radius-full);padding:8px 15px;}
 #sugbox{border-top:1px solid var(--color-border);background:var(--color-card);padding:10px 13px 10px;display:flex;flex-wrap:wrap;gap:7px;}
@@ -404,7 +406,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 }
 </style></head><body>
 <div class="app">
-  <div class="topbar"><div class="hdr-left"><span class="hdr-page"><i class="ti ti-template"></i>投稿作成</span><span class="tag" id="flowtag" style="display:none"></span></div><div class="hdr-right"><button class="helpbtn">?</button><button class="close"><i class="ti ti-list"></i></button></div></div>
+  <div class="topbar"><div class="hdr-left"><span class="hdr-page"><i class="ti ti-template"></i>投稿作成</span><span class="tag" id="flowtag" style="display:none"></span></div><div class="hdr-right"><a class="helpbtn" href="https://hinaiwagami0513.github.io/iineai/help/create/image/" target="_blank" rel="noopener" title="このページのヘルプ（投稿作成 > 画像を作成）" aria-label="このページのヘルプ">?</a><button class="close"><i class="ti ti-list"></i></button></div></div>
   <div style="border-bottom:1px solid var(--color-border);background:var(--color-card);"><div class="stepbar" id="stepbar"></div></div>
   <div class="main">
     <div id="subnav"></div>
@@ -412,7 +414,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 
       <!-- 1 SNS -->
       <div class="screen on" id="sc_sns">
-        <div class="h1">投稿するアカウントを選択</div><div class="h1sub">連携しているアカウントから選んでください</div>
+        <div class="h1">投稿するアカウントを選択</div>
         <div class="g2" style="margin-top:16px">
           <div class="opt acct " onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><div class="av" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i></div><div><div class="acname">@sumika_fudosan</div><div class="acmeta">フォロワー 1.2万</div></div><span class="plat" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i>Instagram</span></div>
           <div class="opt acct " onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><div class="av" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i></div><div><div class="acname">@minato_chintai</div><div class="acmeta">フォロワー 3,400</div></div><span class="plat" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i>Instagram</span></div>
@@ -423,7 +425,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 
       <!-- 2 作成方法 -->
       <div class="screen" id="sc_method">
-        <div class="h1">作成方法を選ぶ</div><div class="h1sub">どうやって投稿を作りますか？</div>
+        <div class="h1">作成方法を選ぶ</div>
         <div class="g3" style="margin-top:16px">
           <div class="opt method sel" onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><i class="ti ti-photo mi"></i><div class="ot">画像を作成</div></div>
           <div class="opt method" onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><i class="ti ti-video mi"></i><div class="ot">動画を作成</div></div>
@@ -434,19 +436,16 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
       <!-- 台本から / 素材から 選択 -->
       <div class="screen" id="sc_route">
         <div class="h1">どちらの方法で作りますか？</div>
-        <div class="h1sub">画像の作り方を選んでください</div>
         <div class="g2" style="margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:640px;margin:16px auto 0;">
           <div class="opt method sel" onclick="pickCard(this,'opt')" style="padding:32px 20px;text-align:center;">
             <span class="ochk"><i class="ti ti-check"></i></span>
             <i class="ti ti-sparkles mi" style="font-size:36px;display:block;margin-bottom:12px;"></i>
             <div class="ot" style="font-size:var(--text-h3);margin-bottom:6px;">台本から</div>
-            <div class="od">AIがテーマから画像台本を作成。素材がなくてもOK</div>
           </div>
           <div class="opt method" onclick="pickCard(this,'opt')" style="padding:32px 20px;text-align:center;">
             <span class="ochk"><i class="ti ti-check"></i></span>
             <i class="ti ti-upload mi" style="font-size:36px;display:block;margin-bottom:12px;"></i>
             <div class="ot" style="font-size:var(--text-h3);margin-bottom:6px;">素材から</div>
-            <div class="od">手持ちの写真や画像をアップして、AIが投稿を組み立て</div>
           </div>
         </div>
       </div>
@@ -455,7 +454,6 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
       <!-- 枚数を選択 -->
       <div class="screen" id="sc_count">
         <div class="h1">画像の枚数を選ぶ</div>
-        <div class="h1sub">投稿に含める画像の枚数を選んでください</div>
         <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;max-width:560px;margin:14px auto 0;">
           <div class="opt method" onclick="pickCount(this)" style="padding:20px 10px;text-align:center;"><div style="font-size:var(--text-h1);font-weight:var(--font-weight-h1);">1</div><div style="font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:4px;">枚</div></div>
           <div class="opt method" onclick="pickCount(this)" style="padding:20px 10px;text-align:center;"><div style="font-size:var(--text-h1);font-weight:var(--font-weight-h1);">4</div><div style="font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:4px;">枚</div></div>
@@ -472,7 +470,6 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
       <!-- 何をベースに（アコーディオン＋チャット） -->
       <div class="screen" id="sc_base">
         <div class="h1">企画を考える</div>
-        <div class="h1sub">AIと会話しながら企画内容を決めていきます</div>
         <div id="m_kw" style="border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden;">
             <div class="booth" style="border:none;border-radius:0;">
               <div class="booth-hd"><img src="./assets/iine-fox-face.png" alt="AIアシスト"><div style="flex:1;"><div class="bt">AIアシスタント</div><div class="bs">● オンライン</div></div><div class="tpl-drop-wrap"><button onclick="toggleTplDrop(event)" class="tpl-drop-btn"><i class="ti ti-layout-grid"></i></button><div class="tpl-drop-menu" id="tplDropMenu"><div class="tpl-drop-label">テンプレから作る</div><div class="tpl-drop-item" onclick="pickTemplate('物件紹介カルーセル');closeTplDrop()"><i class="ti ti-layout-grid"></i>物件紹介カルーセル</div><div class="tpl-drop-item" onclick="pickTemplate('ビフォーアフター');closeTplDrop()"><i class="ti ti-photo"></i>ビフォーアフター</div><div class="tpl-drop-item" onclick="pickTemplate('スペック訴求');closeTplDrop()"><i class="ti ti-businessplan"></i>スペック訴求</div><div class="tpl-drop-divider"></div><div class="tpl-drop-item" onclick="closeTplDrop()"><i class="ti ti-template"></i>テンプレ一覧・新規作成</div></div></div></div>
@@ -798,7 +795,12 @@ function pickRow(el){el.closest('.selstack').querySelectorAll('.selrow').forEach
 /* ===== 予測変換チャット ===== */
 var TREE={
   saved_ask:{ai:'保存した企画内容を使用しますか？',sug:[['はい、保存した企画内容を使う','saved_yes'],['いいえ、新しく考える','start']]},
-  saved_yes:{ai:'保存した企画内容を読み込みました！「次へ：投稿を編集」で進めます。',type:'done_saved',sug:[]},
+  saved_yes:{ai:'保存した企画内容が3件あります。使うものを選んでください。',type:'plans',saved:true,plans:[
+    {title:'駅徒歩5分の好立地を活かした内見誘導カルーセル',typeBadge:'実写型',section:'物件の魅力を体感させる写真構成',savedAt:'2026/08/12',savedFrom:'@sumika_fudosan',bullets:['1枚目：外観＋キャッチコピーで駅近を訴求','2枚目：南向きリビングの日当たり写真','3枚目：水回り・収納のビフォーアフター','4枚目：CTA「内見予約はプロフから」']},
+    {title:'この物件が選ばれる3つの理由',typeBadge:'結論先出し型',section:'数字で訴求する物件スペック',savedAt:'2026/08/08',savedFrom:'@sumika_fudosan',bullets:['1枚目：「駅徒歩5分・南向き・即入居OK」を大文字テロップ','2-3枚目：各理由を写真+テロップで深掘り','4枚目：CTA「プロフから内見予約」']},
+    {title:'住んだら変わる毎日のルーティン',typeBadge:'ライフスタイル型',section:'暮らしのイメージで感情を動かす',savedAt:'2026/07/29',savedFrom:'@minato_chintai',bullets:['朝：南向きの光で目覚める','昼：駅近だからランチも充実','夜：帰宅が早い→自分時間']}
+  ],sug:[]},
+  saved_done:{ai:'保存した企画内容を読み込みました！「次へ：投稿を編集」で進めます。',type:'done_saved',sug:[]},
   start:{ai:'どんな投稿を作りますか？',sug:[['物件を紹介したい','q_bukken'],['ファンを増やしたい','q_fan'],['お知らせしたい','q_news'],['まだ決まっていない','q_und']]},
   q_bukken:{ai:'ええですね！どの物件を紹介しますか？',sug:[['駅徒歩5分の南向き1LDK','q_point'],['リノベ済みの築古物件','q_point'],['ペット可の物件','q_point']]},
   q_fan:{ai:'いいですね！どんな切り口で？',sug:[['スタッフの日常','q_point'],['お役立ち情報','q_point'],['お客様の声','q_point']]},
@@ -841,21 +843,26 @@ function chatRender(){
   if(n&&n.type==='done_saved'){box.innerHTML='<div class="donemsg"><i class="ti ti-check"></i>保存した企画内容を読み込みました。「次へ：投稿を編集」で進めます。</div>';enableNext();return;}
   if(n.type==='plans'){
     var s=document.getElementById('stream');
+    s.querySelectorAll('.plan-cards,.proposal-cards').forEach(function(g){g.classList.add('cards-past');});
     var cards='<div class="plan-cards">';
     n.plans.forEach(function(p,idx){
-      cards+='<div class="plan-card" onclick="highlightPlan(this)"><div class="pc-head"><span class="pc-radio"></span><span class="pc-htitle">'+p.title+'</span><span class="pc-type">'+p.typeBadge+'</span><i class="ti ti-bookmark pc-bmark" onclick="event.stopPropagation();if(this.classList.toggle(\'active\')){this.classList.remove(\'ti-bookmark\');this.classList.add(\'ti-bookmark-filled\');}else{this.classList.remove(\'ti-bookmark-filled\');this.classList.add(\'ti-bookmark\');}"></i></div><div class="pc-section">'+p.section+'</div><ul class="pc-bullets">';
+      var bmark=n.saved?'<i class="ti ti-bookmark pc-bmark active" title="保存ずみ"></i>':'<i class="ti ti-bookmark pc-bmark" onclick="event.stopPropagation();this.classList.toggle(\'active\');this.title=this.classList.contains(\'active\')?\'保存ずみ\':\'あとで使うために保存\';"></i>';
+      var savedMeta=p.savedAt?'<div class="pc-saved"><i class="ti ti-clock"></i>'+p.savedAt+' に保存'+(p.savedFrom?'・'+p.savedFrom:'')+'</div>':'';
+      cards+='<div class="plan-card" onclick="highlightPlan(this)"><div class="pc-head"><span class="pc-radio"></span><span class="pc-htitle">'+p.title+'</span><span class="pc-type">'+p.typeBadge+'</span>'+bmark+'</div>'+savedMeta+'<div class="pc-section">'+p.section+'</div><ul class="pc-bullets">';
       p.bullets.forEach(function(b){cards+='<li>'+b+'</li>';});
       cards+='</ul></div>';
     });
     cards+='</div>';
     s.insertAdjacentHTML('beforeend',cards);
     chatScroll();
+    if(n.saved){box.innerHTML='<button class="sug confirm-sug" onclick="confirmPlan(true)" disabled>この企画内容を使う</button><button class="sug" onclick="switchToNew()">使わずに新しく考える</button>';return;}
     var regenNode=n.sug.length?n.sug[0][1]:null;
     box.innerHTML='<button class="sug confirm-sug" onclick="confirmPlan()" disabled>この企画内容で決定</button>'+(regenNode?'<button class="sug" onclick="regenInChat(\''+regenNode+'\')">別の企画内容を出して</button>':'');
     return;
   }
   if(n.type==='proposals'){
     var s=document.getElementById('stream');
+    s.querySelectorAll('.plan-cards,.proposal-cards').forEach(function(g){g.classList.add('cards-past');});
     var cards='<div class="proposal-cards">';
     n.proposals.forEach(function(p){
       var badge=p.badge?'<span class="pc-badge">'+p.badge+'</span>':'';
@@ -1026,12 +1033,22 @@ function highlightPlan(el){
   el.classList.add('sel');
   var btn=document.querySelector('.confirm-sug');if(btn){btn.disabled=false;}
 }
-function confirmPlan(){
-  var sel=document.querySelector('.plan-card.sel');if(!sel)return;
+function confirmPlan(isSaved){
+  var groups=document.querySelectorAll('.plan-cards');
+  var last=groups.length?groups[groups.length-1]:null;
+  var sel=last?last.querySelector('.plan-card.sel'):null;if(!sel)return;
   var title=sel.querySelector('.pc-htitle').textContent;
   chatAdd('me','「'+title+'」を選択');
-  cnode='__done';
-  setTimeout(function(){chatAdd('ai','企画内容が決まりました！「次へ：投稿を編集」で進めましょう。');chatRender();chatScroll();},160);
+  cnode=isSaved?'saved_done':'__done';
+  var msg=isSaved?TREE.saved_done.ai:'企画内容が決まりました！「次へ：投稿を編集」で進めましょう。';
+  setTimeout(function(){chatAdd('ai',msg);chatRender();chatScroll();},160);
+}
+function switchToNew(){
+  document.querySelectorAll('.plan-cards').forEach(function(g){g.classList.add('cards-past');});
+  cnode='start';
+  chatAdd('me','使わずに新しく考える');
+  var box=document.getElementById('sugbox');if(box)box.innerHTML='';
+  setTimeout(function(){chatAdd('ai',TREE.start.ai);chatRender();chatScroll();},160);
 }
 function highlightProposal(el){
   el.parentElement.querySelectorAll('.proposal-card').forEach(function(c){c.classList.remove('sel');});
@@ -1039,7 +1056,9 @@ function highlightProposal(el){
   var btn=document.querySelector('.confirm-sug');if(btn){btn.disabled=false;}
 }
 function confirmProposal(){
-  var sel=document.querySelector('.proposal-card.sel');if(!sel)return;
+  var pgroups=document.querySelectorAll('.proposal-cards');
+  var plast=pgroups.length?pgroups[pgroups.length-1]:null;
+  var sel=plast?plast.querySelector('.proposal-card.sel'):null;if(!sel)return;
   var next=sel.dataset.next;
   var title=sel.querySelector('.pc-title').textContent;
   chatAdd('me',title+'を選択');
@@ -1090,6 +1109,10 @@ function pickSug(idx){
       chatAdd('ai',nn.ai);
       setTimeout(function(){showGenerating(nn.genTarget);},300);
       var box=document.getElementById('sugbox');if(box)box.innerHTML='';
+    }else if(nn&&(nn.type==='plans'||nn.type==='proposals')){
+      var cbox=document.getElementById('sugbox');if(cbox)cbox.innerHTML='';
+      setTimeout(function(){chatAdd('ai',nn.ai);chatRender();chatScroll();},160);
+      chatScroll();return;
     }else{
       setTimeout(function(){chatAdd('ai',TREE[cnode].ai);chatRender();chatScroll();},160);
     }

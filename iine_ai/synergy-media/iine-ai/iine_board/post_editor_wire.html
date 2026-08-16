@@ -162,7 +162,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .dot-pulse span:nth-child(3){animation-delay:.4s;}
 .btn{display:inline-flex;align-items:center;gap:7px;border-radius:var(--radius-md);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);padding:11px 22px;cursor:pointer;border:1px solid transparent;}
 .btn .ti{font-size:16px;} .btn-ghost{background:var(--color-card);color:var(--color-foreground);border-color:var(--color-border);} .btn-primary{background:linear-gradient(135deg,var(--color-primary),var(--color-primary-light));color:#fff;}
-.helpbtn{width:32px;height:32px;border:1.5px solid var(--color-primary);border-radius:var(--radius-full);background:var(--color-card);color:var(--color-primary);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.helpbtn{width:32px;height:32px;border:1.5px solid var(--color-primary);border-radius:var(--radius-full);background:var(--color-card);color:var(--color-primary);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;display:flex;align-items:center;justify-content:center;text-decoration:none;}.helpbtn{transition:background .15s,color .15s,border-color .15s;}.helpbtn:hover{background:var(--color-primary);color:var(--color-on-primary);border-color:var(--color-primary);}
 .hdr-left{display:flex;align-items:center;gap:10px;}
 .hdr-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
 .hdr-page{font-size:var(--text-h3);font-weight:var(--font-weight-h3);display:flex;align-items:center;gap:8px;}
@@ -211,7 +211,7 @@ body{background:var(--color-background);padding:0;margin:0;color:var(--color-for
 </style></head><body>
 <div class="page-header">
   <div class="hdr-left"><a href="flow_video_script_wire.html"><i class="ti ti-arrow-left"></i></a><span class="hdr-page"><i class="ti ti-video"></i>投稿を編集</span></div>
-  <div class="hdr-right"><button class="helpbtn">?</button></div>
+  <div class="hdr-right"><a class="helpbtn" href="https://hinaiwagami0513.github.io/iineai/help/manage/detail/" target="_blank" rel="noopener" title="このページのヘルプ（投稿詳細・編集）" aria-label="このページのヘルプ">?</a></div>
 </div>
 <div class="page-main">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;"><i class="ti ti-video" style="color:var(--color-muted-foreground);font-size:20px;"></i><span id="titleView" onclick="startTitleEdit()" style="cursor:pointer;padding:4px 8px;border-radius:var(--radius-sm);border:1px solid transparent;display:inline-flex;align-items:center;gap:6px;font-size:var(--text-h2);font-weight:var(--font-weight-h2);" onmouseenter="this.style.borderColor='var(--color-border)'" onmouseleave="this.style.borderColor='transparent'">駅徒歩5分・南向き1LDK 新着物件<i class="ti ti-edit" style="font-size:14px;color:var(--color-muted-foreground);"></i></span><input id="titleInput" style="display:none;padding:4px 8px;border:1.5px solid var(--color-primary);border-radius:var(--radius-sm);background:var(--color-primary-subtle);font-size:var(--text-h2);font-weight:var(--font-weight-h2);outline:none;min-width:320px;" value="駅徒歩5分・南向き1LDK 新着物件" onblur="endTitleEdit()" onkeydown="if(event.key==='Enter')endTitleEdit()"><span style="margin-left:auto;font-size:var(--text-label);color:var(--color-success);font-weight:var(--font-weight-body-strong);display:inline-flex;align-items:center;gap:3px;"><i class="ti ti-check"></i>自動保存ずみ</span></div>

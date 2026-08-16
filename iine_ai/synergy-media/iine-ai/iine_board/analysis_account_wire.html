@@ -134,7 +134,7 @@ body{font-family:"Noto Sans JP",sans-serif;background:#e6e5e3;padding:20px;min-h
 .hdr-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
 .hdr-page{font-size:var(--text-h3);font-weight:var(--font-weight-h3);display:flex;align-items:center;gap:8px;}
 .hdr-page .ti{color:var(--color-muted-foreground);font-size:18px;}
-.helpbtn{width:32px;height:32px;border:1.5px solid var(--color-primary);border-radius:var(--radius-full);background:var(--color-card);color:var(--color-primary);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.helpbtn{width:32px;height:32px;border:1.5px solid var(--color-primary);border-radius:var(--radius-full);background:var(--color-card);color:var(--color-primary);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;display:flex;align-items:center;justify-content:center;text-decoration:none;}.helpbtn{transition:background .15s,color .15s,border-color .15s;}.helpbtn:hover{background:var(--color-primary);color:var(--color-on-primary);border-color:var(--color-primary);}
 .close-btn{width:36px;height:36px;border:1px solid var(--color-border);border-radius:var(--radius-sm);background:var(--color-card);color:var(--color-muted-foreground);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 
 /* ===== SIDEBAR (report準拠) ===== */
@@ -153,6 +153,14 @@ body{font-family:"Noto Sans JP",sans-serif;background:#e6e5e3;padding:20px;min-h
 /* ===== ACCOUNT HEADER (report準拠: 1行横並び+pill) ===== */
 .acct-hd{background:var(--color-card);padding:16px 32px;display:flex;align-items:center;gap:16px;border-bottom:1px solid var(--color-border);}
 .acct-row{display:flex;align-items:center;gap:10px;flex:1;min-width:0;}
+/* SP: アカウント行は折り返す。nowrapのまま縮むと「アリスト」が1文字ずつ折れる。
+   基本ルールの直後に置く（同一詳細度・後勝ち） */
+@media(max-width:768px){
+  .acct-row{flex-wrap:wrap;gap:8px;}
+  .acct-name,.acct-handle{white-space:nowrap;}
+  .acct-stats{width:100%;}
+  .acct-stat{white-space:nowrap;}
+}
 .acct-icon{width:36px;height:36px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:20px;flex:none;}
 .acct-icon.ig{background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram);}
 .acct-name{font-size:var(--text-h3);font-weight:700;}
@@ -286,7 +294,7 @@ body{font-family:"Noto Sans JP",sans-serif;background:#e6e5e3;padding:20px;min-h
       <span class="hdr-page"><i class="ti ti-chart-bar"></i> 分析</span>
     </div>
     <div class="hdr-right">
-      <button class="helpbtn">?</button>
+      <a class="helpbtn" href="https://hinaiwagami0513.github.io/iineai/help/analytics/account-trend/" target="_blank" rel="noopener" title="このページのヘルプ（分析 > アカウント推移）" aria-label="このページのヘルプ">?</a>
       <button class="close-btn"><i class="ti ti-list-details"></i></button>
     </div>
   </div>
@@ -354,7 +362,7 @@ body{font-family:"Noto Sans JP",sans-serif;background:#e6e5e3;padding:20px;min-h
       <!-- Tab navigation -->
       <div class="tab-nav">
         <a href="./analysis_visual_wire.html">ビジュアルレポート</a>
-        <a class="active" href="./analysis_report_wire.html">分析レポート</a>
+        <a class="active" href="./analysis_report_wire.html">アカウントレポート</a>
         <a href="./analysis_posts_wire.html">投稿レポート</a>
       </div>
 

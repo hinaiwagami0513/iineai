@@ -132,7 +132,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .jb{font-size:var(--text-meta);border:1px solid var(--color-border);background:var(--color-card);border-radius:var(--radius-full);width:22px;height:22px;color:var(--color-muted-foreground);cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .jb:hover{border-color:var(--color-primary);color:var(--color-primary);}
 .close{width:36px;height:36px;border:1px solid var(--color-border);border-radius:var(--radius-sm);background:var(--color-card);color:var(--color-muted-foreground);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-.helpbtn{width:32px;height:32px;border:1.5px solid var(--color-primary);border-radius:var(--radius-full);background:var(--color-card);color:var(--color-primary);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.helpbtn{width:32px;height:32px;border:1.5px solid var(--color-primary);border-radius:var(--radius-full);background:var(--color-card);color:var(--color-primary);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;display:flex;align-items:center;justify-content:center;text-decoration:none;}.helpbtn{transition:background .15s,color .15s,border-color .15s;}.helpbtn:hover{background:var(--color-primary);color:var(--color-on-primary);border-color:var(--color-primary);}
 .hdr-left{display:flex;align-items:center;gap:10px;}
 .hdr-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
 .hdr-page{font-size:var(--text-h3);font-weight:var(--font-weight-h3);display:flex;align-items:center;gap:8px;}
@@ -417,7 +417,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 }
 </style></head><body>
 <div class="app">
-  <div class="topbar"><div class="hdr-left"><span class="hdr-page"><i class="ti ti-template"></i>投稿作成</span><span class="tag" id="flowtag" style="display:none"></span></div><div class="hdr-right"><button class="helpbtn">?</button><button class="close"><i class="ti ti-list"></i></button></div></div>
+  <div class="topbar"><div class="hdr-left"><span class="hdr-page"><i class="ti ti-template"></i>投稿作成</span><span class="tag" id="flowtag" style="display:none"></span></div><div class="hdr-right"><a class="helpbtn" href="https://hinaiwagami0513.github.io/iineai/help/create/image/" target="_blank" rel="noopener" title="このページのヘルプ（投稿作成 > 画像を作成）" aria-label="このページのヘルプ">?</a><button class="close"><i class="ti ti-list"></i></button></div></div>
   <div style="border-bottom:1px solid var(--color-border);background:var(--color-card);"><div class="stepbar" id="stepbar"></div></div>
   <div class="main">
     <div id="subnav"></div>
@@ -425,7 +425,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 
       <!-- 1 SNS -->
       <div class="screen on" id="sc_sns">
-        <div class="h1">投稿するアカウントを選択</div><div class="h1sub">連携しているアカウントから選んでください</div>
+        <div class="h1">投稿するアカウントを選択</div>
         <div class="g2" style="margin-top:16px">
           <div class="opt acct " onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><div class="av" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i></div><div><div class="acname">@sumika_fudosan</div><div class="acmeta">フォロワー 1.2万</div></div><span class="plat" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i>Instagram</span></div>
           <div class="opt acct " onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><div class="av" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i></div><div><div class="acname">@minato_chintai</div><div class="acmeta">フォロワー 3,400</div></div><span class="plat" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i>Instagram</span></div>
@@ -436,7 +436,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 
       <!-- 2 作成方法 -->
       <div class="screen" id="sc_method">
-        <div class="h1">作成方法を選ぶ</div><div class="h1sub">どうやって投稿を作りますか？</div>
+        <div class="h1">作成方法を選ぶ</div>
         <div class="g3" style="margin-top:16px">
           <div class="opt method sel" onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><i class="ti ti-photo mi"></i><div class="ot">画像を作成</div></div>
           <div class="opt method" onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><i class="ti ti-video mi"></i><div class="ot">動画を作成</div></div>
@@ -447,26 +447,22 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
       <!-- 台本から / 素材から 選択 -->
       <div class="screen" id="sc_route">
         <div class="h1">どちらの方法で作りますか？</div>
-        <div class="h1sub">画像の作り方を選んでください</div>
         <div class="g2" style="margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:640px;margin:16px auto 0;">
           <div class="opt method" onclick="pickCard(this,'opt')" style="padding:32px 20px;text-align:center;">
             <span class="ochk"><i class="ti ti-check"></i></span>
             <i class="ti ti-sparkles mi" style="font-size:36px;display:block;margin-bottom:12px;"></i>
             <div class="ot" style="font-size:var(--text-h3);margin-bottom:6px;">台本から</div>
-            <div class="od">AIがテーマから画像台本を作成。素材がなくてもOK</div>
           </div>
           <div class="opt method sel" onclick="pickCard(this,'opt')" style="padding:32px 20px;text-align:center;">
             <span class="ochk"><i class="ti ti-check"></i></span>
             <i class="ti ti-upload mi" style="font-size:36px;display:block;margin-bottom:12px;"></i>
             <div class="ot" style="font-size:var(--text-h3);margin-bottom:6px;">素材から</div>
-            <div class="od">手持ちの写真や画像をアップして、AIが投稿を組み立て</div>
           </div>
         </div>
       </div>
       <!-- 4 素材をアップ -->
       <div class="screen" id="sc_upload">
         <div class="h1">素材をアップロード</div>
-        <div class="h1sub">画像に使う素材をアップロードまたはドライブから選択してください</div>
         <div style="display:inline-flex;gap:4px;padding:4px;background:var(--color-background);border-radius:var(--radius-md);margin-top:16px;margin-bottom:16px;">
           <div class="uptab on" onclick="upTab(0,this)" style="padding:8px 20px;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;border-radius:var(--radius-sm);background:var(--color-card);color:var(--color-foreground);box-shadow:0 1px 2px rgb(0 0 0/.06);">PCからアップロード</div>
           <div class="uptab" onclick="upTab(1,this)" style="padding:8px 20px;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;border-radius:var(--radius-sm);background:transparent;color:var(--color-muted-foreground);">いいねドライブから選択</div>
@@ -567,7 +563,6 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
       <!-- 5 チャットで台本と設定 -->
       <div class="screen" id="sc_chat">
         <div class="h1">チャットで構成と設定を決める</div>
-        <div class="h1sub">AIと会話しながら画像の構成を決めます。右の設定は手動でも変更できます。</div>
         <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px;min-height:480px;">
           <!-- Left: Chat panel -->
           <div style="border:1px solid var(--color-border);border-radius:var(--radius-lg);background:#f0ede9;display:flex;flex-direction:column;overflow:hidden;">

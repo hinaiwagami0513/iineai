@@ -255,7 +255,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 
       <!-- 1 SNS -->
       <div class="screen on" id="sc_sns">
-        <div class="h1">投稿するアカウントを選択</div><div class="h1sub">連携しているアカウントから選んでください</div>
+        <div class="h1">投稿するアカウントを選択</div>
         <div class="g2" style="margin-top:16px">
           <div class="opt acct sel" onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><div class="av" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i></div><div><div class="acname">@sumika_fudosan</div><div class="acmeta">フォロワー 1.2万</div></div><span class="plat" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i>Instagram</span></div>
           <div class="opt acct " onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><div class="av" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i></div><div><div class="acname">@minato_chintai</div><div class="acmeta">フォロワー 3,400</div></div><span class="plat" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i>Instagram</span></div>
@@ -266,7 +266,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 
       <!-- 2 作成方法 -->
       <div class="screen" id="sc_method">
-        <div class="h1">作成方法を選ぶ</div><div class="h1sub">どうやって投稿を作りますか？</div>
+        <div class="h1">作成方法を選ぶ</div>
         <div class="g3" style="margin-top:16px">
           <div class="opt method sel" onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><i class="ti ti-photo mi"></i><div class="ot">画像を作成</div></div>
           <div class="opt method" onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><i class="ti ti-video mi"></i><div class="ot">動画を作成</div></div>
@@ -277,7 +277,6 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
       <!-- 3 何をベースに（アコーディオン＋チャット） -->
       <div class="screen" id="sc_base">
         <div class="h1">企画を考える</div>
-        <div class="h1sub">AIと会話しながら企画内容を決めていきます</div>
         <div class="mcard reco open" id="m_kw">
           <div class="mhead" onclick="acc('m_kw')"><div class="mic"><i class="ti ti-messages"></i></div><div><div class="mt">チャットで企画を考える</div><div class="md">AIと会話しながら企画内容を決めていきます</div></div><i class="ti ti-chevron-down cv"></i></div>
           <div class="mbody"><div class="mbody-inner">
@@ -308,7 +307,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 
       <!-- 4 具体案を選ぶ -->
       <div class="screen" id="sc_concept">
-        <div class="h1">具体案を選ぶ</div><div class="h1sub"><i class="ti ti-sparkles" style="color:var(--color-muted-foreground)"></i>渡した素材をもとに、AIが3つの具体案を作りました。1つ選んでください。</div>
+        <div class="h1">具体案を選ぶ</div>
         <div class="selstack" style="margin-top:4px">
           <div class="selrow sel" onclick="pickRow(this)"><div class="th"><i class="ti ti-photo"></i></div><div><div class="nm">A案・推し設備 先出し型 <span class="tag2">おすすめ</span></div><div class="mt">1枚目に「駅徒歩5分・南向き」をドン。保存されやすい情報密度重視</div></div><span class="chk"><i class="ti ti-check"></i></span></div>
           <div class="selrow" onclick="pickRow(this)"><div class="th"><i class="ti ti-photo"></i></div><div><div class="nm">B案・内見導線 重視型</div><div class="mt">アクセス・間取りを整理。来店予約につなげる構成</div></div><span class="chk"></span></div>
@@ -318,7 +317,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 
       <!-- 5 仕上げる -->
       <div class="screen" id="sc_editor">
-        <div class="h1">仕上げる</div><div class="h1sub"><i class="ti ti-edit" style="color:var(--color-muted-foreground)"></i>画像と文章を確認・編集します</div>
+        <div class="h1">仕上げる</div>
         <div class="bridge"><i class="ti ti-edit bi"></i><div class="bt">投稿編集エディタへ</div><div class="bd">選んだ具体案をもとに、AIが画像4枚と投稿文を下書きします。<br>ここから先は投稿編集画面で仕上げます。</div></div>
       </div>
 

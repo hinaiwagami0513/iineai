@@ -30,6 +30,49 @@
   Tabler に無いモチーフは、**同じ意味を持つ既存アイコンに置き換える**（若葉マーク → `IconSeedlingFilled`）。
   例外として画像アセットを持つのはマスコット（🦊）だけ。
 
+## アプリのヘッダー「?」からヘルプに飛ばす（2026-08-16）
+
+各画面のヘッダー右にある **`?` はその画面を説明している記事に直接飛ばす**。トップに落とさない。
+迷った人がもう一度探し直す手間をなくすのが目的なので、文脈つきのディープリンクにする。
+
+- 実装は `<a>`。`<button>` + onclick にしない（中クリック・右クリックで新規タブが使えなくなる）。
+- `target="_blank" rel="noopener"`。作業中の画面を失わせない。
+- `title="このページのヘルプ（画面名）"` / `aria-label="このページのヘルプ"`。
+- ベースURLは `https://iine-ai.com/help`。公開先が変わったらここだけ差し替える。
+- **ホバーで枠線→塗りつぶし**（`background:primary` / `color:on-primary`、transition .15s）。
+  枠線だけだと押せると分からない。[[orange-only-interaction]] のとおりオレンジは押せる合図に使う。
+
+### ヘッダーは共通コンポーネントを使う
+`?` が無い画面があったら、それは**ヘッダーが共通化できていない証拠**。個別に `?` を足して回らず、
+共通ヘッダー（`.topbar` > `.hdr-left` + `.hdr-right`）に寄せる。右側に `?` が自然と出る。
+
+```html
+<div class="topbar">
+  <div class="hdr-left"><span class="hdr-page"><i class="ti ti-…"></i> 画面名</span></div>
+  <div class="hdr-right">
+    <a class="helpbtn" href="…" target="_blank" rel="noopener" …>?</a>
+    <button class="close-btn"><i class="ti ti-list-details"></i></button>
+  </div>
+</div>
+```
+
+実例: `analysis_posts_wire` だけ `.topbar` 直下に `.pgic`/`.pgnm` を置く独自シェルで `?` が無かった。
+共通ヘッダーに差し替えて解消（2026-08-16）。
+
+| ワイヤー | 画面 | 飛び先 |
+|---|---|---|
+| `analysis_visual_wire` | 分析 > ビジュアルレポート | `/analytics/visual/` |
+| `analysis_report_wire` | 分析 > AIレポート | `/analytics/ai-report/` |
+| `analysis_account_wire` | 分析 > アカウント推移 | `/analytics/account-trend/` |
+| `analysis_metrics_wire` | 分析 > 数値変化（導入効果） | `/analytics/effect/` |
+| `analysis_posts_wire` | 分析 > 投稿レポート | `/analytics/post-report/` |
+| `flow_image_v3_wire` / `flow_image_material_wire` | 投稿作成 > 画像 | `/create/image/` |
+| `flow_video_script_wire` / `flow_video_material_wire` | 投稿作成 > 動画 | `/create/video/` |
+| `flow_manual_wire` | 投稿作成 > 完成品から作る | `/create/upload/` |
+| `post_editor_wire` / `post_editor_image_wire` | 投稿詳細・編集 | `/manage/detail/` |
+| `post_list_wire` | 投稿一覧 | `/manage/list/` |
+| `shell_header_sidebar_wire` | 共通シェル | `/`（トップ） |
+
 ## 用語の注意
 投稿一覧の3タブ目は「**予約完了**」（旧「投稿準備完了」から改称）。[[post-list-page]] と表記を揃える。
 

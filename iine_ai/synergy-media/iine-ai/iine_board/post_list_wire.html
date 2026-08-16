@@ -94,11 +94,13 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .ti-brand-tiktok:before{content:"\ec70"}
 .ti-brand-x:before{content:"\fc0f"}
 .ti-brand-youtube:before{content:"\ec90"}
+.ti-calendar-event:before{content:"\ea52"}
 .ti-calendar:before{content:"\ea53"}
 .ti-chart-bar:before{content:"\ea59"}
 .ti-check:before{content:"\ea5e"}
 .ti-chevron-down:before{content:"\ea5f"}
 .ti-clipboard-list:before{content:"\ea6d"}
+.ti-clock:before{content:"\ea70"}
 .ti-coffee:before{content:"\ef0e"}
 .ti-dots:before{content:"\ea95"}
 .ti-eye:before{content:"\ea9a"}
@@ -144,7 +146,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .hd .pgic{font-size:20px;color:var(--color-muted-foreground);}
 .hd .pgnm{font-size:var(--text-h3);font-weight:var(--font-weight-h3);}
 .hd .r{margin-left:auto;display:flex;align-items:center;gap:8px;}
-.help{width:32px;height:32px;border:1.5px solid var(--color-primary);color:var(--color-primary);background:transparent;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;}
+.help{width:32px;height:32px;border:1.5px solid var(--color-primary);color:var(--color-primary);background:transparent;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;text-decoration:none;}.help{transition:background .15s,color .15s,border-color .15s;}.help:hover{background:var(--color-primary);color:var(--color-on-primary);border-color:var(--color-primary);}
 .sbtoggle{width:36px;height:36px;border:1px solid var(--color-border);color:var(--color-muted-foreground);background:transparent;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;}
 .sbtoggle:hover{background:var(--color-background);}
 
@@ -227,6 +229,50 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .pcard.warn-card{border-color:var(--color-warning-border);background:var(--color-warning-subtle);}
 .pcard.warn-card .pcard-sched{background:rgba(255,255,255,.6);}
 
+/* Tab 1: 投稿予定日時の事前設定（下書き段階）
+   主役はステータスのままなので primary 強調はしない。設定済みは surface のおとなしい行、
+   未設定は点線プレースホルダー。※下書きの未設定は「正常」なので warning 色を使わない
+   （黄枠の注意喚起は予約済みタブの役割）。 */
+.pcard-plan{display:flex;align-items:center;gap:7px;width:100%;padding:8px 10px;border-radius:var(--radius-md);border:1px solid var(--color-border);background:var(--color-surface);color:var(--color-foreground);font-family:inherit;font-size:var(--text-label);font-weight:var(--font-weight-label);text-align:left;cursor:pointer;transition:border-color .15s,background .15s,color .15s;}
+.pcard-plan i{font-size:16px;color:var(--color-muted-foreground);transition:color .15s;}
+.pcard-plan .plan-date{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);}
+.pcard-plan .plan-tmp{font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);background:var(--color-background);border-radius:var(--radius-full);padding:1px 6px;}
+.pcard-plan .plan-act{margin-left:auto;color:var(--color-muted-foreground);}
+.pcard-plan:hover{border-color:var(--color-primary);color:var(--color-primary);background:var(--color-primary-subtle);}
+.pcard-plan:hover i,.pcard-plan:hover .plan-act{color:var(--color-primary);}
+.pcard-plan.empty{background:transparent;border-style:dashed;border-width:1.5px;border-color:var(--color-border-strong);color:var(--color-muted-foreground);justify-content:center;}
+
+/* ===== 投稿予定ポップオーバー ===== */
+.plan-overlay{display:none;position:fixed;inset:0;background:rgb(0 0 0 / .18);z-index:55;}
+.plan-overlay.open{display:block;}
+.plan-pop{display:none;position:fixed;z-index:60;width:340px;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);box-shadow:0 12px 32px rgb(0 0 0 / .16);padding:18px;}
+.plan-pop.open{display:block;}
+.plan-pop-hd{display:flex;align-items:center;gap:7px;font-size:var(--text-h3);font-weight:var(--font-weight-h3);margin-bottom:4px;}
+.plan-pop-hd i{font-size:20px;color:var(--color-primary);}
+.plan-pop-note{font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.6;margin-bottom:14px;}
+.plan-quick{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px;}
+.plan-qbtn{padding:11px 8px;border-radius:var(--radius-md);border:1px solid var(--color-border);background:var(--color-surface);color:var(--color-foreground);font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);line-height:1.35;text-align:center;cursor:pointer;transition:all .15s;}
+.plan-qbtn span{display:block;font-size:var(--text-label);font-weight:var(--font-weight-label);color:var(--color-muted-foreground);margin-top:3px;}
+.plan-qbtn:hover,.plan-qbtn.on{border-color:var(--color-primary);background:var(--color-primary-subtle);color:var(--color-primary);}
+.plan-qbtn:hover span,.plan-qbtn.on span{color:var(--color-primary);}
+.plan-sep{display:flex;align-items:center;gap:10px;font-size:var(--text-label);color:var(--color-muted-foreground);margin-bottom:12px;}
+.plan-sep::before,.plan-sep::after{content:"";flex:1;height:1px;background:var(--color-border);}
+.plan-fields{display:flex;gap:8px;margin-bottom:14px;}
+.plan-fields input,.plan-fields select{flex:1;min-width:0;height:44px;padding:0 10px;border-radius:var(--radius-md);border:1px solid var(--color-border-strong);background:var(--color-input);color:var(--color-foreground);font-family:inherit;font-size:var(--text-body);}
+.plan-fields input:focus,.plan-fields select:focus{outline:2px solid var(--color-ring);outline-offset:1px;border-color:var(--color-primary);}
+.plan-actions{display:flex;gap:8px;}
+.plan-btn{flex:1;height:44px;border-radius:var(--radius-md);border:1px solid var(--color-border);background:transparent;color:var(--color-foreground);font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;}
+.plan-btn:hover{background:var(--color-background);}
+.plan-btn.primary{flex:1.7;background:var(--color-primary);color:var(--color-on-primary);border-color:var(--color-primary);}
+.plan-btn.primary:hover{background:var(--color-primary-hover);}
+.plan-btn.clear{flex:none;width:44px;color:var(--color-muted-foreground);}
+.plan-btn.clear:hover{color:var(--color-destructive);border-color:var(--color-destructive);background:var(--color-destructive-subtle);}
+/* sheet 内の予定行 */
+#sh-plan .plan-inline{display:flex;align-items:center;gap:6px;}
+#sh-plan .plan-set{font-weight:var(--font-weight-body-strong);}
+#sh-plan .plan-none{color:var(--color-muted-foreground);}
+#sh-plan .plan-link{margin-left:8px;background:none;border:none;padding:0;font-family:inherit;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-primary);cursor:pointer;text-decoration:underline;}
+
 /* Tab 3: metrics */
 .metrics-row{display:flex;align-items:center;gap:14px;padding:6px 0 0;}
 .metric{display:flex;align-items:center;gap:4px;font-size:var(--text-label);color:var(--color-muted-foreground);}
@@ -265,6 +311,13 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .sheet-row{display:flex;align-items:center;gap:10px;font-size:var(--text-body);}
 .sheet-row .lbl{color:var(--color-muted-foreground);min-width:90px;}
 .sheet-actions{padding:18px 22px;border-top:1px solid var(--color-border);display:flex;gap:10px;}
+/* なぜこのボタンなのかを1行で言う（承認待ちで押せない理由など） */
+.sheet-actions-note{padding:14px 22px 0;font-size:var(--text-label);line-height:1.5;color:var(--color-muted-foreground);border-top:1px solid var(--color-border);}
+.sheet-actions-note:not([style*="none"]) + .sheet-actions{border-top:none;padding-top:12px;}
+.sheet-btn[disabled]{opacity:.45;cursor:default;}
+.sheet-btn[disabled]:hover{background:transparent;}
+/* 予約済みのステータスバッジ */
+.st-ready{background:var(--color-primary-subtle);color:var(--color-primary);display:inline-flex;align-items:center;gap:4px;}
 .sheet-btn{flex:1;height:42px;border-radius:var(--radius-md);border:1px solid var(--color-border);background:transparent;cursor:pointer;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);display:flex;align-items:center;justify-content:center;gap:6px;}
 .sheet-btn:hover{background:var(--color-background);}
 .sheet-btn.primary{background:var(--color-primary);color:var(--color-on-primary);border-color:var(--color-primary);}
@@ -298,6 +351,13 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
   .grid{grid-template-columns:repeat(2,1fr);gap:12px;}
   .sheet{width:100%;box-shadow:none;}
   .sort-dd{display:none;}
+  /* 予定ポップオーバーはSPでは下からのシートにする（片手で押せる位置）。
+     下部ナビ(.sb)が z-index:100 なので、その上かつ60px上に重ねる。 */
+  .plan-overlay{z-index:110;}
+  .plan-pop{width:100%;left:0!important;right:0;top:auto!important;bottom:60px;z-index:120;border-radius:var(--radius-xl) var(--radius-xl) 0 0;padding:18px 16px;}
+  .pcard-plan{gap:5px;padding:7px 8px;}
+  .pcard-plan .plan-date{font-size:var(--text-label);}
+  .pcard-plan .plan-act{display:none;}
 }
 
 /* SP bottom bar */
@@ -325,13 +385,13 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
     <!-- Header -->
     <div class="hd">
       <i class="ti ti-file-text pgic"></i><span class="pgnm">投稿一覧</span>
-      <div class="r"><button class="help">?</button><button class="sbtoggle"><i class="ti ti-list"></i></button></div>
+      <div class="r"><a class="help" href="https://hinaiwagami0513.github.io/iineai/help/manage/list/" target="_blank" rel="noopener" title="このページのヘルプ（投稿一覧）" aria-label="このページのヘルプ">?</a><button class="sbtoggle"><i class="ti ti-list"></i></button></div>
     </div>
 
     <!-- Tab bar -->
     <div class="tabbar">
       <div class="tab on" data-tab="draft">下書き<span class="cnt">8</span></div>
-      <div class="tab" data-tab="ready">投稿準備完了<span class="cnt">3</span></div>
+      <div class="tab" data-tab="ready">予約済み<span class="cnt">3</span></div>
       <div class="tab" data-tab="posted">投稿済み<span class="cnt">24</span></div>
     </div>
 
@@ -346,6 +406,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
         <button class="sort-dd"><i class="ti ti-arrows-sort"></i><span class="sort-label">更新日が新しい順</span><i class="ti ti-chevron-down"></i></button>
         <div class="sort-menu">
           <div class="sort-opt on" data-sort="更新日が新しい順">更新日が新しい順</div>
+          <div class="sort-opt" data-sort="投稿予定日が近い順">投稿予定日が近い順</div>
           <div class="sort-opt" data-sort="更新日が古い順">更新日が古い順</div>
           <div class="sort-opt" data-sort="作成日が新しい順">作成日が新しい順</div>
           <div class="sort-opt" data-sort="タイトル順">タイトル順</div>
@@ -362,6 +423,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
           <div class="pcard-thumb ph1"><span class="pcard-status st-draft">作成中</span></div>
           <div class="pcard-body">
             <div class="pcard-title">夏の新メニュー紹介 トロピカルスムージー</div>
+            <button class="pcard-plan empty" data-plan=""><i class="ti ti-calendar-event"></i>投稿予定を決める</button>
             <div class="pcard-foot"><span class="badge badge-ig"><i class="ti ti-brand-instagram"></i>フィード</span><span class="pcard-date">7/15 更新</span></div>
           </div>
         </div>
@@ -369,6 +431,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
           <div class="pcard-thumb ph2"><span class="pcard-status st-confirm">確認待ち</span></div>
           <div class="pcard-body">
             <div class="pcard-title">本日のワンコ写真 #犬カフェ #犬好きさんと繋がりたい</div>
+            <button class="pcard-plan" data-plan="2026-07-19T12:00"><i class="ti ti-calendar-event"></i><span class="plan-date">7/19(日) 12:00</span><span class="plan-act">変更</span></button>
             <div class="pcard-foot"><span class="badge badge-xx"><i class="ti ti-brand-x"></i>ポスト</span><span class="pcard-date">7/15 更新</span></div>
           </div>
         </div>
@@ -376,6 +439,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
           <div class="pcard-thumb ph3"><span class="pcard-status st-draft">作成中</span></div>
           <div class="pcard-body">
             <div class="pcard-title">看板犬ポチの朝ルーティン</div>
+            <button class="pcard-plan empty" data-plan=""><i class="ti ti-calendar-event"></i>投稿予定を決める</button>
             <div class="pcard-foot"><span class="badge badge-tk"><i class="ti ti-brand-tiktok"></i>ショート</span><span class="pcard-date">7/14 更新</span></div>
           </div>
         </div>
@@ -383,6 +447,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
           <div class="pcard-thumb ph4"><span class="pcard-status st-confirm">確認待ち</span></div>
           <div class="pcard-body">
             <div class="pcard-title">お客様の声まとめ 7月前半</div>
+            <button class="pcard-plan" data-plan="2026-07-22T19:00"><i class="ti ti-calendar-event"></i><span class="plan-date">7/22(水) 19:00</span><span class="plan-act">変更</span></button>
             <div class="pcard-foot"><span class="badge badge-ig"><i class="ti ti-brand-instagram"></i>リール</span><span class="pcard-date">7/13 更新</span></div>
           </div>
         </div>
@@ -390,6 +455,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
           <div class="pcard-thumb ph5"><span class="pcard-status st-draft">作成中</span></div>
           <div class="pcard-body">
             <div class="pcard-title">犬カフェOneの1日密着ドキュメンタリー</div>
+            <button class="pcard-plan empty" data-plan=""><i class="ti ti-calendar-event"></i>投稿予定を決める</button>
             <div class="pcard-foot"><span class="badge badge-yt"><i class="ti ti-brand-youtube"></i>ロング</span><span class="pcard-date">7/12 更新</span></div>
           </div>
         </div>
@@ -397,34 +463,35 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
           <div class="pcard-thumb ph6"><span class="pcard-status st-confirm">確認待ち</span></div>
           <div class="pcard-body">
             <div class="pcard-title">スタッフおすすめドリンク3選</div>
+            <button class="pcard-plan" data-plan="2026-07-25T09:00"><i class="ti ti-calendar-event"></i><span class="plan-date">7/25(土) 09:00</span><span class="plan-act">変更</span></button>
             <div class="pcard-foot"><span class="badge badge-ig"><i class="ti ti-brand-instagram"></i>フィード</span><span class="pcard-date">7/11 更新</span></div>
           </div>
         </div>
       </div></div>
 
-      <!-- Tab2: 投稿準備完了（承認済み → 予約日時を設定） -->
+      <!-- Tab2: 予約済み（承認済み → 予約日時を設定） -->
       <div class="tabpanel" data-panel="ready"><div class="grid">
-        <div class="pcard" data-card="r1">
+        <div class="pcard" data-card="r1" data-plan="2026-07-18T19:00">
           <div class="pcard-thumb ph1"></div>
           <div class="pcard-body">
             <div class="pcard-title">週末限定パフェのお知らせ</div>
-            <div class="pcard-sched"><span class="sched-date">7/18(金) 19:00</span><span class="sched-countdown">あと2日</span></div>
+            <div class="pcard-sched"><span class="sched-date">7/18(土) 19:00</span><span class="sched-countdown">あと2日</span></div>
             <div class="pcard-foot"><span class="badge badge-ig"><i class="ti ti-brand-instagram"></i>フィード</span></div>
           </div>
         </div>
-        <div class="pcard" data-card="r2">
+        <div class="pcard" data-card="r2" data-plan="2026-07-20T10:00">
           <div class="pcard-thumb ph4"></div>
           <div class="pcard-body">
             <div class="pcard-title">夏休み営業時間のお知らせ</div>
-            <div class="pcard-sched"><span class="sched-date">7/20(日) 10:00</span><span class="sched-countdown">あと4日</span></div>
+            <div class="pcard-sched"><span class="sched-date">7/20(月) 10:00</span><span class="sched-countdown">あと4日</span></div>
             <div class="pcard-foot"><span class="badge badge-xx"><i class="ti ti-brand-x"></i>ポスト</span></div>
           </div>
         </div>
-        <div class="pcard warn-card" data-card="r3">
-          <div class="pcard-thumb ph3"><span class="pcard-status st-warn">日時未設定</span></div>
+        <div class="pcard" data-card="r3" data-plan="2026-07-23T18:00">
+          <div class="pcard-thumb ph3"></div>
           <div class="pcard-body">
             <div class="pcard-title">新人スタッフ紹介 ミクちゃん</div>
-            <div class="pcard-sched"><span class="sched-date">日時を設定してください</span></div>
+            <div class="pcard-sched"><span class="sched-date">7/23(木) 18:00</span><span class="sched-countdown">あと7日</span></div>
             <div class="pcard-foot"><span class="badge badge-ig"><i class="ti ti-brand-instagram"></i>リール</span></div>
           </div>
         </div>
@@ -521,12 +588,14 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
           <div class="sheet-row" id="sh-sns"><span class="lbl">SNS</span><span class="badge badge-ig"><i class="ti ti-brand-instagram"></i>Instagram</span></div>
           <div class="sheet-row"><span class="lbl">投稿タイプ</span><span>フィード</span></div>
           <div class="sheet-row" id="sh-status"><span class="lbl">ステータス</span><span class="pcard-status st-draft" style="position:static">作成中</span></div>
+          <div class="sheet-row" id="sh-plan"><span class="lbl">投稿予定</span><span class="plan-inline"><span class="plan-none">未設定</span><button class="plan-link">決める</button></span></div>
           <div class="sheet-row"><span class="lbl">作成日</span><span>2026/07/12</span></div>
           <div class="sheet-row"><span class="lbl">更新日</span><span>2026/07/15 14:30</span></div>
         </div>
       </div>
+      <div class="sheet-actions-note" id="sh-actions-note" style="display:none"></div>
       <div class="sheet-actions">
-        <button class="sheet-btn"><i class="ti ti-pencil"></i>編集する</button>
+        <button class="sheet-btn edit-btn"><i class="ti ti-pencil"></i>編集する</button>
         <button class="sheet-btn confirm-btn"><i class="ti ti-send"></i>確認をお願いする</button>
       </div>
     </div>
@@ -543,6 +612,24 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
   <div class="sp-tab"><i class="ti ti-dots"></i>その他</div>
 </div>
 
+<!-- 投稿予定ポップオーバー（下書き段階で予定を先に入れる） -->
+<div class="plan-overlay"></div>
+<div class="plan-pop" role="dialog" aria-label="投稿予定を決める">
+  <div class="plan-pop-hd"><i class="ti ti-calendar-event"></i>いつ投稿する？</div>
+  <div class="plan-pop-note">ここで決めるのは仮の日時です。「予約を確定する」を押すまで投稿されません。</div>
+  <div class="plan-quick" id="plan-quick"></div>
+  <div class="plan-sep">日時を指定する</div>
+  <div class="plan-fields">
+    <input type="date" id="plan-date">
+    <select id="plan-time"></select>
+  </div>
+  <div class="plan-actions">
+    <button class="plan-btn clear" id="plan-clear" title="予定を消す"><i class="ti ti-x"></i></button>
+    <button class="plan-btn" id="plan-cancel">やめる</button>
+    <button class="plan-btn primary" id="plan-save"><i class="ti ti-check"></i>この日時にする</button>
+  </div>
+</div>
+
 <script>
 function switchTab(key){
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
@@ -550,6 +637,8 @@ function switchTab(key){
   document.querySelectorAll('.tabpanel').forEach(p=>p.classList.remove('on'));
   document.querySelector('[data-panel="'+key+'"]').classList.add('on');
 }
+
+countTabs();   // タブの件数は実際のカード数から出す
 
 // Hash-based tab (for board iframes: #draft, #ready, #posted)
 var hashTab=location.hash.replace('#','');
@@ -593,6 +682,7 @@ if(sortDD&&sortMenu){
       opt.classList.add('on');
       document.querySelector('.sort-label').textContent=opt.dataset.sort;
       sortMenu.classList.remove('open');
+      if(opt.dataset.sort==='投稿予定日が近い順')planSort();
       toast('「'+opt.dataset.sort+'」に変更しました');
     });
   });
@@ -611,9 +701,12 @@ function editorUrl(card){
 
 // Card click → sheet (update content based on card)
 var currentEditorUrl='';
+var currentCard=null;
 document.querySelectorAll('.pcard').forEach(card=>{
   card.addEventListener('click',(e)=>{
     if(e.target.closest('.pcard-more'))return;
+    if(e.target.closest('.pcard-plan'))return; // 予定ボタンは詳細を開かない
+    currentCard=card;
     var sheet=document.querySelector('.sheet');
     currentEditorUrl=editorUrl(card);
     // Update sheet title
@@ -635,42 +728,192 @@ document.querySelectorAll('.pcard').forEach(card=>{
     }else{
       metricsEl.style.display='none';
     }
-    // Update sheet status + action button based on card status
-    var statusEl=card.querySelector('.pcard-status');
-    var actionsEl=document.querySelector('.sheet-actions');
-    var statusRow=document.getElementById('sh-status');
-    var editBtn='<button class="sheet-btn edit-btn"><i class="ti ti-pencil"></i>編集する</button>';
-    if(statusEl&&statusEl.classList.contains('st-draft')){
-      if(statusRow)statusRow.innerHTML='<span class="lbl">ステータス</span><span class="pcard-status st-draft" style="position:static">作成中</span>';
-      actionsEl.innerHTML=editBtn+'<button class="sheet-btn confirm-btn"><i class="ti ti-send"></i>確認をお願いする</button>';
-    }else if(statusEl&&statusEl.classList.contains('st-confirm')){
-      if(statusRow)statusRow.innerHTML='<span class="lbl">ステータス</span><span class="pcard-status st-confirm" style="position:static">確認待ち</span>';
-      actionsEl.innerHTML=editBtn+'<button class="sheet-btn approve-btn"><i class="ti ti-check"></i>承認する</button>';
-    }else{
-      if(statusRow)statusRow.innerHTML='<span class="lbl">ステータス</span><span>投稿済み</span>';
-      actionsEl.innerHTML=editBtn;
-    }
+    renderStatusAndActions(card);
+    renderSheetPlan(card);
     sheet.classList.add('open');
   });
 });
 
+/* ===================================================================
+   状態モデル
+     下書き   … 日付未定、または日付を「仮」で入れてある
+     予約済み … 日時が確定していて、まだ投稿されていない
+     投稿済み … 投稿が完了した
+   予約済みに入るには必ず日時が要る。だから予約に進む操作は
+   日時が空なら先に日時ピッカーを開く。
+   誰が何を押せるかは「承認権限を持つメンバーがいるか」で分岐する。
+   人の管理はこの画面では行わない（設定 > メンバー管理の担当）。
+     承認権限を持つメンバー0人（一人運用） … 作成者がそのまま[予約する]
+     1人以上                              … [確認をお願いする] → 承認者が[承認して予約する]
+   =================================================================== */
+// 承認権限を持つメンバーの人数と、ログイン中の自分の役割。
+// 人の管理は「設定 > メンバー管理」が持つ。この画面は結果を読むだけ。
+// このモックは「承認フローあり・自分は承認者」の世界を描いている
+// （サンプルに確認待ちのカードがあるため）。
+// 一人運用の画（作成中に直接[予約を確定する]が出る）を見たいときは
+// REVIEWER_COUNT を 0 にする。実装時はAPI/セッションから入れる。
+var REVIEWER_COUNT = 1;
+var MY_ROLE = 'reviewer';   // 'author' | 'reviewer'
+
+function renderStatusAndActions(card){
+  var panel=panelOf(card);
+  var statusEl=card.querySelector('.pcard-status');
+  var actionsEl=document.querySelector('.sheet-actions');
+  var statusRow=document.getElementById('sh-status');
+  var noteEl=document.getElementById('sh-actions-note');
+  var editBtn='<button class="sheet-btn edit-btn"><i class="ti ti-pencil"></i>編集する</button>';
+  var editBtnOff='<button class="sheet-btn" disabled><i class="ti ti-pencil"></i>編集する</button>';
+  function status(html){ if(statusRow)statusRow.innerHTML='<span class="lbl">ステータス</span>'+html; }
+  function note(t){ if(noteEl){ noteEl.textContent=t||''; noteEl.style.display=t?'':'none'; } }
+
+  if(panel==='posted'){
+    status('<span>投稿済み</span>');
+    actionsEl.innerHTML=editBtn; note('');
+    return;
+  }
+  if(panel==='ready'){
+    status('<span class="pcard-status st-ready" style="position:static"><i class="ti ti-calendar-event"></i>予約済み</span>');
+    actionsEl.innerHTML=editBtn+'<button class="sheet-btn unreserve-btn"><i class="ti ti-x"></i>予約を取り消す</button>';
+    note('予約が確定しています。日時になると自動で投稿されます。');
+    return;
+  }
+  // ここから下書きタブ。
+  // 日時が未定のうちは主ボタンを「日時を決める」にする。
+  // 「予約を確定する」を押させてから怒るより、押す前に次の一手を見せたほうが迷わない。
+  var plan=card.dataset.plan||'';
+  var when=plan?planLabel(plan):'';
+  var setDateBtn='<button class="sheet-btn primary plan-first-btn"><i class="ti ti-calendar-event"></i>投稿日時を決める</button>';
+
+  if(REVIEWER_COUNT===0){
+    // 一人運用: 承認を挟まず自分で予約確定まで進める
+    status('<span class="pcard-status st-draft" style="position:static">作成中</span>');
+    if(!plan){
+      actionsEl.innerHTML=editBtn+setDateBtn;
+      note('まず投稿日時を決めます。そのあと予約を確定できます。');
+    }else{
+      actionsEl.innerHTML=editBtn+'<button class="sheet-btn primary reserve-btn"><i class="ti ti-check"></i>予約を確定する</button>';
+      note('いまは仮の日時です。確定すると '+when+' に自動で投稿されます。');
+    }
+    return;
+  }
+  if(statusEl&&statusEl.classList.contains('st-confirm')){
+    status('<span class="pcard-status st-confirm" style="position:static">確認待ち</span>');
+    if(MY_ROLE==='reviewer'){
+      // 7/24決定: 承認者は内容を編集できる
+      if(!plan){
+        actionsEl.innerHTML=editBtn+setDateBtn;
+        note('投稿日時が未定です。日時を決めると承認して確定できます。');
+      }else{
+        actionsEl.innerHTML=editBtn+'<button class="sheet-btn primary approve-btn"><i class="ti ti-check"></i>承認して予約を確定する</button>';
+        note('確定すると '+when+' に自動で投稿されます。内容は確定前に直せます。');
+      }
+    }else{
+      // 7/24決定: 依頼した側は提出後に編集できない
+      actionsEl.innerHTML=editBtnOff+'<button class="sheet-btn" disabled><i class="ti ti-clock"></i>承認待ち</button>';
+      note('承認を待っています。承認されるまで編集できません。');
+    }
+    return;
+  }
+  status('<span class="pcard-status st-draft" style="position:static">作成中</span>');
+  if(!plan){
+    actionsEl.innerHTML=editBtn+setDateBtn;
+    note('まず投稿日時を決めます。そのあと確認をお願いできます。');
+  }else{
+    actionsEl.innerHTML=editBtn+'<button class="sheet-btn primary confirm-btn"><i class="ti ti-send"></i>確認をお願いする</button>';
+    note('いまは仮の日時です。承認されると '+when+' で確定します。');
+  }
+}
+
+// 予約済みへ進む。日時が空なら先に決めさせる（予約済み＝日時が確定した状態のため）
+function goReserve(anchor, approved){
+  var card=currentCard;
+  if(!card)return;
+  if(!card.dataset.plan){
+    toast('先に投稿日時を決めてください');
+    planOpen(anchor, card);
+    return;
+  }
+  toast.success((approved?'承認しました。':'')+'予約を確定しました。'+planLabel(card.dataset.plan)+' に投稿されます');
+  document.querySelector('.sheet').classList.remove('open');
+  moveToReady(card);
+}
+
+
+/* ===== カードの状態遷移 =====
+   モックでも実際にカードが動くようにする。押した結果が目に見えないと、
+   仮予約と確定の違いがレビューで伝わらない。 */
+function countTabs(){
+  ['draft','ready','posted'].forEach(function(k){
+    var n=document.querySelectorAll('[data-panel="'+k+'"] .pcard').length;
+    var b=document.querySelector('[data-tab="'+k+'"] .cnt');
+    if(b)b.textContent=n;
+  });
+}
+function daysLeft(v){
+  var d=planParse(v); if(!d)return '';
+  var n=Math.ceil((d-DEMO_NOW)/86400000);
+  return n<=0?'まもなく':('あと'+n+'日');
+}
+// 下書き → 予約済み
+function moveToReady(card){
+  var v=card.dataset.plan; if(!v)return;
+  var st=card.querySelector('.pcard-status'); if(st)st.remove();
+  var plan=card.querySelector('.pcard-plan'); if(plan)plan.remove();
+  var date=card.querySelector('.pcard-date'); if(date)date.remove();
+  var title=card.querySelector('.pcard-title');
+  var sched=document.createElement('div');
+  sched.className='pcard-sched';
+  sched.innerHTML='<span class="sched-date">'+planLabel(v)+'</span><span class="sched-countdown">'+daysLeft(v)+'</span>';
+  title.insertAdjacentElement('afterend',sched);
+  document.querySelector('[data-panel="ready"] .grid').appendChild(card);
+  countTabs();
+  switchTab('ready');   // 動いた先を見せる
+}
+// 予約済み → 下書き（予約の取り消し）。日時は仮として残す
+function moveToDraft(card){
+  var sched=card.querySelector('.pcard-sched'); if(sched)sched.remove();
+  var thumb=card.querySelector('.pcard-thumb');
+  if(thumb&&!card.querySelector('.pcard-status')){
+    thumb.insertAdjacentHTML('beforeend','<span class="pcard-status st-draft">作成中</span>');
+  }
+  var title=card.querySelector('.pcard-title');
+  var btn=document.createElement('button');
+  btn.className='pcard-plan';
+  btn.addEventListener('click',function(e){ e.stopPropagation(); planOpen(btn,card); });
+  title.insertAdjacentElement('afterend',btn);
+  renderCardPlan(card);
+  document.querySelector('[data-panel="draft"] .grid').appendChild(card);
+  countTabs();
+  switchTab('draft');
+}
+// 作成中 → 確認待ち（下書きタブ内でステータスだけ変わる）
+function markAwaitingReview(card){
+  var st=card.querySelector('.pcard-status');
+  if(st){ st.className='pcard-status st-confirm'; st.textContent='確認待ち'; }
+}
+
 // Sheet action buttons (delegated)
 document.querySelector('.sheet-actions').addEventListener('click',(e)=>{
   var ebtn=e.target.closest('.edit-btn');
-  if(ebtn){
-    window.location.href=currentEditorUrl;
-    return;
-  }
-  var btn=e.target.closest('.confirm-btn');
-  if(btn){
+  if(ebtn){ window.location.href=currentEditorUrl; return; }
+  var pbtn=e.target.closest('.plan-first-btn');
+  if(pbtn){ planOpen(pbtn,currentCard); return; }
+  var rbtn=e.target.closest('.reserve-btn');
+  if(rbtn){ goReserve(rbtn,false); return; }
+  var abtn=e.target.closest('.approve-btn');
+  if(abtn){ goReserve(abtn,true); return; }
+  var cbtn=e.target.closest('.confirm-btn');
+  if(cbtn){
     toast.success('確認依頼を送信しました');
     document.querySelector('.sheet').classList.remove('open');
+    if(currentCard)markAwaitingReview(currentCard);
     return;
   }
-  var abtn=e.target.closest('.approve-btn');
-  if(abtn){
-    toast.success('承認しました。投稿準備完了に移動します');
+  var ubtn=e.target.closest('.unreserve-btn');
+  if(ubtn){
+    toast('予約を取り消しました。下書きに戻します');
     document.querySelector('.sheet').classList.remove('open');
+    if(currentCard)moveToDraft(currentCard);
     return;
   }
 });
@@ -690,6 +933,199 @@ document.querySelectorAll('.sth').forEach(th=>{
 document.querySelector('.sheet-close').addEventListener('click',()=>{
   document.querySelector('.sheet').classList.remove('open');
 });
+
+/* ===================================================================
+   投稿予定日時を「下書きのうちに」入れておく機能
+   これまで予約日時は承認後（予約済みタブ）でしか設定できず、
+   予約済みに上がってから「日時未設定」の黄枠が出る作りだった。
+   下書き段階で先に決めておけるようにして、その手戻りをなくす。
+   =================================================================== */
+
+// ワイヤー用の基準日時。実装時は new Date() に置き換える。
+var DEMO_NOW=new Date(2026,6,16,9,30);
+var WDAY=['日','月','火','水','木','金','土'];
+
+function pad2(n){return (n<10?'0':'')+n;}
+function planParse(v){
+  var m=v&&v.match(/^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})$/);
+  return m?new Date(+m[1],+m[2]-1,+m[3],+m[4],+m[5]):null;
+}
+function planValue(d){
+  return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate())+'T'+pad2(d.getHours())+':'+pad2(d.getMinutes());
+}
+function planLabel(v){
+  var d=planParse(v);
+  if(!d)return '';
+  return (d.getMonth()+1)+'/'+d.getDate()+'('+WDAY[d.getDay()]+') '+pad2(d.getHours())+':'+pad2(d.getMinutes());
+}
+function panelOf(card){
+  var p=card.closest('.tabpanel');
+  return p?p.dataset.panel:'draft';
+}
+
+// かんたん選択（設問を作らず、押すだけで決まる導線）
+function planQuickOptions(){
+  var b=DEMO_NOW,y=b.getFullYear(),m=b.getMonth(),d=b.getDate(),c=[];
+  var todayEve=new Date(y,m,d,19,0);
+  if(todayEve>b)c.push({name:'今日の夜',date:todayEve});
+  c.push({name:'明日の朝',date:new Date(y,m,d+1,9,0)});
+  c.push({name:'明日の夜',date:new Date(y,m,d+1,19,0)});
+  var sat=new Date(y,m,d,10,0),gap=(6-sat.getDay()+7)%7;
+  if(gap===0&&sat<=b)gap=7;
+  sat.setDate(sat.getDate()+gap);
+  c.push({name:'今週の土曜',date:sat});
+  var mon=new Date(y,m,d,9,0),g2=(1-mon.getDay()+7)%7||7;
+  mon.setDate(mon.getDate()+g2);
+  c.push({name:'来週の月曜',date:mon});
+  return c.slice(0,4);
+}
+
+// カード上の予定ボタンを描き直す
+function renderCardPlan(card){
+  var btn=card.querySelector('.pcard-plan');
+  if(!btn)return;
+  var v=card.dataset.plan||'';
+  btn.dataset.plan=v;
+  if(v){
+    btn.classList.remove('empty');
+    btn.innerHTML='<i class="ti ti-calendar-event"></i><span class="plan-date">'+planLabel(v)+'</span><span class="plan-tmp">仮</span><span class="plan-act">変更</span>';
+  }else{
+    btn.classList.add('empty');
+    btn.innerHTML='<i class="ti ti-calendar-event"></i>投稿予定を決める';
+  }
+}
+
+// 詳細sheetの予定行（投稿済みには出さない）
+function renderSheetPlan(card){
+  var row=document.getElementById('sh-plan');
+  if(!row)return;
+  var panel=panelOf(card);
+  if(panel==='posted'){row.style.display='none';return;}
+  row.style.display='';
+  var v=card.dataset.plan||'';
+  var lbl=panel==='ready'?'予約日時':'投稿予定（仮）';
+  row.innerHTML='<span class="lbl">'+lbl+'</span><span class="plan-inline">'+
+    (v?'<span class="plan-set">'+planLabel(v)+'</span><button class="plan-link">変更</button>'
+      :'<span class="plan-none">未設定</span><button class="plan-link">決める</button>')+'</span>';
+}
+
+// 初期化: ボタンに書いてある予定をカード側に集約して描き直す
+document.querySelectorAll('.pcard').forEach(function(card){
+  var btn=card.querySelector('.pcard-plan');
+  if(btn&&!card.dataset.plan)card.dataset.plan=btn.dataset.plan||'';
+  renderCardPlan(card);
+});
+
+// ---- ポップオーバー ----
+var planPop=document.querySelector('.plan-pop');
+var planOverlay=document.querySelector('.plan-overlay');
+var planDateEl=document.getElementById('plan-date');
+var planTimeEl=document.getElementById('plan-time');
+var planQuickEl=document.getElementById('plan-quick');
+var planTarget=null;
+
+// 時刻は30分刻み（自由入力より押し間違いが少ない）
+for(var h=0;h<24;h++){
+  for(var mi=0;mi<60;mi+=30){
+    var o=document.createElement('option');
+    o.value=pad2(h)+':'+pad2(mi);
+    o.textContent=pad2(h)+':'+pad2(mi);
+    planTimeEl.appendChild(o);
+  }
+}
+
+function planFields(d){
+  planDateEl.value=d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate());
+  planTimeEl.value=pad2(d.getHours())+':'+pad2(Math.floor(d.getMinutes()/30)*30);
+}
+
+function planPosition(anchor){
+  var r=anchor.getBoundingClientRect();
+  var w=planPop.offsetWidth,ht=planPop.offsetHeight;
+  var left=Math.min(Math.max(8,r.left),window.innerWidth-w-8);
+  var top=r.bottom+8;
+  if(top+ht>window.innerHeight-8)top=Math.max(8,r.top-ht-8);
+  planPop.style.left=left+'px';
+  planPop.style.top=top+'px';
+}
+
+function planOpen(anchor,card){
+  planTarget=card;
+  var cur=planParse(card.dataset.plan||'');
+  planFields(cur||planQuickOptions()[0].date);
+  planQuickEl.innerHTML='';
+  planQuickOptions().forEach(function(q){
+    var b=document.createElement('button');
+    b.className='plan-qbtn';
+    b.dataset.value=planValue(q.date);
+    b.innerHTML=q.name+'<span>'+planLabel(planValue(q.date))+'</span>';
+    if(card.dataset.plan===b.dataset.value)b.classList.add('on');
+    planQuickEl.appendChild(b);
+  });
+  document.getElementById('plan-clear').style.display=card.dataset.plan?'':'none';
+  planPop.classList.add('open');
+  planOverlay.classList.add('open');
+  planPosition(anchor);
+}
+
+function planClose(){
+  planPop.classList.remove('open');
+  planOverlay.classList.remove('open');
+  planTarget=null;
+}
+
+function planApply(value){
+  if(!planTarget)return;
+  var card=planTarget;
+  card.dataset.plan=value;
+  renderCardPlan(card);
+  if(currentCard===card){ renderSheetPlan(card); renderStatusAndActions(card); }
+  planClose();
+  toast.success(value?('投稿予定を '+planLabel(value)+' にしました'):'投稿予定を消しました');
+}
+
+// カードの予定ボタン
+document.querySelectorAll('.pcard-plan').forEach(function(btn){
+  btn.addEventListener('click',function(e){
+    e.stopPropagation();
+    planOpen(btn,btn.closest('.pcard'));
+  });
+});
+
+// sheet内の「決める / 変更」
+document.getElementById('sh-plan').addEventListener('click',function(e){
+  var link=e.target.closest('.plan-link');
+  if(link&&currentCard)planOpen(link,currentCard);
+});
+
+// かんたん選択は押した時点で確定（40-50代向けにタップ数を減らす）
+planQuickEl.addEventListener('click',function(e){
+  var b=e.target.closest('.plan-qbtn');
+  if(b)planApply(b.dataset.value);
+});
+
+document.getElementById('plan-save').addEventListener('click',function(){
+  if(!planDateEl.value){toast('日付を選んでください');return;}
+  planApply(planDateEl.value+'T'+planTimeEl.value);
+});
+document.getElementById('plan-clear').addEventListener('click',function(){planApply('');});
+document.getElementById('plan-cancel').addEventListener('click',planClose);
+planOverlay.addEventListener('click',planClose);
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&planTarget)planClose();});
+window.addEventListener('resize',function(){if(planTarget)planClose();});
+
+// 「投稿予定日が近い順」は実際に並び替える（未設定は末尾）
+function planSort(){
+  document.querySelectorAll('.tabpanel .grid').forEach(function(grid){
+    Array.prototype.slice.call(grid.children).sort(function(a,b){
+      var av=a.dataset.plan||'',bv=b.dataset.plan||'';
+      if(!av&&!bv)return 0;
+      if(!av)return 1;
+      if(!bv)return -1;
+      return av<bv?-1:1;
+    }).forEach(function(c){grid.appendChild(c);});
+  });
+}
 </script>
 <script src="sonner.js"></script>
 </body></html>

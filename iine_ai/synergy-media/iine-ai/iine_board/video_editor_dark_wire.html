@@ -485,8 +485,14 @@ body{background:#0a0908;padding:0;margin:0;color:var(--color-editor-foreground);
               </div>
             </div>
             <button class="propbtn" onclick="tlAddKf()" style="width:100%;margin-bottom:12px;background:rgba(239,97,8,.08);border-color:var(--color-primary);color:var(--color-primary);">&#9670; 再生ヘッド位置に追加</button>
-            <div class="fl">一覧 <span style="font-size:10px;font-weight:400;color:var(--color-editor-muted);margin-left:4px;">右クリックで操作</span></div>
-            <div id="kfList" style="background:var(--color-editor-elevated);border:1px solid var(--color-editor-border);border-radius:var(--radius-md);padding:4px 0;font-size:11px;">
+            <div class="fl">ズーム</div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"><input type="range" min="10" max="400" value="100" style="flex:1;accent-color:var(--color-primary);"> <div class="fsel" style="width:64px;text-align:center;font-size:11px;padding:6px;">100%</div></div>
+            <div class="fl">X</div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"><input type="range" min="-100" max="100" value="0" style="flex:1;accent-color:var(--color-primary);"> <div class="fsel" style="width:64px;text-align:center;font-size:11px;padding:6px;">0</div></div>
+            <div class="fl">Y</div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"><input type="range" min="-100" max="100" value="0" style="flex:1;accent-color:var(--color-primary);"> <div class="fsel" style="width:64px;text-align:center;font-size:11px;padding:6px;">0</div></div>
+            <!-- 一覧はUI非表示。ポイントの管理データとして保持（追加／削除／‹ ›送り／タイムラインの◆が参照） -->
+            <div id="kfList" style="display:none;background:var(--color-editor-elevated);border:1px solid var(--color-editor-border);border-radius:var(--radius-md);padding:4px 0;font-size:11px;">
               <div class="kfrow" data-t="0" title="このポイントへ移動" onclick="jumpToKf(this)" oncontextmenu="showKfMenu(event,this)">
                 <div style="display:flex;align-items:center;gap:6px;"><span class="kfd">&#9670;</span><span class="kfn">ポイント 1</span></div>
                 <div style="display:flex;align-items:center;gap:6px;"><span class="kft">00:00</span><i class="ti ti-dots kfdots" title="その他の操作" onclick="showKfMenu(event,this.closest('.kfrow'))"></i><span class="kfdel" title="このポイントを削除" onclick="deleteKf(this.closest('.kfrow'),event)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></span></div>
@@ -516,7 +522,6 @@ body{background:#0a0908;padding:0;margin:0;color:var(--color-editor-foreground);
 
           <!-- ===== 小タブ 1: トランスフォーム ===== -->
           <div class="edsubpane" id="edsubpane-1" style="display:none;">
-            <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--color-editor-muted);background:var(--color-editor-elevated);border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);padding:8px 10px;margin-bottom:14px;"><i class="ti ti-info-circle" style="font-size:14px;flex-shrink:0;"></i> 開始・終了・長さはタイムライン上で直接ドラッグして調整</div>
             <div class="fl" style="margin-top:0;">スケール</div>
             <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--color-editor-foreground);margin-bottom:14px;"><input type="range" style="flex:1;accent-color:var(--color-primary);"> <div class="fsel" style="width:64px;text-align:center;font-size:11px;padding:6px;">100%</div></div>
             <div class="fl">位置</div>
@@ -985,7 +990,15 @@ body{background:#0a0908;padding:0;margin:0;color:var(--color-editor-foreground);
               </div>
               <div style="font-size:10px;color:var(--color-editor-muted);">スラント</div>
             </div>
+            <div style="text-align:center;cursor:pointer;">
+              <div style="aspect-ratio:1;border-radius:var(--radius-md);border:1px solid var(--color-editor-border);background:var(--color-editor-elevated);display:flex;align-items:center;justify-content:center;margin-bottom:4px;">
+                <svg width="40" height="26" viewBox="0 0 40 26"><path id="archPath" d="M4 22 Q20 2 36 22" fill="none"/><text font-size="11" font-weight="900" fill="var(--color-editor-foreground)"><textPath href="#archPath" startOffset="50%" text-anchor="middle">Aa</textPath></text></svg>
+              </div>
+              <div style="font-size:10px;color:var(--color-editor-muted);">アーチ</div>
+            </div>
           </div>
+          <div class="fl">アーチの曲がり</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;"><input type="range" min="-100" max="100" value="40" style="flex:1;accent-color:var(--color-primary);"> <div class="fsel" style="width:64px;text-align:center;font-size:11px;padding:6px;">40</div></div>
         </div>
 
         <!-- ========== メインタブ 3: 吹き出し ========== -->
@@ -1152,7 +1165,18 @@ body{background:#0a0908;padding:0;margin:0;color:var(--color-editor-foreground);
               <div style="font-size:10px;color:var(--color-editor-muted);">フリー</div>
             </div>
           </div>
-          <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:var(--color-editor-muted);background:var(--color-editor-elevated);border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);padding:8px 10px;"><i class="ti ti-info-circle" style="font-size:14px;flex-shrink:0;"></i> 追加後、タイムラインで選択すると下部に強度・トラッキング設定が表示されます</div>
+          <div class="fl">強度</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;"><input type="range" min="0" max="100" value="50" style="flex:1;accent-color:var(--color-primary);"> <div class="fsel" style="width:64px;text-align:center;font-size:11px;padding:6px;">50</div></div>
+          <div class="fl">追従</div>
+          <div style="display:flex;gap:0;background:var(--color-editor-elevated);border-radius:var(--radius-sm);padding:3px;border:1px solid var(--color-editor-border);margin-bottom:14px;">
+            <span class="mostrack on" onclick="pickMosaicTrack(this)" style="flex:1;text-align:center;padding:6px 0;font-size:10px;font-weight:700;border-radius:3px;cursor:pointer;color:var(--color-editor-foreground);background:var(--color-editor-surface);">固定</span>
+            <span class="mostrack" onclick="pickMosaicTrack(this)" style="flex:1;text-align:center;padding:6px 0;font-size:10px;font-weight:500;border-radius:3px;cursor:pointer;color:var(--color-editor-muted);background:transparent;">顔追従</span>
+            <span class="mostrack" onclick="pickMosaicTrack(this)" style="flex:1;text-align:center;padding:6px 0;font-size:10px;font-weight:500;border-radius:3px;cursor:pointer;color:var(--color-editor-muted);background:transparent;">手動ポイント</span>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+            <button class="propbtn" onclick="duplicateShape()">複製</button>
+            <button class="propbtn" style="color:var(--color-destructive);border-color:var(--color-destructive);" onclick="deleteShape()">削除</button>
+          </div>
         </div>
       </div>
       <!-- ===== 音声（BGM・効果音・ナレーション・動画音量を統合） ===== -->

@@ -126,7 +126,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .grad{background:linear-gradient(135deg,var(--color-primary),var(--color-primary-light))!important;color:#fff!important;}
 .topbar{height:56px;flex:none;border-bottom:1px solid var(--color-border);display:flex;align-items:center;gap:12px;padding:0 24px;}
 .tag{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-primary);background:var(--color-primary-subtle);border-radius:var(--radius-full);padding:4px 12px;}
-.helpbtn{width:32px;height:32px;border:1.5px solid var(--color-primary);border-radius:var(--radius-full);background:var(--color-card);color:var(--color-primary);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.helpbtn{width:32px;height:32px;border:1.5px solid var(--color-primary);border-radius:var(--radius-full);background:var(--color-card);color:var(--color-primary);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;display:flex;align-items:center;justify-content:center;text-decoration:none;}.helpbtn{transition:background .15s,color .15s,border-color .15s;}.helpbtn:hover{background:var(--color-primary);color:var(--color-on-primary);border-color:var(--color-primary);}
 .hdr-left{display:flex;align-items:center;gap:10px;}
 .hdr-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
 .hdr-page{font-size:var(--text-h3);font-weight:var(--font-weight-h3);display:flex;align-items:center;gap:8px;}
@@ -163,9 +163,10 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .av{width:42px;height:42px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:19px;}
 .acname{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);} .acmeta{font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:1px;}
 .plat{margin-left:auto;display:flex;align-items:center;gap:5px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);border-radius:var(--radius-full);padding:3px 10px;}
+.method{text-align:center;padding:32px 20px;}
 .method .mi{font-size:48px;display:block;margin-bottom:16px;color:var(--color-muted-foreground);}
 .method.sel .mi{color:var(--color-primary);}
-.method .ot{font-size:var(--text-h3);font-weight:var(--font-weight-h3);}
+.method .ot{font-size:var(--text-h3);font-weight:var(--font-weight-h3);} .method .od{font-size:var(--text-body);color:var(--color-muted-foreground);margin-top:8px;line-height:1.6;}
 /* アコーディオン */
 .mcard{border:1.5px solid var(--color-border);border-radius:var(--radius-lg);background:var(--color-card);overflow:hidden;margin-bottom:11px;}
 .mcard.reco{border:2px solid var(--color-primary);} .mcard.open{border-color:var(--color-primary);}
@@ -258,6 +259,10 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 /* gen-note */
 .gen-note{margin-top:14px;padding:14px 18px;border-radius:var(--radius-md);background:var(--color-primary-subtle);font-size:var(--text-label);color:var(--color-primary);display:flex;align-items:center;gap:8px;line-height:1.5;font-weight:var(--font-weight-body-strong);}
 .gen-note.off{background:var(--color-surface);color:var(--color-muted-foreground);}
+/* アップロードと同じページに置く投稿文生成セクション */
+.secsep{border-top:1px solid var(--color-border);margin:28px 0 24px;}
+.sech{font-size:var(--text-h2);font-weight:var(--font-weight-h2);display:flex;align-items:center;gap:10px;}
+#genSection .booth{height:420px;}
 @media (max-width:430px){
   body{padding:0;}
   .app{width:100%;height:100vh;border-radius:0;border-left:none;border-right:none;}
@@ -282,7 +287,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 }
 </style></head><body>
 <div class="app">
-  <div class="topbar"><div class="hdr-left"><span class="hdr-page"><i class="ti ti-upload"></i>投稿作成</span><span class="tag" id="flowtag">完成品から作る</span></div><div class="hdr-right"><button class="helpbtn">?</button><button class="close"><i class="ti ti-list"></i></button></div></div>
+  <div class="topbar"><div class="hdr-left"><span class="hdr-page"><i class="ti ti-upload"></i>投稿作成</span><span class="tag" id="flowtag">完成品から作る</span></div><div class="hdr-right"><a class="helpbtn" href="https://hinaiwagami0513.github.io/iineai/help/create/upload/" target="_blank" rel="noopener" title="このページのヘルプ（投稿作成 > 完成品から作る）" aria-label="このページのヘルプ">?</a><button class="close"><i class="ti ti-list"></i></button></div></div>
   <div style="border-bottom:1px solid var(--color-border);background:var(--color-card);"><div class="stepbar" id="stepbar"></div></div>
   <div class="main">
     <div id="subnav"></div>
@@ -290,7 +295,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 
       <!-- 1 SNS -->
       <div class="screen on" id="sc_sns">
-        <div class="h1">投稿するアカウントを選択</div><div class="h1sub">連携しているアカウントから選んでください</div>
+        <div class="h1">投稿するアカウントを選択</div>
         <div class="g2" style="margin-top:16px">
           <div class="opt acct sel" onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><div class="av" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i></div><div><div class="acname">@sumika_fudosan</div><div class="acmeta">フォロワー 1.2万</div></div><span class="plat" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i>Instagram</span></div>
           <div class="opt acct " onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><div class="av" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i></div><div><div class="acname">@minato_chintai</div><div class="acmeta">フォロワー 3,400</div></div><span class="plat" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i>Instagram</span></div>
@@ -301,7 +306,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 
       <!-- 2 作成方法 -->
       <div class="screen" id="sc_method">
-        <div class="h1">作成方法を選ぶ</div><div class="h1sub">どうやって投稿を作りますか？</div>
+        <div class="h1">作成方法を選ぶ</div>
         <div class="g3" style="margin-top:16px">
           <div class="opt method" onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><i class="ti ti-photo mi"></i><div class="ot">画像を作成</div></div>
           <div class="opt method" onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><i class="ti ti-video mi"></i><div class="ot">動画を作成</div></div>
@@ -311,7 +316,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 
       <!-- 3 アップロード＋投稿文生成ON/OFF -->
       <div class="screen" id="sc_upload">
-        <div class="h1">完成品をアップロード</div><div class="h1sub"><i class="ti ti-upload" style="color:var(--color-muted-foreground)"></i>手持ちの画像・動画をアップして、投稿文を生成するか選んでください</div>
+        <div class="h1">完成品をアップロード</div>
 
         <div style="margin-top:16px">
           <div style="font-size:var(--text-label);font-weight:var(--font-weight-body-strong);margin-bottom:8px;display:flex;align-items:center;gap:6px"><i class="ti ti-photo" style="color:var(--color-muted-foreground)"></i>画像・動画の完成品をアップ<span class="req">必須</span></div>
@@ -336,12 +341,12 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
             <span class="slider"></span>
           </label>
         </div>
-        <div class="gen-note" id="genNote"><i class="ti ti-sparkles"></i>次のステップでAIが投稿文を生成します</div>
-      </div>
+        <div class="gen-note" id="genNote"><i class="ti ti-sparkles"></i>下のAIアシスタントで投稿文の方向性を決めます</div>
 
-      <!-- 3 投稿文生成（ONの場合のみ） -->
-      <div class="screen" id="sc_gen">
-        <div class="h1">投稿文を生成</div><div class="h1sub"><i class="ti ti-sparkles" style="color:var(--color-muted-foreground)"></i>アップロードした素材をもとに、AIが投稿文を生成します</div>
+        <!-- 投稿文生成（ONのときだけ表示・同じページ内） -->
+        <div id="genSection">
+        <div class="secsep"></div>
+        <div class="sech">投稿文を生成</div>
         <div style="margin-top:16px">
           <div style="font-size:var(--text-label);font-weight:var(--font-weight-body-strong);margin-bottom:8px;display:flex;align-items:center;gap:6px"><i class="ti ti-messages" style="color:var(--color-muted-foreground)"></i>AIに指示する</div>
           <div class="booth">
@@ -366,6 +371,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
             </div>
           </div>
         </div>
+        </div><!-- /genSection -->
       </div>
 
       <!-- 4 投稿を編集 -->
@@ -488,25 +494,19 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 <script>
 /* ===== 画面遷移 ===== */
 var genOn=true;
-var SCR_ON=['sns','method','upload','gen','editor','finish'];
-var SCR_OFF=['sns','method','upload','editor','finish'];
-var META_ON={
-  sns:{big:1,sub:0}, method:{big:2,sub:0}, upload:{big:3,sub:0},
-  gen:{big:4,sub:0}, editor:{big:5,sub:0}, finish:{big:6,sub:0}
-};
-var META_OFF={
+// アップロードと投稿文生成は同じページ（upload）に同居するので、トグルで段数は変わらない
+var SCR=['sns','method','upload','editor','finish'];
+var META={
   sns:{big:1,sub:0}, method:{big:2,sub:0}, upload:{big:3,sub:0},
   editor:{big:4,sub:0}, finish:{big:5,sub:0}
 };
-function getSCR(){return genOn?SCR_ON:SCR_OFF;}
-function getMETA(){return genOn?META_ON:META_OFF;}
+function getSCR(){return SCR;}
+function getMETA(){return META;}
 var i=0;
 function renderStep(){
   var scr=getSCR();var meta=getMETA();
   var big=meta[scr[i]].big;
-  var steps=genOn
-    ?[[1,'アカウント選択'],[2,'作成方法'],[3,'素材アップ'],[4,'投稿文生成'],[5,'仕上げる'],[6,'完成']]
-    :[[1,'アカウント選択'],[2,'作成方法'],[3,'素材アップ'],[4,'仕上げる'],[5,'完成']];
+  var steps=[[1,'アカウント選択'],[2,'作成方法'],[3,genOn?'素材アップ・投稿文':'素材アップ'],[4,'仕上げる'],[5,'完成']];
   var last=steps[steps.length-1][0];
   var h='';
   steps.forEach(function(s,idx){
@@ -561,13 +561,17 @@ function applySelected(){
 function toggleGen(){
   genOn=document.getElementById('genToggle').checked;
   var note=document.getElementById('genNote');
+  var sec=document.getElementById('genSection');
   if(genOn){
     note.className='gen-note';
-    note.innerHTML='<i class="ti ti-sparkles"></i>次のステップでAIが投稿文を生成します';
+    note.innerHTML='<i class="ti ti-sparkles"></i>下のAIアシスタントで投稿文の方向性を決めます';
+    sec.style.display='block';
   }else{
     note.className='gen-note off';
     note.innerHTML='<i class="ti ti-edit"></i>投稿文は空の状態で編集画面に進みます';
+    sec.style.display='none';
   }
+  renderStep();
   // update editor caption
   var cg=document.getElementById('captionGenerated');
   var ce=document.getElementById('captionEmpty');

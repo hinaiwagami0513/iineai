@@ -132,7 +132,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .jb{font-size:var(--text-meta);border:1px solid var(--color-border);background:var(--color-card);border-radius:var(--radius-full);width:22px;height:22px;color:var(--color-muted-foreground);cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .jb:hover{border-color:var(--color-primary);color:var(--color-primary);}
 .close{width:36px;height:36px;border:1px solid var(--color-border);border-radius:var(--radius-sm);background:var(--color-card);color:var(--color-muted-foreground);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
-.helpbtn{width:32px;height:32px;border:1.5px solid var(--color-primary);border-radius:var(--radius-full);background:var(--color-card);color:var(--color-primary);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.helpbtn{width:32px;height:32px;border:1.5px solid var(--color-primary);border-radius:var(--radius-full);background:var(--color-card);color:var(--color-primary);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;display:flex;align-items:center;justify-content:center;text-decoration:none;}.helpbtn{transition:background .15s,color .15s,border-color .15s;}.helpbtn:hover{background:var(--color-primary);color:var(--color-on-primary);border-color:var(--color-primary);}
 .hdr-left{display:flex;align-items:center;gap:10px;}
 .hdr-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
 .hdr-page{font-size:var(--text-h3);font-weight:var(--font-weight-h3);display:flex;align-items:center;gap:8px;}
@@ -242,6 +242,8 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .plan-card .pc-bmark{color:var(--color-muted-foreground);font-size:18px;cursor:pointer;margin-left:auto;} .plan-card .pc-bmark.active{color:var(--color-primary);}
 .plan-card .pc-section{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);color:var(--color-primary);margin-bottom:6px;}
 .plan-card .pc-bullets{list-style:disc;padding-left:18px;font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.8;}
+.plan-card .pc-saved{display:inline-flex;align-items:center;gap:5px;font-size:var(--text-meta);color:var(--color-muted-foreground);background:var(--color-muted);border-radius:var(--radius-full);padding:3px 10px;margin-bottom:10px;}
+.cards-past{opacity:.5;pointer-events:none;}
 .tplmarker{align-self:center;display:flex;align-items:center;gap:7px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-info);background:var(--color-info-subtle);border-radius:var(--radius-full);padding:8px 15px;}
 .attach-card{align-self:flex-end;display:flex;align-items:center;gap:10px;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:10px 14px;max-width:80%;}
 .attach-card i{font-size:22px;color:var(--color-muted-foreground);flex:none;}
@@ -390,12 +392,76 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
   .sug{font-size:11px;padding:6px 10px;}
   .proposal-card-pg{padding:14px 16px;}
   .h1{font-size:var(--text-h2);}
-  #sc_finish>div{flex-direction:column !important;gap:24px !important;padding:24px 16px !important;}
-  #sc_finish>div>div:last-child{width:100% !important;max-width:320px;margin:0 auto;}
+  .donebody>div{flex-direction:column !important;gap:24px !important;padding:24px 16px !important;}
+  .donebody>div>div:last-child{width:100% !important;max-width:320px;margin:0 auto;}
+  .donemodal{width:calc(100vw - 24px);max-height:88vh;}
 }
+
+/* ===== 完成モーダル =====
+   ステップ4の別ページをやめてモーダルにした。編集画面を閉じずに結果だけ見せる。 */
+.donemask{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:900;}
+.donemask.open{display:block;}
+.donemodal{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:901;
+  width:820px;max-width:calc(100vw - 40px);max-height:90vh;overflow-y:auto;
+  background:var(--color-card);border-radius:var(--radius-xl);box-shadow:0 24px 64px rgba(0,0,0,.24);}
+.donemodal.open{display:block;}
+.doneclose{position:absolute;top:14px;right:14px;width:36px;height:36px;border-radius:var(--radius-sm);
+  border:1px solid var(--color-border);background:var(--color-card);color:var(--color-muted-foreground);
+  font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1;}
+.doneclose:hover{background:var(--color-background);}
+
+/* ===== シーン表（クリックで直せる） =====
+   AIに会話で頼まないと直せないのは、テロップの誤字ひとつでもつらい。
+   セルを押したらその場で書き換えられるようにする。 */
+.sctable{width:100%;border-collapse:collapse;font-size:var(--text-body);}
+.sctable th{text-align:left;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);
+  color:var(--color-muted-foreground);padding:10px 14px;border-bottom:2px solid var(--color-border);}
+.sctable td{padding:10px;border-bottom:1px solid var(--color-border);vertical-align:top;}
+.sctable tr:last-child td{border-bottom:none;}
+.sc-no{font-weight:var(--font-weight-body-strong);}
+.sc-time{display:inline-block;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);
+  color:var(--color-primary);background:var(--color-primary-subtle);border-radius:var(--radius-full);padding:2px 8px;margin-left:6px;}
+/* 編集できる場所。押せると分かるように枠がホバーで出る */
+.ed{display:block;border:1px solid transparent;border-radius:var(--radius-sm);padding:4px 6px;margin:-4px -6px;
+  cursor:text;white-space:pre-wrap;word-break:break-word;transition:background .12s,border-color .12s;min-height:1.6em;line-height:1.6;}
+.ed:hover{background:var(--color-surface);border-color:var(--color-border);}
+.ed:focus{outline:none;background:var(--color-card);border-color:var(--color-primary);
+  box-shadow:0 0 0 2px var(--color-primary-subtle);}
+.ed:empty::before{content:attr(data-ph);color:var(--color-border-strong);}
+.sc-role{font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:4px;}
+.sc-tel{font-weight:var(--font-weight-body-strong);}
+.sc-add{display:inline-flex;align-items:center;gap:6px;margin-top:12px;padding:9px 14px;border-radius:var(--radius-md);
+  border:1.5px dashed var(--color-border-strong);background:transparent;color:var(--color-muted-foreground);
+  font-family:inherit;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);cursor:pointer;}
+.sc-add:hover{border-color:var(--color-primary);color:var(--color-primary);background:var(--color-primary-subtle);}
+.sc-del{float:right;width:26px;height:26px;border:none;background:transparent;color:var(--color-border-strong);
+  font-size:15px;cursor:pointer;border-radius:var(--radius-sm);}
+.sc-del:hover{color:var(--color-destructive);background:var(--color-destructive-subtle);}
+
+/* ===== 削除の確認ダイアログ =====
+   シーンは書いた内容ごと消える。×一発で消えるのは事故のもとなので一段挟む。 */
+.cfmask{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:950;}
+.cfmask.open{display:block;}
+.cfbox{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:951;
+  width:400px;max-width:calc(100vw - 32px);background:var(--color-card);border-radius:var(--radius-lg);
+  box-shadow:0 24px 64px rgba(0,0,0,.24);padding:24px;}
+.cfbox.open{display:block;}
+.cfttl{display:flex;align-items:center;gap:9px;font-size:var(--text-h3);font-weight:var(--font-weight-h3);margin-bottom:10px;}
+.cfttl i{color:var(--color-destructive);font-size:20px;}
+.cfmsg{font-size:var(--text-body);line-height:1.7;color:var(--color-muted-foreground);margin-bottom:14px;}
+.cfprev{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);
+  padding:12px 14px;font-size:var(--text-label);line-height:1.7;color:var(--color-foreground);
+  margin-bottom:18px;white-space:pre-wrap;word-break:break-word;max-height:120px;overflow-y:auto;}
+.cfbtns{display:flex;gap:10px;justify-content:flex-end;}
+.cfbtn{height:44px;padding:0 20px;border-radius:var(--radius-md);font-family:inherit;font-size:var(--text-body);
+  font-weight:var(--font-weight-body-strong);cursor:pointer;display:inline-flex;align-items:center;gap:6px;}
+.cfbtn.ghost{border:1px solid var(--color-border);background:transparent;color:var(--color-foreground);}
+.cfbtn.ghost:hover{background:var(--color-background);}
+.cfbtn.danger{border:none;background:var(--color-destructive);color:var(--color-on-destructive);}
+.cfbtn.danger:hover{opacity:.9;}
 </style></head><body>
 <div class="app">
-  <div class="topbar"><div class="hdr-left"><span class="hdr-page"><i class="ti ti-template"></i>投稿作成</span><span class="tag" id="flowtag" style="display:none"></span></div><div class="hdr-right"><button class="helpbtn">?</button><button class="close"><i class="ti ti-list"></i></button></div></div>
+  <div class="topbar"><div class="hdr-left"><span class="hdr-page"><i class="ti ti-template"></i>投稿作成</span><span class="tag" id="flowtag" style="display:none"></span></div><div class="hdr-right"><a class="helpbtn" href="https://hinaiwagami0513.github.io/iineai/help/create/video/" target="_blank" rel="noopener" title="このページのヘルプ（投稿作成 > 動画を作成）" aria-label="このページのヘルプ">?</a><button class="close"><i class="ti ti-list"></i></button></div></div>
   <div style="border-bottom:1px solid var(--color-border);background:var(--color-card);"><div class="stepbar" id="stepbar"></div></div>
   <div class="main">
     <div id="subnav"></div>
@@ -403,7 +469,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 
       <!-- 1 SNS -->
       <div class="screen on" id="sc_sns">
-        <div class="h1">投稿するアカウントを選択</div><div class="h1sub">連携しているアカウントから選んでください</div>
+        <div class="h1">投稿するアカウントを選択</div>
         <div class="g2" style="margin-top:16px">
           <div class="opt acct " onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><div class="av" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i></div><div><div class="acname">@sumika_fudosan</div><div class="acmeta">フォロワー 1.2万</div></div><span class="plat" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i>Instagram</span></div>
           <div class="opt acct " onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><div class="av" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i></div><div><div class="acname">@minato_chintai</div><div class="acmeta">フォロワー 3,400</div></div><span class="plat" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i>Instagram</span></div>
@@ -414,7 +480,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 
       <!-- 2 作成方法 -->
       <div class="screen" id="sc_method">
-        <div class="h1">作成方法を選ぶ</div><div class="h1sub">どうやって投稿を作りますか？</div>
+        <div class="h1">作成方法を選ぶ</div>
         <div class="g3" style="margin-top:16px">
           <div class="opt method" onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><i class="ti ti-photo mi"></i><div class="ot">画像を作成</div></div>
           <div class="opt method sel" onclick="pickCard(this,'opt')"><span class="ochk"><i class="ti ti-check"></i></span><i class="ti ti-video mi"></i><div class="ot">動画を作成</div></div>
@@ -425,19 +491,16 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
       <!-- 台本から / 素材から 選択 -->
       <div class="screen" id="sc_videotype">
         <div class="h1">どちらの方法で作りますか？</div>
-        <div class="h1sub">動画の作り方を選んでください</div>
         <div class="g2" style="margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:640px;margin:16px auto 0;">
           <div class="opt method sel" onclick="pickCard(this,'opt')" style="padding:32px 20px;text-align:center;">
             <span class="ochk"><i class="ti ti-check"></i></span>
             <i class="ti ti-video mi" style="font-size:36px;display:block;margin-bottom:12px;"></i>
             <div class="ot" style="font-size:var(--text-h3);margin-bottom:6px;">台本から</div>
-            <div class="od">AIがテーマから台本・映像指示を作成。素材がなくてもOK</div>
           </div>
           <div class="opt method" onclick="pickCard(this,'opt')" style="padding:32px 20px;text-align:center;">
             <span class="ochk"><i class="ti ti-check"></i></span>
             <i class="ti ti-upload mi" style="font-size:36px;display:block;margin-bottom:12px;"></i>
             <div class="ot" style="font-size:var(--text-h3);margin-bottom:6px;">素材から</div>
-            <div class="od">手持ちの動画や画像をアップして、AIが台本と音楽を組み立て</div>
           </div>
         </div>
       </div>
@@ -445,7 +508,6 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
       <!-- 何をベースに（アコーディオン＋チャット） -->
       <div class="screen" id="sc_base">
         <div class="h1">企画を考える</div>
-        <div class="h1sub">AIと会話しながら企画内容を決めていきます</div>
         <div id="m_kw" style="border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden;">
             <div class="booth" style="border:none;border-radius:0;">
               <div class="booth-hd"><img src="./assets/iine-fox-face.png" alt="AIアシスト"><div style="flex:1;"><div class="bt">AIアシスタント</div><div class="bs">● オンライン</div></div><div class="tpl-drop-wrap"><button onclick="toggleTplDrop(event)" class="tpl-drop-btn"><i class="ti ti-layout-grid"></i></button><div class="tpl-drop-menu" id="tplDropMenu"><div class="tpl-drop-label">テンプレから作る</div><div class="tpl-drop-item" onclick="pickTemplate('物件紹介カルーセル');closeTplDrop()"><i class="ti ti-layout-grid"></i>物件紹介カルーセル</div><div class="tpl-drop-item" onclick="pickTemplate('ビフォーアフター');closeTplDrop()"><i class="ti ti-photo"></i>ビフォーアフター</div><div class="tpl-drop-item" onclick="pickTemplate('スペック訴求');closeTplDrop()"><i class="ti ti-businessplan"></i>スペック訴求</div><div class="tpl-drop-divider"></div><div class="tpl-drop-item" onclick="closeTplDrop()"><i class="ti ti-template"></i>テンプレ一覧・新規作成</div></div></div></div>
@@ -469,22 +531,9 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
           <div style="border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden;display:flex;flex-direction:column;">
             <div style="display:flex;border-bottom:1px solid var(--color-border);"><span class="ed-xtab on" onclick="edTab(0,this)" style="padding:13px 20px;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);color:var(--color-primary);border-bottom:2px solid var(--color-primary);margin-bottom:-1px;cursor:pointer;">台本（シーン）</span><span class="ed-xtab" onclick="edTab(1,this)" style="padding:13px 20px;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;">投稿文</span><span class="ed-xtab" onclick="edTab(2,this)" style="padding:13px 20px;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;">AIレビュー</span></div>
             <div class="ed-xpane on" id="edPane0" style="flex:1;overflow-y:auto;padding:18px;">
-              <div style="background:var(--color-accent-purple-subtle);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:14px 16px;margin-bottom:16px;">
-                <div style="display:flex;align-items:center;gap:10px;">
-                  <div style="width:32px;height:32px;border-radius:var(--radius-md);background:var(--color-accent-purple);display:flex;align-items:center;justify-content:center;flex-shrink:0;"><i class="ti ti-video" style="color:#fff;font-size:16px;"></i></div>
-                  <div><div style="font-size:var(--text-body);font-weight:var(--font-weight-body-strong);color:var(--color-accent-purple);">実写ベース</div><div style="font-size:var(--text-label);color:var(--color-accent-purple);opacity:.8;margin-top:2px;">動画素材が含まれているため自動判定しました</div></div>
-                </div>
-              </div>
-              <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"><span style="font-size:var(--text-body);font-weight:var(--font-weight-body-strong);">シーン構成</span><span style="font-size:var(--text-label);color:var(--color-muted-foreground);">4シーン・約24秒</span><span style="margin-left:auto;font-size:var(--text-label);color:var(--color-primary);font-weight:var(--font-weight-body-strong);cursor:pointer;">AIに「台本書き直して」と依頼可能</span></div>
-              <table style="width:100%;border-collapse:collapse;font-size:var(--text-body);">
-                <thead><tr><th style="text-align:left;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);padding:10px 14px;border-bottom:2px solid var(--color-border);width:22%;">シーン</th><th style="text-align:left;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);padding:10px 14px;border-bottom:2px solid var(--color-border);width:50%;">映像（撮影）</th><th style="text-align:left;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);padding:10px 14px;border-bottom:2px solid var(--color-border);width:28%;">テロップ</th></tr></thead>
-                <tbody>
-                  <tr><td style="padding:14px;border-bottom:1px solid var(--color-border);vertical-align:top;"><b>シーン1</b> <span style="font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-primary);background:var(--color-primary-subtle);border-radius:var(--radius-full);padding:2px 8px;">0〜4秒</span><div style="font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:2px;">オープニング</div></td><td style="padding:14px;border-bottom:1px solid var(--color-border);vertical-align:top;font-size:var(--text-label);line-height:1.7;">・建物外観を正面からワイドで撮影<br>・カメラをゆっくりティルトアップ</td><td style="padding:14px;border-bottom:1px solid var(--color-border);vertical-align:top;font-weight:var(--font-weight-body-strong);font-size:var(--text-label);">駅徒歩5分の好立地！</td></tr>
-                  <tr><td style="padding:14px;border-bottom:1px solid var(--color-border);vertical-align:top;"><b>シーン2</b> <span style="font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-primary);background:var(--color-primary-subtle);border-radius:var(--radius-full);padding:2px 8px;">4〜14秒</span><div style="font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:2px;">外観・エントランス</div></td><td style="padding:14px;border-bottom:1px solid var(--color-border);vertical-align:top;font-size:var(--text-label);line-height:1.7;">・エントランスから入口まで動線を撮影<br>・廊下の順でテンポよく</td><td style="padding:14px;border-bottom:1px solid var(--color-border);vertical-align:top;font-weight:var(--font-weight-body-strong);font-size:var(--text-label);">駅徒歩5分</td></tr>
-                  <tr><td style="padding:14px;border-bottom:1px solid var(--color-border);vertical-align:top;"><b>シーン3</b> <span style="font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-primary);background:var(--color-primary-subtle);border-radius:var(--radius-full);padding:2px 8px;">14〜20秒</span><div style="font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:2px;">室内ツアー</div></td><td style="padding:14px;border-bottom:1px solid var(--color-border);vertical-align:top;font-size:var(--text-label);line-height:1.7;">・リビングを広角で撮影<br>・水回りをゆっくりパン</td><td style="padding:14px;border-bottom:1px solid var(--color-border);vertical-align:top;font-weight:var(--font-weight-body-strong);font-size:var(--text-label);">南向きで日当たり良好</td></tr>
-                  <tr><td style="padding:14px;vertical-align:top;"><b>シーン4</b> <span style="font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-primary);background:var(--color-primary-subtle);border-radius:var(--radius-full);padding:2px 8px;">20〜24秒</span><div style="font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:2px;">CTA</div></td><td style="padding:14px;vertical-align:top;font-size:var(--text-label);line-height:1.7;">・物件情報をカードで表示<br>・プロフリンクへ誘導</td><td style="padding:14px;vertical-align:top;font-weight:var(--font-weight-body-strong);font-size:var(--text-label);">プロフから内見予約！</td></tr>
-                </tbody>
-              </table>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;"><span style="font-size:var(--text-body);font-weight:var(--font-weight-body-strong);">シーン構成</span><span id="scSummary" style="font-size:var(--text-label);color:var(--color-muted-foreground);">4シーン・約24秒</span><span style="margin-left:auto;font-size:var(--text-label);color:var(--color-muted-foreground);"><i class="ti ti-pencil" style="font-size:14px;vertical-align:-2px;"></i> クリックで直せます</span></div>
+              <table class="sctable" id="scTable"><tbody></tbody></table>
+              <button class="sc-add"><i class="ti ti-plus"></i>シーンを追加</button>
             </div>
             <div class="ed-xpane" id="edPane1" style="flex:1;overflow-y:auto;padding:18px;">
               <div style="font-size:var(--text-body);font-weight:var(--font-weight-body-strong);margin-bottom:12px;">投稿文（キャプション）</div>
@@ -566,70 +615,36 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
           </div>
         </div>
       </div>
+    </div><!-- /canvas -->
 
-      <div class="screen" id="sc_finish">
-        <div style="display:flex;gap:40px;align-items:center;justify-content:center;padding:32px 20px;">
-          <!-- Left: celebration -->
-          <div style="text-align:center;max-width:360px;">
-            <img src="./assets/iine-fox-celebrate.png" alt="お祝いキツネ" style="width:160px;height:160px;object-fit:contain;margin:0 auto 20px;display:block;">
-            <div style="font-size:var(--text-h1);font-weight:var(--font-weight-h1);margin-bottom:10px;">投稿の準備ができました！</div>
-            <div style="font-size:var(--text-body);color:var(--color-muted-foreground);line-height:1.7;margin-bottom:24px;">いつでも予約・投稿できます。<br>おつかれさまでした。</div>
-            <div style="display:flex;gap:12px;justify-content:center;"><button class="btn btn-ghost" style="display:inline-flex;align-items:center;gap:6px;padding:12px 20px;border:1px solid var(--color-border);border-radius:var(--radius-md);background:var(--color-surface);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;color:var(--color-foreground);"><i class="ti ti-list"></i>一覧へ戻る</button><button class="btn btn-primary grad" style="display:inline-flex;align-items:center;gap:6px;padding:12px 20px;border:none;border-radius:var(--radius-md);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;color:#fff;"><i class="ti ti-calendar-event"></i>投稿を予約する</button></div>
-          </div>
-          <!-- Right: phone preview -->
-          <div style="width:320px;flex:none;">
-            <div style="border:3px solid #222;border-radius:28px;overflow:hidden;background:#000;padding:8px 0 0;">
-              <!-- phone status bar -->
-              <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px 6px;font-size:10px;color:#fff;"><span>9:41</span><div style="display:flex;gap:4px;align-items:center;"><i class="ti ti-wifi" style="font-size:12px;"></i><i class="ti ti-battery-4" style="font-size:14px;"></i></div></div>
-              <!-- Instagram-like post -->
-              <div style="background:#fff;">
-                <!-- header -->
-                <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;"><div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--color-primary),var(--color-primary-light));"></div><div><div style="font-size:10px;font-weight:700;">your_account</div><div style="font-size:8px;color:#999;">東京都</div></div><i class="ti ti-dots" style="margin-left:auto;font-size:14px;color:#666;"></i></div>
-                <!-- image area -->
-                <div style="aspect-ratio:1;background:linear-gradient(135deg,#f0e6d3,#e8d5b8);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;"><i class="ti ti-video" style="font-size:32px;color:var(--color-primary);opacity:.6;"></i><span style="font-size:9px;color:var(--color-muted-foreground);">駅徒歩5分・南向き1LDK</span></div>
-                <!-- action icons -->
-                <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;"><i class="ti ti-heart" style="font-size:18px;"></i><i class="ti ti-message-circle" style="font-size:18px;"></i><i class="ti ti-send" style="font-size:18px;"></i><i class="ti ti-bookmark" style="margin-left:auto;font-size:18px;"></i></div>
-                <!-- likes -->
-                <div style="padding:0 12px 4px;font-size:9px;font-weight:700;">128 likes</div>
-                <!-- caption -->
-                <div style="padding:0 12px 10px;font-size:9px;line-height:1.5;"><b>your_account</b> 駅徒歩5分の南向き1LDK、新着です。日当たり良好・即入居OK。<span style="color:var(--color-primary);">#賃貸 #お部屋探し</span></div>
-              </div>
-              <!-- phone bottom bar -->
-              <div style="background:#fff;padding:6px 0 10px;display:flex;justify-content:center;gap:24px;"><i class="ti ti-home" style="font-size:16px;"></i><i class="ti ti-search" style="font-size:16px;"></i><i class="ti ti-square-plus" style="font-size:16px;"></i><i class="ti ti-movie" style="font-size:16px;"></i><i class="ti ti-user" style="font-size:16px;"></i></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
+    <!-- フッターは canvas の外。中に入れるとスクロールで一緒に流れてしまう -->
     <div class="foot">
       <button class="btn btn-ghost" id="back" onclick="nav(-1)"><i class="ti ti-arrow-left"></i>戻る</button>
       <button class="btn btn-primary" id="next" onclick="nav(1)">次へ</button>
     </div>
-  </div>
 </div>
 <script>
 /* ===== 画面遷移 ===== */
-var SCR=['sns','method','videotype','base','editor','finish'];
+var SCR=['sns','method','videotype','base','editor'];   // 完成はモーダル（doneModal）で出すので画面には持たない
 var META={
   sns:{big:1,sub:0}, method:{big:2,sub:0},
   videotype:{big:2,sub:1},
   base:{big:2,sub:2},
-  editor:{big:3,sub:0}, finish:{big:4,sub:0}
+  editor:{big:3,sub:0}
 };
 var i=0;
 var baseReady=false;
 var savedPlan=false;
 function renderStep(){
   var big=META[SCR[i]].big;
-  var steps=[[1,'何を投稿する？'],[2,'何をどう作る？'],[3,'投稿を編集'],[4,'完成']];
+  var steps=[[1,'何を投稿する？'],[2,'何をどう作る？'],[3,'投稿を編集']];
   var h='';
   steps.forEach(function(s,idx){
     var n=s[0];
     var cls=n<big?'done':(n===big?'now':'todo');
     var ni=n<big?'<i class="ti ti-check"></i>':n;
     h+='<div class="st '+cls+'"><div class="n">'+ni+'</div><span class="tx">'+s[1]+'</span></div>';
-    if(n<4)h+='<div class="stline '+(n<big?'done':'')+'"></div>';
+    if(n<steps.length)h+='<div class="stline '+(n<big?'done':'')+'"></div>';
   });
   document.getElementById('stepbar').innerHTML=h;
 }
@@ -649,11 +664,16 @@ function show(){
   document.getElementById('sc_'+SCR[i]).classList.add('on');
   var bk=document.getElementById('back');if(i===0){bk.innerHTML='キャンセル';bk.style.visibility='visible';}else{bk.innerHTML='<i class="ti ti-arrow-left"></i> 戻る';bk.style.visibility='visible';}
   var nx=document.getElementById('next');
-  nx.innerHTML=(i===SCR.length-1)?'完了 <i class="ti ti-check"></i>':(SCR[i]==='base'?'次へ：投稿を編集 <i class="ti ti-arrow-right"></i>':(SCR[i]==='editor'?'確認へ進む <i class="ti ti-arrow-right"></i>':'次へ <i class="ti ti-arrow-right"></i>'));
+  nx.innerHTML=(SCR[i]==='editor')?'これで完成 <i class="ti ti-check"></i>':(SCR[i]==='base'?'次へ：投稿を編集 <i class="ti ti-arrow-right"></i>':'次へ <i class="ti ti-arrow-right"></i>');
   /* disable next on base until a method is used */
   if(SCR[i]==='base'&&!baseReady){
     nx.classList.add('btn-disabled');
     nx.onclick=function(e){e.preventDefault();showTooltip(nx,'素材を選択してください');};
+  }else if(SCR[i]==='editor'){
+    // 最後は次のページに行かず、その場でモーダルを出す。
+    // openDone は後ろのscriptで定義されるので、参照はクリック時まで遅らせる
+    nx.classList.remove('btn-disabled');
+    nx.onclick=function(){ openDone(); };
   }else{
     nx.classList.remove('btn-disabled');
     nx.onclick=function(){nav(1);};
@@ -682,7 +702,12 @@ function pickRow(el){el.closest('.selstack').querySelectorAll('.selrow').forEach
 /* ===== 予測変換チャット ===== */
 var TREE={
   saved_ask:{ai:'保存した企画内容を使用しますか？',sug:[['はい、保存した企画内容を使う','saved_yes'],['いいえ、新しく考える','start']]},
-  saved_yes:{ai:'保存した企画内容を読み込みました！「次へ：投稿を編集」で進めます。',type:'done_saved',sug:[]},
+  saved_yes:{ai:'保存した企画内容が3件あります。使うものを選んでください。',type:'plans',saved:true,plans:[
+    {title:'駅徒歩5分の好立地を活かした内見誘導リール',typeBadge:'実演型',section:'物件の魅力を体感させる映像',savedAt:'2026/08/12',savedFrom:'@sumika_fudosan',bullets:['エントランスから玄関までの実際の動線を撮影し「駅徒歩5分」を体感','南向きリビングの日当たりを朝・昼の2カットで比較','水回り・収納を開閉アクションで広さを実演']},
+    {title:'この物件が選ばれる3つの理由',typeBadge:'結論先出し型',section:'数字で訴求する物件スペック',savedAt:'2026/08/08',savedFrom:'@sumika_fudosan',bullets:['冒頭3秒で「駅徒歩5分・南向き・即入居OK」を大文字テロップ','各理由を1シーンずつ映像+テロップで深掘り','最後に「プロフから内見予約」のCTAカード']},
+    {title:'住んだら変わる毎日のルーティン',typeBadge:'ライフスタイル型',section:'暮らしのイメージで感情を動かす',savedAt:'2026/07/29',savedFrom:'すみか不動産ch',bullets:['朝のルーティン：南向きの光で目覚める','夜のルーティン：駅近だから帰宅が早い','休日のルーティン：周辺散歩']}
+  ],sug:[]},
+  saved_done:{ai:'保存した企画内容を読み込みました！「次へ：投稿を編集」で進めます。',type:'done_saved',sug:[]},
   start:{ai:'どんな投稿を作りますか？',sug:[['物件を紹介したい','q_bukken'],['ファンを増やしたい','q_fan'],['お知らせしたい','q_news'],['まだ決まっていない','q_und']]},
   q_bukken:{ai:'ええですね！どの物件を紹介しますか？',sug:[['駅徒歩5分の南向き1LDK','q_point'],['リノベ済みの築古物件','q_point'],['ペット可の物件','q_point']]},
   q_fan:{ai:'いいですね！どんな切り口で？',sug:[['スタッフの日常','q_point'],['お役立ち情報','q_point'],['お客様の声','q_point']]},
@@ -725,9 +750,12 @@ function chatRender(){
   if(n&&n.type==='done_saved'){box.innerHTML='<div class="donemsg"><i class="ti ti-check"></i>保存した企画内容を読み込みました。「次へ：投稿を編集」で進めます。</div>';enableNext();return;}
   if(n.type==='plans'){
     var s=document.getElementById('stream');
+    s.querySelectorAll('.plan-cards,.proposal-cards').forEach(function(g){g.classList.add('cards-past');});
     var cards='<div class="plan-cards">';
     n.plans.forEach(function(p,idx){
-      cards+='<div class="plan-card" onclick="highlightPlan(this)"><div class="pc-head"><span class="pc-radio"></span><span class="pc-htitle">'+p.title+'</span><span class="pc-type">'+p.typeBadge+'</span><i class="ti ti-bookmark pc-bmark" onclick="event.stopPropagation();if(this.classList.toggle(\'active\')){this.classList.remove(\'ti-bookmark\');this.classList.add(\'ti-bookmark-filled\');}else{this.classList.remove(\'ti-bookmark-filled\');this.classList.add(\'ti-bookmark\');}"></i></div><div class="pc-section">'+p.section+'</div><ul class="pc-bullets">';
+      var bmark=n.saved?'<i class="ti ti-bookmark pc-bmark active" title="保存ずみ"></i>':'<i class="ti ti-bookmark pc-bmark" onclick="event.stopPropagation();this.classList.toggle(\'active\');this.title=this.classList.contains(\'active\')?\'保存ずみ\':\'あとで使うために保存\';"></i>';
+      var savedMeta=p.savedAt?'<div class="pc-saved"><i class="ti ti-clock"></i>'+p.savedAt+' に保存'+(p.savedFrom?'・'+p.savedFrom:'')+'</div>':'';
+      cards+='<div class="plan-card" onclick="highlightPlan(this)"><div class="pc-head"><span class="pc-radio"></span><span class="pc-htitle">'+p.title+'</span><span class="pc-type">'+p.typeBadge+'</span>'+bmark+'</div>'+savedMeta+'<div class="pc-section">'+p.section+'</div><ul class="pc-bullets">';
       p.bullets.forEach(function(b){cards+='<li>'+b+'</li>';});
       cards+='</ul></div>';
     });
@@ -735,12 +763,14 @@ function chatRender(){
     s.insertAdjacentHTML('beforeend',cards);
     chatScroll();
     /* show confirm + regen in sugbox */
+    if(n.saved){box.innerHTML='<button class="sug confirm-sug" onclick="confirmPlan(true)" disabled>この企画内容を使う</button><button class="sug" onclick="switchToNew()">使わずに新しく考える</button>';return;}
     var regenNode=n.sug.length?n.sug[0][1]:null;
     box.innerHTML='<button class="sug confirm-sug" onclick="confirmPlan()" disabled>この企画内容で決定</button>'+(regenNode?'<button class="sug" onclick="regenInChat(\''+regenNode+'\')">別の企画内容を出して</button>':'');
     return;
   }
   if(n.type==='proposals'){
     var s=document.getElementById('stream');
+    s.querySelectorAll('.plan-cards,.proposal-cards').forEach(function(g){g.classList.add('cards-past');});
     var cards='<div class="proposal-cards">';
     n.proposals.forEach(function(p){
       var badge=p.badge?'<span class="pc-badge">'+p.badge+'</span>':'';
@@ -912,12 +942,22 @@ function highlightPlan(el){
   el.classList.add('sel');
   var btn=document.querySelector('.confirm-sug');if(btn){btn.disabled=false;}
 }
-function confirmPlan(){
-  var sel=document.querySelector('.plan-card.sel');if(!sel)return;
+function confirmPlan(isSaved){
+  var groups=document.querySelectorAll('.plan-cards');
+  var last=groups.length?groups[groups.length-1]:null;
+  var sel=last?last.querySelector('.plan-card.sel'):null;if(!sel)return;
   var title=sel.querySelector('.pc-htitle').textContent;
   chatAdd('me','「'+title+'」を選択');
-  cnode='__done';
-  setTimeout(function(){chatAdd('ai','企画内容が決まりました！「次へ：投稿を編集」で進めましょう。');chatRender();chatScroll();},160);
+  cnode=isSaved?'saved_done':'__done';
+  var msg=isSaved?TREE.saved_done.ai:'企画内容が決まりました！「次へ：投稿を編集」で進めましょう。';
+  setTimeout(function(){chatAdd('ai',msg);chatRender();chatScroll();},160);
+}
+function switchToNew(){
+  document.querySelectorAll('.plan-cards').forEach(function(g){g.classList.add('cards-past');});
+  cnode='start';
+  chatAdd('me','使わずに新しく考える');
+  var box=document.getElementById('sugbox');if(box)box.innerHTML='';
+  setTimeout(function(){chatAdd('ai',TREE.start.ai);chatRender();chatScroll();},160);
 }
 function highlightProposal(el){
   el.parentElement.querySelectorAll('.proposal-card').forEach(function(c){c.classList.remove('sel');});
@@ -925,7 +965,9 @@ function highlightProposal(el){
   var btn=document.querySelector('.confirm-sug');if(btn){btn.disabled=false;}
 }
 function confirmProposal(){
-  var sel=document.querySelector('.proposal-card.sel');if(!sel)return;
+  var pgroups=document.querySelectorAll('.proposal-cards');
+  var plast=pgroups.length?pgroups[pgroups.length-1]:null;
+  var sel=plast?plast.querySelector('.proposal-card.sel'):null;if(!sel)return;
   var next=sel.dataset.next;
   var title=sel.querySelector('.pc-title').textContent;
   chatAdd('me',title+'を選択');
@@ -976,6 +1018,10 @@ function pickSug(idx){
       chatAdd('ai',nn.ai);
       setTimeout(function(){showGenerating(nn.genTarget);},300);
       var box=document.getElementById('sugbox');if(box)box.innerHTML='';
+    }else if(nn&&(nn.type==='plans'||nn.type==='proposals')){
+      var cbox=document.getElementById('sugbox');if(cbox)cbox.innerHTML='';
+      setTimeout(function(){chatAdd('ai',nn.ai);chatRender();chatScroll();},160);
+      chatScroll();return;
     }else{
       setTimeout(function(){chatAdd('ai',TREE[cnode].ai);chatRender();chatScroll();},160);
     }
@@ -1031,4 +1077,209 @@ function sendChatMsg(){
 }
 </script>
 <script src="sonner.js"></script>
+
+<!-- 完成はページ遷移ではなくモーダルで出す（編集画面を閉じずに結果だけ見せる） -->
+<div class="donemask" id="doneMask"></div>
+<div class="donemodal" id="doneModal" role="dialog" aria-modal="true" aria-label="投稿の準備ができました">
+  <button class="doneclose" id="doneClose" aria-label="閉じる"><i class="ti ti-x"></i></button>
+      <div class="donebody">
+        <div style="display:flex;gap:40px;align-items:center;justify-content:center;padding:32px 20px;">
+          <!-- Left: celebration -->
+          <div style="text-align:center;max-width:360px;">
+            <img src="./assets/iine-fox-celebrate.png" alt="お祝いキツネ" style="width:160px;height:160px;object-fit:contain;margin:0 auto 20px;display:block;">
+            <div style="font-size:var(--text-h1);font-weight:var(--font-weight-h1);margin-bottom:10px;">投稿の準備ができました！</div>
+            <div style="font-size:var(--text-body);color:var(--color-muted-foreground);line-height:1.7;margin-bottom:24px;">いつでも予約・投稿できます。<br>おつかれさまでした。</div>
+            <div style="display:flex;gap:12px;justify-content:center;"><button class="btn btn-ghost" style="display:inline-flex;align-items:center;gap:6px;padding:12px 20px;border:1px solid var(--color-border);border-radius:var(--radius-md);background:var(--color-surface);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;color:var(--color-foreground);"><i class="ti ti-list"></i>一覧へ戻る</button><button class="btn btn-primary grad" style="display:inline-flex;align-items:center;gap:6px;padding:12px 20px;border:none;border-radius:var(--radius-md);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;color:#fff;"><i class="ti ti-calendar-event"></i>投稿を予約する</button></div>
+          </div>
+          <!-- Right: phone preview -->
+          <div style="width:320px;flex:none;">
+            <div style="border:3px solid #222;border-radius:28px;overflow:hidden;background:#000;padding:8px 0 0;">
+              <!-- phone status bar -->
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:0 16px 6px;font-size:10px;color:#fff;"><span>9:41</span><div style="display:flex;gap:4px;align-items:center;"><i class="ti ti-wifi" style="font-size:12px;"></i><i class="ti ti-battery-4" style="font-size:14px;"></i></div></div>
+              <!-- Instagram-like post -->
+              <div style="background:#fff;">
+                <!-- header -->
+                <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;"><div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--color-primary),var(--color-primary-light));"></div><div><div style="font-size:10px;font-weight:700;">your_account</div><div style="font-size:8px;color:#999;">東京都</div></div><i class="ti ti-dots" style="margin-left:auto;font-size:14px;color:#666;"></i></div>
+                <!-- image area -->
+                <div style="aspect-ratio:1;background:linear-gradient(135deg,#f0e6d3,#e8d5b8);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;"><i class="ti ti-video" style="font-size:32px;color:var(--color-primary);opacity:.6;"></i><span style="font-size:9px;color:var(--color-muted-foreground);">駅徒歩5分・南向き1LDK</span></div>
+                <!-- action icons -->
+                <div style="display:flex;align-items:center;gap:10px;padding:8px 12px;"><i class="ti ti-heart" style="font-size:18px;"></i><i class="ti ti-message-circle" style="font-size:18px;"></i><i class="ti ti-send" style="font-size:18px;"></i><i class="ti ti-bookmark" style="margin-left:auto;font-size:18px;"></i></div>
+                <!-- likes -->
+                <div style="padding:0 12px 4px;font-size:9px;font-weight:700;">128 likes</div>
+                <!-- caption -->
+                <div style="padding:0 12px 10px;font-size:9px;line-height:1.5;"><b>your_account</b> 駅徒歩5分の南向き1LDK、新着です。日当たり良好・即入居OK。<span style="color:var(--color-primary);">#賃貸 #お部屋探し</span></div>
+              </div>
+              <!-- phone bottom bar -->
+              <div style="background:#fff;padding:6px 0 10px;display:flex;justify-content:center;gap:24px;"><i class="ti ti-home" style="font-size:16px;"></i><i class="ti ti-search" style="font-size:16px;"></i><i class="ti ti-square-plus" style="font-size:16px;"></i><i class="ti ti-movie" style="font-size:16px;"></i><i class="ti ti-user" style="font-size:16px;"></i></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+</div>
+<script>
+/* 完成モーダルの開閉 */
+function openDone(){ document.getElementById('doneMask').classList.add('open');
+  document.getElementById('doneModal').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeDone(){ document.getElementById('doneMask').classList.remove('open');
+  document.getElementById('doneModal').classList.remove('open'); document.body.style.overflow=''; }
+document.getElementById('doneClose').addEventListener('click',closeDone);
+document.getElementById('doneMask').addEventListener('click',closeDone);
+document.addEventListener('keydown',function(e){ if(e.key==='Escape')closeDone(); });
+</script>
+
+<script>
+/* ===== シーン表のインライン編集 ===== */
+var SCENES=[
+  {time:'0〜4秒',   role:'オープニング',      shot:'・建物外観を正面からワイドで撮影\n・カメラをゆっくりティルトアップ', tel:'駅徒歩5分の好立地！'},
+  {time:'4〜14秒',  role:'外観・エントランス', shot:'・エントランスから入口まで動線を撮影\n・廊下の順でテンポよく',       tel:'駅徒歩5分'},
+  {time:'14〜20秒', role:'室内ツアー',        shot:'・リビングを広角で撮影\n・水回りをゆっくりパン',                   tel:'南向きで日当たり良好'},
+  {time:'20〜24秒', role:'CTA',              shot:'・物件情報をカードで表示\n・プロフリンクへ誘導',                   tel:'プロフから内見予約！'}
+];
+function esc(t){ return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function renderScenes(){
+  var t=document.getElementById('scTable'); if(!t)return;
+  t.innerHTML='<thead><tr><th style="width:24%">シーン</th><th style="width:46%">映像（撮影）</th><th>テロップ</th></tr></thead><tbody>'+
+    SCENES.map(function(s,i){
+      return '<tr data-i="'+i+'">'+
+        '<td>'+(SCENES.length>1?'<button class="sc-del" data-del="'+i+'" title="このシーンを削除"><i class="ti ti-x"></i></button>':'')+
+          '<span class="sc-no">シーン'+(i+1)+'</span>'+
+          '<span class="sc-time"><span class="ed" contenteditable="true" data-f="time" data-ph="0〜0秒">'+esc(s.time)+'</span></span>'+
+          '<div class="sc-role"><span class="ed" contenteditable="true" data-f="role" data-ph="役割">'+esc(s.role)+'</span></div></td>'+
+        '<td><span class="ed" contenteditable="true" data-f="shot" data-ph="撮り方を書く">'+esc(s.shot)+'</span></td>'+
+        '<td class="sc-tel"><span class="ed" contenteditable="true" data-f="tel" data-ph="画面に出す文字">'+esc(s.tel)+'</span></td>'+
+      '</tr>';
+    }).join('')+'</tbody>';
+  var sum=document.getElementById('scSummary');
+  if(sum)sum.textContent=SCENES.length+'シーン・約'+totalSec()+'秒';
+}
+function totalSec(){
+  var last=SCENES[SCENES.length-1]; if(!last)return 0;
+  var m=String(last.time).match(/(\d+)\s*秒?\s*$/);
+  return m?m[1]:'—';
+}
+document.addEventListener('input',function(e){
+  var el=e.target.closest?e.target.closest('.ed'):null; if(!el)return;
+  var tr=el.closest('tr'); if(!tr)return;
+  SCENES[+tr.dataset.i][el.dataset.f]=el.innerText;
+});
+document.addEventListener('keydown',function(e){
+  var el=e.target.closest?e.target.closest('.ed'):null; if(!el)return;
+  // テロップと役割は1行。改行で確定して抜ける
+  if(e.key==='Enter'&&(el.dataset.f==='tel'||el.dataset.f==='role'||el.dataset.f==='time')){ e.preventDefault(); el.blur(); }
+});
+document.addEventListener('blur',function(e){
+  var el=e.target.closest?e.target.closest('.ed'):null; if(!el)return;
+  if(typeof toast!=='undefined')toast('変更を保存しました');
+},true);
+document.addEventListener('click',function(e){
+  var d=e.target.closest?e.target.closest('.sc-del'):null;
+  if(d){ askDeleteScene(+d.dataset.del); return; }
+  var a=e.target.closest?e.target.closest('.sc-add'):null;
+  if(a){ SCENES.push({time:'',role:'',shot:'',tel:''}); renderScenes();
+    var rows=document.querySelectorAll('#scTable tbody tr');
+    var last=rows[rows.length-1]; if(last)last.querySelector('.ed').focus(); }
+});
+renderScenes();
+
+/* ===== 承認フロー状態（URLハッシュで切替） ===== */
+(function(){
+  var h = location.hash.replace('#','');
+  if(h !== 'approval-request' && h !== 'approval-waiting' && h !== 'approval-review') return;
+  // バナー挿入（shadcn Alert スタイル）
+  var bannerHTML = '';
+  if(h === 'approval-request'){
+    // バナーなし（通常編集と同じ見た目、フッターだけ変わる）
+  } else if(h === 'approval-waiting'){
+    bannerHTML = '<div style="position:relative;display:flex;align-items:flex-start;gap:12px;margin:16px 22px 0;padding:16px;border-radius:var(--radius-md);border:1px solid var(--color-warning-border);background:var(--color-warning-subtle);color:var(--color-warning);font-size:var(--text-body);line-height:1.5;">'
+      + '<i class="ti ti-clock" style="font-size:16px;margin-top:1px;flex:none"></i>'
+      + '<div style="flex:1"><div style="font-weight:var(--font-weight-body-strong);margin-bottom:2px">確認待ち</div><div style="font-size:var(--text-label);opacity:.85">承認者の確認が完了するまで編集できません</div></div>'
+      + '<span onclick="alertDialog({title:\'確認依頼を取り下げますか？\',description:\'取り下げると再度編集できます。\',cancelLabel:\'キャンセル\',actionLabel:\'取り下げる\'},function(){toast(\'取り下げました\')})" style="cursor:pointer;color:var(--color-muted-foreground);font-size:var(--text-label);white-space:nowrap;margin-top:2px">取り下げる</span>'
+      + '</div>';
+  } else {
+    bannerHTML = '<div style="display:flex;align-items:flex-start;gap:12px;margin:16px 22px 0;padding:16px;border-radius:var(--radius-md);border:1px solid var(--color-info);background:var(--color-info-subtle);font-size:var(--text-body);line-height:1.5;">'
+      + '<i class="ti ti-pencil" style="font-size:16px;margin-top:2px;flex:none;color:var(--color-info)"></i>'
+      + '<div><div style="font-weight:var(--font-weight-body-strong);margin-bottom:2px;color:var(--color-foreground)">承認者として確認中</div><div style="font-size:var(--text-label);color:var(--color-muted-foreground)">内容を確認・編集して承認してください</div></div>'
+      + '</div>';
+  }
+  var stepbarWrap = document.getElementById('stepbar').parentElement;
+  if(bannerHTML) stepbarWrap.insertAdjacentHTML('afterend', bannerHTML);
+  // 作成者・確認待ち: オーバーレイで全面ロック
+  if(h === 'approval-waiting'){
+    var mainEl = document.querySelector('.main');
+    var overlayDiv = document.createElement('div');
+    overlayDiv.style.cssText = 'position:absolute;inset:0;z-index:5;pointer-events:auto;background:rgba(255,255,255,0.55);cursor:not-allowed;';
+    mainEl.style.position = 'relative';
+    mainEl.appendChild(overlayDiv);
+  }
+  // エディタ画面の生成/差替ボタンだけ非表示（承認フローでは不要）
+  document.querySelectorAll('#sc_editor a.grad').forEach(function(el){ el.style.display = 'none'; });
+  document.querySelectorAll('#sc_editor div').forEach(function(el){
+    var t = (el.textContent||'').trim();
+    if(t === '撮った動画に差し替える') el.style.display = 'none';
+  });
+  // エディタ画面に遷移（show()より先に呼ぶ）
+  var edIdx = SCR.indexOf('editor');
+  if(edIdx >= 0){ i = edIdx; show(); }
+  // フッター変更（show()の後に実行して上書きを防ぐ）
+  var foot = document.querySelector('.foot');
+  if(h === 'approval-request'){
+    foot.innerHTML = '<button class="btn btn-ghost"><i class="ti ti-arrow-left"></i>戻る</button><button class="btn btn-primary" onclick="toast.success(\'確認依頼を送信しました\');this.disabled=true;this.style.opacity=\'.4\';this.style.cursor=\'not-allowed\';this.style.pointerEvents=\'none\';this.innerHTML=\'<i class=ti ti-check style=font-size:16px></i>確認依頼済み\';"><i class="ti ti-send"></i>確認をお願いする</button>';
+  } else if(h === 'approval-waiting'){
+    foot.innerHTML = '<button class="btn btn-ghost"><i class="ti ti-arrow-left"></i>戻る</button><button class="btn btn-primary" style="opacity:.4;cursor:not-allowed;pointer-events:none"><i class="ti ti-send"></i>確認をお願いする</button>';
+    foot.style.position = 'relative';
+    foot.style.zIndex = '6';
+  } else {
+    foot.innerHTML = '<button class="btn btn-ghost"><i class="ti ti-arrow-left"></i>一覧に戻る</button><button class="btn" style="background:var(--color-success);color:#fff;border-color:var(--color-success)" onclick="toast.success(\'承認しました\')"><i class="ti ti-check"></i>承認する</button>';
+  }
+})();
+
+</script>
+
+<!-- シーン削除の確認 -->
+<div class="cfmask" id="cfMask"></div>
+<div class="cfbox" id="cfBox" role="dialog" aria-modal="true" aria-labelledby="cfTitle">
+  <div class="cfttl"><i class="ti ti-alert-circle"></i><span id="cfTitle">このシーンを削除しますか？</span></div>
+  <div class="cfmsg">書いた内容も一緒に消えます。元に戻せません。</div>
+  <div class="cfprev" id="cfPrev"></div>
+  <div class="cfbtns">
+    <button class="cfbtn ghost" id="cfCancel">やめる</button>
+    <button class="cfbtn danger" id="cfOk"><i class="ti ti-x"></i>削除する</button>
+  </div>
+</div>
+<script>
+/* 削除の確認ダイアログ */
+var cfIndex=null;
+function askDeleteScene(idx){
+  cfIndex=idx;
+  var sc=SCENES[idx]||{};
+  document.getElementById('cfTitle').textContent='シーン'+(idx+1)+'を削除しますか？';
+  var body=[];
+  if(sc.role)body.push(sc.role);
+  if(sc.tel)body.push('テロップ: '+sc.tel);
+  if(sc.shot)body.push(sc.shot);
+  document.getElementById('cfPrev').textContent=body.join('\n')||'（まだ何も書かれていません）';
+  document.getElementById('cfMask').classList.add('open');
+  document.getElementById('cfBox').classList.add('open');
+  document.getElementById('cfCancel').focus();
+}
+function closeConfirm(){
+  cfIndex=null;
+  document.getElementById('cfMask').classList.remove('open');
+  document.getElementById('cfBox').classList.remove('open');
+}
+document.getElementById('cfCancel').addEventListener('click',closeConfirm);
+document.getElementById('cfMask').addEventListener('click',closeConfirm);
+document.getElementById('cfOk').addEventListener('click',function(){
+  if(cfIndex===null)return;
+  var n=cfIndex+1;
+  SCENES.splice(cfIndex,1);
+  closeConfirm(); renderScenes();
+  if(typeof toast!=='undefined')toast('シーン'+n+'を削除しました');
+});
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'&&cfIndex!==null)closeConfirm();
+});
+</script>
 </body></html>

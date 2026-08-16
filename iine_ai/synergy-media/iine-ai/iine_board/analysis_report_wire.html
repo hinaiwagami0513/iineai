@@ -1,5 +1,5 @@
 <!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>分析レポート — スライド型ビジュアル</title>
+<title>アカウントレポート — スライド型ビジュアル</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
 <script src="sonner.js"></script>
@@ -114,7 +114,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);font-family:"
 .hdr-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
 .hdr-page{font-size:var(--text-h3);font-weight:var(--font-weight-h3);display:flex;align-items:center;gap:8px;}
 .hdr-page .ti{color:var(--color-muted-foreground);font-size:18px;}
-.helpbtn{width:32px;height:32px;border:1.5px solid var(--color-primary);border-radius:var(--radius-full);background:var(--color-card);color:var(--color-primary);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.helpbtn{width:32px;height:32px;border:1.5px solid var(--color-primary);border-radius:var(--radius-full);background:var(--color-card);color:var(--color-primary);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;display:flex;align-items:center;justify-content:center;text-decoration:none;}.helpbtn{transition:background .15s,color .15s,border-color .15s;}.helpbtn:hover{background:var(--color-primary);color:var(--color-on-primary);border-color:var(--color-primary);}
 .close-btn{width:36px;height:36px;border:1px solid var(--color-border);border-radius:var(--radius-sm);background:var(--color-card);color:var(--color-muted-foreground);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 
 /* === main layout === */
@@ -136,6 +136,14 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);font-family:"
 /* === account header === */
 .acct-hd{background:var(--color-card);padding:16px 28px 16px;display:flex;align-items:center;gap:16px;border-bottom:1px solid var(--color-border);}
 .acct-row{display:flex;align-items:center;gap:10px;flex:1;min-width:0;}
+/* SP: アカウント行は折り返す。nowrapのまま縮むと「アリスト」が1文字ずつ折れる。
+   基本ルールの直後に置く（同一詳細度・後勝ち） */
+@media(max-width:768px){
+  .acct-row{flex-wrap:wrap;gap:8px;}
+  .acct-name,.acct-handle{white-space:nowrap;}
+  .acct-stats{width:100%;}
+  .acct-stat{white-space:nowrap;}
+}
 .acct-icon{width:36px;height:36px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:20px;flex:none;}
 .acct-icon.ig{background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram);}
 .acct-icon.x{background:var(--color-sns-x-subtle);color:var(--color-sns-x);}
@@ -240,6 +248,24 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);font-family:"
 .sl-compare-row .bar.after-down{background:var(--color-destructive);}
 .sl-compare-row .bar.after-primary{background:var(--color-primary);}
 .sl-compare-row .val{width:40px;text-align:right;font-weight:700;}
+/* 前後比較はバーを出さず、いつの数字かをラベルで言い切る（「前」「後」だと期間が分からない） */
+.sl-compare.nobar .sl-compare-row{justify-content:space-between;gap:12px;padding:8px 12px;background:var(--color-surface);border-radius:var(--radius-sm);font-size:var(--text-body);}
+.sl-compare.nobar .lbl{width:auto;}
+.sl-compare.nobar .val{width:auto;font-size:var(--text-body-lg);}
+.sl-compare.nobar .sl-compare-row.now .lbl{color:var(--color-foreground);font-weight:700;}
+.sl-compare.nobar .val.up{color:var(--color-success);}
+.sl-compare.nobar .val.down{color:var(--color-destructive);}
+/* スライド内の縦棒グラフ。数値変化ページの導入前後グラフと同じ作法（軸・目盛りなし、高さの差で見せる） */
+.sl-chart{display:flex;align-items:flex-end;justify-content:center;gap:32px;}
+.sl-col{display:flex;flex-direction:column;align-items:center;width:80px;}
+.sl-col-val{font-size:var(--text-h2);font-weight:900;line-height:1.1;margin-bottom:6px;white-space:nowrap;}
+.sl-col-track{width:100%;height:80px;display:flex;align-items:flex-end;border-bottom:2px solid var(--color-border-strong);}
+.sl-col-bar{width:100%;min-height:4px;border-radius:var(--radius-sm) var(--radius-sm) 0 0;}
+.sl-col-label{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);margin-top:8px;}
+.sl-col.up .sl-col-val,.sl-col.up .sl-col-label{color:var(--color-success);}
+.sl-col.up .sl-col-bar{background:var(--color-success);}
+.sl-col.down .sl-col-val,.sl-col.down .sl-col-label{color:var(--color-destructive);}
+.sl-col.down .sl-col-bar{background:var(--color-destructive);}
 
 /* badge row */
 .sl-badge-row{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;}
@@ -423,7 +449,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);font-family:"
       <span class="hdr-page"><i class="ti ti-chart-bar"></i> 分析</span>
     </div>
     <div class="hdr-right">
-      <button class="helpbtn">?</button>
+      <a class="helpbtn" href="https://hinaiwagami0513.github.io/iineai/help/analytics/ai-report/" target="_blank" rel="noopener" title="このページのヘルプ（分析 > AIレポート）" aria-label="このページのヘルプ">?</a>
       <button class="close-btn"><i class="ti ti-list-details"></i></button>
     </div>
   </div>
@@ -503,7 +529,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);font-family:"
       <!-- ===== TAB NAV ===== -->
       <div class="tab-nav">
         <a href="./analysis_visual_wire.html">ビジュアルレポート</a>
-        <a class="active" href="./analysis_report_wire.html">分析レポート</a>
+        <a class="active" href="./analysis_report_wire.html">アカウントレポート</a>
         <a href="./analysis_posts_wire.html">投稿レポート</a>
       </div>
 
@@ -564,18 +590,15 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);font-family:"
               <div style="text-align:center;font-size:var(--text-body);color:var(--color-muted-foreground);margin-top:4px;">フォロワー数</div>
               <div class="sl-big">
                 <div class="num up">+4<span class="unit">人</span></div>
-                <div class="sub">2人 → 6人</div>
               </div>
-              <div class="sl-compare">
+              <div class="sl-compare nobar">
                 <div class="sl-compare-row">
-                  <span class="lbl">前</span>
-                  <div class="bar-wrap"><div class="bar before" style="width:33%;"></div></div>
+                  <span class="lbl">1ヶ月前</span>
                   <span class="val">2人</span>
                 </div>
-                <div class="sl-compare-row">
-                  <span class="lbl">後</span>
-                  <div class="bar-wrap"><div class="bar after-up" style="width:100%;"></div></div>
-                  <span class="val">6人</span>
+                <div class="sl-compare-row now">
+                  <span class="lbl">今月</span>
+                  <span class="val up">6人</span>
                 </div>
               </div>
               <div class="sl-badge-row" style="margin-top:auto;">
@@ -593,18 +616,15 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);font-family:"
               <div style="text-align:center;font-size:var(--text-body);color:var(--color-muted-foreground);margin-top:4px;">インプレッション数 <span class="help-tip">?<span class="help-text">インプレッション = 投稿が表示された回数（同じ人が2回見たら2回）</span></span></div>
               <div class="sl-big">
                 <div class="num down">-383<span class="unit">回</span></div>
-                <div class="sub">387回 → 4回</div>
               </div>
-              <div class="sl-compare">
+              <div class="sl-compare nobar">
                 <div class="sl-compare-row">
-                  <span class="lbl">前</span>
-                  <div class="bar-wrap"><div class="bar before" style="width:100%;"></div></div>
-                  <span class="val">387</span>
+                  <span class="lbl">1ヶ月前</span>
+                  <span class="val">387回</span>
                 </div>
-                <div class="sl-compare-row">
-                  <span class="lbl">後</span>
-                  <div class="bar-wrap"><div class="bar after-down" style="width:1%;"></div></div>
-                  <span class="val">4</span>
+                <div class="sl-compare-row now">
+                  <span class="lbl">今月</span>
+                  <span class="val down">4回</span>
                 </div>
               </div>
               <hr class="sl-divider">
@@ -830,17 +850,17 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);font-family:"
                 <div class="sl-icon up"><i class="ti ti-video"></i></div>
                 <div class="sl-label">リール vs テキスト</div>
               </div>
-              <div class="sl-compare" style="gap:12px;">
-                <div style="text-align:center;font-size:var(--text-label);color:var(--color-muted-foreground);">平均リーチ</div>
-                <div class="sl-compare-row">
-                  <span class="lbl" style="width:60px;">リール</span>
-                  <div class="bar-wrap"><div class="bar after-up" style="width:100%;"></div></div>
-                  <span class="val" style="width:50px;">1,100</span>
+              <div style="text-align:center;font-size:var(--text-label);color:var(--color-muted-foreground);">平均リーチ</div>
+              <div class="sl-chart">
+                <div class="sl-col up">
+                  <span class="sl-col-val">1,100</span>
+                  <div class="sl-col-track"><div class="sl-col-bar" style="height:100%"></div></div>
+                  <span class="sl-col-label">リール</span>
                 </div>
-                <div class="sl-compare-row">
-                  <span class="lbl" style="width:60px;">テキスト</span>
-                  <div class="bar-wrap"><div class="bar after-down" style="width:1%;"></div></div>
-                  <span class="val" style="width:50px;">14</span>
+                <div class="sl-col down">
+                  <span class="sl-col-val">14</span>
+                  <div class="sl-col-track"><div class="sl-col-bar" style="height:1%"></div></div>
+                  <span class="sl-col-label">テキスト</span>
                 </div>
               </div>
               <hr class="sl-divider">

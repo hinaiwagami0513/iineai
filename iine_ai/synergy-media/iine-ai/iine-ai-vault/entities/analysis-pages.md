@@ -14,7 +14,6 @@ raw は書き換え禁止なので、7/17・7/31 の議事録には旧名「分�
 | ビジュアルレポート | `analysis_visual_wire.html` | 毎月自動生成の8枚画像カード。SNSにそのまま出せる絵 |
 | アカウントレポート | `analysis_report_wire.html` | AIのスライド型レポート |
 | 投稿レポート | `analysis_posts_wire.html` | 投稿単位の一覧 |
-| 投稿レポート 数値変化 | `analysis_post_metrics_wire.html` | 投稿レポートの掘り下げ |
 | アカウントデータ | `analysis_account_wire.html` | フォロワー等の推移 |
 | データ分析 | `analysis_metrics_wire.html` | 指標の比較（導入効果/カスタム期間） |
 
