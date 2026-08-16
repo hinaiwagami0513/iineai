@@ -11,6 +11,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { CategoryNav } from '@/components/category-nav';
 import { SearchTrigger } from '@/components/search-provider';
 import { SITE } from '@/content/site';
+import { asset } from '@/lib/utils';
 
 export function SiteHeader({ showSearch = true }: { showSearch?: boolean }) {
   const [navOpen, setNavOpen] = useState(false);
@@ -39,7 +40,7 @@ export function SiteHeader({ showSearch = true }: { showSearch?: boolean }) {
 
         <Link href="/" className="flex min-w-0 flex-1 items-center gap-2.5 md:flex-none">
           <Image
-            src="/img/logo-iine-ai.png"
+            src={asset('/img/logo-iine-ai.png')}
             alt="いいねAI"
             width={140}
             height={28}

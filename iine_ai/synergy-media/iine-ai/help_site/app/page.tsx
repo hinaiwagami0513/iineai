@@ -12,6 +12,7 @@ import { SiteHeader } from '@/components/site-header';
 import { BeginnerIcon, categoryIcon } from '@/components/icons';
 import { allArticles } from '@/lib/content';
 import { categories, top } from '@/content/site';
+import { asset } from '@/lib/utils';
 
 export default function HomePage() {
   const popular = top.popular
@@ -25,7 +26,7 @@ export default function HomePage() {
 
       <section className="border-b bg-[radial-gradient(900px_320px_at_50%_-60px,rgba(255,151,30,0.2),transparent_70%),linear-gradient(180deg,var(--primary-subtle)_0%,var(--secondary)_100%)] px-4 pb-12 pt-9 text-center sm:px-6 sm:pt-14">
         <Image
-          src="/img/fox-support.png"
+          src={asset('/img/fox-support.png')}
           alt=""
           width={132}
           height={112}

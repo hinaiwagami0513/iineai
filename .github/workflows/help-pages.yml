@@ -1,0 +1,95 @@
+# GitHub Pages を「リポジトリのファイルそのまま配信（legacy）」から
+# Actions ビルドに切り替えるワークフロー。
+#
+# 公開されるもの:
+#   /                      … リポジトリのルート（index.html → board.html への転送）
+#   /iine_board/…          … 既存のワイヤーHTML（従来どおりのパスを維持）
+#   /help/                 … help_site をビルドした新ヘルプセンター
+#
+# help_site のビルド成果物（17MB）はリポジトリにコミットしない。
+
+name: Deploy help center to Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# 走行中のデプロイは中断せず、後続を1本だけ待たせる
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: iine_ai/synergy-media/iine-ai/help_site
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: iine_ai/synergy-media/iine-ai/help_site/package-lock.json
+
+      - run: npm ci
+
+      - name: Build help center
+        # Pages はプロジェクトサイトなので /iineai 配下。ヘルプはさらに /help。
+        env:
+          BASE_PATH: /iineai/help
+        run: npm run build
+
+      - name: Assemble the site
+        run: |
+          set -eux
+          cd "$GITHUB_WORKSPACE"
+          mkdir -p _site
+
+          # 従来どおり「リポジトリのファイルをそのまま配信」を再現する。
+          # 既存の公開URL（/ と /iine_ai/…/iine_board/*.html）を1本も壊さないため、
+          # 個別にコピーせず追跡ファイルを丸ごと持っていく。
+          # git 管理外（node_modules / out / .next / 各種作業フォルダ）は自然に落ちる。
+          git ls-files -z | rsync -a --files-from=- --from0 ./ _site/
+
+          # 新ヘルプを /help/ に配置
+          cp -R iine_ai/synergy-media/iine-ai/help_site/out _site/help
+
+          # Pages の Jekyll 処理を止める（_next/ が消されるのを防ぐ）
+          touch _site/.nojekyll
+
+      - name: Sanity check
+        run: |
+          set -eu
+          cd "$GITHUB_WORKSPACE/_site"
+          for f in index.html \
+                   iine_ai/synergy-media/iine-ai/iine_board/board.html \
+                   iine_ai/synergy-media/iine-ai/iine_board/post_list_wire.html \
+                   help/index.html \
+                   help/analytics/ai-report/index.html \
+                   help/manage/list/index.html; do
+            test -f "$f" || { echo "missing: $f"; exit 1; }
+          done
+          echo "OK: $(find . -type f | wc -l) files"
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
