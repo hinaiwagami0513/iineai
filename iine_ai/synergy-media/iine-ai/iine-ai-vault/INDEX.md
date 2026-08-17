@@ -30,11 +30,11 @@
 デザイン系（源泉=DESIGN.md）:
 - [[orange-only-interaction]] — オレンジは押せる/選ばれてる/進む先だけ。
 - [[warm-neutral-no-black]] — 暖色ニュートラル。純黒・寒色グレー禁止。
-- [[state-color-plus-glyph]] — 状態は色+形/アイコンのセット。
+- [[state-color-plus-glyph]] — 状態は色+形/アイコンのセット（例外はトーストだけ）。
 - [[editor-dark-theme]] — エディタは別世界のダークUI。暖色3段+純黒ステージ。
 - [[marker-loading-unification]] — 待ち・進行・完了はMarkerに統一。
 - [[component-procurement]] — 汎用はshadcnそのまま、固有だけルール化。
-- [[toast-orange-default]] — トーストは既定オレンジ、赤はエラーだけ。
+- [[toast-orange-default]] — トーストは既定オレンジ、赤はエラーだけ。アイコンは✓統一。
 
 プロダクト系（源泉=会議/worklog）:
 - [[flow-ui-decided]] — チャットvsフロー論争はフローUIで確定。
