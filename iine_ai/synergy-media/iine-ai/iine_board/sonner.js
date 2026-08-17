@@ -21,12 +21,29 @@
   var WIDTH = 356;
   var OFFSET = 32;
 
-  /* ---- rich-colors (from sonner source) ---- */
+  /* ---- 配色（DESIGN.md 準拠） --------------------------------------------
+     Sonner 既定の緑/赤/青/黄はいいねAIの配色ではないので使わない。
+     **既定はオレンジ。赤はエラーだけ。**
+     3種が同じオレンジになるぶん、区別はアイコンの形で付ける
+     （状態は色だけで表さない = state-color-plus-glyph）。
+     文字は foreground のまま。色を持つのは背景・枠・アイコンだけにして読みやすさを守る。 */
+  var ORANGE = {
+    bg:     'var(--color-primary-subtle, #fff2e2)',
+    border: 'rgba(239,97,8,0.30)',
+    text:   'var(--color-foreground, #2a2826)',
+    icon:   'var(--color-primary, #ef6108)',
+  };
+  var RED = {
+    bg:     'var(--color-destructive-subtle, #fee2e2)',
+    border: 'rgba(220,38,38,0.30)',
+    text:   'var(--color-foreground, #2a2826)',
+    icon:   'var(--color-destructive, #dc2626)',
+  };
   var THEME = {
-    success: { bg: 'hsl(143,85%,96%)', border: 'hsl(145,92%,87%)', text: 'hsl(140,100%,27%)' },
-    error:   { bg: 'hsl(359,100%,97%)', border: 'hsl(359,100%,94%)', text: 'hsl(360,100%,45%)' },
-    info:    { bg: 'hsl(208,100%,97%)', border: 'hsl(221,91%,93%)', text: 'hsl(210,92%,45%)' },
-    warning: { bg: 'hsl(49,100%,97%)',  border: 'hsl(49,91%,84%)',  text: 'hsl(31,92%,45%)' },
+    success: ORANGE,
+    info:    ORANGE,
+    warning: ORANGE,
+    error:   RED,
   };
 
   /* ---- icons 16x16 (Sonner built-in) ---- */
@@ -81,10 +98,11 @@
     el.setAttribute('data-type', type);
 
     /* ---- base style (exact Sonner source values) ---- */
-    var colors = THEME[type];
-    var bg    = colors ? colors.bg     : '#fff';
-    var bdr   = colors ? colors.border : 'hsl(0,0%,93%)';
-    var txt   = colors ? colors.text   : 'hsl(0,0%,9%)';
+    var colors = THEME[type] || ORANGE;   /* 種類を付けずに呼んでもオレンジ */
+    var bg    = colors.bg;
+    var bdr   = colors.border;
+    var txt   = colors.text;
+    var icoc  = colors.icon;
 
     el.style.cssText = [
       'pointer-events:auto',
@@ -112,7 +130,7 @@
     var iconSvg = ICONS[type] || '';
     var iconWrap = '';
     if (iconSvg) {
-      iconWrap = '<div data-icon style="display:flex;height:16px;width:16px;flex-shrink:0;align-items:center;justify-content:flex-start;margin-left:-3px;margin-right:4px;">' + iconSvg + '</div>';
+      iconWrap = '<div data-icon style="display:flex;height:16px;width:16px;flex-shrink:0;align-items:center;justify-content:flex-start;margin-left:-3px;margin-right:4px;color:' + icoc + ';">' + iconSvg + '</div>';
     }
 
     /* ---- content ---- */
@@ -241,7 +259,7 @@
     var btnBase = 'display:inline-flex;align-items:center;justify-content:center;height:36px;padding:0 16px;border-radius:6px;font-size:14px;font-weight:500;cursor:pointer;transition:opacity .2s;outline:none;';
     var cancelBtn = '<button data-cancel style="' + btnBase + 'background:transparent;border:1px solid var(--color-border,hsl(0,0%,90%));color:var(--color-foreground,hsl(0,0%,9%));">'+escapeHtml(cancelLabel)+'</button>';
     var actionColor = destructive
-      ? 'background:hsl(0,72%,51%);border:none;color:#fff;'
+      ? 'background:var(--color-destructive,#dc2626);border:none;color:var(--color-on-destructive,#fff);'
       : 'background:var(--color-foreground,hsl(0,0%,9%));border:none;color:var(--color-card,#fff);';
     var actionBtn = '<button data-action style="' + btnBase + actionColor + '">'+escapeHtml(actionLabel)+'</button>';
     var footer = '<div style="display:flex;justify-content:flex-end;gap:8px;margin-top:24px;">' + cancelBtn + actionBtn + '</div>';

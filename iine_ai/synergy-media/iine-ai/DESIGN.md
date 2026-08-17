@@ -365,6 +365,29 @@ shadcn/ui のコンポーネントを土台にし、上のトークンでテー�
 `primary` 色 + 常時下線（`underline-offset:3px`）。ボタンではなくテキストリンクとして表現する。
 緑/青/グレーのリンク色分裂を持ち込まない。
 
+### Toast（sonner）の配色
+
+**既定はオレンジ。赤はエラーだけ。**
+sonner 既定の rich-colors（緑 / 赤 / 青 / 黄）はいいねAIの配色ではないので使わない。
+青い成功トーストが混ざると、そこだけ別プロダクトの顔になる。
+
+| 種類 | 背景 | 枠 | アイコン | 文字 |
+|---|---|---|---|---|
+| 既定 / `info` / `success` / `warning` | `primary-subtle` | `primary` 30% | `primary` | `foreground` |
+| `error` | `destructive-subtle` | `destructive` 30% | `destructive` | `foreground` |
+
+- **色を持つのは背景・枠・アイコンだけ。本文は `foreground` のまま。**
+  オレンジ文字にすると本文が読みにくくなるうえ、[[orange-only-interaction]] の
+  「オレンジ = 押せる」と衝突する。トーストは押すものではない。
+- 4種が同じオレンジになるぶん、**区別はアイコンの形で付ける**（✓ / i / ⚠ / ✕）。
+  色だけで状態を表さない、の原則どおり（§ Do's and Don'ts）。
+- 種類を付けずに `toast('保存しました')` と呼んでもオレンジになる。既定がオレンジという意味。
+- 実装: 実プロダクトは shadcn の sonner に `toastOptions.classNames` でトークンを当てる。
+  配布用スタンドアロンHTMLは `iine_board/sonner.js` が同じ配色を持つ。
+
+⚠️ 黄（`warning`）を warning トーストに使わない。オレンジと近すぎて2色に見えず、
+かえって「注意」が伝わらない。警告は⚠アイコンで示す。
+
 ### コンポーネント調達方針（DESIGN.md はコンポーネントを再発明しない）
 
 部品は2系統で調達する。DESIGN.md が持つのは B のルールだけで、A は列挙にとどめる。

@@ -34,6 +34,7 @@
 - [[editor-dark-theme]] — エディタは別世界のダークUI。暖色3段+純黒ステージ。
 - [[marker-loading-unification]] — 待ち・進行・完了はMarkerに統一。
 - [[component-procurement]] — 汎用はshadcnそのまま、固有だけルール化。
+- [[toast-orange-default]] — トーストは既定オレンジ、赤はエラーだけ。
 
 プロダクト系（源泉=会議/worklog）:
 - [[flow-ui-decided]] — チャットvsフロー論争はフローUIで確定。
