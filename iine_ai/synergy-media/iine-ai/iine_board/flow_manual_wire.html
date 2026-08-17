@@ -342,6 +342,9 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .bk-btn.primary:hover{background:var(--color-primary-hover);}
 .bk-done-note{margin-top:14px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-primary);}
 .bk-done-note i{font-size:15px;}
+.bk-qbtn.rec{border-color:var(--color-primary);background:var(--color-primary-subtle);color:var(--color-primary);}
+.bk-qbtn.rec span{color:var(--color-primary);opacity:.75;}
+.bk-qbtn.rec i{font-size:13px;margin-right:4px;}
 @media(max-width:600px){ .bk-pop{width:calc(100vw - 24px);padding:16px;} .bk-quick{grid-template-columns:1fr;} }
 </style></head><body>
 <div class="app">
@@ -756,6 +759,14 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape')closeDone()
       for(var k=0;k<c.length;k++)if(c[k].date.getTime()===dt.getTime())return;
       c.push({name:name,date:dt});
     }
+    /* 分析の「おすすめの投稿時間」を先頭に置く（反応が良い曜日・時刻） */
+    REC_SLOTS.forEach(function(r){
+      var t=new Date(y,m,d,+r.t.split(':')[0],+r.t.split(':')[1]);
+      var gap=(r.d-t.getDay()+7)%7;
+      if(gap===0&&t<=b)gap=7;
+      t.setDate(t.getDate()+gap);
+      add('おすすめ '+WD[r.d]+r.t.slice(0,2)+'時',t);
+    });
     add('今日の夜',new Date(y,m,d,19,0));
     add('明日の朝',new Date(y,m,d+1,9,0));
     add('明日の夜',new Date(y,m,d+1,19,0));
@@ -768,7 +779,7 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape')closeDone()
     add('来週の月曜',mon);
     var sat2=new Date(sat.getTime());sat2.setDate(sat2.getDate()+7);
     add('来週の土曜',sat2);
-    return c.slice(0,4);
+    return c.slice(0,5);
   }
   function setFields(d){
     dateEl.value=d.getFullYear()+'-'+p2(d.getMonth()+1)+'-'+p2(d.getDate());
@@ -777,6 +788,13 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape')closeDone()
   function readFields(){
     var m=(dateEl.value||'').match(/^(\d{4})-(\d{2})-(\d{2})$/),t=(timeEl.value||'').match(/^(\d{2}):(\d{2})$/);
     return (m&&t)?new Date(+m[1],+m[2]-1,+m[3],+t[1],+t[2]):null;
+  }
+  /* 分析（投稿レポート）で反応が良かった曜日・時刻 */
+  var REC_SLOTS=[{d:3,t:'14:00'},{d:6,t:'11:00'},{d:2,t:'19:00'}];
+  function isRecSlot(d){
+    return REC_SLOTS.some(function(r){
+      return r.d===d.getDay() && r.t===p2(d.getHours())+':'+p2(d.getMinutes());
+    });
   }
   function shortLabel(d){return (d.getMonth()+1)+'/'+d.getDate()+'('+WD[d.getDay()]+') '+p2(d.getHours())+':'+p2(d.getMinutes());}
   function longLabel(d){return (d.getMonth()+1)+'月'+d.getDate()+'日('+WD[d.getDay()]+') '+p2(d.getHours())+':'+p2(d.getMinutes());}
@@ -788,8 +806,8 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape')closeDone()
     quickEl.innerHTML='';
     opts.forEach(function(q){
       var b=document.createElement('button');
-      b.className='bk-qbtn';b.type='button';b.dataset.value=q.date.getTime();
-      b.innerHTML=q.name+'<span>'+shortLabel(q.date)+'</span>';
+      b.className='bk-qbtn'+(isRecSlot(q.date)?' rec':'');b.type='button';b.dataset.value=q.date.getTime();
+      b.innerHTML=(isRecSlot(q.date)?'<i class="ti ti-sparkles"></i>':'')+q.name+'<span>'+shortLabel(q.date)+'</span>';
       quickEl.appendChild(b);
     });
     mask.classList.add('open');pop.classList.add('open');

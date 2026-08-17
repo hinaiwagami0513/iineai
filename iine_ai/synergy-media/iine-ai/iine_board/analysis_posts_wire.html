@@ -211,6 +211,32 @@ body { font-family: 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif; -webk
 .sub-tab-nav a:hover{color:var(--color-foreground);background:var(--color-background);}
 .sub-tab-nav .active{color:var(--color-primary);font-weight:var(--font-weight-body-strong);background:var(--color-primary-subtle);border:1px solid rgba(239,97,8,.2);}
 
+.besttime{margin:20px 32px 0;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:24px;}
+.besttime-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px;}
+.besttime-title{font-size:var(--text-h3);font-weight:var(--font-weight-h3);}
+.besttime-sub{font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:2px;}
+.besttime-note{display:flex;align-items:center;gap:8px;padding-top:12px;}
+/* ===== おすすめの投稿時間 ===== */
+.besttime-legend{display:flex;align-items:center;gap:5px;font-size:var(--text-meta);color:var(--color-muted-foreground);flex:none;}
+.besttime-legend .lg{width:14px;height:14px;border-radius:3px;}
+.bt-picks{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px;}
+.bt-pick{display:flex;flex-direction:column;gap:3px;padding:12px 14px;border:1px solid var(--color-border);
+  border-radius:var(--radius-md);background:var(--color-surface);}
+.bt-pick.best{border-color:var(--color-primary);background:var(--color-primary-subtle);}
+.bt-rank{font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);}
+.bt-pick.best .bt-rank{color:var(--color-primary);}
+.bt-when{font-size:var(--text-h3);font-weight:var(--font-weight-h3);}
+.bt-pick.best .bt-when{color:var(--color-primary);}
+.bt-rate{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-foreground);}
+.bt-note{font-size:var(--text-meta);color:var(--color-muted-foreground);}
+.bt-heat{display:flex;flex-direction:column;gap:4px;}
+.bt-head,.bt-row{display:grid;grid-template-columns:28px repeat(7,1fr);gap:4px;align-items:center;}
+.bt-head span{font-size:var(--text-meta);color:var(--color-muted-foreground);text-align:center;}
+.bt-day{font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);text-align:center;}
+.bt-row i{height:26px;border-radius:4px;display:block;}
+.lv1{background:#f2f1f0;} .lv2{background:#ffd9b3;} .lv3{background:#fba861;} .lv4{background:var(--color-primary);}
+.bt-row i.top{outline:2px solid var(--color-foreground);outline-offset:1px;}
+@media(max-width:768px){ .bt-picks{grid-template-columns:1fr;} }
 /* ── Month summary ── */
 .month-summary { padding: 24px 32px 0; }
 .month-summary-title { font-size: var(--text-h3); font-weight: var(--font-weight-h3); margin-bottom: 12px; }
@@ -576,6 +602,60 @@ body { font-family: 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif; -webk
             <div class="ms-card-val">3<span class="ms-card-unit">件</span></div>
             <div class="ms-card-lbl">コメント合計</div>
           </div>
+        </div>
+      </div>
+
+      <!-- ===== おすすめの投稿時間 ===== -->
+      <div class="besttime">
+        <div class="besttime-hd">
+          <div>
+            <div class="besttime-title">おすすめの投稿時間</div>
+            <div class="besttime-sub">過去90日の反応率から、よく見られている時間帯を出しています</div>
+          </div>
+          <div class="besttime-legend">
+            <span>少ない</span>
+            <span class="lg lv1"></span><span class="lg lv2"></span><span class="lg lv3"></span><span class="lg lv4"></span>
+            <span>多い</span>
+          </div>
+        </div>
+
+        <!-- おすすめ上位3枠 -->
+        <div class="bt-picks">
+          <div class="bt-pick best">
+            <span class="bt-rank">1位</span>
+            <span class="bt-when">水曜 14:00</span>
+            <span class="bt-rate">反応率 8.2%</span>
+            <span class="bt-note">いちばん見られています</span>
+          </div>
+          <div class="bt-pick">
+            <span class="bt-rank">2位</span>
+            <span class="bt-when">土曜 11:00</span>
+            <span class="bt-rate">反応率 7.4%</span>
+            <span class="bt-note">休日の午前がねらい目</span>
+          </div>
+          <div class="bt-pick">
+            <span class="bt-rank">3位</span>
+            <span class="bt-when">火曜 19:00</span>
+            <span class="bt-rate">反応率 6.9%</span>
+            <span class="bt-note">帰宅後の時間帯</span>
+          </div>
+        </div>
+
+        <!-- 曜日 × 時間帯のヒートマップ -->
+        <div class="bt-heat">
+          <div class="bt-head"><span></span><span>6時</span><span>9時</span><span>12時</span><span>14時</span><span>17時</span><span>19時</span><span>21時</span></div>
+          <div class="bt-row"><span class="bt-day">月</span><i class="lv1"></i><i class="lv1"></i><i class="lv2"></i><i class="lv2"></i><i class="lv1"></i><i class="lv2"></i><i class="lv1"></i></div>
+          <div class="bt-row"><span class="bt-day">火</span><i class="lv1"></i><i class="lv2"></i><i class="lv2"></i><i class="lv3"></i><i class="lv2"></i><i class="lv4"></i><i class="lv2"></i></div>
+          <div class="bt-row"><span class="bt-day">水</span><i class="lv1"></i><i class="lv2"></i><i class="lv3"></i><i class="lv4 top" title="水曜 14:00・反応率 8.2%"></i><i class="lv3"></i><i class="lv3"></i><i class="lv2"></i></div>
+          <div class="bt-row"><span class="bt-day">木</span><i class="lv1"></i><i class="lv1"></i><i class="lv2"></i><i class="lv2"></i><i class="lv2"></i><i class="lv3"></i><i class="lv2"></i></div>
+          <div class="bt-row"><span class="bt-day">金</span><i class="lv1"></i><i class="lv2"></i><i class="lv2"></i><i class="lv2"></i><i class="lv2"></i><i class="lv3"></i><i class="lv3"></i></div>
+          <div class="bt-row"><span class="bt-day">土</span><i class="lv2"></i><i class="lv3"></i><i class="lv4"></i><i class="lv3"></i><i class="lv2"></i><i class="lv2"></i><i class="lv2"></i></div>
+          <div class="bt-row"><span class="bt-day">日</span><i class="lv1"></i><i class="lv3"></i><i class="lv3"></i><i class="lv2"></i><i class="lv2"></i><i class="lv2"></i><i class="lv1"></i></div>
+        </div>
+
+        <div class="besttime-note">
+          <img src="./assets/iine-fox-happy.png" style="width:24px;height:24px;object-fit:contain;">
+          <span style="font-size:var(--text-label);color:var(--color-muted-foreground);">水曜14時が最も反応が高いです。投稿予定を決めるときの目安にしてください</span>
         </div>
       </div>
 
