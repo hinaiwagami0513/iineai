@@ -128,7 +128,7 @@
     ].join(';');
 
     /* ---- icon ---- */
-    var iconSvg = ICONS[type] || '';
+    var iconSvg = ICONS[type] || CHECK;   /* 種類なしの toast() も既定扱いで ✓ を出す */
     var iconWrap = '';
     if (iconSvg) {
       iconWrap = '<div data-icon style="display:flex;height:16px;width:16px;flex-shrink:0;align-items:center;justify-content:flex-start;margin-left:-3px;margin-right:4px;color:' + icoc + ';">' + iconSvg + '</div>';

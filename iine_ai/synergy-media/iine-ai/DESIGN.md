@@ -373,8 +373,8 @@ sonner 既定の rich-colors（緑 / 赤 / 青 / 黄）はいいねAIの配色�
 
 | 種類 | 背景 | 枠 | アイコン | 文字 |
 |---|---|---|---|---|
-| 既定 / `info` / `success` / `warning` | `primary-subtle` | `primary` 30% | `primary` | `foreground` |
-| `error` | `destructive-subtle` | `destructive` 30% | `destructive` | `foreground` |
+| 既定 / `info` / `success` / `warning` | `primary-subtle` | `primary` 30% | ✓ / `primary` | `foreground` |
+| `error` | `destructive-subtle` | `destructive` 30% | ✓ / `destructive` | `foreground` |
 
 - **色を持つのは背景・枠・アイコンだけ。本文は `foreground` のまま。**
   オレンジ文字にすると本文が読みにくくなるうえ、[[orange-only-interaction]] の
@@ -383,12 +383,16 @@ sonner 既定の rich-colors（緑 / 赤 / 青 / 黄）はいいねAIの配色�
   形を4つに散らすと、右下に一瞬出るだけのトーストで4種の記号を読み分けさせることになる。
   トーストは読み分けるものではなく、本文を読ませるもの。記号は「通知が来た」の目印にとどめる。
   区別が要るのは**エラーだけ**で、それは赤が担う（オレンジ = ふつうの通知 / 赤 = エラー）。
-- 種類を付けずに `toast('保存しました')` と呼んでもオレンジになる。既定がオレンジという意味。
+- 種類を付けずに `toast('保存しました')` と呼んでもオレンジ + ✓ になる。既定がオレンジという意味。
 - 実装: 実プロダクトは shadcn の sonner に `toastOptions.classNames` でトークンを当てる。
   配布用スタンドアロンHTMLは `iine_board/sonner.js` が同じ配色を持つ。
 
 ⚠️ 黄（`warning`）を warning トーストに使わない。オレンジと近すぎて2色に見えず、
 かえって「注意」が伝わらない。強く止めたい警告はトーストではなく Dialog / Alert で出す。
+
+> **§ Do's and Don'ts「状態は色だけで表さない」に対する唯一の意図的な例外。**
+> トーストは一時表示で操作対象でもないため、形の読み分けより本文の可読性を優先した。
+> バッジ・ステータス・SNS媒体表示は従来どおり色 + 形のセットを守る。
 
 ### コンポーネント調達方針（DESIGN.md はコンポーネントを再発明しない）
 

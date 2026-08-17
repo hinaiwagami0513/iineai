@@ -1,2 +1,5 @@
 .DS_Store
 **/.DS_Store
+.gstack/
+# 別リポジトリ（.git を持つ）。この repo には取り込まない
+iine_ai/synergy-media/iine-ai/iineAI/
