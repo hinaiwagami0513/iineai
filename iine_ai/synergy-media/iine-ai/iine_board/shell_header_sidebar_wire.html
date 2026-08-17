@@ -30,6 +30,25 @@
 .ti-minus:before{content:"\eaf2"}
 .ti-chevron-down:before{content:"\ea5f"}
 .ti-clipboard-list:before{content:"\ea6d"}
+.ti-alert-circle:before{content:"\ea05"}
+.ti-arrow-down:before{content:"\ea16"}
+.ti-arrow-right:before{content:"\ea1f"}
+.ti-arrow-up:before{content:"\ea1c"}
+.ti-bookmark:before{content:"\ea3a"}
+.ti-brand-instagram:before{content:"\ec20"}
+.ti-brand-tiktok:before{content:"\ec73"}
+.ti-brand-x:before{content:"\fc0f"}
+.ti-brand-youtube:before{content:"\ec90"}
+.ti-calendar-event:before{content:"\ea52"}
+.ti-checks:before{content:"\ebaa"}
+.ti-clock:before{content:"\ea70"}
+.ti-device-mobile:before{content:"\ea8a"}
+.ti-eye:before{content:"\ea9a"}
+.ti-heart:before{content:"\eabe"}
+.ti-pencil:before{content:"\eb04"}
+.ti-school:before{content:"\ecf7"}
+.ti-trending-up:before{content:"\eb43"}
+.ti-users:before{content:"\ebf2"}
 
 :root {
   --color-primary: #ef6108;
@@ -160,19 +179,136 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .hd .pgnm{font-size:var(--text-h3);font-weight:var(--font-weight-body-strong);}
 .hd .r{margin-left:auto;display:flex;align-items:center;gap:10px;}
 .help{width:38px;height:38px;border:1.5px solid var(--color-primary);color:var(--color-primary);background:transparent;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:19px;cursor:pointer;text-decoration:none;}.help{transition:background .15s,color .15s,border-color .15s;}.help:hover{background:var(--color-primary);color:var(--color-on-primary);border-color:var(--color-primary);}
-/* body */
-.content{flex:1;overflow-y:auto;padding:26px;}
-.h1{font-size:var(--text-h2);font-weight:var(--font-weight-h2);margin-bottom:16px;}
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:20px;}
-.stat{background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:18px;}
-.stat .sl{font-size:var(--text-label);color:var(--color-muted-foreground);margin-bottom:8px;}
-.stat .sv{font-size:var(--text-h1);font-weight:var(--font-weight-h1);color:var(--color-foreground);}
-.stat .sv .u{font-size:var(--text-body);color:var(--color-muted-foreground);font-weight:var(--font-weight-body);margin-left:3px;}
-.panel{background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:20px;}
-.panel .pt{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);margin-bottom:14px;}
-.emptyfox{display:flex;flex-direction:column;align-items:center;gap:10px;padding:24px;color:var(--color-muted-foreground);font-size:var(--text-label);}
-.emptyfox img{width:70px;height:70px;object-fit:contain;}
-/* ===== 右下：生成トレイ＋FAB ===== */
+/* ===== ダッシュボード本体 =====
+   ターゲットは40〜50代の未経験者（[[target-first]]）。
+   ・文字を読まなくても分かるよう、全ての項目に「丸アイコン＋状態色」を必ず添える
+   ・数字は大きく、増減は「矢印＋色＋日本語の一文」の3点セットで出す
+   ・押せるものだけオレンジ（[[orange-only-interaction]]）。情報カードはオレンジにしない */
+/* 右下の生成トレイ（約300×230px）に最後のカードが隠れないよう下に逃がす */
+.content{flex:1;overflow-y:auto;padding:22px 26px 260px;background:var(--color-background);}
+.db-sec{margin-bottom:22px;}
+.db-sec-h{display:flex;align-items:center;gap:9px;margin-bottom:12px;}
+.db-sec-h .ic{width:30px;height:30px;flex:none;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:17px;}
+.db-sec-h .tt{font-size:var(--text-h2);font-weight:var(--font-weight-h2);}
+.db-sec-h .cnt{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:#fff;background:var(--color-foreground);border-radius:var(--radius-full);padding:2px 10px;}
+.db-sec-h .more{margin-left:auto;display:inline-flex;align-items:center;gap:4px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-primary);cursor:pointer;}
+.db-card{background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);}
+
+/* あいさつ */
+.db-hello{display:flex;align-items:center;gap:18px;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:18px 22px;margin-bottom:22px;}
+.db-hello .fox{width:64px;height:64px;flex:none;object-fit:contain;}
+.db-hello .hi{font-size:var(--text-h2);font-weight:var(--font-weight-h2);margin-bottom:5px;}
+.db-hello .sub{display:flex;align-items:center;gap:7px;font-size:var(--text-body-lg);color:var(--color-muted-foreground);line-height:1.6;}
+.db-hello .sub i{font-size:17px;color:var(--color-muted-foreground);}
+.db-hello .sub b{color:var(--color-foreground);font-weight:var(--font-weight-body-strong);}
+.db-cta{margin-left:auto;flex:none;display:inline-flex;align-items:center;gap:8px;background:var(--color-primary);color:var(--color-on-primary);border:none;border-radius:var(--radius-md);padding:16px 26px;font-family:inherit;font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);cursor:pointer;}
+.db-cta:hover{background:var(--color-primary-hover);}
+.db-cta i{font-size:19px;}
+
+/* 今日やること */
+.db-todo .row{display:flex;align-items:center;gap:14px;padding:16px 18px;border-bottom:1px solid var(--color-border);}
+.db-todo .row:last-child{border-bottom:none;}
+.db-todo .ic{width:46px;height:46px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:22px;}
+.db-todo .ic.warn{background:var(--color-warning-subtle);color:var(--color-warning);}
+.db-todo .ic.info{background:var(--color-info-subtle);color:var(--color-info);}
+.db-todo .ic.ok{background:var(--color-success-subtle);color:var(--color-success);}
+.db-todo .tx{flex:1;min-width:0;}
+.db-todo .t{font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.db-todo .num{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);border-radius:var(--radius-full);padding:2px 9px;}
+.db-todo .num.warn{background:var(--color-warning-subtle);color:var(--color-warning);}
+.db-todo .num.info{background:var(--color-info-subtle);color:var(--color-info);}
+.db-todo .num.ok{background:var(--color-success-subtle);color:var(--color-success);}
+.db-todo .d{font-size:var(--text-body);color:var(--color-muted-foreground);margin-top:3px;line-height:1.6;}
+.db-todo .go{flex:none;display:inline-flex;align-items:center;gap:6px;background:var(--color-primary);color:var(--color-on-primary);border:none;border-radius:var(--radius-md);padding:13px 20px;font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;white-space:nowrap;}
+.db-todo .go:hover{background:var(--color-primary-hover);}
+.db-todo .alldone{display:flex;align-items:center;gap:14px;padding:20px;}
+.db-todo .alldone img{width:56px;height:56px;object-fit:contain;flex:none;}
+
+/* 状況カード4枚 */
+.db-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.db-stat{background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:16px;cursor:pointer;transition:border-color .15s,box-shadow .15s;}
+.db-stat:hover{border-color:var(--color-primary);box-shadow:0 2px 10px rgba(0,0,0,.06);}
+.db-stat .top{display:flex;align-items:center;gap:9px;margin-bottom:10px;}
+.db-stat .ic{width:34px;height:34px;flex:none;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.db-stat .nm{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);color:var(--color-foreground);}
+.db-stat .val{font-size:var(--text-h1);font-weight:var(--font-weight-h1);line-height:1.1;}
+.db-stat .val .u{font-size:var(--text-body-lg);font-weight:var(--font-weight-body);color:var(--color-muted-foreground);margin-left:4px;}
+.db-stat .cmp{display:flex;align-items:center;gap:4px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);margin-top:7px;}
+.db-stat .cmp.up{color:var(--color-success);} .db-stat .cmp.down{color:var(--color-destructive);} .db-stat .cmp.flat{color:var(--color-muted-foreground);} .db-stat .cmp.warn{color:var(--color-warning);}
+
+/* 今週の予定（曜日バー） */
+.db-week{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;padding:14px;}
+.db-day{border:1px solid var(--color-border);border-radius:var(--radius-md);padding:10px 8px;min-height:118px;display:flex;flex-direction:column;gap:7px;background:var(--color-surface);}
+.db-day.today{border:2px solid var(--color-primary);background:var(--color-primary-subtle);}
+.db-day .dh{display:flex;flex-direction:column;align-items:center;gap:2px;}
+.db-day .dw{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);}
+.db-day .dd{font-size:var(--text-h3);font-weight:var(--font-weight-h3);}
+.db-day.today .dw,.db-day.today .dd{color:var(--color-primary);}
+.db-day .badge-today{font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:#fff;background:var(--color-primary);border-radius:var(--radius-full);padding:1px 8px;}
+.db-day .sat{color:var(--color-info);} .db-day .sun{color:var(--color-destructive);}
+.db-post{display:flex;align-items:center;gap:5px;border-radius:var(--radius-sm);padding:5px 6px;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);line-height:1.3;}
+.db-post i{font-size:12px;flex:none;}
+.db-post .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.db-none{font-size:var(--text-meta);color:var(--color-muted-foreground);text-align:center;margin-top:6px;}
+
+/* 下段2カラム */
+.db-cols{display:grid;grid-template-columns:1.35fr 1fr;gap:18px;align-items:start;}
+
+/* 反応の伸び */
+.db-growth{padding:6px 16px 14px;}
+.db-grow{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--color-border);}
+.db-grow:last-child{border-bottom:none;}
+.db-grow .ic{width:40px;height:40px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:19px;}
+.db-grow .tx{flex:1;min-width:0;}
+.db-grow .nm{font-size:var(--text-body);color:var(--color-muted-foreground);}
+.db-grow .vl{font-size:var(--text-h2);font-weight:var(--font-weight-h2);line-height:1.2;}
+.db-grow .msg{font-size:var(--text-label);margin-top:2px;display:flex;align-items:center;gap:4px;font-weight:var(--font-weight-body-strong);}
+.db-grow .msg.up{color:var(--color-success);} .db-grow .msg.down{color:var(--color-destructive);}
+.db-bar{width:74px;flex:none;display:flex;align-items:flex-end;gap:3px;height:38px;}
+.db-bar i{flex:1;border-radius:2px 2px 0 0;display:block;}
+
+/* 最近の投稿 */
+.db-recent{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:14px;}
+.db-rp{border:1px solid var(--color-border);border-radius:var(--radius-md);overflow:hidden;background:var(--color-surface);cursor:pointer;}
+.db-rp .th{aspect-ratio:1;display:flex;align-items:center;justify-content:center;position:relative;}
+.db-rp .th .sns{position:absolute;top:7px;left:7px;width:24px;height:24px;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:13px;background:#fff;}
+.db-rp .bd{padding:9px 10px;}
+.db-rp .ti-t{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);line-height:1.5;height:2.9em;overflow:hidden;}
+.db-rp .mt{display:flex;align-items:center;gap:10px;margin-top:7px;font-size:var(--text-meta);color:var(--color-muted-foreground);font-weight:var(--font-weight-body-strong);}
+.db-rp .mt span{display:inline-flex;align-items:center;gap:3px;}
+.db-rp .mt i{font-size:12px;}
+
+/* SNS接続 */
+.db-sns{padding:8px 14px 14px;}
+.db-snsrow{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid var(--color-border);}
+.db-snsrow:last-child{border-bottom:none;}
+.db-snsrow .ic{width:36px;height:36px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.db-snsrow .nm{flex:1;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);}
+.db-snsrow .nm small{display:block;font-size:var(--text-label);color:var(--color-muted-foreground);font-weight:var(--font-weight-body);margin-top:1px;}
+.db-ok{display:inline-flex;align-items:center;gap:4px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-success);background:var(--color-success-subtle);border-radius:var(--radius-full);padding:4px 10px;}
+.db-connect{border:1.5px solid var(--color-primary);color:var(--color-primary);background:transparent;border-radius:var(--radius-md);padding:8px 14px;font-family:inherit;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);cursor:pointer;}
+.db-connect:hover{background:var(--color-primary);color:var(--color-on-primary);}
+
+/* 困ったとき */
+.db-help{display:flex;align-items:center;gap:14px;padding:16px;}
+.db-help img{width:52px;height:52px;flex:none;object-fit:contain;}
+.db-help .t{font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);margin-bottom:3px;}
+.db-help .d{font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.6;}
+.db-help .go{flex:none;display:inline-flex;align-items:center;gap:7px;border:1.5px solid var(--color-primary);color:var(--color-primary);background:transparent;border-radius:var(--radius-md);padding:11px 16px;font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;white-space:nowrap;}
+.db-help .go i{font-size:17px;}
+.db-help .go:hover{background:var(--color-primary);color:var(--color-on-primary);}
+
+@media(max-width:1100px){
+  .db-stats{grid-template-columns:repeat(2,1fr);}
+  .db-cols{grid-template-columns:1fr;}
+}
+@media(max-width:760px){
+  .db-hello{flex-wrap:wrap;} .db-cta{margin-left:0;width:100%;justify-content:center;}
+  .db-week{grid-template-columns:repeat(2,1fr);}
+  .db-recent{grid-template-columns:repeat(2,1fr);}
+  .db-todo .row{flex-wrap:wrap;} .db-todo .go{width:100%;justify-content:center;}
+}
+/* ===== 右下：生成トレイ ===== */
 .corner{position:absolute;right:20px;bottom:20px;display:flex;flex-direction:column;align-items:flex-end;gap:12px;z-index:15;}
 .tray{width:300px;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);box-shadow:0 8px 24px rgba(0,0,0,.16);overflow:hidden;}
 .trayhd{display:flex;align-items:center;gap:8px;padding:11px 13px;border-bottom:1px solid var(--color-border);background:var(--color-surface);}
@@ -193,8 +329,6 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .trayrow.done .st{color:var(--color-success);}
 .pbar{height:3px;background:var(--color-border);border-radius:var(--radius-full);margin-top:5px;overflow:hidden;}
 .pbar i{display:block;height:100%;background:var(--color-primary);border-radius:var(--radius-full);}
-.fab{width:60px;height:60px;border-radius:var(--radius-full);background:var(--color-primary);box-shadow:0 4px 14px rgba(239,97,8,.4);display:flex;align-items:center;justify-content:center;cursor:pointer;}
-.fab img{width:46px;height:46px;object-fit:contain;}
 @media (max-width:430px){
   body{padding:0;}
   .app{width:100%;height:auto;min-height:100vh;border-radius:0;border:none;flex-direction:column;}
@@ -218,8 +352,6 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
   /* ===== 右下コーナートレイ ===== */
   .corner{right:12px;bottom:72px;}
   .tray{width:calc(100vw - 24px);}
-  .fab{width:52px;height:52px;}
-  .fab img{width:40px;height:40px;}
   /* ===== ポップオーバー ===== */
   .pop{left:8px;right:8px;bottom:68px;}
 }
@@ -268,20 +400,259 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
       <div class="r"><a class="help" href="https://hinaiwagami0513.github.io/iineai/help/" target="_blank" rel="noopener" title="このページのヘルプ（ヘルプセンター トップ）" aria-label="このページのヘルプ"><i class="ti ti-help"></i></a></div>
     </div>
     <div class="content">
-      <div class="h1">こんにちは、犬カフェOne さん</div>
-      <div class="cards">
-        <div class="stat"><div class="sl">今週の投稿</div><div class="sv">12<span class="u">件</span></div></div>
-        <div class="stat"><div class="sl">予約中</div><div class="sv">5<span class="u">件</span></div></div>
-        <div class="stat"><div class="sl">下書き</div><div class="sv">8<span class="u">件</span></div></div>
-      </div>
-      <div class="panel">
-        <div class="pt">最近の投稿</div>
-        <div class="emptyfox"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAABtCAMAAABeOpmlAAACqVBMVEVMaXFdREU8GAc8GAZPMCxGGwNXJwVPFxkrCg46FgU+GghAHg9EIhU7FgQ7FgU6FgU9GQlEIxjVzszb1tVkJwI+Gww1FAY8GQlBIBEuDwRGJho+GglDIBJJKyKXiYFIKiGll489GQm0oIu7sKy1qKMxDAAuCgD66M356MzAuLX56Mz14sb558z558q7pIv7kxn6khn76cz66c38khn76Mz66Mz6kxv6kRn7lBr7kxv86s36khv////86s/6kxn9lBo6FAL19fUeHh78khf6kRc4EwEhISD458v66s74kRr66M37lBz66Ms9FgIwCwD6khj/mx7/9dgzDQD87NKbQgL/mB36jhIsCAD/8tby8vL/99w0EQIoBAD6kx0cHR6gQwMWFxjz8/MSEhP/lRv+8NT9lhw3DwD669H8/P2kRwT77dZBFwL+7dHoihz35cn4+fn/++EgAQBCIBHzkBzw7+8XGx1OHwNGJhdYOio6Gg4/MR5yMAPi0rlMKxzr3MNvU0JiRDNnSzs1LCFmMgeysrL/nyF1Wkn6pkL78Nr05syOdWKHbVt4PwrvjRxVHQGoXxJPMiZdQDLx4ccbGxuAZVKHSQ3QwKmzZRPihhudkYa+bhf7t2XCsJr7r1GRTw59Z12SOwfp5+b36dCvo5v7nC3LuKDi3t3MxcR2XlODNwJVNSKdVxF8fHt/b2WVgnrbyrOVfGjHdBe8po96enn6mCSokn2NenGjjHZEQj3QeBf64r7//+fm1r7Yxq363bT62av7y477w3wpKSf75cX7oTeroJPbgRqchHA2NDFiXVXt7Ov//vLVfRi4rKfGvbr6055WT0kJCw2KhXpZVk/8VCDgfRb/ViDsnD74Uh+3g0rNeyi4PhbcRRfyTBv+UR3+UB7mkzl+XD+meEeSLa6yAAAAqHRSTlMADsHPGP7+AwH+/nZR6PPcs0L+/v6C/Y5l/jamWiT+Lf6Z/v7+4+69of5pQIKE8f////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////7zeSoIAAAACXBIWXMAAAsTAAALEwEAmpwYAAAgAElEQVR42q17B0NbV7ausA0YcC/YuJckbzLz3lPBakgIYUsc1YMkrIKKMUYgjOhmKEO/jLFpprvihrs9ruMa98SxEydx+pTbf8r91j5yi8l7ubmz44AQ5+z17W+t9a21tw4i0RsjUTQjZdrc6fNS5ieKRDMTZ4r+USMR84lmrFgybfq0xStFPzvvTNGs2Un6QMCoT5q7ZNk/DsJMmI9bMW+OHXPr7XOWihJ/BqZo/hx7UsKiRQnxeqM9edqKxH8IhETMsXLJbLveGK1PWJSQZI+umBrBTFHidGP8sc0FBQWbzy2KDxjt05cmiv6nCGgJq9fOsQfsCc3HNm8u2Hws3jh3xpReSBStsKc2b99MY/v2zc31SXr79Fmi/xkEOH/Gkjn6QHzzMVoYTX0uKZoyJQUzRdMCCewaGgXbC87tSdXbpy1jLvzVzk9cOtueGt+8efvrmROM0xOnoABMzQk0F5BpuriAxrn6gD5+SdyvJQHLXzbNHkhm5oWZtxcUbD9ntC+bAkCiKEWPCNi8eVF9/UvABZub4132ufN/HQIsf/EcY9KiY2QW3G8+t6d+EYsC/eIpfJAomsc8sKe292yDvhkX0l0Fm/tTjcmLE396A2Ir8e0xc+Y79K+cFk1LOFawXaCz2V7bfmWonvlg3rsMzBTFzYUHCs4ZJ+46257VRs9tJ9Y2/7jzYH1adNqM1whmkumpPZ74minYnzXbGBjfMcDsbz+2p6mvxX93b/K57dubA3Pj3kGAEEgOnCso2NPpk9nC1fe6+WZywx2HxjHQn8bcELMh8DVj9fwVKYuXLFm7du2SxSlLZy1bGRfzOwOBr4uTXfUH3Sr3j0T/OVfH5WpfxFLdvWc7giBp9TsAANhuB4Dos2pLXsTic95oAluDxVnF1mL3YFJgzgpRzHjcakjq3A9cLr7EHl/b0NBQGzW6eFfq+9PWLp0/I0aFKG65Pa2rwqFWqd37Nm9fxF+JOE2RvEj1jSjYiOpnvRMEQgwWHLNPOGWRvLw8/93LjfWbf3RnFRVbFTvvxLuipKBxy1LmzS0piZ7vOHtzzVcvzixYSGPBmQ9PrDraeT6+xPX+tMXz46imwP3jxW5NUZHVXbF5UcPEF9VlmDXi36s/tn1zvD5lCgBrjQlIkeR7vsy8SLjnSmN7d3L8nZ1iTGFVOPZ3BYwp89fOdZW0dt58b8HpKi0bpaVVpRjC6+ML1l9qbzXy7y9fsWy6PmnQYVVkZWWp3QMJJZ3djX1tPgDw3Ws4t70gQb9kCgDzjIsQH60j4cw8U/WVQG9fR21N/FOHGABC1p0VCUZ9SXzHzQ/JdmlVfl1+fmF2FTNfWpVdmI+RXUooXlzqrC3RR1MHdxZrVFlFKneoqyapcay3qdsPAOU95xFbi4zL3wEAHTR2FRQsGoajInnO4d4vqsP3r7RG9zsUimLHjn0JJfrhVQuytdqqujpmSluaffz0wgUYC08fz2ckECzAq1q4prOpJOHI/p0OtaL4enNT395I9RdrasvghEzfMJa5CHmYOEUl6tq8HUkA+yZ/e7ufywxXtw3VD7gdA4P1NU0XzxRqSwvr8tkyz3wFnw811DalpqWlNjU1DA2fvXniBSOnsK6wVFu1YNVQjf7IU7fb0d90/64zj6vuPb+bBUEn0qArMG3mT9KAZMDYXLB9T7sfIWj5YiKpxSeLWJz3WrsGBqPBoQOnaWqsvGrhVzc7G9KCQVe0flFXf3//eH9/c1dCvCsY9NYOXzyxoArUEMzn73UG+fEdF9JOVVsiJl9P7Y0vMLPM375ne0Hzu9VgpmjGbAAoiO+uxmW7J/qCZ514wd3dmxQfbDxRB+Yxaf6ZS8NNQT7aNT549WnFQMjtEIbbXLH/zr4jzfF8MLXx5ofPGVht1foOb3xgzRccvOq8EuxeNxnOIyGAKAamBnAOQtztN0X8t1wdnR094Uhe9f1OvnVNnTab5jtzqTEtGG2+cKfiOmy6s9Qac2xIxNYigCke+HKwP97rbb34Ih+IC7VVXw15O07580x5Ze0dna4xJylRPQMQNwUAffP2O81wQXiy9tndSE+5zFl2K+DtPQ7zVcRoIBg/frCi2FFUpCCrGp1KEQppQgqNRKxkWJD1DvfA1SP1Xu/wmuOAkK19vio1eKXMacrr6bl7DSlu8Xc2/4ggnBJA4IhhZ3+nkwCsq5aFLf6WzprGF8I8a4aCJf0HBxyOLLKkUFgVColabYVEKBRisYQNjVKC32W5HTuujkdrGi6dxq1V2jPDwc4WP9TVeaqpxSlzdozvVB5xTeWCufw+h3t8OIxLh8cQONUTtcGbddq6fG3dmtaa6JGnxe4iLBR2YVShUiuVeKmyKiQEQKyUGCRKvDLjErHbUXGhPlh74Lm2sK608BJfO1FtslT3tlIeNB5xOwb5KQAkTg8Mut0XhibDlupbtSMoBnzTerBfWvpVY030QoWj2ADjYgPs6lQqsVgthmWxSqHQiXMl9INBIlEq1SBCAhTunTsG44Pnvyol/tY3BW9Ul0+2Xqm2hEdaBx2OC/w00TsARNMDF9yOfU1t8FNbtPdub03jQm1+oXZhd9B4pMKRpVEYxJheYlaKc8UqYl1MQ/gGN4gNuYZcMZiQ6PBNYVY5Bi7og2dPa/PrtAsag73VV0ou+y2+lqaD4Nk1bwopnhYYd7uvpl12+u4P6TvHgt3PS+uqSk/UBvufOorNGqtq06Z0LFSpZIbFSoU4Nxf2dbAHRiQGA4ARIrFOIoaXJOYsx9P+YO0JkFB6vL2mbyzQcMrn3Mvfcbj7XcunALA80O9wP9VPOJ3tjZe7g0ez6cajwfh9KGoaNWjfhJGba4ARdXp6bOm6XF3uJhACMDFgcItarNMRRLPbvS8a7KvDQgrP1ozdGx72+9fp97vdXYGpitESV5e7aAf6gUjrs96ai9AzUFfTX+HQKNRqiY7s5W4ygGa8UsPpSoo+/JxL/wwSWnquGPhUFCF0tVJp1jj2N9cML9TWZVcdrblyo6Gn+kp9qEiTEJiqHC8NJOwociwaqy4fMwaPVmXna9fXui6osswSAFAzb+eKNxEABQsACnqxIT2XlrvJAIZU6WKdWKJSMQQ6eEIJqSoOXeAbXmjrqqrOepPby6u7u3YWVdQbp2pIZunjK9w7xxst1X2C/U9d9oMOLFRCqU4Da2VWJZJcpUZNtAMIrOpyc3PZwlU6vIFIgRtUOjCg1GjM1p37SlK/0uZXZXcH+/yWxiM73V/ajaun6AmXJQW+RBqk9qyrac+uytceCNZ/6UDmAYDg2lx4IDcW/JgcNORuUjJvS3J1RD2gsFg0xC4hhQQJjjvx/AlwkN9Zs24k+aDDcZCfPWMKADNmu6BET+19TUPHYX9VMGG/2wzyFWJakpgCcBObXcVIIAAGeMCA1zAtyc3VKSkLxUoKCPqqNAiBaXY8rfd+qq0rPd1Q22vf74YMTLk1Ek3nj+zUpHd5axdo67RrBPtsfZs2Ef1AAK1hqZYuLJBy3kBhiUCAP+AHChS8g9/RF8MmCRxBCPbXe9/DpGeavF1uq2OqLGR5yHc5QqouL+jSvsfXw77KyiJdkk6ziin+JCS/akQjWccSc2GQUUJhx9JSiZxIJ3RKA+VCuhIpY3Y/jU96oX2OZfXvtBZ3BabeGaUYEyp27qs5CvsvUuOfEv8qDTGgBMfk202Md8gvvuiUlBWbdIgBtVghEYKE0gIBICGVkBjIHxgaKJbZ/WW0dkFpnfZocHDn/vgpkoAdTxj1+/frEQBVp1tLrjrMEFSrggUdfTFAgpnfIf2oRVgdLZzVJdI+IThJJwQwCF5yiXiTCr9XwgsH+UbMfLwhuuOqN3nlFACEejheQxnTHhwk+yCP1TpWb7EcA2IeK2Zik8sUT02FWcWSnhCAKCaV9FpN0oXwYKqgSjc7BmuOgoL1wfEL3qljEI25vr7krJYScNxNXQZm0SANaDYhvJVQZLiZgtsgKK8OOYqUZ9VJLEgyhQvuFSghVUpXAYZY4e4PrsHkZ7319uVTHlAgCKLGpgWlpWdSE3ZYmdCIX8k7JEaHmNMxa2RGqIRqaoeAT0LUMLWWEAKWjhAHJk8MA6KiaKC+aWFp1cJao3HpzwCYn8pf0hYWdvB33GZinmIOQSTG7cSuUvCq7iUmWqQCQNVkT6dQKClHlYJqIAUoa8TWmDKrEIiOq952CMylYNPqnzmimfF+A1r7AzVHIICkcABAboAtNF9U7ymxqPki4dfpFLhGp1ExvlUSyetqCIYkkpBVSWUDEaJKFzoHs3u85oQ2+3jD7J87pJoFAqpO19YPpCsRfWqxUNSIYoPH49mkhrKg76LiQAAoH1XsIqXaCieIhbUybjR0g4e1BmJyAHtfUlQR3/o8W3ugZMXPHVI1nM7W3vQeBAFiAq9mVELVPE8OHdp13WOgoTRDerF4tUZDOUgIIPgKnYqZVgv9kef6YdxhUKAiKgkQ84La7NgXXKUtPN0wZRbgQIm/qNUuTO0KacQStUoVAntq6LpE4zlkKivL/OjxdY/aQAIIbYEppVCloFZIFpXKSgmnUkO8VQbroQeRsrLIIY8iBkCoH4p0c0LTaa32pmv+u3tTnCmsjS4486dvgiAAwW2lvlPHrChPflJm25AR2f3wiQfWJUqUZ5VVA2wUHiqdSqlUCMFG9VCtNpx8uDsik9rKPjppAAK6hmoFkpjE4PvvziyMXy5KfPvca+ZMCsHOVVu3jf7+fEWRxAoTRChpqsJw8pNMqUkqte1+GDILUZGeTt0vpSoAqAlPLNpxvdnw9W6bVJYpjQAAy1IVIwDtiXv/H7aMbtt4ov2DlXTU9NaB2qzlc/m00Y05OTnbxh1mDXIPwctSTaLwPN4tk0qlsg0ZuzwhXSwRJQor1WqYRRxIrKxnJRlWeJ7INsik8g2Zux97SMmF7EhXoTNw92+FgY2jafzseUvjXrsB7p/OJzee/Ww0Z+PGjb//ww4xAIhJPVSwgqWGHuXtLsuL7P7kpCGE3EOOkgRY1QpyFKGkvKSiLaEyef2j3YiA3ZHH2EGprSTHm1hCabIG/rAF9nNGvxlrTObnvgoE5N8c/dEF+do/bYsBUJk1CEPch0RTIB4Unl2PHnz00cPDHivKD8DBIvUhKgbACjYAi3p2dMhKjWHX17j28S6zRoG9G+tlWC5rsir+CQBycrZ+qK07czSavFTIBShgUu167KgZgC0EIF1jVirTVWwfgFqgUIQMhtDJkzoP9kEaheBWUluko1rwP5M9HWsTNRqP4eR1s8eDNKW0YP0L/qkVRQRg48acrX9Eo6590WBcQQioCho/xB4oX/vnGIABFewb0tNfKotEg22wgppTDfsKByh0qEZMjFVgA0TkMtXSkXpj4dggooyJdXAT2EpPZ3O9AUBbB3MvmmZTWU4ULS5ZhcY9u5ABYC7Igt5g6TqF0ONr0NyCzRBt+yTkfoOYCSEuUDMAdFV6LtsyKsGM2or9uwZ1SqFWsfhjRVkAsFEAkJ+NbceakrUUBjPeH3peVUgAXsVAlpK1fEphatIevLQCBu3EJJqXDRgxQYUB+1NIA6JdRfs2inr04woNunJSKlU6vJAFlt5kgOwVZnekrkYMLOVXESAGAB5gQcgKPlU0NVN94RxEY0WrCQA6ahFYJkiQWiSHOiEyUShYM4A2VBisQIsZ/+nYyBe/BpBfWFgIClwpADAvukCbnf22C7AbU9LegzZFCrNEOAsqVpiVBkQWzKEWqllgY5m0cvae0AmzQwIrjnBwjKMwU1cvFpJF9RYA2MtHb4Btetz7jbT+twAgwa1iqsFWhJPaXbz/6uDgvjsD2CTDsbRDAy1UD8gHahJbcAAr8BQASMzFjoGr+wb3Hfwy5LCaFbHOEcDdDECOAKCwECx0fhAnWp12trSQ7L8FACUGXRQAmHFI2RXleZfLWD+OU0vEnspAEYBgF7NtG3XqJBg62jLSdsyx/0h9IM3Fe+1dgwNu5ISC/tepfgoAPrjoXSaa773EQiD7DSECteRnimbHnUU8j0/7ovjQzxU/6Ib4Ur9BANAHUGJikAKz/CAE7sEo3aC34w6+/iA210q6COlZ/FYWEIBV/CzRCu8aAcCbDGjUEjOtDuXLyBvxkR/+x4xG73gx6wKpGyRvwEU0NzRJjQ6JdRHWcd5lpzv0en2SMWC84EZGShg9QhrmvAKA/W/JUtFS7IR+CsBKOSSmfeU+3hgYSvYmJfO0Ir2dP+I2Y+0GGKJeRKUQmkHKSRU2qBKz40hNINkV0JN9Y3KjXe+94KD8RY3QFL3hAiQhAHxVkiJKcb33EgBcsGWLAECNMzex2X3HrucvDnt7W+5doRkBwnUQCOhMTuiBsG5h70JNAu5A49mxt+1aA09X60uGj/J241W3mUmJ4k0AAgPrSxaLUkreBCDUAtoOIJzU1q40780DNX3V4fDdXp7cio9BQir0egoN2nCSYqpWlGKkzninuKv2XnVe9SlmX28PXrrJ49wDbRIICL3NwEsAS10n3gGQriH72E4FXEMLh4J7nRznu8+iALzSpg1RqmGnJAgVHemtUCJCjqs1Y9Wc3FLW4UpiFLQuHHIF9tE2C41jcQzA6CsA78EFS98OQgYgC22NkvqHNP69F0H75bB80nc/2UgA7C407QoNk1r0ZGqzUsGIwPYANQMR0FvNmSyRTj5JoODDE65AP7yWrla/ioHRP77MOwrCWbE0FHRAiAE1gsZgVg8k8LXPL3n5W3cz8+4+88I6pnR1UcNEg7ZqCjgK5UhnpbzUKYq7vI2TTmn1/STBB0neVc+TXQnMpxoBQM7LGKBytIpfgV74KBOiN4NQhUlxzleREBzWHuWNtdcme9Yll5B95EFXMZU6cgJKDu0bhZKtpJMsnH/xY23c/WHeLgQBGu1hV/1AERXXN4sRW3I+E6K42W9KsQAgi4q5OX0gIXgUm8kko2vovDfAVqTX811uFOdQyEz2Ncp0NZVKSAFKL/QzIaDna8+nuhhWUObFBMGEHenUHmjeBkCJ2PEBPuebl7RA0OLXOoBGBm42F43XXMRGBXO5StiCXMguvt9hDmEQAfQdx/UaJaoUOh6NuKgLV5S4wBWy1uWCCy5p+2rQ5TJZeQsAzFctTEYxghDEguANIbJaQTF8EP1GeyKYxFSN7Hd0J5OwmENWBYsCM9uBeZTUwZEkQoa89tjFRmN7R4k9uF77TUJFFoqrWG3+iQvqsEmjcjxjNrak+W8DCKF9UIQ0xT/+XXu61qhnwmrn2yP+G67oU7cGDbkyFPJ4ru/CDuzwLrwiOApUrqsBfWy4bvkj7XzD8S8OVjjMqMdImKy3XVB1vHXOSupJF8NR5BACkCMA0ITU4BenjO4H2qPepJiq4Mz9nhceUGC2kMGz6/EDrsznK+PQAXs8IZab1q5Y+BmTLpf7b9Xc1H69KYR+Du2I4u1ilE8huIT1hKuT4YRSnKq/YoD5FvbNIfOTLxY2lQg57Wrv8d8M7Hej7Kk1niePZGV+50jLvRGnv0z26KSHhY37jl5wgR0M9DQ2Hf/iiSekYf25JuR+BaCUPmA8UBKdxQCkRJO8R/Gx3GsAcK2BzlnBgueQ9iseCGhaV2OH/iCpGg4LDn1SFsm71n2+tbWxeyLDVPbJIY8hpEQU7HMF7AIFnee9L7SHPSxQJZtog/+agVLt6V4+KbqWPikRLbYnxdc0HX3vzOcxAH/dtevJyZPXlRRgYLr6jw1e6gj0gWA9zk4UoP/6o92mT/zPvF5XSYnL633m/ERW9ui6JyTRAUE8pSzKVk3DGf8uD4tTw/WTT57s2vXXf/o9A3BgwfqLtcH4ZP1axsD8ZP7vt1qDwRr0pNCB0ds9eSbZJx89ePj1Y0TYSY/n8d6x1qZAWnTRhQEUd03I8+TBbps8c6TWlUzOSXK1tpXLN+x+ALbxOQUaogRjWlrTUN/9xwbPySeHDz3++uGDj2wmWbjts9GNhCCtJhisvfJ3o52dF8ZN58d8/pFTz3o/30q/3fZ5mJPJIhHs7zBsDx4+Orzr8H/+88GDX153qJn9Xdiuy2SZI60BuAYJwg/1ZNJ2/JNdnutQqOKdA3euHvznv+K2Rw8f2Ng0ZZFMqVzK3d5KWbBlqO/KRJszr901jZ56WOsdnsyszHP6/Lu/+Xbr1m9z9vo4mUlmkcttNhtno32m7OHXhw4/KfJ4zBQVhzfk2bBX5ny3vOh5jEnG4C2/RYar86TM4wqPx411P3oo2w3DeF8ul8uwY8Ydn27dOor994G7YWd5Zd5II79WhKeXGi7DorySq8xo+/Pt25/v9VlkAED/MBgMC1BMfvQ1HdN4PIelEbnMgnczw71e3mj0evvC2L3LbNINEdthD6nD468/mtxdFjGRcYtFbjLJTGw2ufPT259t3PhZSybHcTLOvzfZvkI0j193txK/l8rkXJ6/csTp40yZpoxMmWAf/2z4YuMq5eSPR4cPSSM2mTRThrlt4WsdyUkd13xSuW2DLBOgIrZDhx89MME4t4FOFGQyC60GE+IfXsh9zu9Ht/3JX0n2Mkeqb+Dzu+X6zhYnZ8HF8kw5l1nOWTLZLTJpDALM47VNzlUyJrAumSyvB/alcs7X09ow6aRLbKZKOBmxgyukGxAiNguzTr+TYrpMRgHnPDG68eOWsJz4tTjbuvH53cq53tYJv4nD7ZlsyQy5ycTwy+lnogETyWlWgLDJLOUjjdeclXJZZXiv0bg3XGmSVzonGtvKiS0bERa73sJulcIDEbJv4cqRB9tWORHkJovJv/d8cA6eGlw5zZ7a1+PH9ISXbs8w0ZplJilbf0YGjofYL+B6YtRCGdjpz6i0+SKdLldnxMfBeZ0NIxlyObNoE+zHoNAwRcCASc6FP9+69fZkHoWEf/JKasn0ZezRhSWp3saJcgtdSetmDEjpWGoDAcCPUqn89WTEJFS+tzIcbunm7ahRLb7wZG/NLX/ly99LpRl0i4y+mUxy+iLFqjj/d0h0BHnElFk+MexNXcvOifAQ1rxoTQcygUZGRgazahJcQWMDjNtoVSwxGLWmye6ahrHuJj6K4WrqHmut6Y5kYv0WWabs5UIIACUTsLCAqvR/uhUp6ORwSWbeUE10nvCg3kw8wJPa25YhXAWzNvZVIIK9B0A2NqtMcJNcxmWabg3xvD6KRj0atbu8rbcm84QJcA9eyC1Ssk8AMmRSNl+l/8SWnG0XnRYkRKap/PJYKh7mmUnleGVq8qnqvBjrMsGNFsIvpTDIkArWX2Ul+zXHVV+uNdqN0T174o32aODUXU7O0CGdCIbtFWLhLtzm/5RUFtGYSUNWVn3NOGcGK0Yz5hjHesJy08uAIdfRzYiUDFNGRmwW0h72jRiAush7Wl31x/713/7tXwv2BBpaMjgLSxo5ox/XyGPIpXJkp5TL9K0azdn2fU+5HCkJCrjwSHeJ8EwbPrRNDba3QX8EzBQymSap4AfmRsGlgiAgW+UWesX5xoL/8pcf/uPf/+Mv/+Jtj0WQLbZyG4smgTmYJ8G4uA3r7ynnECQmk6nSea8jOCf22RWdE/JD9/2c/CVfMkEF2EqI2JeRQL+M+cPC+U4FFv3ww9/+9sO/N9dAFdi9HJKPXcTWbpOSEMN8hnMvytC2i5E8UgBoJlS4lZ/9xknlsrmu2mt+U6VMGgskZCCxR3rLpEjOsGDtNkFk8Dbn7K459re//OWHYzXteSZ5RqxyUAqxnGFBhFiqlDl7vssZHd1ywGdiqW7iTM51Ta65q988q50xTR/o7fFV2l5lsmCfzDPTwpzyVwAwyts6gnuOHdsTPH8PBZylDfSa/qustBEI9kaGc/LT21u3bLt9ykkRypzX05dmfPMZSUIQtzbJO3zfL68UpJ853RaTNGaflSWb3CZ8kzNhHRlL9gZTu+/5ONyB2TmZTxjOcg4XcpXSsHPk02+2jm7dcnEEYUI5zHH+yx3epCU/eUoUirBidknys0lfJYfYR0LKsQYbZSVcKWNUCPJKr0m2kQdchq/l2rXLPvIsy73yyYkDbHx6L1wpLw87I5e/u40WYOs3e515nBAl4fCNWp4e757qGVQ9nnty5lXKpbEMoCq/AQBo2ATe0aLE0pscw5U7nWFOLs1g1bz83vdbY+Ozierwvb2rvsnB69HbJ1AuLCQ/nMzf0u4tmb56qud0wUnKHBc00ZnBkQJJWSAy6bUJxYAxQBQwzWPpwlFnIRP8xfk+/zYnNrZ+9ufvP9sI69tyvj8x6UTcoRhZLM7JWw180pK4n3m4HCTMs/MNt3qcMpp1g3QDVSMps0iGBQDkDikTJCH1XyokV97yMXXdbORs2UYj5/bN+2GazUQX+JynOrzG6fN/9llten/W9ADfuI4wv8p5LF3KRIBV+1iLZ2J8yOXU8LDqIePK93780v4W9N4f3/78wN4eZ9hC2gOqwn7Iv2vO4v/ng9r0OGzK7BK+Y12PMxPhiHWbYq0AiqKQlwwAUyaOWLEI9QuAMkaEj1zYGF3T0ob4MMFDKEcw72zpS+aT5q0WJSb+/x+Hn13iarzRhvCq5GICSz7gYl0GDWlMdDAsrHQSBb7vvh3dsmV0C0Tn28+d4QyKD/hezkl9zst9tbx+2vxf8LA+/UHAysVgobUX7kP7yvpzYe1CIDIgxL2QF9R34X8qvXmrPvuYjc8utlEkE1EcV+6PnBpL5o3TZ/3CP1cgCDNS5hr55PZ1oDGjkhN6YwvTIUtMB9HnkDLL6Qt4krNK7htpYeOeL495iYMQOttudASwejKf+N/4s4i4pdOSXHxr36lKpy8DviAFIM4tjHpbrON7GZcWISm48vLycDhcXs7SgqxXTvQ18K458+b/N/9ehC6euQzBwBvP906MOJ3l8spKjrMJrQCDIqizsH0ijzCB2kBYSBw4Uxib94ne8wHeOHfxStFPPyr9ZX+bIoqbtXwOYehb12ICEfstcNcAAAEbSURBVLZKcgdb9AaZ0Le/SkxBHDZIqR5lhJ3OSMu6sdaAt2T28llxol9O/k8/T6a/DlqLpCip7bwycS/T6SuXotgxNbLEZFIW0wjaulRy0nKf32dpudbbUYun32cvX0GPu//6P1MRMMTNT5k3x8UbGzqvXGuBoIRlHAFg2x4sHA2ShYkSs9126hY+F3V5XXPYc+6/gvspMYhmzF88b24qr49vHLt1qlLKgei3Bv14/9qzsY4GO8+nzZ63eNYM0T/A+isMwmesK2elLJ/+/gcf/N9wuc/pdKLwh8Os/Dv9fp//VKox7YP3py1PmbU6TvSPs/4TEETGyrjf/e63v/3fv/nNb/4XG3jxf37729/9bv781TMSX1/+y6z/F1H5n4M/xl1fAAAAAElFTkSuQmCC" alt=""><div>まだ投稿がありません。「投稿作成」から始めてね。</div></div>
-      </div>
-    </div>
-  </div>
 
-  <!-- 右下：生成トレイ＋FAB -->
+      <!-- あいさつ：今日の状況を1行で言い切る -->
+      <div class="db-hello">
+        <img class="fox" src="./assets/iine-fox-happy.png" alt="">
+        <div>
+          <div class="hi">こんにちは、犬カフェOne さん</div>
+          <div class="sub"><i class="ti ti-calendar-event"></i>今日は 8月16日（日）。今日出す投稿が <b>1件</b> あります。</div>
+        </div>
+        <button class="db-cta"><i class="ti ti-plus"></i>投稿を作る</button>
+      </div>
+
+      <!-- 今日やること：一番上に置く。ここだけ見れば次の一手が分かる -->
+      <div class="db-sec">
+        <div class="db-sec-h">
+          <span class="ic" style="background:var(--color-warning-subtle);color:var(--color-warning)"><i class="ti ti-checks"></i></span>
+          <span class="tt">今日やること</span>
+          <span class="cnt">3件</span>
+        </div>
+        <div class="db-card db-todo">
+          <div class="row">
+            <span class="ic warn"><i class="ti ti-clock"></i></span>
+            <div class="tx">
+              <div class="t">確認をお願いされています<span class="num warn">2件</span></div>
+              <div class="d">中身を見て、よければ「承認」してください。承認すると予約が決まります。</div>
+            </div>
+            <button class="go">確認する<i class="ti ti-arrow-right"></i></button>
+          </div>
+          <div class="row">
+            <span class="ic info"><i class="ti ti-calendar-event"></i></span>
+            <div class="tx">
+              <div class="t">投稿する日がまだ決まっていません<span class="num info">3件</span></div>
+              <div class="d">日にちを決めると、その時間に自動で投稿されます。</div>
+            </div>
+            <button class="go">日を決める<i class="ti ti-arrow-right"></i></button>
+          </div>
+          <div class="row">
+            <span class="ic ok"><i class="ti ti-check"></i></span>
+            <div class="tx">
+              <div class="t">今日の投稿は準備できています<span class="num ok">1件</span></div>
+              <div class="d">19:00 に「週末限定パフェのお知らせ」が自動で投稿されます。</div>
+            </div>
+            <button class="go">中身を見る<i class="ti ti-arrow-right"></i></button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 今の状況：数字4枚。クリックで投稿一覧の該当タブへ -->
+      <div class="db-sec">
+        <div class="db-sec-h">
+          <span class="ic" style="background:var(--color-info-subtle);color:var(--color-info)"><i class="ti ti-file-text"></i></span>
+          <span class="tt">今の状況</span>
+          <span class="more">投稿一覧を見る<i class="ti ti-arrow-right"></i></span>
+        </div>
+        <div class="db-stats">
+          <div class="db-stat">
+            <div class="top"><span class="ic" style="background:var(--color-success-subtle);color:var(--color-success)"><i class="ti ti-check"></i></span><span class="nm">今週 投稿した</span></div>
+            <div class="val">12<span class="u">件</span></div>
+            <div class="cmp up"><i class="ti ti-arrow-up"></i>先週より 3件 増えました</div>
+          </div>
+          <div class="db-stat">
+            <div class="top"><span class="ic" style="background:var(--color-info-subtle);color:var(--color-info)"><i class="ti ti-calendar-event"></i></span><span class="nm">予約済み</span></div>
+            <div class="val">5<span class="u">件</span></div>
+            <div class="cmp flat"><i class="ti ti-clock"></i>次は 今日 19:00</div>
+          </div>
+          <div class="db-stat">
+            <div class="top"><span class="ic" style="background:var(--color-accent-purple-subtle);color:var(--color-accent-purple)"><i class="ti ti-pencil"></i></span><span class="nm">下書き</span></div>
+            <div class="val">8<span class="u">件</span></div>
+            <div class="cmp flat"><i class="ti ti-calendar-event"></i>うち 3件 は日時未定</div>
+          </div>
+          <div class="db-stat">
+            <div class="top"><span class="ic" style="background:var(--color-warning-subtle);color:var(--color-warning)"><i class="ti ti-clock"></i></span><span class="nm">確認待ち</span></div>
+            <div class="val">2<span class="u">件</span></div>
+            <div class="cmp warn"><i class="ti ti-alert-circle"></i>あなたの確認待ちです</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 今週の予定：文字を読まなくても「いつ何が出るか」が図で分かる -->
+      <div class="db-sec">
+        <div class="db-sec-h">
+          <span class="ic" style="background:var(--color-primary-subtle);color:var(--color-primary)"><i class="ti ti-calendar"></i></span>
+          <span class="tt">今週の投稿予定</span>
+          <span class="more">カレンダーを見る<i class="ti ti-arrow-right"></i></span>
+        </div>
+        <div class="db-card db-week">
+          <div class="db-day">
+            <div class="dh"><span class="dw">月</span><span class="dd">10</span></div>
+            <div class="db-post" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i><span class="nm">看板犬ポチ</span></div>
+          </div>
+          <div class="db-day">
+            <div class="dh"><span class="dw">火</span><span class="dd">11</span></div>
+            <div class="db-none">予定なし</div>
+          </div>
+          <div class="db-day">
+            <div class="dh"><span class="dw">水</span><span class="dd">12</span></div>
+            <div class="db-post" style="background:var(--color-sns-x-subtle);color:var(--color-sns-x)"><i class="ti ti-brand-x"></i><span class="nm">夏休み営業</span></div>
+          </div>
+          <div class="db-day">
+            <div class="dh"><span class="dw">木</span><span class="dd">13</span></div>
+            <div class="db-post" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i><span class="nm">新人スタッフ</span></div>
+            <div class="db-post" style="background:var(--color-sns-tiktok-subtle);color:var(--color-sns-tiktok)"><i class="ti ti-brand-tiktok"></i><span class="nm">ダックス図鑑</span></div>
+          </div>
+          <div class="db-day">
+            <div class="dh"><span class="dw">金</span><span class="dd">14</span></div>
+            <div class="db-none">予定なし</div>
+          </div>
+          <div class="db-day">
+            <div class="dh"><span class="dw sat">土</span><span class="dd sat">15</span></div>
+            <div class="db-post" style="background:var(--color-sns-youtube-subtle);color:var(--color-sns-youtube)"><i class="ti ti-brand-youtube"></i><span class="nm">1日密着</span></div>
+          </div>
+          <div class="db-day today">
+            <div class="dh"><span class="dw">日</span><span class="dd">16</span><span class="badge-today">今日</span></div>
+            <div class="db-post" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i><span class="nm">パフェのお知らせ</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 下段：左＝最近の投稿 / 右＝伸び・接続・ヘルプ -->
+      <div class="db-cols">
+        <div>
+          <div class="db-sec">
+            <div class="db-sec-h">
+              <span class="ic" style="background:var(--color-like-subtle);color:var(--color-like)"><i class="ti ti-photo"></i></span>
+              <span class="tt">最近出した投稿</span>
+              <span class="more">すべて見る<i class="ti ti-arrow-right"></i></span>
+            </div>
+            <div class="db-card db-recent">
+              <div class="db-rp">
+                <div class="th" style="background:linear-gradient(135deg,#f7d9b0,#efc189)">
+                  <span class="sns" style="color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i></span>
+                  <i class="ti ti-photo" style="font-size:30px;color:rgba(255,255,255,.85)"></i>
+                </div>
+                <div class="bd">
+                  <div class="ti-t">夏の新メニュー トロピカルスムージー</div>
+                  <div class="mt"><span><i class="ti ti-heart"></i>128</span><span><i class="ti ti-eye"></i>2,410</span><span><i class="ti ti-bookmark"></i>36</span></div>
+                </div>
+              </div>
+              <div class="db-rp">
+                <div class="th" style="background:linear-gradient(135deg,#b9dcc0,#93c8a0)">
+                  <span class="sns" style="color:var(--color-sns-tiktok)"><i class="ti ti-brand-tiktok"></i></span>
+                  <i class="ti ti-video" style="font-size:30px;color:rgba(255,255,255,.9)"></i>
+                </div>
+                <div class="bd">
+                  <div class="ti-t">看板犬ポチの朝ルーティン</div>
+                  <div class="mt"><span><i class="ti ti-heart"></i>642</span><span><i class="ti ti-eye"></i>9,180</span><span><i class="ti ti-bookmark"></i>91</span></div>
+                </div>
+              </div>
+              <div class="db-rp">
+                <div class="th" style="background:linear-gradient(135deg,#eec3d8,#e0a5c4)">
+                  <span class="sns" style="color:var(--color-sns-x)"><i class="ti ti-brand-x"></i></span>
+                  <i class="ti ti-photo" style="font-size:30px;color:rgba(255,255,255,.9)"></i>
+                </div>
+                <div class="bd">
+                  <div class="ti-t">お客様の声まとめ 7月前半</div>
+                  <div class="mt"><span><i class="ti ti-heart"></i>75</span><span><i class="ti ti-eye"></i>1,320</span><span><i class="ti ti-bookmark"></i>12</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- SNSの接続：つながってないと投稿できないので、状態を色＋アイコン＋文字で -->
+          <div class="db-sec">
+            <div class="db-sec-h">
+              <span class="ic" style="background:var(--color-surface);color:var(--color-muted-foreground);border:1px solid var(--color-border)"><i class="ti ti-device-mobile"></i></span>
+              <span class="tt">SNSの連携</span>
+            </div>
+            <div class="db-card db-sns">
+              <div class="db-snsrow">
+                <span class="ic" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i></span>
+                <span class="nm">Instagram<small>@inucafe_one</small></span>
+                <span class="db-ok"><i class="ti ti-check"></i>連携しています</span>
+              </div>
+              <div class="db-snsrow">
+                <span class="ic" style="background:var(--color-sns-x-subtle);color:var(--color-sns-x)"><i class="ti ti-brand-x"></i></span>
+                <span class="nm">X<small>@inucafe_one</small></span>
+                <span class="db-ok"><i class="ti ti-check"></i>連携しています</span>
+              </div>
+              <div class="db-snsrow">
+                <span class="ic" style="background:var(--color-sns-tiktok-subtle);color:var(--color-sns-tiktok)"><i class="ti ti-brand-tiktok"></i></span>
+                <span class="nm">TikTok<small>@inucafe_one</small></span>
+                <span class="db-ok"><i class="ti ti-check"></i>連携しています</span>
+              </div>
+              <div class="db-snsrow">
+                <span class="ic" style="background:var(--color-surface);color:var(--color-muted-foreground)"><i class="ti ti-brand-youtube"></i></span>
+                <span class="nm">YouTube<small style="color:var(--color-destructive)">まだ連携していません</small></span>
+                <button class="db-connect">連携する</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <!-- 反応の伸び：グラフ＋矢印＋日本語の一文の3点セット -->
+          <div class="db-sec">
+            <div class="db-sec-h">
+              <span class="ic" style="background:var(--color-success-subtle);color:var(--color-success)"><i class="ti ti-trending-up"></i></span>
+              <span class="tt">先週と比べて</span>
+            </div>
+            <div class="db-card db-growth">
+              <div class="db-grow">
+                <span class="ic" style="background:var(--color-info-subtle);color:var(--color-info)"><i class="ti ti-users"></i></span>
+                <div class="tx">
+                  <div class="nm">フォロワー</div>
+                  <div class="vl">1,284<span style="font-size:var(--text-body);font-weight:var(--font-weight-body);color:var(--color-muted-foreground)"> 人</span></div>
+                  <div class="msg up"><i class="ti ti-arrow-up"></i>38人 増えました</div>
+                </div>
+                <div class="db-bar">
+                  <i style="height:40%;background:var(--color-border-strong)"></i><i style="height:52%;background:var(--color-border-strong)"></i><i style="height:48%;background:var(--color-border-strong)"></i><i style="height:70%;background:var(--color-border-strong)"></i><i style="height:100%;background:var(--color-success)"></i>
+                </div>
+              </div>
+              <div class="db-grow">
+                <span class="ic" style="background:var(--color-like-subtle);color:var(--color-like)"><i class="ti ti-heart"></i></span>
+                <div class="tx">
+                  <div class="nm">いいね</div>
+                  <div class="vl">845<span style="font-size:var(--text-body);font-weight:var(--font-weight-body);color:var(--color-muted-foreground)"> 回</span></div>
+                  <div class="msg up"><i class="ti ti-arrow-up"></i>112回 増えました</div>
+                </div>
+                <div class="db-bar">
+                  <i style="height:55%;background:var(--color-border-strong)"></i><i style="height:44%;background:var(--color-border-strong)"></i><i style="height:62%;background:var(--color-border-strong)"></i><i style="height:58%;background:var(--color-border-strong)"></i><i style="height:100%;background:var(--color-success)"></i>
+                </div>
+              </div>
+              <div class="db-grow">
+                <span class="ic" style="background:var(--color-accent-purple-subtle);color:var(--color-accent-purple)"><i class="ti ti-bookmark"></i></span>
+                <div class="tx">
+                  <div class="nm">保存</div>
+                  <div class="vl">139<span style="font-size:var(--text-body);font-weight:var(--font-weight-body);color:var(--color-muted-foreground)"> 回</span></div>
+                  <div class="msg down"><i class="ti ti-arrow-down"></i>9回 減りました</div>
+                </div>
+                <div class="db-bar">
+                  <i style="height:80%;background:var(--color-border-strong)"></i><i style="height:92%;background:var(--color-border-strong)"></i><i style="height:76%;background:var(--color-border-strong)"></i><i style="height:88%;background:var(--color-border-strong)"></i><i style="height:70%;background:var(--color-destructive)"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 困ったとき -->
+          <div class="db-sec" style="margin-bottom:0">
+            <div class="db-card db-help">
+              <img src="./assets/iine-fox-face.png" alt="">
+              <div>
+                <div class="t">やり方に迷ったら</div>
+                <div class="d">画面ごとの使い方を、写真付きで説明しています。</div>
+              </div>
+              <button class="go"><i class="ti ti-school"></i>使い方を見る</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /main -->
+
+  <!-- 右下：生成トレイ -->
   <div class="corner">
     <div class="tray">
       <div class="trayhd"><i class="ti ti-player-play" style="color:var(--color-primary);font-size:15px"></i><span class="tt">バックグラウンド生成</span><span class="cnt">2</span><i class="ti ti-minus min"></i></div>
@@ -289,7 +660,6 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
       <div class="trayrow"><div class="ic"><i class="ti ti-photo"></i></div><div class="tx"><div class="nm">駅徒歩5分 南向き1LDK</div><div class="st"><span class="spin"></span><span class="shimmer">画像を生成中…（3/4）</span></div><div class="pbar"><i style="width:75%"></i></div></div></div>
       <div class="trayrow done"><div class="ic"><i class="ti ti-check"></i></div><div class="tx"><div class="nm">カフェ新メニュー紹介</div><div class="st"><i class="ti ti-check" style="font-size:13px"></i>生成が完了しました</div></div></div>
     </div>
-    <div class="fab"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAABtCAMAAABeOpmlAAACqVBMVEVMaXFdREU8GAc8GAZPMCxGGwNXJwVPFxkrCg46FgU+GghAHg9EIhU7FgQ7FgU6FgU9GQlEIxjVzszb1tVkJwI+Gww1FAY8GQlBIBEuDwRGJho+GglDIBJJKyKXiYFIKiGll489GQm0oIu7sKy1qKMxDAAuCgD66M356MzAuLX56Mz14sb558z558q7pIv7kxn6khn76cz66c38khn76Mz66Mz6kxv6kRn7lBr7kxv86s36khv////86s/6kxn9lBo6FAL19fUeHh78khf6kRc4EwEhISD458v66s74kRr66M37lBz66Ms9FgIwCwD6khj/mx7/9dgzDQD87NKbQgL/mB36jhIsCAD/8tby8vL/99w0EQIoBAD6kx0cHR6gQwMWFxjz8/MSEhP/lRv+8NT9lhw3DwD669H8/P2kRwT77dZBFwL+7dHoihz35cn4+fn/++EgAQBCIBHzkBzw7+8XGx1OHwNGJhdYOio6Gg4/MR5yMAPi0rlMKxzr3MNvU0JiRDNnSzs1LCFmMgeysrL/nyF1Wkn6pkL78Nr05syOdWKHbVt4PwrvjRxVHQGoXxJPMiZdQDLx4ccbGxuAZVKHSQ3QwKmzZRPihhudkYa+bhf7t2XCsJr7r1GRTw59Z12SOwfp5+b36dCvo5v7nC3LuKDi3t3MxcR2XlODNwJVNSKdVxF8fHt/b2WVgnrbyrOVfGjHdBe8po96enn6mCSokn2NenGjjHZEQj3QeBf64r7//+fm1r7Yxq363bT62av7y477w3wpKSf75cX7oTeroJPbgRqchHA2NDFiXVXt7Ov//vLVfRi4rKfGvbr6055WT0kJCw2KhXpZVk/8VCDgfRb/ViDsnD74Uh+3g0rNeyi4PhbcRRfyTBv+UR3+UB7mkzl+XD+meEeSLa6yAAAAqHRSTlMADsHPGP7+AwH+/nZR6PPcs0L+/v6C/Y5l/jamWiT+Lf6Z/v7+4+69of5pQIKE8f//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////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" alt="AIアシスト"></div>
   </div>
 </div>
 </body></html>

@@ -524,7 +524,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 /* ===== まとめて作る: 生成前の確認 =====
    一気に作ると最後まで中身が見えないので、作る前に案を並べて見せる。 */
 .bulkcheck-sub{font-size:var(--text-body-lg);color:var(--color-muted-foreground);margin:-6px 0 16px;}
-.bcgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.bcgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:14px;}
 .bccard{border:1.5px solid var(--color-border);border-radius:var(--radius-lg);background:var(--color-card);
   overflow:hidden;display:flex;flex-direction:column;transition:border-color .15s,opacity .15s;}
 .bccard.off{opacity:.5;border-style:dashed;}
@@ -548,13 +548,13 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 @media(max-width:768px){ .bcgrid{grid-template-columns:1fr;} }
 /* 案カードの中で投稿日時を決める。チェックを外した案は非活性 */
 .bcsched{display:flex;align-items:center;gap:6px;margin:0 14px;padding:10px 0 0;border-top:1px dashed var(--color-border);}
-.bcsched input{flex:1.5;}
-.bcsched select{flex:1;}
-.bcsched input,.bcsched select{min-width:0;height:34px;padding:0 6px;border-radius:var(--radius-sm);
+.bcsched input{flex:0 1 200px;min-width:132px;}
+.bcsched select{flex:0 0 94px;width:94px;}
+.bcsched input,.bcsched select{height:34px;padding:0 6px;border-radius:var(--radius-sm);
   border:1px solid var(--color-border-strong);background:var(--color-input);font-family:inherit;
   font-size:var(--text-label);color:var(--color-foreground);}
 .bcsched .kari{font-size:var(--text-meta);color:var(--color-muted-foreground);background:var(--color-background);
-  border-radius:var(--radius-full);padding:2px 7px;flex:none;}
+  border-radius:var(--radius-full);padding:2px 7px;flex:none;margin-left:auto;}
 .bccard.off .bcsched{opacity:.45;}
 .bcsched input:disabled,.bcsched select:disabled{cursor:not-allowed;background:var(--color-background);color:var(--color-muted-foreground);}
 /* ===== 予約日時ピッカー（完成画面の「投稿を予約する」から開く） ===== */

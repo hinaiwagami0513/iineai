@@ -57,7 +57,13 @@ function serveStatic(req, res) {
   if (!file.startsWith(ROOT)) { res.writeHead(403).end('forbidden'); return; }
   fs.readFile(file, (err, buf) => {
     if (err) { res.writeHead(404).end('not found'); return; }
-    res.writeHead(200, { 'content-type': MIME[path.extname(file).toLowerCase()] || 'application/octet-stream' });
+    res.writeHead(200, {
+      'content-type': MIME[path.extname(file).toLowerCase()] || 'application/octet-stream',
+      /* 編集がすぐ反映されるように、ブラウザにキャッシュさせない */
+      'cache-control': 'no-store, no-cache, must-revalidate',
+      'pragma': 'no-cache',
+      'expires': '0'
+    });
     res.end(buf);
   });
 }
