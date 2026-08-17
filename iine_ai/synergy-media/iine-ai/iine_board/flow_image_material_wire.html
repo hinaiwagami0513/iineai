@@ -465,6 +465,20 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .bk-done-note{margin-top:14px;display:flex;align-items:center;justify-content:center;gap:6px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-primary);}
 .bk-done-note i{font-size:15px;}
 @media(max-width:600px){ .bk-pop{width:calc(100vw - 24px);padding:16px;} .bk-quick{grid-template-columns:1fr;} }
+/* ===== アスペクト比：比率どおりの四角形で選ばせる ===== */
+.arrow-row{display:flex;gap:8px;}
+.ar{flex:1;display:flex;flex-direction:column;align-items:center;gap:7px;padding:12px 6px 10px;cursor:pointer;
+  border:1px solid var(--color-border);border-radius:var(--radius-md);background:var(--color-card);
+  transition:border-color .15s,background .15s;}
+.ar:hover{border-color:var(--color-border-strong);}
+.ar.on{border-color:var(--color-primary);background:var(--color-primary-subtle);}
+.ar-shape{display:flex;align-items:flex-end;justify-content:center;height:46px;}
+.ar-box{border:2px solid var(--color-border-strong);border-radius:3px;background:var(--color-surface);}
+.ar.on .ar-box{border-color:var(--color-primary);background:var(--color-primary-subtle);}
+.ar-t{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);color:var(--color-foreground);line-height:1;}
+.ar.on .ar-t{color:var(--color-primary);}
+.ar-s{font-size:var(--text-meta);color:var(--color-muted-foreground);line-height:1;}
+.ar.on .ar-s{color:var(--color-primary);}
 </style></head><body>
 <div class="app">
   <div class="topbar"><div class="hdr-left"><span class="hdr-page"><i class="ti ti-template"></i>投稿作成</span><span class="tag" id="flowtag" style="display:none"></span></div><div class="hdr-right"><a class="helpbtn" href="https://hinaiwagami0513.github.io/iineai/help/create/image/" target="_blank" rel="noopener" title="このページのヘルプ（投稿作成 > 画像を作成）" aria-label="このページのヘルプ">?</a><button class="close"><i class="ti ti-list"></i></button></div></div>
@@ -648,10 +662,19 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
             <!-- アスペクト比 -->
             <div style="margin-bottom:16px;">
               <div style="font-size:var(--text-label);font-weight:var(--font-weight-body-strong);margin-bottom:6px;">アスペクト比</div>
-              <div style="display:flex;gap:6px;">
-                <div class="sz on" onclick="pickSz(this)" style="flex:1;padding:8px;text-align:center;border:1px solid var(--color-primary);border-radius:var(--radius-md);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;background:var(--color-primary-subtle);color:var(--color-primary);">4:5</div>
-                <div class="sz" onclick="pickSz(this)" style="flex:1;padding:8px;text-align:center;border:1px solid var(--color-border);border-radius:var(--radius-md);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;background:var(--color-card);">1:1</div>
-                <div class="sz" onclick="pickSz(this)" style="flex:1;padding:8px;text-align:center;border:1px solid var(--color-border);border-radius:var(--radius-md);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;background:var(--color-card);">9:16</div>
+              <div class="arrow-row">
+                <div class="ar on" onclick="pickAspect(this)" title="4:5（フィード）">
+                  <span class="ar-shape"><span class="ar-box" style="width:36px;height:45px;"></span></span>
+                  <span class="ar-t">4:5</span><span class="ar-s">フィード</span>
+                </div>
+                <div class="ar" onclick="pickAspect(this)" title="1:1（正方形）">
+                  <span class="ar-shape"><span class="ar-box" style="width:45px;height:45px;"></span></span>
+                  <span class="ar-t">1:1</span><span class="ar-s">正方形</span>
+                </div>
+                <div class="ar" onclick="pickAspect(this)" title="9:16（ストーリー・リール）">
+                  <span class="ar-shape"><span class="ar-box" style="width:25px;height:45px;"></span></span>
+                  <span class="ar-t">9:16</span><span class="ar-s">ストーリー</span>
+                </div>
               </div>
             </div>
             <!-- フォント -->
@@ -991,6 +1014,11 @@ function pickDrvFile(el){
   if(label){label.textContent=cnt>0?cnt+'件選択中':'未選択';label.style.color=cnt>0?'var(--color-primary)':'var(--color-muted-foreground)';}
 }
 function pickSz(el){el.parentElement.querySelectorAll('.sz').forEach(function(s){s.classList.remove('on');s.style.borderColor='var(--color-border)';s.style.background='var(--color-card)';s.style.color='';});el.classList.add('on');el.style.borderColor='var(--color-primary)';el.style.background='var(--color-primary-subtle)';el.style.color='var(--color-primary)';}
+/* アスペクト比の選択（見た目は CSS の .ar.on 側で切り替える） */
+function pickAspect(el){
+  el.parentElement.querySelectorAll('.ar').forEach(function(a){a.classList.remove('on');});
+  el.classList.add('on');
+}
 /* ===== チャット送信 ===== */
 function chatSendSug(txt){
   if(!txt)return;
