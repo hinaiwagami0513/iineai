@@ -170,7 +170,17 @@
       if (e.key === 'Enter' || e.key === ' ' || e.key === 'ArrowDown') { e.preventDefault(); openContent(wrap); }
     });
 
-    // 外側のコードが sel.value を書き換えたときも表示を合わせる
+    // 外側のコードが sel.value を書き換えたときも表示を合わせる。
+    // change を投げてくれない呼び出し元があるので、代入そのものを拾う
+    ['value', 'selectedIndex'].forEach(function (prop) {
+      var d = Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, prop);
+      if (!d || !d.get || !d.set) return;
+      Object.defineProperty(sel, prop, {
+        configurable: true,
+        get: function () { return d.get.call(this); },
+        set: function (v) { d.set.call(this, v); syncTrigger(wrap); }
+      });
+    });
     sel.addEventListener('change', function () { syncTrigger(wrap); });
     new MutationObserver(function () { syncTrigger(wrap); })
       .observe(sel, { childList: true, attributes: true, attributeFilter: ['disabled'] });
@@ -190,6 +200,14 @@
   } else {
     upgradeAll();
   }
+  // 画面を innerHTML で作り直すところがあるので、増えた select は自動で拾う。
+  // これが無いと再描画のたびに OS 標準の <select> に戻ってしまう。
+  var pending = null;
+  new MutationObserver(function () {
+    if (pending) return;
+    pending = setTimeout(function () { pending = null; upgradeAll(); }, 0);
+  }).observe(document.documentElement, { childList: true, subtree: true });
+
   // 後から DOM に足された select 用
   window.upgradeSelects = upgradeAll;
 })();
