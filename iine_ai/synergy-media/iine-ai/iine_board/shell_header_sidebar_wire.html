@@ -201,7 +201,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .planchip i{font-size:15px;color:var(--color-primary);}
 /* ヘッダーの丸ボタン（ToDo・チャット）。数はバッジで出す */
 .hdwrap{position:relative;display:flex;}
-.hdbtn{position:relative;width:38px;height:38px;flex:none;border:1px solid var(--color-border-strong);background:var(--color-card);color:var(--color-foreground);border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:19px;cursor:pointer;padding:0;}
+.hdbtn{position:relative;width:38px;height:38px;flex:none;border:1px solid var(--color-border-strong);background:var(--color-card);color:var(--color-foreground);border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:19px;cursor:pointer;padding:0;text-decoration:none;}
 .hdbtn:hover{border-color:var(--color-primary);color:var(--color-primary);}
 .hdbtn.on{border-color:var(--color-primary);color:var(--color-primary);background:var(--color-primary-subtle);}
 .hdbadge{position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;padding:0 5px;border-radius:var(--radius-full);background:var(--color-primary);color:var(--color-on-primary);font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);display:flex;align-items:center;justify-content:center;border:2px solid var(--color-card);}
@@ -475,7 +475,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
       <div class="ni"><i class="ti ti-file-text"></i>投稿</div>
       <div class="ni"><i class="ti ti-calendar"></i>カレンダー</div>
       <div class="ni"><i class="ti ti-chart-bar"></i>分析</div>
-      <div class="ni"><i class="ti ti-folder"></i>ドライブ</div>
+      <a class="ni" href="./drive_wire.html"><i class="ti ti-folder"></i>ドライブ</a>
       <div class="nidiv"></div>
       <div class="ni" onclick="navToggle(this)"><i class="ti ti-settings"></i>設定<span class="cv"><i class="ti ti-chevron-down"></i></span></div>
       <div class="nisub">
@@ -562,7 +562,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
           </div>
         </div>
         <!-- チャット：未読の数だけヘッダーに出す -->
-        <button class="hdbtn" title="チャット（未読2件）" aria-label="チャット（未読2件）"><i class="ti ti-message-dots"></i><span class="hdbadge">2</span></button>
+        <a class="hdbtn" href="./chat_wire.html" title="チャット（未読2件）" aria-label="チャット（未読2件）"><i class="ti ti-message-dots"></i><span class="hdbadge">2</span></a>
         <a class="help" href="https://hinaiwagami0513.github.io/iineai/help/" target="_blank" rel="noopener" title="このページのヘルプ（ヘルプセンター トップ）" aria-label="このページのヘルプ"><i class="ti ti-help"></i></a>
       </div>
     </div>
@@ -619,7 +619,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
             <span class="ic" style="background:var(--color-accent-purple-subtle);color:var(--color-accent-purple)"><i class="ti ti-message-dots"></i></span>
             <span class="tt">チャット</span>
             <span class="cnt">未読2</span>
-            <button class="more">開く<i class="ti ti-arrow-right"></i></button>
+            <a class="more" href="./chat_wire.html">開く<i class="ti ti-arrow-right"></i></a>
           </div>
           <div class="mb">
             <div class="db-msg">

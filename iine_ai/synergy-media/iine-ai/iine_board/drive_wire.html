@@ -1,0 +1,610 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>いいねドライブ — いいねAI</title>
+<link rel="stylesheet" href="./tabler-icons-inline.css">
+<style>
+/* このファイルで使うアイコンだけ定義する（フォント実体は tabler-icons-inline.css）。
+   字形コードは同梱フォントで実物を描画して確認済み。 */
+.ti-plus:before{content:"\eb0b"}
+.ti-layout-dashboard:before{content:"\f02c"}
+.ti-file-text:before{content:"\eaa2"}
+.ti-file:before{content:"\eaa4"}
+.ti-calendar:before{content:"\ea53"}
+.ti-calendar-event:before{content:"\ea52"}
+.ti-chart-bar:before{content:"\ea59"}
+.ti-messages:before{content:"\eb6c"}
+.ti-message-dots:before{content:"\eaee"}
+.ti-folder:before{content:"\eaad"}
+.ti-dots:before{content:"\ea95"}
+.ti-dots-vertical:before{content:"\ea94"}
+.ti-settings:before{content:"\eb20"}
+.ti-chevron-down:before{content:"\ea5f"}
+.ti-chevron-right:before{content:"\ea61"}
+.ti-selector:before{content:"\eb1d"}
+.ti-coffee:before{content:"\ef0e"}
+.ti-sparkles:before{content:"\f6d7"}
+.ti-help:before{content:"\eabf"}
+.ti-list-check:before{content:"\eb6a"}
+.ti-clock:before{content:"\ea70"}
+.ti-check:before{content:"\ea5e"}
+.ti-x:before{content:"\eb55"}
+.ti-search:before{content:"\eb1c"}
+.ti-arrow-right:before{content:"\ea1f"}
+.ti-alert-triangle:before{content:"\ea06"}
+.ti-trash:before{content:"\eb41"}
+.ti-star:before{content:"\eb2e"}
+.ti-photo:before{content:"\eb0a"}
+.ti-video:before{content:"\ed22"}
+.ti-music:before{content:"\eafc"}
+.ti-upload:before{content:"\eb47"}
+.ti-download:before{content:"\ea96"}
+.ti-copy:before{content:"\ea7a"}
+.ti-pencil:before{content:"\eb04"}
+.ti-share:before{content:"\eb21"}
+.ti-users:before{content:"\ebf2"}
+.ti-world:before{content:"\eb54"}
+.ti-refresh:before{content:"\eb13"}
+.ti-database:before{content:"\eb1f"}
+.ti-external-link:before{content:"\ea99"}
+
+:root {
+  --color-primary: #ef6108;
+  --color-primary-hover: #d9570a;
+  --color-primary-light: #ff971e;
+  --color-primary-subtle: #fff2e2;
+  --color-on-primary: #ffffff;
+  --color-background: #f2f1f0;
+  --color-surface: #fbfaf8;
+  --color-card: #ffffff;
+  --color-foreground: #2a2826;
+  --color-muted-foreground: #757575;
+  --color-border: #e9e8e6;
+  --color-border-strong: #cfcdc9;
+  --color-input: #ffffff;
+  --color-ring: #ef6108;
+  --color-success: #12960a;
+  --color-success-subtle: #e7f3e6;
+  --color-warning: #8a6d0f;
+  --color-warning-subtle: #fcf4d9;
+  --color-info: #185fa5;
+  --color-info-subtle: #e6f1fb;
+  --color-destructive: #dc2626;
+  --color-destructive-subtle: #fee2e2;
+  --color-accent-purple: #9724ba;
+  --color-accent-purple-subtle: #f5e7f8;
+  --font-body: "Noto Sans JP";
+  --text-h1: 1.875rem;
+  --text-h2: 1.25rem;
+  --text-h3: 1rem;
+  --text-body-lg: 1rem;
+  --text-body: 0.875rem;
+  --text-label: 0.75rem;
+  --text-meta: 0.625rem;
+  --font-weight-h1: 700;
+  --font-weight-h2: 700;
+  --font-weight-h3: 700;
+  --font-weight-body: 400;
+  --font-weight-body-strong: 700;
+  --font-weight-label: 500;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:var(--font-body),'Hiragino Sans','Meiryo',sans-serif;-webkit-font-smoothing:antialiased;}
+body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
+.app{width:1240px;margin:0 auto;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-xl);overflow:hidden;display:flex;height:800px;position:relative;}
+.ti{line-height:1;}
+
+/* ===== サイドバー（全画面共通） ===== */
+.sb{width:250px;flex:none;background:var(--color-surface);border-right:1px solid var(--color-border);display:flex;flex-direction:column;}
+.sbtop{padding:16px 16px 10px;}
+.logo{font-size:var(--text-h3);font-weight:var(--font-weight-h3);color:var(--color-primary);margin-bottom:14px;display:block;}
+.create{width:100%;display:flex;align-items:center;justify-content:center;gap:7px;background:var(--color-primary);color:#fff;border:none;border-radius:var(--radius-md);padding:11px;font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;}
+.nav{padding:6px 10px;overflow-y:auto;flex:1;}
+.ni{display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:var(--radius-md);font-size:var(--text-body);font-weight:var(--font-weight-label);color:var(--color-foreground);cursor:pointer;text-decoration:none;}
+.ni .ti{font-size:18px;color:#6b6864;}
+.ni .cv{margin-left:auto;font-size:14px;color:#a8a6a2;}
+.ni.on{background:var(--color-primary-subtle);color:var(--color-primary);font-weight:var(--font-weight-body-strong);}
+.ni.on .ti{color:var(--color-primary);}
+.nidiv{height:1px;background:var(--color-border);margin:8px 10px;}
+.ni.exp .cv{transform:rotate(180deg);}
+.nisub{display:none;}
+.nisub.open{display:block;}
+.nis{display:flex;align-items:center;text-decoration:none;padding:8px 10px 8px 41px;border-radius:var(--radius-md);font-size:var(--text-label);font-weight:var(--font-weight-label);color:var(--color-muted-foreground);cursor:pointer;}
+.nis:hover{background:var(--color-primary-subtle);color:var(--color-primary);}
+.foot{border-top:1px solid var(--color-border);padding:12px;}
+.switcher{display:flex;align-items:center;gap:10px;padding:9px 10px;border:1px solid var(--color-border-strong);border-radius:var(--radius-md);background:var(--color-card);cursor:pointer;}
+.switcher .pic{width:34px;height:34px;flex:none;border-radius:var(--radius-md);background:#fde9d3;color:var(--color-primary);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.switcher .pn{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);}
+.switcher .an{font-size:var(--text-meta);color:#a8a6a2;}
+.switcher .cv{margin-left:auto;color:#a8a6a2;font-size:17px;}
+
+/* ===== メイン ===== */
+.main{flex:1;min-width:0;display:flex;flex-direction:column;}
+.hd{height:64px;flex:none;display:flex;align-items:center;gap:11px;padding:0 26px;border-bottom:1px solid var(--color-border);}
+.hd .pgic{font-size:22px;color:var(--color-foreground);}
+.hd .pgnm{font-size:var(--text-h3);font-weight:var(--font-weight-body-strong);}
+.hd .r{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.help{width:38px;height:38px;border:1.5px solid var(--color-primary);color:var(--color-primary);background:transparent;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:19px;cursor:pointer;text-decoration:none;}
+.help:hover{background:var(--color-primary);color:var(--color-on-primary);}
+.planchip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--color-border-strong);border-radius:var(--radius-full);padding:5px 12px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);white-space:nowrap;}
+.planchip i{font-size:15px;color:var(--color-primary);}
+.hdbtn{position:relative;width:38px;height:38px;flex:none;border:1px solid var(--color-border-strong);background:var(--color-card);color:var(--color-foreground);border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:19px;cursor:pointer;padding:0;text-decoration:none;}
+.hdbtn:hover{border-color:var(--color-primary);color:var(--color-primary);}
+.hdbadge{position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;padding:0 5px;border-radius:var(--radius-full);background:var(--color-primary);color:var(--color-on-primary);font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);display:flex;align-items:center;justify-content:center;border:2px solid var(--color-card);}
+
+/* ===== 素材 / 学習 のタブ =====
+   旧「学習」はドライブに統合した。ただし性格が違う（素材=投稿に貼るもの／
+   学習=AIに読ませるもの）ので、フォルダで混ぜずタブで分ける。 */
+.tabs{display:flex;gap:0;padding:0 26px;border-bottom:1px solid var(--color-border);flex:none;background:var(--color-card);}
+.tab{display:flex;align-items:center;gap:8px;padding:13px 20px;font-family:inherit;font-size:var(--text-body-lg);font-weight:var(--font-weight-label);color:var(--color-muted-foreground);background:none;border:none;border-bottom:3px solid transparent;margin-bottom:-1px;cursor:pointer;}
+.tab i{font-size:18px;}
+.tab:hover{color:var(--color-foreground);}
+.tab.on{color:var(--color-primary);border-bottom-color:var(--color-primary);font-weight:var(--font-weight-body-strong);}
+.pane{flex:1;min-height:0;display:none;}
+.pane.on{display:flex;}
+
+/* ===== 左：ドライブのツリー ===== */
+.tree{width:244px;flex:none;border-right:1px solid var(--color-border);background:var(--color-surface);display:flex;flex-direction:column;}
+.tree-body{flex:1;overflow-y:auto;padding:14px 10px;}
+.tree-lbl{font-size:var(--text-label);color:var(--color-muted-foreground);font-weight:var(--font-weight-body-strong);padding:12px 10px 6px;}
+.tree-lbl:first-child{padding-top:0;}
+.tr{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--radius-md);font-size:var(--text-body);color:var(--color-foreground);cursor:pointer;}
+.tr:hover{background:var(--color-primary-subtle);}
+.tr.on{background:var(--color-primary-subtle);color:var(--color-primary);font-weight:var(--font-weight-body-strong);}
+.tr .ti{font-size:17px;color:#6b6864;flex:none;}
+.tr.on .ti{color:var(--color-primary);}
+.tr .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.tr .num{font-size:var(--text-meta);color:var(--color-muted-foreground);font-weight:var(--font-weight-body-strong);}
+.tr .cv{font-size:13px;color:#a8a6a2;transition:transform .15s;}
+.tr.exp .cv{transform:rotate(90deg);}
+.trsub{display:none;margin-left:14px;border-left:1px solid var(--color-border);padding-left:4px;}
+.trsub.open{display:block;}
+/* 使用量。無制限プランへの導線はここ1箇所 */
+.tree-foot{flex:none;border-top:1px solid var(--color-border);padding:12px;}
+.usage{display:flex;align-items:baseline;gap:6px;font-size:var(--text-label);margin-bottom:6px;}
+.usage b{font-weight:var(--font-weight-body-strong);}
+.usage .of{color:var(--color-muted-foreground);}
+.usage .pc{margin-left:auto;color:var(--color-muted-foreground);font-weight:var(--font-weight-body-strong);}
+.bar{height:6px;background:var(--color-border);border-radius:var(--radius-full);overflow:hidden;margin-bottom:12px;}
+.bar i{display:block;height:100%;background:var(--color-primary);border-radius:var(--radius-full);}
+.upg{width:100%;display:flex;align-items:center;justify-content:center;gap:7px;border:1.5px solid var(--color-primary);color:var(--color-primary);background:transparent;border-radius:var(--radius-md);padding:10px;font-family:inherit;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);cursor:pointer;}
+.upg:hover{background:var(--color-primary);color:var(--color-on-primary);}
+
+/* ===== 右：ファイル一覧 ===== */
+.files{flex:1;min-width:0;overflow-y:auto;padding:20px 24px 40px;background:var(--color-background);}
+.crumb{display:flex;align-items:center;gap:6px;font-size:var(--text-label);color:var(--color-muted-foreground);margin-bottom:12px;flex-wrap:wrap;}
+.crumb a{color:var(--color-muted-foreground);text-decoration:none;cursor:pointer;}
+.crumb a:hover{color:var(--color-primary);text-decoration:underline;}
+.crumb .sep{font-size:13px;}
+.crumb b{color:var(--color-foreground);font-weight:var(--font-weight-body-strong);}
+.fhead{display:flex;align-items:center;gap:12px;margin-bottom:16px;flex-wrap:wrap;}
+.fhead .h{font-size:var(--text-h2);font-weight:var(--font-weight-h2);}
+.fhead .cnt{font-size:var(--text-label);color:var(--color-muted-foreground);}
+.fhead .sp{margin-left:auto;display:flex;gap:10px;}
+.btn-o{display:inline-flex;align-items:center;gap:7px;border:1.5px solid var(--color-primary);color:var(--color-primary);background:transparent;border-radius:var(--radius-md);padding:10px 16px;font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;white-space:nowrap;}
+.btn-o:hover{background:var(--color-primary);color:var(--color-on-primary);}
+.btn-p{display:inline-flex;align-items:center;gap:7px;background:var(--color-primary);color:var(--color-on-primary);border:none;border-radius:var(--radius-md);padding:11px 18px;font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;white-space:nowrap;}
+.btn-p:hover{background:var(--color-primary-hover);}
+.chips{display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap;}
+.chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--color-border-strong);background:var(--color-card);color:var(--color-muted-foreground);border-radius:var(--radius-full);padding:7px 16px;font-family:inherit;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);cursor:pointer;}
+.chip:hover{border-color:var(--color-primary);color:var(--color-primary);}
+.chip.on{background:var(--color-primary-subtle);border-color:var(--color-primary);color:var(--color-primary);}
+.sec-t{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);margin-bottom:11px;}
+/* フォルダ */
+.fgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:26px;}
+.fcard{display:flex;align-items:center;gap:10px;min-width:0;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:13px 14px;cursor:pointer;}
+.fcard:hover{border-color:var(--color-primary);}
+.fcard .ic{width:32px;height:32px;flex:none;border-radius:var(--radius-sm);background:var(--color-primary-subtle);color:var(--color-primary);display:flex;align-items:center;justify-content:center;font-size:19px;}
+.fcard>div{min-width:0;}
+.fcard .nm{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.fcard .mt{font-size:var(--text-meta);color:var(--color-muted-foreground);margin-top:3px;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+/* ファイル */
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
+.file{background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-md);overflow:hidden;cursor:pointer;position:relative;}
+.file:hover{border-color:var(--color-primary);}
+.file.on{border:2px solid var(--color-primary);}
+.file .th{aspect-ratio:1;display:flex;align-items:center;justify-content:center;position:relative;}
+.file .th .kind{position:absolute;top:7px;left:7px;width:24px;height:24px;border-radius:var(--radius-full);background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;font-size:13px;color:var(--color-foreground);}
+.file .th .fav{position:absolute;top:7px;right:7px;font-size:15px;color:#ffb020;}
+.file .bd{padding:9px 10px 11px;border-top:1px solid var(--color-border);}
+.file .nm{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.file .mt{font-size:var(--text-meta);color:var(--color-muted-foreground);margin-top:3px;}
+.file.hide{display:none;}
+.empty{padding:40px;text-align:center;font-size:var(--text-body);color:var(--color-muted-foreground);background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);}
+
+/* ===== ファイル詳細（右からのドロワー） ===== */
+.drawer{position:absolute;top:0;right:0;bottom:0;width:380px;background:var(--color-card);border-left:1px solid var(--color-border);box-shadow:-8px 0 24px rgba(0,0,0,.10);display:none;flex-direction:column;z-index:30;}
+.drawer.on{display:flex;}
+.dr-h{display:flex;align-items:center;gap:8px;padding:15px 18px;border-bottom:1px solid var(--color-border);flex:none;}
+.dr-h .tt{font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);}
+.dr-icon{margin-left:auto;width:32px;height:32px;border:none;background:transparent;color:var(--color-muted-foreground);border-radius:var(--radius-sm);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;position:relative;}
+.dr-icon:hover{background:var(--color-surface);color:var(--color-foreground);}
+.dr-menu{position:absolute;top:38px;right:0;width:186px;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-md);box-shadow:0 8px 24px rgba(0,0,0,.16);padding:6px;display:none;z-index:5;}
+.dr-menu.on{display:block;}
+.dr-menu div{display:flex;align-items:center;gap:9px;padding:9px 10px;border-radius:var(--radius-sm);font-size:var(--text-body);cursor:pointer;text-align:left;}
+.dr-menu div:hover{background:var(--color-surface);}
+.dr-menu .del{color:var(--color-destructive);}
+.dr-menu .del:hover{background:var(--color-destructive-subtle);}
+.dr-body{flex:1;overflow-y:auto;padding:18px;}
+.dr-prev{width:100%;aspect-ratio:1;border-radius:var(--radius-md);border:1px solid var(--color-border);margin-bottom:14px;}
+.dr-nm{font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);line-height:1.6;word-break:break-all;}
+.dr-tbl{margin-top:14px;border:1px solid var(--color-border);border-radius:var(--radius-md);overflow:hidden;}
+.dr-tbl .row{display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--color-border);font-size:var(--text-label);}
+.dr-tbl .row:last-child{border-bottom:none;}
+.dr-tbl .k{color:var(--color-muted-foreground);}
+.dr-tbl .v{margin-left:auto;font-weight:var(--font-weight-body-strong);text-align:right;}
+.dr-cta{width:100%;margin-top:16px;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--color-primary);color:var(--color-on-primary);border:none;border-radius:var(--radius-md);padding:14px;font-family:inherit;font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);cursor:pointer;text-decoration:none;}
+.dr-cta:hover{background:var(--color-primary-hover);}
+/* この素材を使った投稿の逆引き。同じ写真の使い回しに気づける */
+.dr-used{margin-top:20px;}
+.dr-used .t{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);margin-bottom:9px;}
+.dr-post{display:flex;align-items:center;gap:10px;padding:9px 10px;border:1px solid var(--color-border);border-radius:var(--radius-md);margin-bottom:8px;cursor:pointer;}
+.dr-post:hover{border-color:var(--color-primary);}
+.dr-post .sw{width:34px;height:34px;flex:none;border-radius:var(--radius-sm);}
+.dr-post .tx{flex:1;min-width:0;}
+.dr-post .pt{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.dr-post .pd{font-size:var(--text-meta);color:var(--color-muted-foreground);margin-top:2px;}
+
+/* ===== 学習タブ ===== */
+.learn{flex:1;min-width:0;overflow-y:auto;padding:20px 24px 40px;background:var(--color-background);}
+.lrn-note{display:flex;align-items:flex-start;gap:13px;background:var(--color-info-subtle);border:1px solid #cfe0f2;border-radius:var(--radius-lg);padding:16px 18px;margin-bottom:20px;}
+.lrn-note .ic{width:34px;height:34px;flex:none;border-radius:var(--radius-full);background:#fff;color:var(--color-info);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.lrn-note .t{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);margin-bottom:4px;}
+.lrn-note .d{font-size:var(--text-label);line-height:1.8;color:var(--color-foreground);}
+.lrn-list{background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden;}
+.lrn{display:flex;align-items:center;gap:14px;padding:15px 18px;border-bottom:1px solid var(--color-border);}
+.lrn:last-child{border-bottom:none;}
+.lrn:hover{background:var(--color-surface);}
+.lrn .ic{width:40px;height:40px;flex:none;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:19px;}
+.lrn .ic.doc{background:var(--color-destructive-subtle);color:var(--color-destructive);}
+.lrn .ic.off{background:var(--color-success-subtle);color:var(--color-success);}
+.lrn .ic.web{background:var(--color-info-subtle);color:var(--color-info);}
+.lrn .tx{flex:1;min-width:0;}
+.lrn .nm{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.lrn .mt{font-size:var(--text-meta);color:var(--color-muted-foreground);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.st{display:inline-flex;align-items:center;gap:5px;flex:none;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);border-radius:var(--radius-full);padding:5px 12px;}
+.st.ok{background:var(--color-success-subtle);color:var(--color-success);}
+.st.run{background:var(--color-info-subtle);color:var(--color-info);}
+.st.ng{background:var(--color-destructive-subtle);color:var(--color-destructive);}
+.lrn .more{flex:none;width:32px;height:32px;border:none;background:transparent;color:var(--color-muted-foreground);border-radius:var(--radius-sm);font-size:18px;cursor:pointer;}
+.lrn .more:hover{background:var(--color-border);color:var(--color-foreground);}
+.lrn-foot{font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.9;margin-top:16px;}
+
+@media(max-width:1200px){
+  .grid{grid-template-columns:repeat(3,1fr);}
+  .fgrid{grid-template-columns:repeat(2,1fr);}
+  .drawer{width:100%;}
+}
+</style></head><body>
+<div class="app">
+  <!-- サイドバー -->
+  <aside class="sb">
+    <div class="sbtop"><span class="logo">いいねAI</span><button class="create"><i class="ti ti-plus"></i>投稿作成</button></div>
+    <div class="nav">
+      <a class="ni" href="./shell_header_sidebar_wire.html"><i class="ti ti-layout-dashboard"></i>ホーム</a>
+      <a class="ni" href="./post_list_wire.html"><i class="ti ti-file-text"></i>投稿</a>
+      <div class="ni"><i class="ti ti-calendar"></i>カレンダー</div>
+      <a class="ni" href="./analysis_visual_wire.html"><i class="ti ti-chart-bar"></i>分析</a>
+      <div class="ni on"><i class="ti ti-folder"></i>ドライブ</div>
+      <div class="nidiv"></div>
+      <div class="ni" onclick="navToggle(this)"><i class="ti ti-settings"></i>設定<span class="cv"><i class="ti ti-chevron-down"></i></span></div>
+      <div class="nisub">
+        <div class="nis">運用目的</div>
+        <div class="nis">SNS設定</div>
+        <div class="nis">メンバー管理</div>
+        <div class="nis">AIレビュー</div>
+      </div>
+      <div class="nidiv"></div>
+      <div class="ni" onclick="navToggle(this)"><i class="ti ti-dots"></i>その他<span class="cv"><i class="ti ti-chevron-down"></i></span></div>
+      <div class="nisub">
+        <a class="nis" href="./news_wire.html">NEWS</a>
+        <a class="nis" href="https://hinaiwagami0513.github.io/iineai/help/" target="_blank" rel="noopener">ヘルプセンター</a>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="switcher"><div class="pic"><i class="ti ti-coffee"></i></div><div><div class="pn">犬カフェOne</div><div class="an">田中 陽菜</div></div><i class="ti ti-selector cv"></i></div>
+    </div>
+  </aside>
+
+  <!-- メイン -->
+  <div class="main">
+    <div class="hd">
+      <i class="ti ti-database pgic"></i><span class="pgnm">いいねドライブ</span>
+      <div class="r">
+        <span class="planchip"><i class="ti ti-sparkles"></i>ベーシックOne</span>
+        <button class="hdbtn" title="ToDo" aria-label="ToDo"><i class="ti ti-list-check"></i><span class="hdbadge">5</span></button>
+        <a class="hdbtn" href="./chat_wire.html" title="チャット（未読2件）" aria-label="チャット（未読2件）"><i class="ti ti-message-dots"></i><span class="hdbadge">2</span></a>
+        <a class="help" href="https://hinaiwagami0513.github.io/iineai/help/" target="_blank" rel="noopener" title="このページのヘルプ" aria-label="このページのヘルプ"><i class="ti ti-help"></i></a>
+      </div>
+    </div>
+
+    <!-- 素材 / 学習 -->
+    <div class="tabs">
+      <button class="tab on" id="tabMat" onclick="drvTab('mat')"><i class="ti ti-photo"></i>素材</button>
+      <button class="tab" id="tabLrn" onclick="drvTab('lrn')"><i class="ti ti-world"></i>学習</button>
+    </div>
+
+    <!-- ===== 素材タブ ===== -->
+    <div class="pane on" id="paneMat">
+      <!-- 左：ツリー -->
+      <div class="tree">
+        <div class="tree-body">
+          <div class="tree-lbl">クイック</div>
+          <div class="tr" onclick="pickFolder(this,'最近使った')"><i class="ti ti-clock"></i><span class="nm">最近使った</span><span class="num">24</span></div>
+          <div class="tr" onclick="pickFolder(this,'お気に入り')"><i class="ti ti-star"></i><span class="nm">お気に入り</span><span class="num">8</span></div>
+          <div class="tr" onclick="pickFolder(this,'ゴミ箱')"><i class="ti ti-trash"></i><span class="nm">ゴミ箱</span><span class="num">3</span></div>
+
+          <div class="tree-lbl">マイドライブ</div>
+          <div class="tr exp" onclick="treeToggle(this)"><i class="ti ti-chevron-right cv"></i><i class="ti ti-photo"></i><span class="nm">画像</span></div>
+          <div class="trsub open">
+            <div class="tr on" onclick="pickFolder(this,'Instagram用')"><i class="ti ti-folder"></i><span class="nm">Instagram用</span></div>
+            <div class="tr" onclick="pickFolder(this,'X用')"><i class="ti ti-folder"></i><span class="nm">X用</span></div>
+            <div class="tr" onclick="pickFolder(this,'過去キャンペーン')"><i class="ti ti-folder"></i><span class="nm">過去キャンペーン</span></div>
+          </div>
+          <div class="tr" onclick="treeToggle(this)"><i class="ti ti-chevron-right cv"></i><i class="ti ti-video"></i><span class="nm">動画</span></div>
+          <div class="trsub">
+            <div class="tr" onclick="pickFolder(this,'リール素材')"><i class="ti ti-folder"></i><span class="nm">リール素材</span></div>
+            <div class="tr" onclick="pickFolder(this,'店内の様子')"><i class="ti ti-folder"></i><span class="nm">店内の様子</span></div>
+          </div>
+          <div class="tr" onclick="pickFolder(this,'音声・BGM')"><i class="ti ti-music"></i><span class="nm">音声・BGM</span></div>
+          <div class="tr" onclick="pickFolder(this,'ブランド素材')"><i class="ti ti-star"></i><span class="nm">ブランド素材</span></div>
+
+          <div class="tree-lbl">共有</div>
+          <div class="tr" onclick="pickFolder(this,'チームと共有')"><i class="ti ti-users"></i><span class="nm">チームと共有</span></div>
+          <div class="tr" onclick="pickFolder(this,'リンク共有')"><i class="ti ti-share"></i><span class="nm">リンク共有</span></div>
+        </div>
+        <div class="tree-foot">
+          <div class="usage"><b>2.1 GB</b><span class="of">/ 10 GB</span><span class="pc">21%</span></div>
+          <div class="bar"><i style="width:21%"></i></div>
+          <button class="upg"><i class="ti ti-sparkles"></i>プロプランで無制限に</button>
+        </div>
+      </div>
+
+      <!-- 右：ファイル -->
+      <div class="files">
+        <div class="crumb"><a>マイドライブ</a><i class="ti ti-chevron-right sep"></i><a>画像</a><i class="ti ti-chevron-right sep"></i><b>Instagram用</b></div>
+        <div class="fhead">
+          <span class="h" id="fTitle">Instagram用</span>
+          <span class="cnt">4フォルダ・8ファイル・245 MB</span>
+          <span class="sp">
+            <button class="btn-o"><i class="ti ti-plus"></i>新規フォルダ</button>
+            <button class="btn-p"><i class="ti ti-upload"></i>アップロード</button>
+          </span>
+        </div>
+
+        <div class="chips">
+          <button class="chip on" data-k="all" onclick="drvFilter(this)">すべて</button>
+          <button class="chip" data-k="img" onclick="drvFilter(this)">画像</button>
+          <button class="chip" data-k="vid" onclick="drvFilter(this)">動画</button>
+          <button class="chip" data-k="aud" onclick="drvFilter(this)">音声</button>
+          <button class="chip" data-k="ai" onclick="drvFilter(this)">AI生成のみ</button>
+        </div>
+
+        <div class="sec-t">フォルダ（4）</div>
+        <div class="fgrid">
+          <div class="fcard"><span class="ic"><i class="ti ti-folder"></i></span><div><div class="nm">春コレ 2026</div><div class="mt">23件・3日前</div></div></div>
+          <div class="fcard"><span class="ic"><i class="ti ti-folder"></i></span><div><div class="nm">秋冬コーデ集</div><div class="mt">18件・3日前</div></div></div>
+          <div class="fcard"><span class="ic"><i class="ti ti-folder"></i></span><div><div class="nm">夏フェス 素材</div><div class="mt">31件・1週間前</div></div></div>
+          <div class="fcard"><span class="ic"><i class="ti ti-folder"></i></span><div><div class="nm">商品撮影 RAW</div><div class="mt">12件・2週間前</div></div></div>
+        </div>
+
+        <div class="sec-t">ファイル（8）</div>
+        <div class="grid" id="fileGrid">
+          <div class="file" data-k="img" data-ai="0" data-nm="看板犬ポチ_01.jpg" data-fmt="JPG・2048×2048" data-sz="2.4 MB" data-made="2026/08/12" data-edit="3日前" data-fav="1" data-g="linear-gradient(135deg,#f7d9b0,#efc189)" onclick="openFile(this)">
+            <div class="th" style="background:linear-gradient(135deg,#f7d9b0,#efc189)"><span class="kind"><i class="ti ti-photo"></i></span><span class="fav"><i class="ti ti-star"></i></span></div>
+            <div class="bd"><div class="nm">看板犬ポチ_01.jpg</div><div class="mt">2.4 MB・3日前</div></div>
+          </div>
+          <div class="file" data-k="img" data-ai="1" data-nm="パフェ_新作_AI.png" data-fmt="PNG・1080×1080" data-sz="1.2 MB" data-made="2026/08/12" data-edit="3日前" data-fav="0" data-g="linear-gradient(135deg,#eec3d8,#e0a5c4)" onclick="openFile(this)">
+            <div class="th" style="background:linear-gradient(135deg,#eec3d8,#e0a5c4)"><span class="kind"><i class="ti ti-sparkles"></i></span></div>
+            <div class="bd"><div class="nm">パフェ_新作_AI.png</div><div class="mt">1.2 MB・3日前</div></div>
+          </div>
+          <div class="file" data-k="img" data-ai="0" data-nm="店内_カウンター.jpg" data-fmt="JPG・4032×3024" data-sz="3.1 MB" data-made="2026/08/10" data-edit="5日前" data-fav="0" data-g="linear-gradient(135deg,#d9c7ae,#b9a288)" onclick="openFile(this)">
+            <div class="th" style="background:linear-gradient(135deg,#d9c7ae,#b9a288)"><span class="kind"><i class="ti ti-photo"></i></span></div>
+            <div class="bd"><div class="nm">店内_カウンター.jpg</div><div class="mt">3.1 MB・5日前</div></div>
+          </div>
+          <div class="file" data-k="vid" data-ai="0" data-nm="ポチの朝ルーティン.mp4" data-fmt="MP4・1080×1920" data-sz="48.2 MB" data-made="2026/08/09" data-edit="6日前" data-fav="1" data-g="linear-gradient(135deg,#b9dcc0,#93c8a0)" onclick="openFile(this)">
+            <div class="th" style="background:linear-gradient(135deg,#b9dcc0,#93c8a0)"><span class="kind"><i class="ti ti-video"></i></span><span class="fav"><i class="ti ti-star"></i></span></div>
+            <div class="bd"><div class="nm">ポチの朝ルーティン.mp4</div><div class="mt">48.2 MB・6日前</div></div>
+          </div>
+          <div class="file" data-k="img" data-ai="1" data-nm="夏フェス_バナー_AI.png" data-fmt="PNG・1200×628" data-sz="880 KB" data-made="2026/08/08" data-edit="1週間前" data-fav="0" data-g="linear-gradient(135deg,#f6c99a,#ef9f5c)" onclick="openFile(this)">
+            <div class="th" style="background:linear-gradient(135deg,#f6c99a,#ef9f5c)"><span class="kind"><i class="ti ti-sparkles"></i></span></div>
+            <div class="bd"><div class="nm">夏フェス_バナー_AI.png</div><div class="mt">880 KB・1週間前</div></div>
+          </div>
+          <div class="file" data-k="img" data-ai="0" data-nm="新作メニュー表.jpg" data-fmt="JPG・3024×4032" data-sz="2.8 MB" data-made="2026/08/06" data-edit="1週間前" data-fav="0" data-g="linear-gradient(135deg,#cfe0f2,#9fc0e0)" onclick="openFile(this)">
+            <div class="th" style="background:linear-gradient(135deg,#cfe0f2,#9fc0e0)"><span class="kind"><i class="ti ti-photo"></i></span></div>
+            <div class="bd"><div class="nm">新作メニュー表.jpg</div><div class="mt">2.8 MB・1週間前</div></div>
+          </div>
+          <div class="file" data-k="aud" data-ai="0" data-nm="店内BGM_やさしい朝.mp3" data-fmt="MP3・2分14秒" data-sz="3.4 MB" data-made="2026/07/30" data-edit="2週間前" data-fav="0" data-g="linear-gradient(135deg,#e3d6f2,#c6b0e8)" onclick="openFile(this)">
+            <div class="th" style="background:linear-gradient(135deg,#e3d6f2,#c6b0e8)"><span class="kind"><i class="ti ti-music"></i></span></div>
+            <div class="bd"><div class="nm">店内BGM_やさしい朝.mp3</div><div class="mt">3.4 MB・2週間前</div></div>
+          </div>
+          <div class="file" data-k="vid" data-ai="0" data-nm="新人スタッフ紹介.mov" data-fmt="MOV・1920×1080" data-sz="122 MB" data-made="2026/07/28" data-edit="3週間前" data-fav="0" data-g="linear-gradient(135deg,#f2d4d4,#dfa8a8)" onclick="openFile(this)">
+            <div class="th" style="background:linear-gradient(135deg,#f2d4d4,#dfa8a8)"><span class="kind"><i class="ti ti-video"></i></span></div>
+            <div class="bd"><div class="nm">新人スタッフ紹介.mov</div><div class="mt">122 MB・3週間前</div></div>
+          </div>
+        </div>
+        <div class="empty" id="fileEmpty" style="display:none">この種類のファイルはこのフォルダにありません。</div>
+      </div>
+    </div>
+
+    <!-- ===== 学習タブ ===== -->
+    <div class="pane" id="paneLrn">
+      <div class="learn">
+        <!-- 素材との違いを最初に言い切る。統合したぶん、ここが曖昧だと混ざる -->
+        <div class="lrn-note">
+          <span class="ic"><i class="ti ti-world"></i></span>
+          <div>
+            <div class="t">学習は「AIに読ませるもの」。素材とは使われ方がちがいます。</div>
+            <div class="d">ここに入れた資料は、投稿文を作るときとAIレビューのときに<b>AIが参考にします</b>。
+            素材タブの写真とちがって、<b>投稿にそのまま貼られることはありません</b>。<br>
+            例：ブランドガイド、メニュー表、お店のサイト、よく使う言い回しをまとめた資料。</div>
+          </div>
+        </div>
+
+        <div class="fhead">
+          <span class="h">学習させた資料</span>
+          <span class="cnt">5件・うち1件を読み込み中</span>
+          <span class="sp">
+            <button class="btn-o"><i class="ti ti-world"></i>URLを追加</button>
+            <button class="btn-p"><i class="ti ti-upload"></i>ファイルを追加</button>
+          </span>
+        </div>
+
+        <div class="lrn-list">
+          <div class="lrn">
+            <span class="ic doc"><i class="ti ti-file-text"></i></span>
+            <div class="tx"><div class="nm">ブランドガイドライン_2026.pdf</div><div class="mt">PDF・4.2 MB・2026/07/02 に追加</div></div>
+            <span class="st ok"><i class="ti ti-check"></i>学習済み</span>
+            <button class="more" aria-label="メニュー"><i class="ti ti-dots-vertical"></i></button>
+          </div>
+          <div class="lrn">
+            <span class="ic web"><i class="ti ti-world"></i></span>
+            <div class="tx"><div class="nm">犬カフェOne 公式サイト</div><div class="mt">https://inucafe-one.example.com・2026/07/02 に追加</div></div>
+            <span class="st ok"><i class="ti ti-check"></i>学習済み</span>
+            <button class="more" aria-label="メニュー"><i class="ti ti-dots-vertical"></i></button>
+          </div>
+          <div class="lrn">
+            <span class="ic off"><i class="ti ti-file"></i></span>
+            <div class="tx"><div class="nm">メニュー表_秋冬.xlsx</div><div class="mt">Excel・620 KB・きょう 追加</div></div>
+            <span class="st run"><i class="ti ti-refresh"></i>読み込み中</span>
+            <button class="more" aria-label="メニュー"><i class="ti ti-dots-vertical"></i></button>
+          </div>
+          <div class="lrn">
+            <span class="ic off"><i class="ti ti-file"></i></span>
+            <div class="tx"><div class="nm">過去の人気投稿まとめ.pptx</div><div class="mt">PowerPoint・8.1 MB・2026/06/18 に追加</div></div>
+            <span class="st ok"><i class="ti ti-check"></i>学習済み</span>
+            <button class="more" aria-label="メニュー"><i class="ti ti-dots-vertical"></i></button>
+          </div>
+          <div class="lrn">
+            <span class="ic web"><i class="ti ti-world"></i></span>
+            <div class="tx"><div class="nm">店舗紹介の記事（外部メディア）</div><div class="mt">https://example.com/inucafe-one・ページを開けませんでした</div></div>
+            <span class="st ng"><i class="ti ti-alert-triangle"></i>読み込み失敗</span>
+            <button class="more" aria-label="メニュー"><i class="ti ti-dots-vertical"></i></button>
+          </div>
+        </div>
+
+        <div class="lrn-foot">
+          読み込めるもの：PDF / 画像（JPEG・PNG）/ 動画（MP4・MOV）/ Office（PPTX・DOCX・XLSX）/ ウェブページのURL。<br>
+          読み込みには数分かかります。「読み込み中」のあいだも、ほかの資料は使われます。
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ファイル詳細 ===== -->
+  <div class="drawer" id="drawer">
+    <div class="dr-h">
+      <span class="tt">ファイル詳細</span>
+      <button class="dr-icon" onclick="drMenu(event)" aria-label="メニュー"><i class="ti ti-dots"></i>
+        <div class="dr-menu" id="drMenu">
+          <div><i class="ti ti-download"></i>ダウンロード</div>
+          <div><i class="ti ti-copy"></i>複製</div>
+          <div><i class="ti ti-star"></i>お気に入り</div>
+          <div><i class="ti ti-share"></i>リンクを作る</div>
+          <div><i class="ti ti-pencil"></i>名前を変更</div>
+          <div class="del"><i class="ti ti-trash"></i>削除</div>
+        </div>
+      </button>
+      <button class="dr-icon" onclick="closeFile()" aria-label="閉じる"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="dr-body">
+      <div class="dr-prev" id="drPrev"></div>
+      <div class="dr-nm" id="drNm"></div>
+      <div class="dr-tbl">
+        <div class="row"><span class="k">サイズ</span><span class="v" id="drSz"></span></div>
+        <div class="row"><span class="k">形式</span><span class="v" id="drFmt"></span></div>
+        <div class="row"><span class="k">作成日</span><span class="v" id="drMade"></span></div>
+        <div class="row"><span class="k">最終編集</span><span class="v" id="drEdit"></span></div>
+        <div class="row"><span class="k">場所</span><span class="v">画像 / Instagram用</span></div>
+      </div>
+      <!-- ドライブ → 投稿作成フロー。素材を選んだ状態でフローに入る -->
+      <a class="dr-cta" href="./flow_image_material_wire.html#step=upload"><i class="ti ti-sparkles"></i>この素材で投稿を作る</a>
+
+      <div class="dr-used">
+        <div class="t">この素材を使った投稿</div>
+        <div class="dr-post"><span class="sw" style="background:linear-gradient(135deg,#f7d9b0,#efc189)"></span><div class="tx"><div class="pt">夏の新メニュー トロピカルスムージー</div><div class="pd">Instagram・8月10日に投稿</div></div><i class="ti ti-arrow-right" style="color:var(--color-muted-foreground);font-size:15px"></i></div>
+        <div class="dr-post"><span class="sw" style="background:linear-gradient(135deg,#b9dcc0,#93c8a0)"></span><div class="tx"><div class="pt">看板犬ポチの朝ルーティン</div><div class="pd">TikTok・8月3日に投稿</div></div><i class="ti ti-arrow-right" style="color:var(--color-muted-foreground);font-size:15px"></i></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// サイドバーの折りたたみ項目
+function navToggle(el){
+  var sub = el.nextElementSibling;
+  if(!sub || !sub.classList.contains('nisub')) return;
+  sub.classList.toggle('open');
+  el.classList.toggle('exp');
+}
+
+/* ===== 素材 / 学習 のタブ ===== */
+function drvTab(which){
+  var mat = which === 'mat';
+  document.getElementById('paneMat').classList.toggle('on', mat);
+  document.getElementById('paneLrn').classList.toggle('on', !mat);
+  document.getElementById('tabMat').classList.toggle('on', mat);
+  document.getElementById('tabLrn').classList.toggle('on', !mat);
+  closeFile();
+}
+
+// #learn 付きで開いたら学習タブから始める（画面一覧から直接呼べるように）
+if(location.hash === '#learn') drvTab('lrn');
+
+/* ===== ツリー ===== */
+function treeToggle(el){
+  var sub = el.nextElementSibling;
+  if(!sub || !sub.classList.contains('trsub')) return;
+  sub.classList.toggle('open');
+  el.classList.toggle('exp');
+}
+function pickFolder(el, name){
+  document.querySelectorAll('.tree .tr').forEach(function(t){ t.classList.remove('on'); });
+  el.classList.add('on');
+  document.getElementById('fTitle').textContent = name;
+  document.querySelector('.crumb b').textContent = name;
+}
+
+/* ===== 種類でしぼる ===== */
+function drvFilter(chip){
+  var k = chip.dataset.k;
+  document.querySelectorAll('.chips .chip').forEach(function(c){ c.classList.toggle('on', c === chip); });
+  var shown = 0;
+  document.querySelectorAll('#fileGrid .file').forEach(function(f){
+    var hit = (k === 'all') || (k === 'ai' ? f.dataset.ai === '1' : f.dataset.k === k);
+    f.classList.toggle('hide', !hit);
+    if(hit) shown++;
+  });
+  document.getElementById('fileGrid').style.display = shown ? 'grid' : 'none';
+  document.getElementById('fileEmpty').style.display = shown ? 'none' : 'block';
+}
+
+/* ===== ファイル詳細 ===== */
+function openFile(el){
+  document.querySelectorAll('#fileGrid .file').forEach(function(f){ f.classList.remove('on'); });
+  el.classList.add('on');
+  document.getElementById('drPrev').style.background = el.dataset.g;
+  document.getElementById('drNm').textContent  = el.dataset.nm;
+  document.getElementById('drSz').textContent  = el.dataset.sz;
+  document.getElementById('drFmt').textContent = el.dataset.fmt;
+  document.getElementById('drMade').textContent = el.dataset.made;
+  document.getElementById('drEdit').textContent = el.dataset.edit;
+  document.getElementById('drawer').classList.add('on');
+}
+function closeFile(){
+  document.getElementById('drawer').classList.remove('on');
+  document.getElementById('drMenu').classList.remove('on');
+  document.querySelectorAll('#fileGrid .file').forEach(function(f){ f.classList.remove('on'); });
+}
+function drMenu(e){
+  e.stopPropagation();
+  document.getElementById('drMenu').classList.toggle('on');
+}
+document.addEventListener('click', function(e){
+  var m = document.getElementById('drMenu');
+  if(m.classList.contains('on') && !m.contains(e.target)) m.classList.remove('on');
+});
+</script>
+</body></html>
