@@ -256,6 +256,15 @@ body {
 .sb-btn:hover { background: var(--color-surface); }
 .sb-btn.active { color: var(--color-primary); background: var(--color-primary-subtle); font-weight: 700; }
 .sb-btn .ti { font-size: 20px; width: 20px; text-align: center; }
+/* グループ区切り線（作業 / 設定 / その他 の3グループに分ける） */
+.sb-div { height: 1px; background: var(--color-border); margin: 8px 4px; }
+/* 折りたたみサブメニュー（設定 配下）。初期は閉じた状態。 */
+.sb-btn .sb-cv { margin-left: auto; font-size: 14px; width: 14px; color: var(--color-muted-foreground); }
+.sb-btn.exp .sb-cv { transform: rotate(180deg); }
+.sb-sub { display: none; }
+.sb-sub.open { display: block; }
+.sb-sub a { display: flex; align-items: center; padding: 7px 12px 7px 42px; border-radius: var(--radius-md); font-size: var(--text-label); color: var(--color-muted-foreground); text-decoration: none; cursor: pointer; }
+.sb-sub a:hover { background: var(--color-primary-subtle); color: var(--color-primary); }
 .sb-acct {
   margin-top: auto;
   padding: 10px;
@@ -897,13 +906,25 @@ body {
     <!-- ===== sidebar (DESIGN.md準拠) ===== -->
     <div class="sidebar">
       <button class="sb-cta"><i class="ti ti-plus"></i> 投稿作成</button>
-      <a class="sb-btn" href="#"><i class="ti ti-layout-dashboard"></i> ダッシュボード</a>
-      <a class="sb-btn" href="#"><i class="ti ti-file-text"></i> 投稿一覧</a>
+      <a class="sb-btn" href="#"><i class="ti ti-layout-dashboard"></i> ホーム</a>
+      <a class="sb-btn" href="#"><i class="ti ti-file-text"></i> 投稿</a>
       <a class="sb-btn" href="#"><i class="ti ti-calendar"></i> カレンダー</a>
       <a class="sb-btn active" href="./analysis_visual_wire.html"><i class="ti ti-chart-bar"></i> 分析</a>
-      <a class="sb-btn" href="#"><i class="ti ti-folder"></i> いいねAIドライブ</a>
-      <a class="sb-btn" href="#"><i class="ti ti-settings"></i> 設定</a>
-      <a class="sb-btn" href="#"><i class="ti ti-dots"></i> その他</a>
+      <a class="sb-btn" href="#"><i class="ti ti-folder"></i> ドライブ</a>
+      <div class="sb-div"></div>
+      <a class="sb-btn" href="#" onclick="sbNavToggle(this);return false;"><i class="ti ti-settings"></i> 設定<i class="ti ti-chevron-down sb-cv"></i></a>
+      <div class="sb-sub">
+        <a href="#">運用目的</a>
+        <a href="#">SNS設定</a>
+        <a href="#">メンバー管理</a>
+        <a href="#">AIレビュー</a>
+      </div>
+      <div class="sb-div"></div>
+      <a class="sb-btn" href="#" onclick="sbNavToggle(this);return false;"><i class="ti ti-dots"></i> その他<i class="ti ti-chevron-down sb-cv"></i></a>
+      <div class="sb-sub">
+        <a href="./news_wire.html">NEWS</a>
+        <a href="https://hinaiwagami0513.github.io/iineai/help/" target="_blank" rel="noopener">ヘルプセンター</a>
+      </div>
       <div class="sb-acct">
         <div class="avatar">S</div>
         <div>
@@ -1134,5 +1155,14 @@ body {
 
 <!-- Fox mascot -->
 
+<script>
+// サイドバーの折りたたみ項目（設定）。直後の .sb-sub を開閉する。
+function sbNavToggle(el){
+  var sub = el.nextElementSibling;
+  if(!sub || !sub.classList.contains('sb-sub')) return;
+  sub.classList.toggle('open');
+  el.classList.toggle('exp');
+}
+</script>
 </body>
 </html>

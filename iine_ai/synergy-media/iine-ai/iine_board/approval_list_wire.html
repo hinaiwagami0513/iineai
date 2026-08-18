@@ -75,6 +75,15 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .ni.on{background:var(--color-primary-subtle);color:var(--color-primary);font-weight:var(--font-weight-body-strong);}
 .ni.on .ti{color:var(--color-primary);}
 .ni:hover{background:var(--color-background);}
+/* グループ区切り線（作業 / 設定 / その他 の3グループに分ける） */
+.nidiv{height:1px;background:var(--color-border);margin:8px 10px;}
+/* 折りたたみサブメニュー（設定 配下）。初期は閉じた状態。 */
+.ni.exp .cv{transform:rotate(180deg);}
+.nisub{display:none;}
+.nisub.open{display:block;}
+.nis{display:flex;align-items:center;text-decoration:none;padding:8px 10px 8px 41px;border-radius:var(--radius-md);font-size:var(--text-label);font-weight:var(--font-weight-label);color:var(--color-muted-foreground);cursor:pointer;}
+.nis:hover{background:var(--color-primary-subtle);color:var(--color-primary);}
+.nis.on{background:var(--color-primary-subtle);color:var(--color-primary);font-weight:var(--font-weight-body-strong);}
 
 /* Main */
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative;}
@@ -173,13 +182,25 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
   <div class="sb">
     <div class="sb-logo"><div class="logo-box">AI</div>いいねAI</div>
     <div class="nav">
-      <div class="ni"><i class="ti ti-layout-dashboard"></i>ダッシュボード</div>
-      <div class="ni on"><i class="ti ti-file-text"></i>投稿一覧</div>
+      <div class="ni"><i class="ti ti-layout-dashboard"></i>ホーム</div>
+      <div class="ni on"><i class="ti ti-file-text"></i>投稿</div>
       <div class="ni"><i class="ti ti-calendar"></i>カレンダー</div>
       <div class="ni"><i class="ti ti-chart-bar"></i>分析</div>
-      <div class="ni"><i class="ti ti-messages"></i>グループチャット</div>
-      <div class="ni"><i class="ti ti-folder"></i>いいねドライブ<span class="cv"><i class="ti ti-chevron-down"></i></span></div>
-      <div class="ni"><i class="ti ti-clipboard-list"></i>投稿タイプ一覧</div>
+      <div class="ni"><i class="ti ti-folder"></i>ドライブ</div>
+      <div class="nidiv"></div>
+      <div class="ni" onclick="navToggle(this)"><i class="ti ti-settings"></i>設定<span class="cv"><i class="ti ti-chevron-down"></i></span></div>
+      <div class="nisub">
+        <div class="nis">運用目的</div>
+        <div class="nis">SNS設定</div>
+        <div class="nis">メンバー管理</div>
+        <div class="nis">AIレビュー</div>
+      </div>
+      <div class="nidiv"></div>
+      <div class="ni" onclick="navToggle(this)"><i class="ti ti-dots"></i>その他<span class="cv"><i class="ti ti-chevron-down"></i></span></div>
+      <div class="nisub">
+        <a class="nis" href="./news_wire.html">NEWS</a>
+        <a class="nis" href="https://hinaiwagami0513.github.io/iineai/help/" target="_blank" rel="noopener">ヘルプセンター</a>
+      </div>
     </div>
   </div>
   <!-- Main -->
@@ -297,13 +318,25 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
   <div class="sb">
     <div class="sb-logo"><div class="logo-box">AI</div>いいねAI</div>
     <div class="nav">
-      <div class="ni"><i class="ti ti-layout-dashboard"></i>ダッシュボード</div>
-      <div class="ni on"><i class="ti ti-file-text"></i>投稿一覧</div>
+      <div class="ni"><i class="ti ti-layout-dashboard"></i>ホーム</div>
+      <div class="ni on"><i class="ti ti-file-text"></i>投稿</div>
       <div class="ni"><i class="ti ti-calendar"></i>カレンダー</div>
       <div class="ni"><i class="ti ti-chart-bar"></i>分析</div>
-      <div class="ni"><i class="ti ti-messages"></i>グループチャット</div>
-      <div class="ni"><i class="ti ti-folder"></i>いいねドライブ<span class="cv"><i class="ti ti-chevron-down"></i></span></div>
-      <div class="ni"><i class="ti ti-clipboard-list"></i>投稿タイプ一覧</div>
+      <div class="ni"><i class="ti ti-folder"></i>ドライブ</div>
+      <div class="nidiv"></div>
+      <div class="ni" onclick="navToggle(this)"><i class="ti ti-settings"></i>設定<span class="cv"><i class="ti ti-chevron-down"></i></span></div>
+      <div class="nisub">
+        <div class="nis">運用目的</div>
+        <div class="nis">SNS設定</div>
+        <div class="nis">メンバー管理</div>
+        <div class="nis">AIレビュー</div>
+      </div>
+      <div class="nidiv"></div>
+      <div class="ni" onclick="navToggle(this)"><i class="ti ti-dots"></i>その他<span class="cv"><i class="ti ti-chevron-down"></i></span></div>
+      <div class="nisub">
+        <a class="nis" href="./news_wire.html">NEWS</a>
+        <a class="nis" href="https://hinaiwagami0513.github.io/iineai/help/" target="_blank" rel="noopener">ヘルプセンター</a>
+      </div>
     </div>
   </div>
   <!-- Main -->
@@ -417,6 +450,13 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 
 <script src="sonner.js"></script>
 <script>
+// サイドバーの折りたたみ項目（設定）。直後の .nisub を開閉する。
+function navToggle(el){
+  var sub = el.nextElementSibling;
+  if(!sub || !sub.classList.contains('nisub')) return;
+  sub.classList.toggle('open');
+  el.classList.toggle('exp');
+}
 /* Demo view switching */
 document.querySelectorAll('.demo-tab').forEach(function(tab){
   tab.addEventListener('click',function(){

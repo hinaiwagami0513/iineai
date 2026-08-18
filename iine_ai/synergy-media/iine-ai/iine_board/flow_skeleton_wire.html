@@ -248,7 +248,7 @@ function show(){
   document.getElementById('sc_'+SCR[i]).classList.add('on');
   document.getElementById('back').style.visibility=(i===0)?'hidden':'visible';
   var nx=document.getElementById('next');
-  var labels={count:'次へ',confirm:'この内容で投稿する',generating:'生成中…',finish:'ダッシュボードへ'};
+  var labels={count:'次へ',confirm:'この内容で投稿する',generating:'生成中…',finish:'ホームへ'};
   nx.innerHTML=labels[SCR[i]];
   nx.disabled=(SCR[i]==='generating');
   var foot=document.getElementById('foot');foot.style.display=(SCR[i]==='generating'||SCR[i]==='finish')?'none':'flex';

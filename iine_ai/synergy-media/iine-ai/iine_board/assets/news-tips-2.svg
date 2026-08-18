@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" width="320" height="180" role="img" aria-label="ドライブのフォルダから写真が浮かび上がり、スマホの投稿へ流れ込む図">
+  <!-- TIPS「ドライブに入れた写真を投稿づくりでそのまま使う」用サムネイル。 -->
+  <rect width="320" height="180" fill="#FDF6EE"/>
+
+  <!-- 左：開いたフォルダ -->
+  <path d="M30 78 h30 l10 12 h44 a8 8 0 0 1 8 8 v44 a8 8 0 0 1 -8 8 h-84 a8 8 0 0 1 -8 -8 v-56 a8 8 0 0 1 8 -8 z" fill="#EF6108"/>
+  <path d="M22 106 h108 a6 6 0 0 1 5.8 7.5 l-8 32 a8 8 0 0 1 -7.8 6 h-92 a6 6 0 0 1 -5.8 -7.5 l8 -32 a8 8 0 0 1 7.8 -6 z" fill="#FF971E"/>
+
+  <!-- 浮かび上がる写真カード3枚 -->
+  <g stroke="#2A2826" stroke-width="2.5">
+    <g transform="rotate(-10 92 74)">
+      <rect x="74" y="56" width="38" height="30" rx="5" fill="#FFFFFF"/>
+      <path d="M77 83 L88 70 L96 78 L102 73 L109 83 Z" fill="#12960A"/>
+      <circle cx="84" cy="65" r="3.5" fill="#E8B931"/>
+    </g>
+    <g transform="rotate(4 140 54)">
+      <rect x="121" y="36" width="38" height="30" rx="5" fill="#FFFFFF"/>
+      <path d="M124 63 L135 50 L143 58 L149 53 L156 63 Z" fill="#185FA5"/>
+      <circle cx="131" cy="45" r="3.5" fill="#E8B931"/>
+    </g>
+    <g transform="rotate(-6 188 40)">
+      <rect x="169" y="24" width="38" height="30" rx="5" fill="#FFFFFF"/>
+      <path d="M172 51 L183 38 L191 46 L197 41 L204 51 Z" fill="#12960A"/>
+      <circle cx="179" cy="33" r="3.5" fill="#E8B931"/>
+    </g>
+  </g>
+
+  <!-- 流れの向き -->
+  <path d="M212 56 C 232 62, 240 74, 242 86" fill="none" stroke="#EF6108" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="7 8"/>
+  <path d="M242 90 L235 79 L249 79 Z" fill="#EF6108"/>
+
+  <!-- 右：スマホの投稿 -->
+  <rect x="222" y="94" width="66" height="72" rx="10" fill="#FFFFFF" stroke="#2A2826" stroke-width="2.5"/>
+  <rect x="232" y="104" width="46" height="30" rx="5" fill="#185FA5"/>
+  <path d="M235 131 L247 118 L256 127 L262 122 L272 131 Z" fill="#0F4C81"/>
+  <rect x="232" y="142" width="46" height="5" rx="2.5" fill="#E0DCD6"/>
+  <rect x="232" y="152" width="30" height="5" rx="2.5" fill="#E0DCD6"/>
+</svg>

@@ -1,0 +1,591 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NEWS — いいねAI</title>
+<link rel="stylesheet" href="./tabler-icons-inline.css">
+<style>
+/* このファイルで使うアイコンだけ定義する（フォント実体は tabler-icons-inline.css） */
+.ti-plus:before{content:"\eb0b"}
+.ti-layout-dashboard:before{content:"\f02c"}
+.ti-file-text:before{content:"\eaa2"}
+.ti-calendar:before{content:"\ea53"}
+.ti-chart-bar:before{content:"\ea59"}
+.ti-messages:before{content:"\eb6c"}
+/* 吹き出し＋点（角丸四角）。字形コードは tabler-icons-inline.css のフォントで実物を見て確認済み */
+.ti-message-dots:before{content:"\eaee"}
+.ti-folder:before{content:"\eaad"}
+.ti-dots:before{content:"\ea95"}
+.ti-settings:before{content:"\eb20"}
+.ti-chevron-down:before{content:"\ea5f"}
+.ti-selector:before{content:"\eb1d"}
+.ti-coffee:before{content:"\ef0e"}
+.ti-sparkles:before{content:"\f6d7"}
+.ti-help:before{content:"\eabf"}
+.ti-list-check:before{content:"\eb6a"}
+.ti-bell:before{content:"\ea35"}
+.ti-trash:before{content:"\eb41"}
+.ti-clock:before{content:"\ea70"}
+.ti-calendar-event:before{content:"\ea52"}
+.ti-arrow-right:before{content:"\ea1f"}
+.ti-alert-circle:before{content:"\ea05"}
+.ti-check:before{content:"\ea5e"}
+.ti-tool:before{content:"\eb40"}
+.ti-x:before{content:"\eb55"}
+.ti-search:before{content:"\eb1c"}
+.ti-arrow-left:before{content:"\ea19"}
+.ti-bulb:before{content:"\ea51"}
+
+:root {
+  --color-primary: #ef6108;
+  --color-primary-hover: #d9570a;
+  --color-primary-light: #ff971e;
+  --color-primary-subtle: #fff2e2;
+  --color-on-primary: #ffffff;
+  --color-background: #f2f1f0;
+  --color-surface: #fbfaf8;
+  --color-card: #ffffff;
+  --color-foreground: #2a2826;
+  --color-muted-foreground: #757575;
+  --color-border: #e9e8e6;
+  --color-border-strong: #cfcdc9;
+  --color-input: #ffffff;
+  --color-ring: #ef6108;
+  --color-success: #12960a;
+  --color-success-subtle: #e7f3e6;
+  --color-warning: #8a6d0f;
+  --color-warning-subtle: #fcf4d9;
+  --color-info: #185fa5;
+  --color-info-subtle: #e6f1fb;
+  --color-destructive: #dc2626;
+  --color-destructive-subtle: #fee2e2;
+  --color-accent-purple: #9724ba;
+  --color-accent-purple-subtle: #f5e7f8;
+  --font-body: "Noto Sans JP";
+  --text-h1: 1.875rem;
+  --text-h2: 1.25rem;
+  --text-h3: 1rem;
+  --text-body-lg: 1rem;
+  --text-body: 0.875rem;
+  --text-label: 0.75rem;
+  --text-meta: 0.625rem;
+  --font-weight-h1: 700;
+  --font-weight-h2: 700;
+  --font-weight-h3: 700;
+  --font-weight-body: 400;
+  --font-weight-body-strong: 700;
+  --font-weight-label: 500;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:var(--font-body),'Hiragino Sans','Meiryo',sans-serif;-webkit-font-smoothing:antialiased;}
+body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
+.app{width:1240px;margin:0 auto;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-xl);overflow:hidden;display:flex;height:800px;position:relative;}
+.ti{line-height:1;}
+
+/* ===== サイドバー ===== */
+.sb{width:250px;flex:none;background:var(--color-surface);border-right:1px solid var(--color-border);display:flex;flex-direction:column;}
+.sbtop{padding:16px 16px 10px;}
+.logo{font-size:var(--text-h3);font-weight:var(--font-weight-h3);color:var(--color-primary);margin-bottom:14px;display:block;}
+.create{width:100%;display:flex;align-items:center;justify-content:center;gap:7px;background:var(--color-primary);color:#fff;border:none;border-radius:var(--radius-md);padding:11px;font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;}
+.nav{padding:6px 10px;overflow-y:auto;flex:1;}
+.ni{display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:var(--radius-md);font-size:var(--text-body);font-weight:var(--font-weight-label);color:var(--color-foreground);cursor:pointer;text-decoration:none;}
+.ni .ti{font-size:18px;color:#6b6864;}
+.ni .cv{margin-left:auto;font-size:14px;color:#a8a6a2;}
+.ni.on{background:var(--color-primary-subtle);color:var(--color-primary);font-weight:var(--font-weight-body-strong);}
+.ni.on .ti{color:var(--color-primary);}
+.nidiv{height:1px;background:var(--color-border);margin:8px 10px;}
+.ni.exp .cv{transform:rotate(180deg);}
+.nisub{display:none;}
+.nisub.open{display:block;}
+.nis{display:flex;align-items:center;text-decoration:none;padding:8px 10px 8px 41px;border-radius:var(--radius-md);font-size:var(--text-label);font-weight:var(--font-weight-label);color:var(--color-muted-foreground);cursor:pointer;}
+.nis:hover{background:var(--color-primary-subtle);color:var(--color-primary);}
+.nis.on{background:var(--color-primary-subtle);color:var(--color-primary);font-weight:var(--font-weight-body-strong);}
+.foot{border-top:1px solid var(--color-border);padding:12px;}
+.switcher{display:flex;align-items:center;gap:10px;padding:9px 10px;border:1px solid var(--color-border-strong);border-radius:var(--radius-md);background:var(--color-card);cursor:pointer;}
+.switcher .pic{width:34px;height:34px;flex:none;border-radius:var(--radius-md);background:#fde9d3;color:var(--color-primary);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.switcher .pn{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);}
+.switcher .an{font-size:var(--text-meta);color:#a8a6a2;}
+.switcher .cv{margin-left:auto;color:#a8a6a2;font-size:17px;}
+
+/* ===== メイン ===== */
+.main{flex:1;min-width:0;display:flex;flex-direction:column;}
+.hd{height:64px;flex:none;display:flex;align-items:center;gap:11px;padding:0 26px;border-bottom:1px solid var(--color-border);}
+.hd .pgic{font-size:22px;color:var(--color-foreground);}
+.hd .pgnm{font-size:var(--text-h3);font-weight:var(--font-weight-body-strong);}
+.hd .r{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.help{width:38px;height:38px;border:1.5px solid var(--color-primary);color:var(--color-primary);background:transparent;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:19px;cursor:pointer;text-decoration:none;}
+.help:hover{background:var(--color-primary);color:var(--color-on-primary);}
+.planchip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--color-border-strong);border-radius:var(--radius-full);padding:5px 12px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);white-space:nowrap;}
+.planchip i{font-size:15px;color:var(--color-primary);}
+.hdwrap{position:relative;display:flex;}
+.hdbtn{position:relative;width:38px;height:38px;flex:none;border:1px solid var(--color-border-strong);background:var(--color-card);color:var(--color-foreground);border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:19px;cursor:pointer;padding:0;}
+.hdbtn:hover{border-color:var(--color-primary);color:var(--color-primary);}
+.hdbtn.on{border-color:var(--color-primary);color:var(--color-primary);background:var(--color-primary-subtle);}
+.hdbadge{position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;padding:0 5px;border-radius:var(--radius-full);background:var(--color-primary);color:var(--color-on-primary);font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);display:flex;align-items:center;justify-content:center;border:2px solid var(--color-card);}
+.hdbadge.zero{display:none;}
+
+/* ===== ToDoパネル（全画面共通・shell と同じ） ===== */
+.tdp{position:absolute;top:48px;right:0;width:448px;max-height:560px;display:none;flex-direction:column;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);box-shadow:0 10px 30px rgba(0,0,0,.16);z-index:40;overflow:hidden;}
+.tdp.open{display:flex;}
+.tdp-h{display:flex;align-items:center;gap:8px;padding:13px 14px;border-bottom:1px solid var(--color-border);background:var(--color-surface);flex:none;}
+.tdp-h .ic{font-size:19px;color:var(--color-primary);}
+.tdp-h .tt{font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);}
+.tdp-h .cnt{font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:#fff;background:var(--color-foreground);border-radius:var(--radius-full);padding:2px 9px;}
+.tdp-add{margin-left:auto;display:inline-flex;align-items:center;gap:5px;background:var(--color-primary);color:var(--color-on-primary);border:none;border-radius:var(--radius-md);padding:8px 13px;font-family:inherit;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);cursor:pointer;}
+.tdp-add:hover{background:var(--color-primary-hover);}
+.tdp-new{display:none;gap:8px;padding:12px 14px;border-bottom:1px solid var(--color-border);background:var(--color-primary-subtle);flex:none;}
+.tdp-new.open{display:flex;}
+.tdp-new input{flex:1;min-width:0;border:1px solid var(--color-border-strong);border-radius:var(--radius-md);padding:9px 11px;font-family:inherit;font-size:var(--text-body);background:var(--color-input);color:var(--color-foreground);}
+.tdp-new input:focus{outline:2px solid var(--color-ring);outline-offset:1px;border-color:var(--color-primary);}
+.tdp-save{flex:none;background:var(--color-primary);color:var(--color-on-primary);border:none;border-radius:var(--radius-md);padding:9px 16px;font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;}
+.tdp-body{overflow-y:auto;padding-bottom:6px;}
+.tdp-lbl{display:flex;align-items:baseline;gap:8px;padding:12px 14px 6px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);}
+.tdp-lbl .note{font-size:var(--text-meta);font-weight:var(--font-weight-body);}
+.tdp-row{display:flex;align-items:center;gap:11px;padding:11px 14px;border-top:1px solid var(--color-border);}
+.tdp-row .ic{width:34px;height:34px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:17px;}
+.tdp-row .ic.warn{background:var(--color-warning-subtle);color:var(--color-warning);}
+.tdp-row .ic.info{background:var(--color-info-subtle);color:var(--color-info);}
+.tdp-row .tx{flex:1;min-width:0;}
+.tdp-row .t{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);line-height:1.5;}
+.tdp-row .d{font-size:var(--text-meta);color:var(--color-muted-foreground);margin-top:2px;line-height:1.5;}
+.tdp-go{flex:none;display:inline-flex;align-items:center;gap:5px;background:var(--color-primary);color:var(--color-on-primary);border:none;border-radius:var(--radius-md);padding:9px 13px;font-family:inherit;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);cursor:pointer;white-space:nowrap;}
+.tdp-go:hover{background:var(--color-primary-hover);}
+.tdp-man{cursor:pointer;}
+.tdp-man input{width:20px;height:20px;flex:none;accent-color:var(--color-primary);cursor:pointer;margin:0;}
+.tdp-man .t{flex:1;min-width:0;font-size:var(--text-body);font-weight:var(--font-weight-label);line-height:1.5;}
+.tdp-man input:checked + .t{text-decoration:line-through;color:var(--color-muted-foreground);}
+.tdp-del{flex:none;width:30px;height:30px;border:none;background:transparent;color:var(--color-muted-foreground);border-radius:var(--radius-sm);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.tdp-del:hover{background:var(--color-destructive-subtle);color:var(--color-destructive);}
+.tdp-empty{padding:16px 14px;font-size:var(--text-label);color:var(--color-muted-foreground);border-top:1px solid var(--color-border);}
+
+/* ===== NEWS本体 =====
+   ホームは最新1件だけ。ここが全件。
+   一覧と本文は「別ページ」として切り替える（アコーディオンで開かない）。
+   長い本文が一覧に混ざると、どこまでが1件なのか分からなくなるため。 */
+.content{flex:1;overflow-y:auto;padding:22px 26px 40px;background:var(--color-background);}
+
+/* --- 検索 + すべて既読 --- */
+.nw-toolbar{display:flex;gap:12px;margin-bottom:14px;}
+.nw-search{position:relative;flex:1;min-width:0;}
+.nw-search i{position:absolute;left:13px;top:50%;transform:translateY(-50%);font-size:17px;color:var(--color-muted-foreground);pointer-events:none;}
+.nw-search input{width:100%;height:42px;padding:0 14px 0 38px;border:1px solid var(--color-border-strong);border-radius:var(--radius-md);background:var(--color-card);font-family:inherit;font-size:var(--text-body);color:var(--color-foreground);}
+.nw-search input::placeholder{color:var(--color-muted-foreground);}
+.nw-search input:focus{outline:2px solid var(--color-ring);outline-offset:1px;border-color:var(--color-primary);}
+.nw-read{flex:none;display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--color-primary);color:var(--color-primary);background:transparent;border-radius:var(--radius-md);padding:0 18px;height:42px;font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;white-space:nowrap;}
+.nw-read:hover{background:var(--color-primary);color:var(--color-on-primary);}
+
+/* --- 絞り込みチップ --- */
+.nw-filters{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+.nw-chip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--color-border-strong);background:var(--color-card);color:var(--color-muted-foreground);border-radius:var(--radius-full);padding:7px 16px;font-family:inherit;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);cursor:pointer;}
+.nw-chip:hover{border-color:var(--color-primary);color:var(--color-primary);}
+.nw-chip.on{background:var(--color-primary-subtle);border-color:var(--color-primary);color:var(--color-primary);}
+.nw-chip .cnt{background:var(--color-primary);color:var(--color-on-primary);border-radius:var(--radius-full);padding:1px 7px;font-size:var(--text-meta);}
+.nw-chip .cnt.zero{display:none;}
+
+/* --- 一覧 --- */
+.nw-list{background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden;}
+.nw-entry{border-bottom:1px solid var(--color-border);}
+.nw-entry:last-child{border-bottom:none;}
+.nw-entry.hide{display:none;}
+.nw-item{display:flex;align-items:flex-start;gap:16px;padding:17px 19px;cursor:pointer;}
+.nw-item:hover{background:var(--color-surface);}
+/* 未読は「点」だけだと気づけないので、行の背景も薄いオレンジにする */
+.nw-entry.unread .nw-item{background:var(--color-primary-subtle);}
+.nw-entry.unread .nw-item:hover{background:#ffe8ca;}
+/* サムネイルは TIPS（読みもの）だけ。お知らせ・メンテナンスには付けない */
+.nw-thumb{width:152px;height:86px;flex:none;border-radius:var(--radius-md);object-fit:cover;border:1px solid var(--color-border);background:var(--color-surface);display:block;}
+.nw-tx{flex:1;min-width:0;}
+.nw-meta{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:6px;}
+.nw-tag{display:inline-flex;align-items:center;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);border-radius:var(--radius-full);padding:3px 10px;}
+.nw-tag.update{background:var(--color-accent-purple-subtle);color:var(--color-accent-purple);}
+.nw-tag.info{background:var(--color-info-subtle);color:var(--color-info);}
+.nw-tag.maint{background:var(--color-warning-subtle);color:var(--color-warning);}
+.nw-tag.tips{background:var(--color-success-subtle);color:var(--color-success);}
+.nw-dt{font-size:var(--text-meta);color:var(--color-muted-foreground);}
+.nw-t{font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);line-height:1.6;}
+.nw-ex{font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.8;margin-top:5px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.nw-dot{width:10px;height:10px;flex:none;border-radius:var(--radius-full);background:var(--color-primary);margin-top:9px;}
+.nw-entry:not(.unread) .nw-dot{visibility:hidden;}
+.nw-empty{padding:32px;text-align:center;font-size:var(--text-body);color:var(--color-muted-foreground);background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);}
+
+/* --- 本文（仮想ページ） --- */
+.nw-detail{display:none;}
+.nw-detail.on{display:block;}
+.nw-back{display:inline-flex;align-items:center;gap:7px;background:none;border:none;color:var(--color-primary);font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;padding:6px 2px;margin-bottom:14px;}
+.nw-back:hover{text-decoration:underline;}
+.nw-art{background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:30px 34px 34px;max-width:780px;}
+.nw-art h2{font-size:var(--text-h2);font-weight:var(--font-weight-h2);line-height:1.6;margin-top:4px;}
+.nw-art .hero{width:100%;max-width:520px;border-radius:var(--radius-md);border:1px solid var(--color-border);margin-top:20px;display:block;}
+.nw-art .body{font-size:var(--text-body);line-height:2;margin-top:20px;}
+.nw-art .body p + p{margin-top:15px;}
+.nw-art .body ul{margin:13px 0 0 22px;}
+.nw-art .body li{margin-bottom:6px;}
+.nw-full{display:none;}
+
+@media(max-width:760px){
+  .nw-toolbar{flex-wrap:wrap;}
+  .nw-read{width:100%;justify-content:center;}
+  .nw-item{flex-wrap:wrap;}
+  .nw-thumb{width:100%;height:auto;aspect-ratio:16/9;}
+  .nw-art{padding:20px;}
+  .tdp{position:fixed;left:12px;right:12px;width:auto;top:60px;}
+}
+</style></head><body>
+<div class="app">
+  <!-- サイドバー -->
+  <aside class="sb">
+    <div class="sbtop"><span class="logo">いいねAI</span><button class="create"><i class="ti ti-plus"></i>投稿作成</button></div>
+    <div class="nav">
+      <a class="ni" href="./shell_header_sidebar_wire.html"><i class="ti ti-layout-dashboard"></i>ホーム</a>
+      <a class="ni" href="./post_list_wire.html"><i class="ti ti-file-text"></i>投稿</a>
+      <div class="ni"><i class="ti ti-calendar"></i>カレンダー</div>
+      <a class="ni" href="./analysis_visual_wire.html"><i class="ti ti-chart-bar"></i>分析</a>
+      <div class="ni"><i class="ti ti-folder"></i>ドライブ</div>
+      <div class="nidiv"></div>
+      <div class="ni" onclick="navToggle(this)"><i class="ti ti-settings"></i>設定<span class="cv"><i class="ti ti-chevron-down"></i></span></div>
+      <div class="nisub">
+        <div class="nis">運用目的</div>
+        <div class="nis">SNS設定</div>
+        <div class="nis">メンバー管理</div>
+        <div class="nis">AIレビュー</div>
+      </div>
+      <div class="nidiv"></div>
+      <div class="ni exp" onclick="navToggle(this)"><i class="ti ti-dots"></i>その他<span class="cv"><i class="ti ti-chevron-down"></i></span></div>
+      <div class="nisub open">
+        <a class="nis on" href="./news_wire.html">NEWS</a>
+        <a class="nis" href="https://hinaiwagami0513.github.io/iineai/help/" target="_blank" rel="noopener">ヘルプセンター</a>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="switcher"><div class="pic"><i class="ti ti-coffee"></i></div><div><div class="pn">犬カフェOne</div><div class="an">田中 陽菜</div></div><i class="ti ti-selector cv"></i></div>
+    </div>
+  </aside>
+
+  <!-- メイン -->
+  <div class="main">
+    <div class="hd">
+      <i class="ti ti-bell pgic"></i><span class="pgnm">NEWS</span>
+      <div class="r">
+        <span class="planchip"><i class="ti ti-sparkles"></i>ベーシックOne</span>
+        <div class="hdwrap">
+          <button class="hdbtn" id="todoBtn" onclick="todoToggle()" title="ToDo" aria-label="ToDo"><i class="ti ti-list-check"></i><span class="hdbadge" id="todoBadge">5</span></button>
+          <div class="tdp" id="todoPanel">
+            <div class="tdp-h">
+              <i class="ti ti-list-check ic"></i><span class="tt">ToDo</span><span class="cnt" id="todoCnt">5件</span>
+              <button class="tdp-add" onclick="todoNewToggle()"><i class="ti ti-plus"></i>追加</button>
+            </div>
+            <div class="tdp-new" id="todoNew">
+              <input id="todoInput" placeholder="やることを書く（例：バナー用の写真を撮る）" onkeydown="if(event.key==='Enter'){todoAdd();}">
+              <button class="tdp-save" onclick="todoAdd()">追加</button>
+            </div>
+            <div class="tdp-body">
+              <div class="tdp-lbl">自動で入ったもの<span class="note">終わると自動で消えます</span></div>
+              <div class="tdp-row">
+                <span class="ic warn"><i class="ti ti-clock"></i></span>
+                <div class="tx">
+                  <div class="t">承認をお願いされています（2件）</div>
+                  <div class="d">中身を見て、よければ「承認」してください。承認すると予約が決まります。</div>
+                </div>
+                <button class="tdp-go">確認する<i class="ti ti-arrow-right"></i></button>
+              </div>
+              <div class="tdp-row">
+                <span class="ic info"><i class="ti ti-calendar-event"></i></span>
+                <div class="tx">
+                  <div class="t">投稿する日がまだ決まっていません（3件）</div>
+                  <div class="d">日にちを決めると、その時間に自動で投稿されます。</div>
+                </div>
+                <button class="tdp-go">日を決める<i class="ti ti-arrow-right"></i></button>
+              </div>
+              <div class="tdp-lbl">自分で追加したもの</div>
+              <div id="todoManual">
+                <label class="tdp-row tdp-man"><input type="checkbox" onchange="todoCount()"><span class="t">バナー用の写真を撮る</span><button class="tdp-del" onclick="todoDel(this)" title="削除" aria-label="削除"><i class="ti ti-trash"></i></button></label>
+                <label class="tdp-row tdp-man"><input type="checkbox" onchange="todoCount()"><span class="t">店長に来月の内容を確認する</span><button class="tdp-del" onclick="todoDel(this)" title="削除" aria-label="削除"><i class="ti ti-trash"></i></button></label>
+                <label class="tdp-row tdp-man"><input type="checkbox" onchange="todoCount()"><span class="t">秋メニューの写真をドライブに入れる</span><button class="tdp-del" onclick="todoDel(this)" title="削除" aria-label="削除"><i class="ti ti-trash"></i></button></label>
+              </div>
+              <div class="tdp-empty" id="todoEmpty" style="display:none">自分で追加したToDoはまだありません。</div>
+            </div>
+          </div>
+        </div>
+        <button class="hdbtn" title="チャット（未読2件）" aria-label="チャット（未読2件）"><i class="ti ti-message-dots"></i><span class="hdbadge">2</span></button>
+        <a class="help" href="https://hinaiwagami0513.github.io/iineai/help/" target="_blank" rel="noopener" title="このページのヘルプ" aria-label="このページのヘルプ"><i class="ti ti-help"></i></a>
+      </div>
+    </div>
+
+    <div class="content">
+      <!-- ===== 一覧（仮想ページ1） ===== -->
+      <div id="listView">
+        <div class="nw-toolbar">
+          <div class="nw-search">
+            <i class="ti ti-search"></i>
+            <input id="nwq" type="search" placeholder="キーワードを検索" autocomplete="off" oninput="newsApply()">
+          </div>
+          <button class="nw-read" onclick="newsReadAll()"><i class="ti ti-check"></i>すべて既読にする</button>
+        </div>
+
+        <div class="nw-filters">
+          <button class="nw-chip on" data-f="all" onclick="newsFilter(this)">すべて</button>
+          <button class="nw-chip" data-f="unread" onclick="newsFilter(this)">未読<span class="cnt" id="unreadCnt">2</span></button>
+          <button class="nw-chip" data-f="update" onclick="newsFilter(this)">機能アップデート</button>
+          <button class="nw-chip" data-f="info" onclick="newsFilter(this)">お知らせ</button>
+          <button class="nw-chip" data-f="maint" onclick="newsFilter(this)">メンテナンス</button>
+          <button class="nw-chip" data-f="tips" onclick="newsFilter(this)">TIPS</button>
+        </div>
+
+        <div class="nw-list" id="newsList">
+      <article class="nw-entry unread" data-f="maint">
+        <div class="nw-item" role="button" tabindex="0" onclick="newsOpen(this)" onkeydown="newsKey(event,this)">
+        <div class="nw-tx">
+          <div class="nw-meta"><span class="nw-tag maint">メンテナンス</span><span class="nw-dt">2026年8月14日</span></div>
+          <div class="nw-t">8月20日（水）2:00〜4:00 はシステムを止めます</div>
+          <div class="nw-ex">設備の入れ替えのため、この時間は いいねAI をお使いいただけません。予約している投稿は、そのままSNSに出ます。</div>
+        </div>
+        <span class="nw-dot" aria-label="未読"></span>
+        </div>
+        <div class="nw-full"><p>設備の入れ替えのため、下記の時間は いいねAI をお使いいただけません。</p><ul><li>日時：2026年8月20日（水）午前2:00 〜 午前4:00</li><li>止まるもの：画面へのログイン、投稿の作成・生成</li><li>止まらないもの：この時間に予約している投稿は、そのままSNSに出ます</li></ul><p>ご不便をおかけしますが、よろしくお願いいたします。</p></div>
+      </article>
+      <article class="nw-entry unread" data-f="update">
+        <div class="nw-item" role="button" tabindex="0" onclick="newsOpen(this)" onkeydown="newsKey(event,this)">
+        <div class="nw-tx">
+          <div class="nw-meta"><span class="nw-tag update">機能アップデート</span><span class="nw-dt">2026年8月8日</span></div>
+          <div class="nw-t">ドライブに動画（MP4・MOV）を置けるようになりました</div>
+          <div class="nw-ex">これまで画像とPDFだけだった「ドライブ」に、動画も入れられるようになりました。旧「学習」のファイルもすべてドライブに移動しています。</div>
+        </div>
+        <span class="nw-dot" aria-label="未読"></span>
+        </div>
+        <div class="nw-full"><p>これまで画像とPDFだけだった「ドライブ」に、動画も入れられるようになりました。撮った動画をそのまま置いておいて、投稿を作るときに選べます。</p><p>あわせて、これまで「学習」にあったファイルはすべてドライブに移動しています。場所が変わっただけで、中身はそのままです。</p></div>
+      </article>
+      <article class="nw-entry" data-f="tips">
+        <div class="nw-item" role="button" tabindex="0" onclick="newsOpen(this)" onkeydown="newsKey(event,this)">
+        <img class="nw-thumb" src="./assets/news-tips-1.svg" alt="">
+        <div class="nw-tx">
+          <div class="nw-meta"><span class="nw-tag tips">TIPS</span><span class="nw-dt">2026年8月5日</span></div>
+          <div class="nw-t">いいねAIのInstagram投稿をFacebookにも自動連携する方法</div>
+          <div class="nw-ex">いいねAIからInstagramに出した投稿を、Facebookページにも自動で出す設定手順を、画面の順番どおりに説明します。</div>
+        </div>
+        <span class="nw-dot" aria-label="未読"></span>
+        </div>
+        <div class="nw-full"><p>いいねAIからInstagramへ出した投稿は、設定をひとつ入れておくと、Facebookページにも自動で同時に出せます。同じ内容を2回作る必要はありません。</p><p>手順は3つです。</p><ul><li>Facebookページと Instagramアカウントを、Meta側でつないでおく</li><li>いいねAIの 設定 &gt; SNS設定 で、Instagramの行の「Facebookにも出す」をオンにする</li><li>投稿を作るときに、出し先が Instagram + Facebook の2つになっているか確かめる</li></ul><p>うまくつながらないときは、Meta側でページとアカウントのつながりが切れていることがほとんどです。SNS設定の画面に「つなぎ直す」が出ていたら、そこから入り直してください。</p></div>
+      </article>
+      <article class="nw-entry" data-f="info">
+        <div class="nw-item" role="button" tabindex="0" onclick="newsOpen(this)" onkeydown="newsKey(event,this)">
+        <div class="nw-tx">
+          <div class="nw-meta"><span class="nw-tag info">お知らせ</span><span class="nw-dt">2026年7月31日</span></div>
+          <div class="nw-t">8月からの料金プランについて</div>
+          <div class="nw-ex">8月1日から、つなげられるSNSの数でプランを分けました。いま「ベーシックOne」をお使いの方は、これまでどおりの料金でお使いいただけます。</div>
+        </div>
+        <span class="nw-dot" aria-label="未読"></span>
+        </div>
+        <div class="nw-full"><p>8月1日から、つなげられるSNSの数でプランを分けました。いま「ベーシックOne」をお使いの方は、これまでどおりの料金でお使いいただけます。</p><p>くわしくは、左下のアカウントメニュー →「プラン・支払い」からご確認ください。</p></div>
+      </article>
+      <article class="nw-entry" data-f="tips">
+        <div class="nw-item" role="button" tabindex="0" onclick="newsOpen(this)" onkeydown="newsKey(event,this)">
+        <img class="nw-thumb" src="./assets/news-tips-2.svg" alt="">
+        <div class="nw-tx">
+          <div class="nw-meta"><span class="nw-tag tips">TIPS</span><span class="nw-dt">2026年7月28日</span></div>
+          <div class="nw-t">ドライブに入れた写真を、投稿づくりでそのまま使うコツ</div>
+          <div class="nw-ex">撮った写真をドライブに入れておくと、投稿を作るときに探し直さずに済みます。フォルダの分け方と、使い回しの見つけ方を説明します。</div>
+        </div>
+        <span class="nw-dot" aria-label="未読"></span>
+        </div>
+        <div class="nw-full"><p>投稿を作るたびに写真を探していると、それだけで時間がかかります。撮ったその日にドライブへ入れておくと、投稿づくりの画面からそのまま選べます。</p><p>フォルダは「media（SNSごと）」ではなく「中身」で分けるのがおすすめです。</p><ul><li>外観・店内</li><li>商品・メニュー</li><li>スタッフ・お客様</li><li>ロゴ・素材</li></ul><p>同じ写真を何度も出してしまうのが心配なときは、写真を開くと「この写真を使った投稿」が出ます。直近で使っていないものから選べば、見え方が単調になりません。</p></div>
+      </article>
+      <article class="nw-entry" data-f="update">
+        <div class="nw-item" role="button" tabindex="0" onclick="newsOpen(this)" onkeydown="newsKey(event,this)">
+        <div class="nw-tx">
+          <div class="nw-meta"><span class="nw-tag update">機能アップデート</span><span class="nw-dt">2026年7月22日</span></div>
+          <div class="nw-t">AIレビューが投稿文の言い回しも見るようになりました</div>
+          <div class="nw-ex">これまでの誤字チェックに加えて、読み手に伝わりにくい言い回しも指摘するようになりました。直す・直さないは自分で選べます。</div>
+        </div>
+        <span class="nw-dot" aria-label="未読"></span>
+        </div>
+        <div class="nw-full"><p>投稿を作ったあとの「AIレビュー」で、これまでの誤字チェックに加えて、読み手に伝わりにくい言い回しも指摘するようになりました。</p><p>指摘は直す・直さないを自分で選べます。かならず直す必要はありません。</p></div>
+      </article>
+      <article class="nw-entry" data-f="tips">
+        <div class="nw-item" role="button" tabindex="0" onclick="newsOpen(this)" onkeydown="newsKey(event,this)">
+        <img class="nw-thumb" src="./assets/news-tips-3.svg" alt="">
+        <div class="nw-tx">
+          <div class="nw-meta"><span class="nw-tag tips">TIPS</span><span class="nw-dt">2026年7月18日</span></div>
+          <div class="nw-t">AIレビューの指摘、どこまで直せばいい？</div>
+          <div class="nw-ex">指摘には「必ず直したいもの」と「好みで決めていいもの」があります。見分け方と、直さなくていい場面をまとめました。</div>
+        </div>
+        <span class="nw-dot" aria-label="未読"></span>
+        </div>
+        <div class="nw-full"><p>AIレビューの指摘は、大きく3つに分かれます。全部直す必要はありません。</p><ul><li><b>必ず直したいもの</b>：誤字、日付や値段の間違い、事実と違う言い切り。ここは出す前に直してください。</li><li><b>直すか迷ったら直すもの</b>：長すぎる一文、専門用語。読む人が知らない言葉は言いかえたほうが伝わります。</li><li><b>好みで決めていいもの</b>：語尾のそろえ方、絵文字の数。お店の雰囲気に合っていれば、そのままで大丈夫です。</li></ul><p>迷ったら「はじめて来るお客様が読んで分かるか」で決めると、だいたい間違いません。</p></div>
+      </article>
+      <article class="nw-entry" data-f="info">
+        <div class="nw-item" role="button" tabindex="0" onclick="newsOpen(this)" onkeydown="newsKey(event,this)">
+        <div class="nw-tx">
+          <div class="nw-meta"><span class="nw-tag info">お知らせ</span><span class="nw-dt">2026年7月10日</span></div>
+          <div class="nw-t">夏季休業のご案内（8月13日〜8月16日）</div>
+          <div class="nw-ex">8月13日（木）から8月16日（日）まで、サポートのお問い合わせ対応をお休みします。画面はいつもどおりお使いいただけます。</div>
+        </div>
+        <span class="nw-dot" aria-label="未読"></span>
+        </div>
+        <div class="nw-full"><p>8月13日（木）から8月16日（日）まで、サポートのお問い合わせ対応をお休みします。いただいたご連絡には、8月17日（月）から順にお返事します。</p><p>いいねAI の画面は、休業中もいつもどおりお使いいただけます。</p></div>
+      </article>
+        </div>
+        <div class="nw-empty" id="newsEmpty" style="display:none">あてはまるお知らせはありません。</div>
+      </div>
+
+      <!-- ===== 本文（仮想ページ2）。アコーディオンではなく画面ごと入れ替える ===== -->
+      <div class="nw-detail" id="detailView">
+        <button class="nw-back" onclick="newsBack()"><i class="ti ti-arrow-left"></i>お知らせ一覧にもどる</button>
+        <article class="nw-art">
+          <div class="nw-meta" id="dMeta"></div>
+          <h2 id="dTitle"></h2>
+          <div id="dHero"></div>
+          <div class="body" id="dBody"></div>
+        </article>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+// サイドバーの折りたたみ項目。直後の .nisub を開閉する。
+function navToggle(el){
+  var sub = el.nextElementSibling;
+  if(!sub || !sub.classList.contains('nisub')) return;
+  sub.classList.toggle('open');
+  el.classList.toggle('exp');
+}
+
+/* ===== ToDo（shell_header_sidebar_wire.html と同じ挙動） ===== */
+var AUTO_TODO = 2;
+function todoToggle(){
+  var p = document.getElementById('todoPanel');
+  var b = document.getElementById('todoBtn');
+  var open = p.classList.toggle('open');
+  b.classList.toggle('on', open);
+  if(!open) document.getElementById('todoNew').classList.remove('open');
+}
+function todoNewToggle(){
+  var n = document.getElementById('todoNew');
+  if(n.classList.toggle('open')) document.getElementById('todoInput').focus();
+}
+function todoAdd(){
+  var input = document.getElementById('todoInput');
+  var text = input.value.trim();
+  if(!text) return;
+  var row = document.createElement('label');
+  row.className = 'tdp-row tdp-man';
+  var cb = document.createElement('input');
+  cb.type = 'checkbox';
+  cb.addEventListener('change', todoCount);
+  var t = document.createElement('span');
+  t.className = 't';
+  t.textContent = text;
+  var del = document.createElement('button');
+  del.className = 'tdp-del';
+  del.title = '削除';
+  del.setAttribute('aria-label','削除');
+  del.innerHTML = '<i class="ti ti-trash"></i>';
+  del.addEventListener('click', function(){ todoDel(del); });
+  row.appendChild(cb); row.appendChild(t); row.appendChild(del);
+  document.getElementById('todoManual').appendChild(row);
+  input.value = '';
+  input.focus();
+  todoCount();
+}
+function todoDel(btn){ btn.closest('.tdp-row').remove(); todoCount(); }
+function todoCount(){
+  var rows = document.querySelectorAll('#todoManual .tdp-man');
+  var open = 0;
+  rows.forEach(function(r){ if(!r.querySelector('input').checked) open++; });
+  var total = AUTO_TODO + open;
+  var badge = document.getElementById('todoBadge');
+  badge.textContent = total;
+  badge.classList.toggle('zero', total === 0);
+  document.getElementById('todoCnt').textContent = total + '件';
+  document.getElementById('todoEmpty').style.display = rows.length ? 'none' : 'block';
+}
+document.addEventListener('click', function(e){
+  var p = document.getElementById('todoPanel');
+  if(!p.classList.contains('open')) return;
+  if(p.contains(e.target) || document.getElementById('todoBtn').contains(e.target)) return;
+  p.classList.remove('open');
+  document.getElementById('todoBtn').classList.remove('on');
+});
+todoCount();
+
+/* ===== NEWS =====
+   一覧と本文は「別のページ」として切り替える。アコーディオンだと、
+   長い本文が一覧に割り込んで、どこまでが1件なのか分からなくなるため。 */
+var activeFilter = 'all';
+
+function newsKey(e, el){
+  if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); newsOpen(el); }
+}
+
+// 一覧 → 本文
+function newsOpen(el){
+  var entry = el.closest('.nw-entry');
+  // 開いた時点で既読にする
+  if(entry.classList.contains('unread')){
+    entry.classList.remove('unread');
+    newsCount();
+  }
+  var title = entry.querySelector('.nw-t').textContent;
+  document.getElementById('dMeta').innerHTML = entry.querySelector('.nw-meta').innerHTML;
+  document.getElementById('dTitle').textContent = title;
+  var thumb = entry.querySelector('.nw-thumb');
+  document.getElementById('dHero').innerHTML = thumb
+    ? '<img class="hero" src="' + thumb.getAttribute('src') + '" alt="">'
+    : '';
+  document.getElementById('dBody').innerHTML = entry.querySelector('.nw-full').innerHTML;
+
+  document.getElementById('listView').style.display = 'none';
+  document.getElementById('detailView').classList.add('on');
+  document.querySelector('.hd .pgnm').textContent = title;   // ヘッダーも記事名にして「別ページ」だと分かるように
+  document.querySelector('.content').scrollTop = 0;
+}
+
+// 本文 → 一覧
+function newsBack(){
+  document.getElementById('detailView').classList.remove('on');
+  document.getElementById('listView').style.display = 'block';
+  document.querySelector('.hd .pgnm').textContent = 'NEWS';
+  document.querySelector('.content').scrollTop = 0;
+}
+
+function newsFilter(chip){
+  activeFilter = chip.dataset.f;
+  document.querySelectorAll('.nw-chip').forEach(function(c){ c.classList.toggle('on', c === chip); });
+  newsApply();
+}
+
+// 絞り込みチップ と キーワード検索 を合わせて適用する
+function newsApply(){
+  var q = document.getElementById('nwq').value.trim().toLowerCase();
+  var shown = 0;
+  document.querySelectorAll('.nw-entry').forEach(function(en){
+    var okFilter = (activeFilter === 'all')
+      || (activeFilter === 'unread' ? en.classList.contains('unread') : en.dataset.f === activeFilter);
+    var text = (en.querySelector('.nw-t').textContent + ' ' +
+                en.querySelector('.nw-ex').textContent + ' ' +
+                en.querySelector('.nw-tag').textContent).toLowerCase();
+    var okQuery = !q || text.indexOf(q) !== -1;
+    var hit = okFilter && okQuery;
+    en.classList.toggle('hide', !hit);
+    if(hit) shown++;
+  });
+  document.getElementById('newsList').style.display = shown ? 'block' : 'none';
+  document.getElementById('newsEmpty').style.display = shown ? 'none' : 'block';
+}
+
+function newsReadAll(){
+  document.querySelectorAll('.nw-entry.unread').forEach(function(en){ en.classList.remove('unread'); });
+  newsCount();
+  newsApply();
+}
+
+// 未読の数。チップのバッジに出し、0件なら消す
+function newsCount(){
+  var n = document.querySelectorAll('.nw-entry.unread').length;
+  var c = document.getElementById('unreadCnt');
+  c.textContent = n;
+  c.classList.toggle('zero', n === 0);
+}
+newsCount();
+</script>
+</body></html>

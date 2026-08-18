@@ -151,6 +151,13 @@ body { font-family: 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif; -webk
 .ni.on .ti { color: var(--color-primary); }
 .ni:hover:not(.on) { background: var(--color-background); }
 .sb-sep { height: 1px; background: var(--color-border); margin: 6px 10px; }
+/* 折りたたみサブメニュー（設定 配下）。初期は閉じた状態。 */
+.ni.exp .cv { transform: rotate(180deg); }
+.nisub { display: none; }
+.nisub.open { display: block; }
+.nis { display: flex; align-items: center; text-decoration: none; padding: 8px 10px 8px 41px; border-radius: var(--radius-md); font-size: var(--text-label); font-weight: var(--font-weight-label); color: var(--color-muted-foreground); cursor: pointer; user-select: none; }
+.nis:hover { background: var(--color-primary-subtle); color: var(--color-primary); }
+.nis.on { background: var(--color-primary-subtle); color: var(--color-primary); font-weight: var(--font-weight-body-strong); }
 .sb-account { margin-top: auto; padding: 12px; border-top: 1px solid var(--color-border); display: flex; align-items: center; gap: 10px; }
 .sb-account .av { width: 32px; height: 32px; border-radius: var(--radius-full); background: linear-gradient(135deg, #f5e7f8, #d9b3ea); flex: none; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--color-accent-purple); }
 .sb-account .nm { font-size: var(--text-label); font-weight: var(--font-weight-body-strong); line-height: 1.3; }
@@ -493,14 +500,25 @@ body { font-family: 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif; -webk
         <button class="sb-cta-btn"><i class="ti ti-plus"></i>投稿作成</button>
       </div>
       <div class="nav">
-        <div class="ni"><i class="ti ti-layout-dashboard"></i>ダッシュボード</div>
-        <div class="ni"><i class="ti ti-file-text"></i>投稿一覧</div>
+        <div class="ni"><i class="ti ti-layout-dashboard"></i>ホーム</div>
+        <div class="ni"><i class="ti ti-file-text"></i>投稿</div>
         <div class="ni"><i class="ti ti-calendar"></i>カレンダー</div>
         <div class="ni on"><i class="ti ti-chart-bar"></i>分析</div>
+        <div class="ni"><i class="ti ti-folder"></i>ドライブ</div>
         <div class="sb-sep"></div>
-        <div class="ni"><i class="ti ti-folder"></i>いいねAIドライブ<span class="cv"><i class="ti ti-chevron-down"></i></span></div>
-        <div class="ni"><i class="ti ti-settings"></i>設定</div>
-        <div class="ni"><i class="ti ti-dots"></i>その他</div>
+        <div class="ni" onclick="navToggle(this)"><i class="ti ti-settings"></i>設定<span class="cv"><i class="ti ti-chevron-down"></i></span></div>
+        <div class="nisub">
+          <div class="nis">運用目的</div>
+          <div class="nis">SNS設定</div>
+          <div class="nis">メンバー管理</div>
+          <div class="nis">AIレビュー</div>
+        </div>
+        <div class="sb-sep"></div>
+        <div class="ni" onclick="navToggle(this)"><i class="ti ti-dots"></i>その他<span class="cv"><i class="ti ti-chevron-down"></i></span></div>
+        <div class="nisub">
+          <a class="nis" href="./news_wire.html">NEWS</a>
+          <a class="nis" href="https://hinaiwagami0513.github.io/iineai/help/" target="_blank" rel="noopener">ヘルプセンター</a>
+        </div>
       </div>
       <div class="sb-account">
         <div class="av">A</div>
@@ -804,6 +822,13 @@ body { font-family: 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif; -webk
 </div>
 
 <script>
+// サイドバーの折りたたみ項目（設定）。直後の .nisub を開閉する。
+function navToggle(el){
+  var sub = el.nextElementSibling;
+  if(!sub || !sub.classList.contains('nisub')) return;
+  sub.classList.toggle('open');
+  el.classList.toggle('exp');
+}
 // Post data
 var posts = {
   1: {
