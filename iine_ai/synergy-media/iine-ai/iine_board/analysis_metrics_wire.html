@@ -25,6 +25,7 @@
 .ti-pencil:before{content:"\eb04"}
 .ti-chart-line:before{content:"\ea5c"}
 .ti-arrow-up-right:before{content:"\ea24"}
+.ti-message-dots:before{content:"\eaee"}
 .ti-plus:before{content:"\eb0b"}
 .ti-arrow-up:before{content:"\ea25"}
 .ti-chevron-down:before{content:"\ea5f"}
@@ -884,6 +885,14 @@ body {
   .mc { padding: 16px; }
   .summary-value { font-size: var(--text-h2); }
 }
+
+/* ===== ヘッダー右側（全画面共通） =====
+   現在のプラン（押せないので枠線のみ）+ ToDo + チャット。ヘルプの左に置く。 */
+.planchip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--color-border-strong,#cfcdc9);border-radius:var(--radius-full,9999px);padding:5px 12px;font-size:var(--text-label,.75rem);font-weight:700;color:var(--color-muted-foreground,#757575);white-space:nowrap;}
+.planchip i{font-size:15px;color:var(--color-primary,#ef6108);}
+.hdbtn{position:relative;width:38px;height:38px;flex:none;border:1px solid var(--color-border-strong,#cfcdc9);background:var(--color-card,#fff);color:var(--color-foreground,#2a2826);border-radius:var(--radius-full,9999px);display:flex;align-items:center;justify-content:center;font-size:19px;cursor:pointer;padding:0;text-decoration:none;}
+.hdbtn:hover{border-color:var(--color-primary,#ef6108);color:var(--color-primary,#ef6108);}
+.hdbadge{position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;padding:0 5px;border-radius:var(--radius-full,9999px);background:var(--color-primary,#ef6108);color:#fff;font-size:var(--text-meta,.625rem);font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid var(--color-card,#fff);}
 </style>
 </head>
 <body>
@@ -895,7 +904,10 @@ body {
       <span class="hdr-page"><i class="ti ti-chart-bar"></i> 分析</span>
     </div>
     <div class="hdr-right">
-      <a class="helpbtn" href="https://hinaiwagami0513.github.io/iineai/help/analytics/effect/" target="_blank" rel="noopener" title="このページのヘルプ（分析 > 数値変化（導入効果））" aria-label="このページのヘルプ">?</a>
+      <span class="planchip"><i class="ti ti-sparkles"></i>ベーシックOne</span>
+        <button class="hdbtn" title="ToDo" aria-label="ToDo"><i class="ti ti-list-check"></i><span class="hdbadge">5</span></button>
+        <a class="hdbtn" href="./chat_wire.html" title="チャット（未読2件）" aria-label="チャット（未読2件）"><i class="ti ti-message-dots"></i><span class="hdbadge">2</span></a>
+        <a class="helpbtn" href="https://hinaiwagami0513.github.io/iineai/help/analytics/effect/" target="_blank" rel="noopener" title="このページのヘルプ（分析 > 数値変化（導入効果））" aria-label="このページのヘルプ">?</a>
       <button class="close-btn"><i class="ti ti-list-details"></i></button>
     </div>
   </div>
@@ -908,7 +920,7 @@ body {
       <button class="sb-cta"><i class="ti ti-plus"></i> 投稿作成</button>
       <a class="sb-btn" href="#"><i class="ti ti-layout-dashboard"></i> ホーム</a>
       <a class="sb-btn" href="#"><i class="ti ti-file-text"></i> 投稿</a>
-      <a class="sb-btn" href="#"><i class="ti ti-calendar"></i> カレンダー</a>
+      <a class="sb-btn" href="./calendar_wire.html"><i class="ti ti-calendar"></i> カレンダー</a>
       <a class="sb-btn active" href="./analysis_visual_wire.html"><i class="ti ti-chart-bar"></i> 分析</a>
       <a class="sb-btn" href="./drive_wire.html"><i class="ti ti-folder"></i> ドライブ</a>
       <div class="sb-div"></div>

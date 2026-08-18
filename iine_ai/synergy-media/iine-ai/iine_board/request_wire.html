@@ -1,0 +1,601 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>プロに頼む — いいねAI</title>
+<link rel="stylesheet" href="./tabler-icons-inline.css">
+<style>
+/* このファイルで使うアイコンだけ定義する（フォント実体は tabler-icons-inline.css）。
+   字形コードは同梱フォントで実物を描画して確認済み。 */
+.ti-plus:before{content:"\eb0b"}
+.ti-layout-dashboard:before{content:"\f02c"}
+.ti-file-text:before{content:"\eaa2"}
+.ti-calendar:before{content:"\ea53"}
+.ti-calendar-event:before{content:"\ea52"}
+.ti-chart-bar:before{content:"\ea59"}
+.ti-folder:before{content:"\eaad"}
+.ti-dots:before{content:"\ea95"}
+.ti-settings:before{content:"\eb20"}
+.ti-chevron-down:before{content:"\ea5f"}
+.ti-selector:before{content:"\eb1d"}
+.ti-coffee:before{content:"\ef0e"}
+.ti-sparkles:before{content:"\f6d7"}
+.ti-help:before{content:"\eabf"}
+.ti-list-check:before{content:"\eb6a"}
+.ti-message-dots:before{content:"\eaee"}
+.ti-message-circle:before{content:"\eaed"}
+.ti-camera:before{content:"\ea54"}
+.ti-clock:before{content:"\ea70"}
+.ti-check:before{content:"\ea5e"}
+.ti-x:before{content:"\eb55"}
+.ti-arrow-right:before{content:"\ea1f"}
+.ti-photo:before{content:"\eb0a"}
+.ti-video:before{content:"\ed22"}
+.ti-users:before{content:"\ebf2"}
+.ti-world:before{content:"\eb54"}
+.ti-star:before{content:"\eb2e"}
+.ti-speakerphone:before{content:"\ed61"}
+.ti-brand-instagram:before{content:"\ec20"}
+.ti-brand-tiktok:before{content:"\ec73"}
+
+:root {
+  --color-primary: #ef6108;
+  --color-primary-hover: #d9570a;
+  --color-primary-subtle: #fff2e2;
+  --color-on-primary: #ffffff;
+  --color-background: #f2f1f0;
+  --color-surface: #fbfaf8;
+  --color-card: #ffffff;
+  --color-foreground: #2a2826;
+  --color-muted-foreground: #757575;
+  --color-border: #e9e8e6;
+  --color-border-strong: #cfcdc9;
+  --color-input: #ffffff;
+  --color-ring: #ef6108;
+  --color-success: #12960a;
+  --color-success-subtle: #e7f3e6;
+  --color-warning: #8a6d0f;
+  --color-warning-border: #e8b931;
+  --color-warning-subtle: #fcf4d9;
+  --color-info: #185fa5;
+  --color-info-subtle: #e6f1fb;
+  --color-destructive: #dc2626;
+  --color-accent-purple: #9724ba;
+  --color-accent-purple-subtle: #f5e7f8;
+  --color-sns-instagram: #b02a78;
+  --color-sns-instagram-subtle: #fce7f3;
+  --color-sns-tiktok: #0e7490;
+  --color-sns-tiktok-subtle: #e0f7fa;
+  --font-body: "Noto Sans JP";
+  --text-h1: 1.875rem;
+  --text-h2: 1.25rem;
+  --text-h3: 1rem;
+  --text-body-lg: 1rem;
+  --text-body: 0.875rem;
+  --text-label: 0.75rem;
+  --text-meta: 0.625rem;
+  --font-weight-h1: 700;
+  --font-weight-h2: 700;
+  --font-weight-h3: 700;
+  --font-weight-body: 400;
+  --font-weight-body-strong: 700;
+  --font-weight-label: 500;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:var(--font-body),'Hiragino Sans','Meiryo',sans-serif;-webkit-font-smoothing:antialiased;}
+body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
+.app{width:1240px;margin:0 auto;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-xl);overflow:hidden;display:flex;height:800px;position:relative;}
+.ti{line-height:1;}
+
+/* ===== サイドバー（全画面共通） ===== */
+.sb{width:250px;flex:none;background:var(--color-surface);border-right:1px solid var(--color-border);display:flex;flex-direction:column;}
+.sbtop{padding:16px 16px 10px;}
+.logo{font-size:var(--text-h3);font-weight:var(--font-weight-h3);color:var(--color-primary);margin-bottom:14px;display:block;}
+.create{width:100%;display:flex;align-items:center;justify-content:center;gap:7px;background:var(--color-primary);color:#fff;border:none;border-radius:var(--radius-md);padding:11px;font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;}
+.nav{padding:6px 10px;overflow-y:auto;flex:1;}
+.ni{display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:var(--radius-md);font-size:var(--text-body);font-weight:var(--font-weight-label);color:var(--color-foreground);cursor:pointer;text-decoration:none;}
+.ni .ti{font-size:18px;color:#6b6864;}
+.ni .cv{margin-left:auto;font-size:14px;color:#a8a6a2;}
+.nidiv{height:1px;background:var(--color-border);margin:8px 10px;}
+.ni.exp .cv{transform:rotate(180deg);}
+.nisub{display:none;}
+.nisub.open{display:block;}
+.nis{display:flex;align-items:center;text-decoration:none;padding:8px 10px 8px 41px;border-radius:var(--radius-md);font-size:var(--text-label);font-weight:var(--font-weight-label);color:var(--color-muted-foreground);cursor:pointer;}
+.nis:hover{background:var(--color-primary-subtle);color:var(--color-primary);}
+.foot{border-top:1px solid var(--color-border);padding:12px;}
+.switcher{display:flex;align-items:center;gap:10px;padding:9px 10px;border:1px solid var(--color-border-strong);border-radius:var(--radius-md);background:var(--color-card);cursor:pointer;}
+.switcher .pic{width:34px;height:34px;flex:none;border-radius:var(--radius-md);background:#fde9d3;color:var(--color-primary);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.switcher .pn{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);}
+.switcher .an{font-size:var(--text-meta);color:#a8a6a2;}
+.switcher .cv{margin-left:auto;color:#a8a6a2;font-size:17px;}
+
+/* ===== メイン ===== */
+.main{flex:1;min-width:0;display:flex;flex-direction:column;}
+.hd{height:64px;flex:none;display:flex;align-items:center;gap:11px;padding:0 26px;border-bottom:1px solid var(--color-border);}
+.hd .pgic{font-size:22px;color:var(--color-foreground);}
+.hd .pgnm{font-size:var(--text-h3);font-weight:var(--font-weight-body-strong);}
+.hd .r{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.help{width:38px;height:38px;border:1.5px solid var(--color-primary);color:var(--color-primary);background:transparent;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:19px;cursor:pointer;text-decoration:none;}
+.help:hover{background:var(--color-primary);color:var(--color-on-primary);}
+.planchip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--color-border-strong);border-radius:var(--radius-full);padding:5px 12px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);white-space:nowrap;}
+.planchip i{font-size:15px;color:var(--color-primary);}
+.hdbtn{position:relative;width:38px;height:38px;flex:none;border:1px solid var(--color-border-strong);background:var(--color-card);color:var(--color-foreground);border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:19px;cursor:pointer;padding:0;text-decoration:none;}
+.hdbtn:hover{border-color:var(--color-primary);color:var(--color-primary);}
+.hdbadge{position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;padding:0 5px;border-radius:var(--radius-full);background:var(--color-primary);color:var(--color-on-primary);font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);display:flex;align-items:center;justify-content:center;border:2px solid var(--color-card);}
+
+/* ===== 3つのサービスの切替 =====
+   広告作成・発注相談・出張撮影は「プロに頼む」仲間なので、同じ場所で行き来できるようにする。 */
+.svc{flex:none;display:flex;gap:0;padding:0 26px;border-bottom:1px solid var(--color-border);background:var(--color-card);}
+.svc a,.svc button{display:flex;align-items:center;gap:8px;padding:13px 20px;font-family:inherit;font-size:var(--text-body-lg);font-weight:var(--font-weight-label);color:var(--color-muted-foreground);background:none;border:none;border-bottom:3px solid transparent;margin-bottom:-1px;cursor:pointer;text-decoration:none;}
+.svc a:hover,.svc button:hover{color:var(--color-foreground);}
+.svc .on{color:var(--color-primary);border-bottom-color:var(--color-primary);font-weight:var(--font-weight-body-strong);}
+.svc i{font-size:18px;}
+
+.content{flex:1;overflow-y:auto;padding:24px 30px 40px;background:var(--color-background);}
+.view{display:none;max-width:840px;}
+.view.on{display:block;}
+.btn-p{display:inline-flex;align-items:center;gap:8px;background:var(--color-primary);color:var(--color-on-primary);border:none;border-radius:var(--radius-md);padding:0 22px;height:44px;font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;}
+.btn-p:hover{background:var(--color-primary-hover);}
+.btn-o{display:inline-flex;align-items:center;gap:7px;border:1.5px solid var(--color-primary);color:var(--color-primary);background:transparent;border-radius:var(--radius-md);padding:0 16px;height:40px;font-family:inherit;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);cursor:pointer;text-decoration:none;}
+.btn-o:hover{background:var(--color-primary);color:var(--color-on-primary);}
+.btn-g{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--color-border-strong);color:var(--color-muted-foreground);background:var(--color-card);border-radius:var(--radius-md);padding:0 16px;height:40px;font-family:inherit;font-size:var(--text-label);font-weight:var(--font-weight-label);cursor:pointer;}
+.btn-g:hover{border-color:var(--color-foreground);color:var(--color-foreground);}
+
+/* 何が起きるかを先に見せる。相談だけで料金は発生しない、を最初に言う */
+.lead{display:flex;align-items:flex-start;gap:14px;background:var(--color-primary-subtle);border:1px solid #f6d9b8;border-radius:var(--radius-lg);padding:18px 20px;margin-bottom:18px;}
+.lead img{width:60px;height:60px;flex:none;object-fit:contain;}
+.lead .t{font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);color:var(--color-primary);margin-bottom:6px;}
+.lead .d{font-size:var(--text-body);line-height:1.9;}
+/* 送ったあとの流れ */
+.flow{display:flex;align-items:center;gap:0;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:16px 18px;margin-bottom:18px;}
+.fstep{display:flex;align-items:center;gap:9px;font-size:var(--text-label);}
+.fstep .n{width:24px;height:24px;flex:none;border-radius:var(--radius-full);background:var(--color-primary-subtle);color:var(--color-primary);display:flex;align-items:center;justify-content:center;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);}
+.fstep .tx b{font-weight:var(--font-weight-body-strong);}
+.fstep .tx small{display:block;color:var(--color-muted-foreground);font-size:var(--text-meta);margin-top:2px;}
+.flow .ar{flex:1;text-align:center;color:var(--color-border-strong);font-size:15px;}
+
+.card{background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:20px;margin-bottom:16px;}
+.card-t{font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);margin-bottom:4px;}
+.card-d{font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.8;margin-bottom:14px;}
+.opts{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;}
+.opt>span:last-child{min-width:0;}
+.opt{border:1px solid var(--color-border-strong);border-radius:var(--radius-md);padding:14px 15px;cursor:pointer;background:var(--color-card);text-align:left;font-family:inherit;display:flex;gap:12px;align-items:flex-start;}
+.opt:hover{border-color:var(--color-primary);}
+.opt.on{border:2px solid var(--color-primary);background:var(--color-primary-subtle);padding:13px 14px;}
+.opt .ic{width:34px;height:34px;flex:none;border-radius:var(--radius-md);background:var(--color-surface);color:var(--color-primary);display:flex;align-items:center;justify-content:center;font-size:17px;}
+.opt.on .ic{background:#fff;}
+.opt .t{display:block;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);}
+.opt .d{display:block;font-size:var(--text-meta);color:var(--color-muted-foreground);line-height:1.7;margin-top:4px;}
+.opt .p{display:block;font-size:var(--text-meta);color:var(--color-primary);font-weight:var(--font-weight-body-strong);margin-top:6px;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.field{margin-bottom:16px;}
+.field:last-child{margin-bottom:0;}
+.lbl{display:block;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);margin-bottom:4px;}
+.sub{font-size:var(--text-label);color:var(--color-muted-foreground);margin-bottom:9px;line-height:1.7;}
+.inp,.sel,.ta{width:100%;border:1px solid var(--color-border-strong);border-radius:var(--radius-md);padding:11px 13px;font-family:inherit;font-size:var(--text-body);line-height:1.8;background:var(--color-input);color:var(--color-foreground);}
+.ta{resize:vertical;min-height:96px;}
+.inp:focus,.sel:focus,.ta:focus{outline:2px solid var(--color-ring);outline-offset:1px;border-color:var(--color-primary);}
+.chips{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{border:1px solid var(--color-border-strong);background:var(--color-card);border-radius:var(--radius-full);padding:9px 16px;font-family:inherit;font-size:var(--text-body);cursor:pointer;color:var(--color-foreground);display:inline-flex;align-items:center;gap:6px;}
+.chip:hover{border-color:var(--color-primary);}
+.chip.on{background:var(--color-primary-subtle);border-color:var(--color-primary);color:var(--color-primary);font-weight:var(--font-weight-body-strong);}
+/* ドライブから参考素材を渡す */
+.refs{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.ref{display:flex;align-items:center;gap:8px;border:1px solid var(--color-border);border-radius:var(--radius-md);padding:7px 10px 7px 7px;background:var(--color-surface);font-size:var(--text-label);}
+.ref .sw{width:28px;height:28px;border-radius:var(--radius-sm);flex:none;}
+.ref .x{border:none;background:transparent;color:var(--color-muted-foreground);cursor:pointer;font-size:14px;}
+.note{display:flex;align-items:flex-start;gap:10px;background:var(--color-info-subtle);border:1px solid #cfe0f2;border-radius:var(--radius-md);padding:12px 14px;font-size:var(--text-label);line-height:1.8;margin-top:14px;}
+.note i{font-size:17px;color:var(--color-info);flex:none;margin-top:1px;}
+.navrow{display:flex;align-items:center;gap:12px;margin-top:20px;}
+.navrow .n{font-size:var(--text-label);color:var(--color-muted-foreground);}
+.navrow .sp{margin-left:auto;}
+
+/* 過去の相談。送って終わりの画面にしない */
+.hist{margin-top:26px;}
+.hist .h{font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);margin-bottom:11px;}
+.hrow{display:flex;align-items:center;gap:13px;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:13px 15px;margin-bottom:9px;}
+.hrow .tx{flex:1;min-width:0;}
+.hrow .t{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);}
+.hrow .m{font-size:var(--text-meta);color:var(--color-muted-foreground);margin-top:3px;}
+.st{display:inline-flex;align-items:center;gap:5px;flex:none;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);border-radius:var(--radius-full);padding:4px 11px;}
+.st.wait{background:var(--color-warning-subtle);color:var(--color-warning);}
+.st.ok{background:var(--color-success-subtle);color:var(--color-success);}
+.st.done{background:var(--color-surface);color:var(--color-muted-foreground);border:1px solid var(--color-border);}
+
+/* 送ったあと */
+.sent{background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:26px 28px;max-width:640px;}
+.sent .done-msg{display:flex;align-items:flex-start;gap:11px;background:var(--color-success-subtle);border:1px solid #c3e0bf;border-radius:var(--radius-md);padding:14px 15px;font-size:var(--text-body);line-height:1.9;color:#0f6b0a;margin-bottom:18px;}
+.sent .done-msg i{font-size:18px;flex:none;margin-top:2px;}
+.sent .sum{border:1px solid var(--color-border);border-radius:var(--radius-md);overflow:hidden;margin-bottom:18px;}
+.sent .srow{display:flex;gap:12px;padding:11px 14px;border-bottom:1px solid var(--color-border);font-size:var(--text-body);}
+.sent .srow:last-child{border-bottom:none;}
+.sent .srow .k{width:110px;flex:none;color:var(--color-muted-foreground);font-size:var(--text-label);}
+.sent .srow .v{font-weight:var(--font-weight-body-strong);}
+
+@media(max-width:1100px){ .opts,.grid2,.grid3{grid-template-columns:1fr;} }
+</style></head><body>
+<div class="app">
+  <!-- サイドバー -->
+  <aside class="sb">
+    <div class="sbtop"><span class="logo">いいねAI</span><button class="create"><i class="ti ti-plus"></i>投稿作成</button></div>
+    <div class="nav">
+      <a class="ni" href="./shell_header_sidebar_wire.html"><i class="ti ti-layout-dashboard"></i>ホーム</a>
+      <a class="ni" href="./post_list_wire.html"><i class="ti ti-file-text"></i>投稿</a>
+      <a class="ni" href="./calendar_wire.html"><i class="ti ti-calendar"></i>カレンダー</a>
+      <a class="ni" href="./analysis_visual_wire.html"><i class="ti ti-chart-bar"></i>分析</a>
+      <a class="ni" href="./drive_wire.html"><i class="ti ti-folder"></i>ドライブ</a>
+      <div class="nidiv"></div>
+      <div class="ni" onclick="navToggle(this)"><i class="ti ti-settings"></i>設定<span class="cv"><i class="ti ti-chevron-down"></i></span></div>
+      <div class="nisub">
+        <a class="nis" href="./settings_wire.html#project">プロジェクト管理</a>
+        <a class="nis" href="./settings_wire.html#plan">プラン一覧</a>
+        <a class="nis" href="./settings_wire.html#sns">SNSアカウント</a>
+        <a class="nis" href="./settings_wire.html#review">AIレビュー</a>
+        <a class="nis" href="./settings_wire.html#members">メンバー管理</a>
+      </div>
+      <div class="nidiv"></div>
+      <div class="ni" onclick="navToggle(this)"><i class="ti ti-dots"></i>その他<span class="cv"><i class="ti ti-chevron-down"></i></span></div>
+      <div class="nisub">
+        <a class="nis" href="./news_wire.html">NEWS</a>
+        <a class="nis" href="https://hinaiwagami0513.github.io/iineai/help/" target="_blank" rel="noopener">ヘルプセンター</a>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="switcher"><div class="pic"><i class="ti ti-coffee"></i></div><div><div class="pn">犬カフェOne</div><div class="an">田中 陽菜</div></div><i class="ti ti-selector cv"></i></div>
+    </div>
+  </aside>
+
+  <!-- メイン -->
+  <div class="main">
+    <div class="hd">
+      <i class="ti ti-message-circle pgic" id="pgic"></i><span class="pgnm" id="pgnm">発注相談</span>
+      <div class="r">
+        <span class="planchip"><i class="ti ti-sparkles"></i>ベーシックOne</span>
+        <button class="hdbtn" title="ToDo" aria-label="ToDo"><i class="ti ti-list-check"></i><span class="hdbadge">5</span></button>
+        <a class="hdbtn" href="./chat_wire.html" title="チャット（未読2件）" aria-label="チャット（未読2件）"><i class="ti ti-message-dots"></i><span class="hdbadge">2</span></a>
+        <a class="help" href="https://hinaiwagami0513.github.io/iineai/help/" target="_blank" rel="noopener" title="このページのヘルプ" aria-label="このページのヘルプ"><i class="ti ti-help"></i></a>
+      </div>
+    </div>
+
+    <!-- プロに頼む3つ -->
+    <div class="svc">
+      <a href="./ads_wire.html"><i class="ti ti-speakerphone"></i>広告作成</a>
+      <button class="on" id="tabOrder" onclick="setMode('order')"><i class="ti ti-message-circle"></i>発注相談</button>
+      <button id="tabShoot" onclick="setMode('shoot')"><i class="ti ti-camera"></i>出張撮影</button>
+    </div>
+
+    <div class="content" id="content">
+
+      <!-- ===== 発注相談 ===== -->
+      <div class="view on" id="vOrder">
+        <div class="lead">
+          <div>
+            <div class="t">つくるのが大変なところだけ、プロに任せられます</div>
+            <div class="d">投稿の制作や動画の編集を、いいねAIの制作チームにお願いできます。<br>
+            <b>相談だけならお金はかかりません。</b>内容を聞いてから、お見積りをお出しします。</div>
+          </div>
+          <img src="./assets/iine-fox-happy.png" alt="">
+        </div>
+
+        <div class="flow">
+          <span class="fstep"><span class="n">1</span><span class="tx"><b>相談を送る</b><small>この画面</small></span></span>
+          <span class="ar"><i class="ti ti-arrow-right"></i></span>
+          <span class="fstep"><span class="n">2</span><span class="tx"><b>見積りが届く</b><small>ふつう1〜2営業日</small></span></span>
+          <span class="ar"><i class="ti ti-arrow-right"></i></span>
+          <span class="fstep"><span class="n">3</span><span class="tx"><b>OKしたら制作開始</b><small>断ってもかまいません</small></span></span>
+          <span class="ar"><i class="ti ti-arrow-right"></i></span>
+          <span class="fstep"><span class="n">4</span><span class="tx"><b>ドライブに納品</b><small>そのまま投稿できます</small></span></span>
+        </div>
+
+        <div class="card">
+          <div class="card-t">なにをお願いしますか</div>
+          <div class="card-d">いくつでも選べます。金額は目安です。</div>
+          <div class="opts">
+            <button class="opt on" onclick="this.classList.toggle('on')">
+              <span class="ic"><i class="ti ti-photo"></i></span>
+              <span><span class="t">投稿をまるごと作る</span>
+              <span class="d">写真えらび・文章・ハッシュタグまで、出せる形にして納品します。</span>
+              <span class="p">1本 5,000円〜</span></span>
+            </button>
+            <button class="opt" onclick="this.classList.toggle('on')">
+              <span class="ic"><i class="ti ti-video"></i></span>
+              <span><span class="t">動画を編集する</span>
+              <span class="d">撮った素材をお預かりして、テロップ・BGMまで付けます。</span>
+              <span class="p">1本 12,000円〜</span></span>
+            </button>
+            <button class="opt" onclick="this.classList.toggle('on')">
+              <span class="ic"><i class="ti ti-sparkles"></i></span>
+              <span><span class="t">画像を作る（バナー・チラシ）</span>
+              <span class="d">キャンペーンの告知画像などを、デザイナーが作ります。</span>
+              <span class="p">1点 8,000円〜</span></span>
+            </button>
+            <button class="opt" onclick="this.classList.toggle('on')">
+              <span class="ic"><i class="ti ti-file-text"></i></span>
+              <span><span class="t">台本だけ作る</span>
+              <span class="d">撮影は自分でする方向け。話す順番と言葉だけ用意します。</span>
+              <span class="p">1本 3,000円〜</span></span>
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-t">どれくらい・いつまでに</div>
+          <div class="grid2">
+            <div class="field" style="margin-bottom:0">
+              <label class="lbl" for="qty">本数</label>
+              <select class="sel" id="qty"><option>1本</option><option selected>3本</option><option>5本</option><option>10本以上</option><option>まだ決まっていない</option></select>
+            </div>
+            <div class="field" style="margin-bottom:0">
+              <label class="lbl" for="due">いつまでに欲しいか</label>
+              <select class="sel" id="due"><option>急ぎ（3営業日以内）</option><option selected>2週間くらい</option><option>1か月くらい</option><option>急がない</option></select>
+            </div>
+          </div>
+          <div class="field" style="margin-top:16px;margin-bottom:0">
+            <label class="lbl">予算の目安</label>
+            <div class="sub">決まっていなければ「わからない」で大丈夫です。こちらから提案します。</div>
+            <div class="chips">
+              <button class="chip" onclick="pickOne(this)">1万円まで</button>
+              <button class="chip on" onclick="pickOne(this)">3万円まで</button>
+              <button class="chip" onclick="pickOne(this)">5万円まで</button>
+              <button class="chip" onclick="pickOne(this)">それ以上</button>
+              <button class="chip" onclick="pickOne(this)">わからない</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-t">参考にしてほしいもの</div>
+          <div class="card-d">ドライブの素材や、こんな感じにしたいという例を渡せます。お店の情報は「プロジェクト管理」から自動で共有されます。</div>
+          <div class="refs">
+            <span class="ref"><span class="sw" style="background:linear-gradient(135deg,#f7d9b0,#efc189)"></span>看板犬ポチ_01.jpg<button class="x" aria-label="外す"><i class="ti ti-x"></i></button></span>
+            <span class="ref"><span class="sw" style="background:linear-gradient(135deg,#b9dcc0,#93c8a0)"></span>ポチの朝ルーティン.mp4<button class="x" aria-label="外す"><i class="ti ti-x"></i></button></span>
+            <a class="btn-o" href="./drive_wire.html"><i class="ti ti-folder"></i>ドライブから選ぶ</a>
+          </div>
+          <div class="field" style="margin-top:16px;margin-bottom:0">
+            <label class="lbl" for="ref">参考にしたいSNSやサイト（あれば）</label>
+            <input class="inp" id="ref" placeholder="https://…">
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-t">伝えたいこと</div>
+          <div class="card-d">うまく書けなくて大丈夫です。箇条書きでも、話し言葉でもかまいません。</div>
+          <textarea class="ta" placeholder="例：秋の新作パフェを推したいです。犬と一緒に写っている写真が多めがうれしいです。">秋の新作パフェを3本ぶん、Instagram向けにお願いしたいです。犬と一緒に写っている写真を多めにしてください。</textarea>
+        </div>
+
+        <div class="note"><i class="ti ti-message-dots"></i>
+          <div>送ると、<b>チャットに相談のスレッドができます</b>。見積りや質問はそこに届くので、メールを探さなくて大丈夫です。</div>
+        </div>
+
+        <div class="navrow">
+          <span class="n">この時点ではお金はかかりません。</span>
+          <span class="sp"><button class="btn-p" onclick="send('order')"><i class="ti ti-message-circle"></i>相談を送る</button></span>
+        </div>
+
+        <div class="hist">
+          <div class="h">今までの相談</div>
+          <div class="hrow">
+            <div class="tx"><div class="t">夏フェスのバナー 2点</div><div class="m">8月2日に相談・16,000円でお願いしました</div></div>
+            <span class="st done">納品ずみ</span>
+            <a class="btn-o" href="./chat_wire.html">やりとりを見る</a>
+          </div>
+          <div class="hrow">
+            <div class="tx"><div class="t">動画編集 1本（新人スタッフ紹介）</div><div class="m">8月14日に相談・見積り待ち</div></div>
+            <span class="st wait"><i class="ti ti-clock"></i>返事待ち</span>
+            <a class="btn-o" href="./chat_wire.html">やりとりを見る</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 出張撮影 ===== -->
+      <div class="view" id="vShoot">
+        <div class="lead">
+          <div>
+            <div class="t">カメラマンがお店に行って、撮ってきます</div>
+            <div class="d">スマホで撮るのがむずかしいもの（料理・外観・スタッフ）を、プロが撮影します。<br>
+            <b>撮った写真はそのままドライブに入ります。</b>相談だけならお金はかかりません。</div>
+          </div>
+          <img src="./assets/iine-fox-happy.png" alt="">
+        </div>
+
+        <div class="flow">
+          <span class="fstep"><span class="n">1</span><span class="tx"><b>希望を送る</b><small>この画面</small></span></span>
+          <span class="ar"><i class="ti ti-arrow-right"></i></span>
+          <span class="fstep"><span class="n">2</span><span class="tx"><b>日程を決める</b><small>チャットで調整</small></span></span>
+          <span class="ar"><i class="ti ti-arrow-right"></i></span>
+          <span class="fstep"><span class="n">3</span><span class="tx"><b>撮影</b><small>2〜3時間が目安</small></span></span>
+          <span class="ar"><i class="ti ti-arrow-right"></i></span>
+          <span class="fstep"><span class="n">4</span><span class="tx"><b>ドライブに納品</b><small>1週間ほど</small></span></span>
+        </div>
+
+        <div class="card">
+          <div class="card-t">なにを撮ってほしいですか</div>
+          <div class="card-d">いくつでも選べます。</div>
+          <div class="opts">
+            <button class="opt on" onclick="this.classList.toggle('on')">
+              <span class="ic"><i class="ti ti-coffee"></i></span>
+              <span><span class="t">料理・商品</span><span class="d">メニュー写真として使えるように、明るく撮ります。</span></span>
+            </button>
+            <button class="opt on" onclick="this.classList.toggle('on')">
+              <span class="ic"><i class="ti ti-photo"></i></span>
+              <span><span class="t">お店の外観・内観</span><span class="d">はじめて来る人が迷わないように、入口も撮ります。</span></span>
+            </button>
+            <button class="opt" onclick="this.classList.toggle('on')">
+              <span class="ic"><i class="ti ti-users"></i></span>
+              <span><span class="t">スタッフ・お客様</span><span class="d">写ってよい方だけ。許可の取り方もご案内します。</span></span>
+            </button>
+            <button class="opt" onclick="this.classList.toggle('on')">
+              <span class="ic"><i class="ti ti-video"></i></span>
+              <span><span class="t">動画も撮る</span><span class="d">リール用の短い動画も一緒に撮影します。</span></span>
+            </button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-t">いつ来てほしいですか</div>
+          <div class="card-d">3つまで希望を出せます。お店が空いている時間だと、きれいに撮れます。</div>
+          <div class="grid3">
+            <div class="field" style="margin-bottom:0">
+              <label class="lbl" for="d1">第1希望</label>
+              <input class="inp" id="d1" value="9月3日（木）14:00">
+            </div>
+            <div class="field" style="margin-bottom:0">
+              <label class="lbl" for="d2">第2希望</label>
+              <input class="inp" id="d2" value="9月4日（金）14:00">
+            </div>
+            <div class="field" style="margin-bottom:0">
+              <label class="lbl" for="d3">第3希望</label>
+              <input class="inp" id="d3" placeholder="なくても大丈夫です">
+            </div>
+          </div>
+          <div class="field" style="margin-top:16px;margin-bottom:0">
+            <label class="lbl">撮影の長さ</label>
+            <div class="chips">
+              <button class="chip" onclick="pickOne(this)">1時間</button>
+              <button class="chip on" onclick="pickOne(this)">2時間</button>
+              <button class="chip" onclick="pickOne(this)">半日</button>
+              <button class="chip" onclick="pickOne(this)">おまかせ</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-t">場所</div>
+          <div class="card-d">「プロジェクト管理」に入っている住所を出しています。ちがう場所で撮る場合は書き換えてください。</div>
+          <div class="field">
+            <label class="lbl" for="addr">住所</label>
+            <input class="inp" id="addr" value="東京都渋谷区〇〇 1-2-3 犬カフェOne">
+          </div>
+          <div class="field" style="margin-bottom:0">
+            <label class="lbl" for="use">撮った写真の使いみち</label>
+            <div class="chips">
+              <button class="chip on" onclick="this.classList.toggle('on')"><i class="ti ti-brand-instagram" style="color:var(--color-sns-instagram)"></i>Instagram</button>
+              <button class="chip" onclick="this.classList.toggle('on')"><i class="ti ti-brand-tiktok" style="color:var(--color-sns-tiktok)"></i>TikTok</button>
+              <button class="chip" onclick="this.classList.toggle('on')">お店のサイト</button>
+              <button class="chip" onclick="this.classList.toggle('on')">チラシ・メニュー表</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-t">伝えたいこと</div>
+          <div class="card-d">当日のお願いや、気をつけてほしいことがあれば書いてください。</div>
+          <textarea class="ta" placeholder="例：14時までは混んでいます。看板犬のポチは15時までお店にいます。">14時までは混んでいます。看板犬のポチは15時までお店にいるので、一緒に撮ってもらえるとうれしいです。</textarea>
+        </div>
+
+        <div class="note"><i class="ti ti-message-dots"></i>
+          <div>送ると、<b>チャットに日程調整のスレッドができます</b>。カメラマンとのやりとりはそこで行います。</div>
+        </div>
+
+        <div class="navrow">
+          <span class="n">この時点ではお金はかかりません。</span>
+          <span class="sp"><button class="btn-p" onclick="send('shoot')"><i class="ti ti-camera"></i>撮影をお願いする</button></span>
+        </div>
+
+        <div class="hist">
+          <div class="h">今までの撮影</div>
+          <div class="hrow">
+            <div class="tx"><div class="t">夏メニューの撮影（2時間）</div><div class="m">7月18日に撮影・写真48枚をドライブに納品</div></div>
+            <span class="st done">納品ずみ</span>
+            <a class="btn-o" href="./drive_wire.html">写真を見る</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== 送ったあと ===== -->
+      <div class="view" id="vSent">
+        <div class="sent">
+          <div class="done-msg"><i class="ti ti-check"></i>
+            <div><b id="sentTitle">相談を送りました。</b><br>
+            <span id="sentBody">1〜2営業日でお見積りをお返しします。やりとりはチャットに届きます。</span></div>
+          </div>
+          <div class="sum" id="sentSum"></div>
+          <div class="navrow">
+            <a class="btn-o" href="./chat_wire.html"><i class="ti ti-message-dots"></i>チャットで見る</a>
+            <span class="sp"><button class="btn-p" onclick="setMode(lastMode)">この画面にもどる<i class="ti ti-arrow-right"></i></button></span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// サイドバーの折りたたみ項目
+function navToggle(el){
+  var sub = el.nextElementSibling;
+  if(!sub || !sub.classList.contains('nisub')) return;
+  sub.classList.toggle('open');
+  el.classList.toggle('exp');
+}
+
+/* ===== 発注相談 / 出張撮影 の切替 =====
+   広告作成と並べて、同じ場所から行き来できるようにしている。 */
+var lastMode = 'order';
+var MODES = {
+  order: {view:'vOrder', tab:'tabOrder', name:'発注相談', icon:'ti-message-circle'},
+  shoot: {view:'vShoot', tab:'tabShoot', name:'出張撮影', icon:'ti-camera'}
+};
+function setMode(m){
+  lastMode = m;
+  Object.keys(MODES).forEach(function(k){
+    document.getElementById(MODES[k].view).classList.toggle('on', k === m);
+    document.getElementById(MODES[k].tab).classList.toggle('on', k === m);
+  });
+  document.getElementById('vSent').classList.remove('on');
+  document.getElementById('pgnm').textContent = MODES[m].name;
+  document.getElementById('pgic').className = 'ti ' + MODES[m].icon + ' pgic';
+  document.getElementById('content').scrollTop = 0;
+  if(location.hash !== '#' + m) history.replaceState(null, '', '#' + m);
+}
+if(location.hash && MODES[location.hash.slice(1)]) setMode(location.hash.slice(1));
+window.addEventListener('hashchange', function(){
+  var k = location.hash.slice(1);
+  if(MODES[k]) setMode(k);
+});
+
+function pickOne(el){
+  el.parentElement.querySelectorAll('.chip').forEach(function(c){ c.classList.remove('on'); });
+  el.classList.add('on');
+}
+
+// 送ったら、なにを送ったのかをそのまま見せる（送って終わりにしない）
+function send(m){
+  var sum, title, body;
+  if(m === 'order'){
+    title = '相談を送りました。';
+    body  = '1〜2営業日でお見積りをお返しします。金額を見てから決められます。';
+    var kinds = [].slice.call(document.querySelectorAll('#vOrder .opt.on .t')).map(function(e){ return e.textContent; });
+    sum = [
+      ['お願いしたこと', kinds.join('・') || '—'],
+      ['本数', document.getElementById('qty').value],
+      ['希望の時期', document.getElementById('due').value],
+      ['予算の目安', (document.querySelector('#vOrder .chip.on') || {textContent:'—'}).textContent],
+      ['渡した素材', 'ドライブから2件']
+    ];
+  } else {
+    title = '撮影のお願いを送りました。';
+    body  = 'カメラマンの空きを確認して、チャットで日程をご相談します。';
+    var subj = [].slice.call(document.querySelectorAll('#vShoot .opt.on .t')).map(function(e){ return e.textContent; });
+    sum = [
+      ['撮ってほしいもの', subj.join('・') || '—'],
+      ['第1希望', document.getElementById('d1').value],
+      ['第2希望', document.getElementById('d2').value || '—'],
+      ['場所', document.getElementById('addr').value]
+    ];
+  }
+  document.getElementById('sentTitle').textContent = title;
+  document.getElementById('sentBody').textContent = body;
+  document.getElementById('sentSum').innerHTML = sum.map(function(r){
+    return '<div class="srow"><span class="k">' + r[0] + '</span><span class="v">' + r[1] + '</span></div>';
+  }).join('');
+  Object.keys(MODES).forEach(function(k){ document.getElementById(MODES[k].view).classList.remove('on'); });
+  document.getElementById('vSent').classList.add('on');
+  document.getElementById('pgnm').textContent = MODES[m].name + '（送りました）';
+  document.getElementById('content').scrollTop = 0;
+}
+</script>
+</body></html>

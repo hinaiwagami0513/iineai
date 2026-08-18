@@ -110,10 +110,11 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .ti-help:before{content:"\eabf"}
 .ti-layout-dashboard:before{content:"\f02c"}
 .ti-list:before{content:"\eb6b"}
-.ti-message-dots:before{content:"\f4a6"}
+.ti-message-dots:before{content:"\eaee"}
 .ti-messages:before{content:"\eb6c"}
 .ti-pencil:before{content:"\eb04"}
 .ti-photo:before{content:"\eb0a"}
+.ti-list-check:before{content:"\eb6a"}
 .ti-plus:before{content:"\eb0b"}
 .ti-selector:before{content:"\eb1d"}
 .ti-send:before{content:"\eb1e"}
@@ -381,6 +382,14 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 
 /* SP bottom bar */
 .sp-bottombar{display:none;}
+
+/* ===== ヘッダー右側（全画面共通） =====
+   現在のプラン（押せないので枠線のみ）+ ToDo + チャット。ヘルプの左に置く。 */
+.planchip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--color-border-strong,#cfcdc9);border-radius:var(--radius-full,9999px);padding:5px 12px;font-size:var(--text-label,.75rem);font-weight:700;color:var(--color-muted-foreground,#757575);white-space:nowrap;}
+.planchip i{font-size:15px;color:var(--color-primary,#ef6108);}
+.hdbtn{position:relative;width:38px;height:38px;flex:none;border:1px solid var(--color-border-strong,#cfcdc9);background:var(--color-card,#fff);color:var(--color-foreground,#2a2826);border-radius:var(--radius-full,9999px);display:flex;align-items:center;justify-content:center;font-size:19px;cursor:pointer;padding:0;text-decoration:none;}
+.hdbtn:hover{border-color:var(--color-primary,#ef6108);color:var(--color-primary,#ef6108);}
+.hdbadge{position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;padding:0 5px;border-radius:var(--radius-full,9999px);background:var(--color-primary,#ef6108);color:#fff;font-size:var(--text-meta,.625rem);font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid var(--color-card,#fff);}
 </style></head><body>
 <div class="app">
   <!-- Sidebar -->
@@ -389,7 +398,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
     <div class="nav">
       <div class="ni"><i class="ti ti-layout-dashboard"></i>ホーム</div>
       <div class="ni on"><i class="ti ti-file-text"></i>投稿</div>
-      <div class="ni"><i class="ti ti-calendar"></i>カレンダー</div>
+      <a class="ni" href="./calendar_wire.html"><i class="ti ti-calendar"></i>カレンダー</a>
       <div class="ni"><i class="ti ti-chart-bar"></i>分析</div>
       <a class="ni" href="./drive_wire.html"><i class="ti ti-folder"></i>ドライブ</a>
       <div class="nidiv"></div>
@@ -415,7 +424,10 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
     <!-- Header -->
     <div class="hd">
       <i class="ti ti-file-text pgic"></i><span class="pgnm">投稿一覧</span>
-      <div class="r"><a class="help" href="https://hinaiwagami0513.github.io/iineai/help/manage/list/" target="_blank" rel="noopener" title="このページのヘルプ（投稿一覧）" aria-label="このページのヘルプ">?</a><button class="sbtoggle"><i class="ti ti-list"></i></button></div>
+      <div class="r"><span class="planchip"><i class="ti ti-sparkles"></i>ベーシックOne</span>
+        <button class="hdbtn" title="ToDo" aria-label="ToDo"><i class="ti ti-list-check"></i><span class="hdbadge">5</span></button>
+        <a class="hdbtn" href="./chat_wire.html" title="チャット（未読2件）" aria-label="チャット（未読2件）"><i class="ti ti-message-dots"></i><span class="hdbadge">2</span></a>
+        <a class="help" href="https://hinaiwagami0513.github.io/iineai/help/manage/list/" target="_blank" rel="noopener" title="このページのヘルプ（投稿一覧）" aria-label="このページのヘルプ">?</a><button class="sbtoggle"><i class="ti ti-list"></i></button></div>
     </div>
 
     <!-- Tab bar -->
