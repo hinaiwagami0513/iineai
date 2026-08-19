@@ -13,6 +13,7 @@
 - 角丸: sm8 / md12 / lg16 / xl20 / full。**旧: 12/16/20/28 は失効**。
 - タイポ: Noto Sans JP、weight 400/500/700/900 のみ。**旧: 800 は失効**。
 - グラデ2種のみ（CTA / Hero）。maneku_dsのpink→yellowは廃止。
+- グラフ: `chart-1..5`（`#ef6108` / `#ff971e` / `#ffc07a` / `#ffdcb8` / `#fff2e2`）。primary起点の単一色相ランプ。詳細は [[chart-single-hue-ramp]]。
 - エディタのダークトークンは [[editor-dark-theme]]。
 
 ## 失効した旧表現

@@ -24,6 +24,8 @@
 - [[editing-surfaces]] — 画像編集/動画作成/投稿編集の各画面。
 - [[analysis-pages]] — 分析画面群（3タブ+掘り下げ2枚・期間表示は上部集約・CSS後勝ちの罠）。
 - [[help-page]] — ヘルプページ（現行26記事 / freee流に作り直した help_site 51記事）。
+- [[settings-page]] — 設定画面（8/19確定の4項目・プランは上部バッジへ）。
+- [[service-website]] — いいねAI のサービスサイト（LP的構成をやめ標準HPへ作り直し）。
 
 ## concepts/ — 判断・パターン・教訓（1個1ページ）
 
@@ -35,6 +37,7 @@
 - [[marker-loading-unification]] — 待ち・進行・完了はMarkerに統一。
 - [[component-procurement]] — 汎用はshadcnそのまま、固有だけルール化。
 - [[toast-orange-default]] — トーストは既定オレンジ、赤はエラーだけ。アイコンは✓統一。
+- [[chart-single-hue-ramp]] — グラフは chart-1..5 のオレンジ単一色相ランプ。端は丸める。orange-only の唯一の例外。
 
 プロダクト系（源泉=会議/worklog）:
 - [[flow-ui-decided]] — チャットvsフロー論争はフローUIで確定。
@@ -48,6 +51,7 @@
 - [[drive-vs-learning]] — ドライブ=素材/学習=外部情報の区別。
 - [[target-first]] — ターゲット整理が全ての前提。
 - [[wire-checklist]] — ワイヤーHTML新規作成時のヘッダー・サイドバー・アイコン確認リスト。
+- [[wording-level]] — UI文言は中学生基準。ただし承認・NG表現・投稿日は砕かない。
 - [[superseded]] — 失効した旧仕様と矛盾の裁定（★迷ったらここ）。
 
 ## raw/ — 生素材（読み取り専用・書き換え禁止）
@@ -62,3 +66,4 @@
 - [[raw/mtg-2026-07-17-iwagami]] — 7/17MTG（承認フロー・分析ページを画像/HTML2形式に）。
 - [[raw/mtg-2026-07-24-iwagami]] — 7/24MTG（承認者は編集可・動画エディタをCapCut参考にアイコン化）。
 - [[raw/mtg-2026-07-31-iwagami]] — 7/31MTG（タイムライン改修・トークリール・Synergy Media移行）。
+- [[raw/mtg-2026-08-19-iwagami]] — ★8/19MTG（設定4項目・学習→AI読み取り資料・承認済みラベル/再承認・CapCut準拠・サイト作り直し）。

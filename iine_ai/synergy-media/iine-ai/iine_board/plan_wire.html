@@ -1,0 +1,491 @@
+<!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>いいねAI 料金一覧（プラン）</title>
+<link rel="stylesheet" href="./tabler-icons-inline.css">
+<link rel="stylesheet" href="./fox-alert.css">
+<style>
+/* このファイルで使うアイコンだけ定義する（フォント実体は tabler-icons-inline.css）。
+   字形コードは同梱フォントで実物を描画して確認済み。 */
+.ti-plus:before{content:"\eb0b"}
+.ti-layout-dashboard:before{content:"\f02c"}
+.ti-file-text:before{content:"\eaa2"}
+.ti-calendar:before{content:"\ea53"}
+.ti-chart-bar:before{content:"\ea59"}
+.ti-folder:before{content:"\eaad"}
+.ti-dots:before{content:"\ea95"}
+.ti-dots-vertical:before{content:"\ea94"}
+.ti-settings:before{content:"\eb20"}
+.ti-chevron-down:before{content:"\ea5f"}
+.ti-selector:before{content:"\eb1d"}
+.ti-coffee:before{content:"\ef0e"}
+.ti-sparkles:before{content:"\f6d7"}
+.ti-help:before{content:"\eabf"}
+.ti-list-check:before{content:"\eb6a"}
+.ti-message-dots:before{content:"\eaee"}
+.ti-check:before{content:"\ea5e"}
+.ti-x:before{content:"\eb55"}
+.ti-alert-triangle:before{content:"\ea06"}
+.ti-trash:before{content:"\eb41"}
+.ti-pencil:before{content:"\eb04"}
+.ti-users:before{content:"\ebf2"}
+.ti-world:before{content:"\eb54"}
+.ti-star:before{content:"\eb2e"}
+.ti-clock:before{content:"\ea70"}
+.ti-brand-instagram:before{content:"\ec20"}
+.ti-brand-x:before{content:"\fc0f"}
+.ti-brand-tiktok:before{content:"\ec73"}
+.ti-brand-youtube:before{content:"\ec90"}
+
+:root {
+  --color-primary: #ef6108;
+  --color-primary-hover: #d9570a;
+  --color-primary-light: #ff971e;
+  --color-primary-subtle: #fff2e2;
+  --color-on-primary: #ffffff;
+  --color-background: #f2f1f0;
+  --color-surface: #fbfaf8;
+  --color-card: #ffffff;
+  --color-foreground: #2a2826;
+  --color-muted-foreground: #757575;
+  --color-border: #e9e8e6;
+  --color-border-strong: #cfcdc9;
+  --color-input: #ffffff;
+  --color-ring: #ef6108;
+  --color-success: #12960a;
+  --color-success-subtle: #e7f3e6;
+  --color-warning: #8a6d0f;
+  --color-warning-border: #e8b931;
+  --color-warning-subtle: #fcf4d9;
+  --color-info: #185fa5;
+  --color-info-subtle: #e6f1fb;
+  --color-destructive: #dc2626;
+  --color-destructive-subtle: #fee2e2;
+  --color-accent-purple: #9724ba;
+  --color-accent-purple-subtle: #f5e7f8;
+  --color-sns-instagram: #b02a78;
+  --color-sns-instagram-subtle: #fce7f3;
+  --color-sns-x: #2a2826;
+  --color-sns-x-subtle: #f2f1f0;
+  --color-sns-tiktok: #0e7490;
+  --color-sns-tiktok-subtle: #e0f7fa;
+  --color-sns-youtube: #a32d2d;
+  --color-sns-youtube-subtle: #fcebeb;
+  --font-body: "Noto Sans JP";
+  --text-h1: 1.875rem;
+  --text-h2: 1.25rem;
+  --text-h3: 1rem;
+  --text-body-lg: 1rem;
+  --text-body: 0.875rem;
+  --text-label: 0.75rem;
+  --text-meta: 0.625rem;
+  --font-weight-h1: 700;
+  --font-weight-h2: 700;
+  --font-weight-h3: 700;
+  --font-weight-body: 400;
+  --font-weight-body-strong: 700;
+  --font-weight-label: 500;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+}
+*{box-sizing:border-box;margin:0;padding:0;font-family:var(--font-body),'Hiragino Sans','Meiryo',sans-serif;-webkit-font-smoothing:antialiased;}
+body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
+.app{width:1240px;margin:0 auto;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-xl);overflow:hidden;display:flex;height:800px;position:relative;}
+.ti{line-height:1;}
+
+/* ===== サイドバー（全画面共通） =====
+   設定の4項目はサイドバーのサブメニューがそのまま画面切替になる。
+   画面の中にもう一段ナビを置くと、同じものが2つ並んで迷う。 */
+.sb{width:250px;flex:none;background:var(--color-surface);border-right:1px solid var(--color-border);display:flex;flex-direction:column;}
+.sbtop{padding:16px 16px 10px;}
+.logo{font-size:var(--text-h3);font-weight:var(--font-weight-h3);color:var(--color-primary);margin-bottom:14px;display:block;}
+.create{width:100%;display:flex;align-items:center;justify-content:center;gap:7px;background:var(--color-primary);color:#fff;border:none;border-radius:var(--radius-md);padding:11px;font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;}
+.nav{padding:6px 10px;overflow-y:auto;flex:1;}
+.ni{display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:var(--radius-md);font-size:var(--text-body);font-weight:var(--font-weight-label);color:var(--color-foreground);cursor:pointer;text-decoration:none;}
+.ni .ti{font-size:18px;color:#6b6864;}
+.ni .cv{margin-left:auto;font-size:14px;color:#a8a6a2;}
+.ni.on{background:var(--color-primary-subtle);color:var(--color-primary);font-weight:var(--font-weight-body-strong);}
+.ni.on .ti{color:var(--color-primary);}
+.nidiv{height:1px;background:var(--color-border);margin:8px 10px;}
+.ni.exp .cv{transform:rotate(180deg);}
+.nisub{display:none;}
+.nisub.open{display:block;}
+.nis{display:flex;align-items:center;text-decoration:none;padding:8px 10px 8px 41px;border-radius:var(--radius-md);font-size:var(--text-label);font-weight:var(--font-weight-label);color:var(--color-muted-foreground);cursor:pointer;}
+.nis:hover{background:var(--color-primary-subtle);color:var(--color-primary);}
+.nis.on{background:var(--color-primary-subtle);color:var(--color-primary);font-weight:var(--font-weight-body-strong);}
+.foot{border-top:1px solid var(--color-border);padding:12px;}
+.switcher{display:flex;align-items:center;gap:10px;padding:9px 10px;border:1px solid var(--color-border-strong);border-radius:var(--radius-md);background:var(--color-card);cursor:pointer;}
+.switcher .pic{width:34px;height:34px;flex:none;border-radius:var(--radius-md);background:#fde9d3;color:var(--color-primary);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.switcher .pn{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);}
+.switcher .an{font-size:var(--text-meta);color:#a8a6a2;}
+.switcher .cv{margin-left:auto;color:#a8a6a2;font-size:17px;}
+
+/* ===== メイン ===== */
+.main{flex:1;min-width:0;display:flex;flex-direction:column;}
+.hd{height:64px;flex:none;display:flex;align-items:center;gap:11px;padding:0 26px;border-bottom:1px solid var(--color-border);}
+.hd .pgic{font-size:22px;color:var(--color-foreground);}
+.hd .pgnm{font-size:var(--text-h3);font-weight:var(--font-weight-body-strong);}
+.hd .r{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.help{width:38px;height:38px;border:1.5px solid var(--color-primary);color:var(--color-primary);background:transparent;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:19px;cursor:pointer;text-decoration:none;}
+.help:hover{background:var(--color-primary);color:var(--color-on-primary);}
+.planchip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--color-border-strong);border-radius:var(--radius-full);padding:5px 12px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);white-space:nowrap;}
+.planchip i{font-size:15px;color:var(--color-primary);}
+.planchip{text-decoration:none;transition:border-color .15s,color .15s;}
+.planchip[href]:hover{border-color:var(--color-primary);color:var(--color-foreground);}
+.planchip.is-here{cursor:default;}
+.hdbtn{position:relative;width:38px;height:38px;flex:none;border:1px solid var(--color-border-strong);background:var(--color-card);color:var(--color-foreground);border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:19px;cursor:pointer;padding:0;text-decoration:none;}
+.hdbtn:hover{border-color:var(--color-primary);color:var(--color-primary);}
+.hdbadge{position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;padding:0 5px;border-radius:var(--radius-full);background:var(--color-primary);color:var(--color-on-primary);font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);display:flex;align-items:center;justify-content:center;border:2px solid var(--color-card);}
+
+/* ===== 設定の中身 ===== */
+.content{flex:1;overflow-y:auto;padding:24px 30px 24px;background:var(--color-background);}
+.pane{display:none;max-width:820px;}
+.pane.on{display:block;}
+.lead{font-size:var(--text-body);color:var(--color-muted-foreground);line-height:1.9;margin-bottom:20px;}
+.card{background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);margin-bottom:18px;}
+.card-h{display:flex;align-items:center;gap:10px;padding:15px 20px;border-bottom:1px solid var(--color-border);}
+.card-h .t{font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);}
+.card-h .d{font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:3px;line-height:1.7;}
+.card-h .sp{margin-left:auto;flex:none;}
+.card-b{padding:18px 20px;}
+.row{display:flex;align-items:flex-start;gap:14px;padding:15px 20px;border-bottom:1px solid var(--color-border);}
+.row:last-child{border-bottom:none;}
+.row .tx{flex:1;min-width:0;}
+.row .t{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);line-height:1.6;}
+.row .d{font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:4px;line-height:1.8;}
+
+/* 入力 */
+.field{margin-bottom:18px;}
+.field:last-child{margin-bottom:0;}
+.lbl{display:block;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);margin-bottom:4px;}
+.sub{font-size:var(--text-label);color:var(--color-muted-foreground);margin-bottom:9px;line-height:1.7;}
+.inp,.ta,.sel{width:100%;border:1px solid var(--color-border-strong);border-radius:var(--radius-md);padding:11px 13px;font-family:inherit;font-size:var(--text-body);line-height:1.8;background:var(--color-input);color:var(--color-foreground);}
+.ta{resize:vertical;min-height:88px;}
+.inp:focus,.ta:focus,.sel:focus{outline:2px solid var(--color-ring);outline-offset:1px;border-color:var(--color-primary);}
+.cnt{font-size:var(--text-meta);color:var(--color-muted-foreground);text-align:right;margin-top:5px;}
+/* 複数えらべるチップ */
+.opts{display:flex;flex-wrap:wrap;gap:9px;}
+.opt{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--color-border-strong);background:var(--color-card);border-radius:var(--radius-full);padding:9px 16px;font-family:inherit;font-size:var(--text-body);cursor:pointer;color:var(--color-foreground);}
+.opt:hover{border-color:var(--color-primary);}
+.opt.on{background:var(--color-primary-subtle);border-color:var(--color-primary);color:var(--color-primary);font-weight:var(--font-weight-body-strong);}
+.opt i{font-size:15px;opacity:0;}
+.opt.on i{opacity:1;}
+/* ひとつだけえらぶカード */
+.picks{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;}
+.pick{border:1px solid var(--color-border-strong);border-radius:var(--radius-md);padding:14px;cursor:pointer;background:var(--color-card);text-align:left;font-family:inherit;}
+.pick:hover{border-color:var(--color-primary);}
+.pick.on{border:2px solid var(--color-primary);background:var(--color-primary-subtle);padding:13px;}
+.pick .t{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);}
+.pick .e{font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:5px;line-height:1.7;}
+.pick.on .t{color:var(--color-primary);}
+
+/* オン・オフのスイッチ */
+.sw{position:relative;display:inline-block;flex:none;width:46px;height:26px;}
+.sw input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer;z-index:2;}
+.sw span{position:absolute;inset:0;background:var(--color-border-strong);border-radius:var(--radius-full);transition:background .15s;}
+.sw span:before{content:"";position:absolute;left:3px;top:3px;width:20px;height:20px;border-radius:var(--radius-full);background:#fff;transition:transform .15s;}
+.sw input:checked + span{background:var(--color-primary);}
+.sw input:checked + span:before{transform:translateX(20px);}
+.sw input:focus-visible + span{outline:2px solid var(--color-ring);outline-offset:2px;}
+
+/* SNS */
+.sns{display:flex;align-items:center;gap:13px;padding:15px 20px;border-bottom:1px solid var(--color-border);}
+.sns:last-child{border-bottom:none;}
+.sns .ic{width:42px;height:42px;flex:none;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:21px;}
+.sns .tx{flex:1;min-width:0;}
+.sns .nm{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);}
+.sns .ac{font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:3px;}
+.state{display:inline-flex;align-items:center;gap:5px;flex:none;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);border-radius:var(--radius-full);padding:5px 12px;}
+.state.ok{background:var(--color-success-subtle);color:var(--color-success);}
+.state.ng{background:var(--color-destructive-subtle);color:var(--color-destructive);}
+
+/* メンバー */
+.mem{display:flex;align-items:center;gap:13px;padding:14px 20px;border-bottom:1px solid var(--color-border);}
+.mem:last-child{border-bottom:none;}
+.mem .av{width:38px;height:38px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);color:#fff;}
+.mem .tx{flex:1;min-width:0;}
+.mem .nm{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);}
+.mem .ml{font-size:var(--text-meta);color:var(--color-muted-foreground);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.mem .last{flex:none;font-size:var(--text-meta);color:var(--color-muted-foreground);width:96px;text-align:right;}
+.role{flex:none;border:1px solid var(--color-border-strong);border-radius:var(--radius-md);padding:7px 10px;font-family:inherit;font-size:var(--text-label);background:var(--color-input);color:var(--color-foreground);cursor:pointer;}
+.role:focus{outline:2px solid var(--color-ring);outline-offset:1px;}
+.role[disabled]{background:var(--color-surface);color:var(--color-muted-foreground);cursor:default;}
+.iconbtn{flex:none;width:32px;height:32px;border:none;background:transparent;color:var(--color-muted-foreground);border-radius:var(--radius-sm);font-size:17px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.iconbtn:hover{background:var(--color-surface);color:var(--color-foreground);}
+.rolehelp{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;padding:16px 20px;background:var(--color-surface);border-top:1px solid var(--color-border);}
+.rolehelp .b{background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:12px 13px;}
+.rolehelp .t{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);margin-bottom:5px;}
+.rolehelp .d{font-size:var(--text-meta);color:var(--color-muted-foreground);line-height:1.8;}
+
+/* AIレビューの観点 */
+.rule{display:flex;align-items:center;gap:14px;padding:14px 20px;border-bottom:1px solid var(--color-border);}
+.rule:last-child{border-bottom:none;}
+.rule .tx{flex:1;min-width:0;}
+.rule .t{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);}
+.rule .d{font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:3px;line-height:1.7;}
+.seg{display:inline-flex;flex:none;background:var(--color-background);border-radius:var(--radius-full);padding:3px;gap:2px;}
+.seg button{border:none;background:transparent;padding:6px 13px;border-radius:var(--radius-full);font-family:inherit;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);cursor:pointer;white-space:nowrap;}
+.seg button.on{background:var(--color-card);color:var(--color-primary);box-shadow:0 1px 2px rgba(0,0,0,.08);}
+.own{display:flex;align-items:center;gap:11px;padding:12px 20px;border-bottom:1px solid var(--color-border);}
+.own .t{flex:1;font-size:var(--text-body);line-height:1.7;}
+.addrow{display:flex;gap:9px;padding:14px 20px;}
+.addrow .inp{flex:1;}
+
+/* ===== プロジェクト管理 =====
+   実物は「全体を1つの編集モードで書き換える」形だが、それだと
+   ・何を書けばいいか分からない ・どこを直したか分からない ・保存が怖い
+   の3つが起きる。項目ごとに読み書きし、進み具合と使われ方を各項目に添える。 */
+
+/* もとになる資料。ここにURLやPDFを入れて「学習」を押すと、AIが読んで下の内容を作る */
+.src{background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);margin-bottom:18px;}
+.src-hd{display:flex;align-items:center;gap:12px;padding:16px 20px;cursor:pointer;}
+.src-hd:hover{background:var(--color-surface);border-radius:var(--radius-lg) var(--radius-lg) 0 0;}
+.src-hd .cv{font-size:16px;color:var(--color-muted-foreground);transition:transform .15s;flex:none;}
+.src.closed .src-hd{border-radius:var(--radius-lg);}
+.src.closed .src-hd .cv{transform:rotate(-90deg);}
+/* たたんだときは、中身のかわりに1行だけ出す */
+.src-sum{display:none;padding:0 20px 16px 48px;font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.7;}
+.src.closed .src-sum{display:block;}
+.src.closed .src-body{display:none;}
+.src-hd .t{font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);}
+.src-hd .cnt{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-primary);}
+.src-hd .sp{margin-left:auto;}
+.src-d{font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.8;padding:0 20px 0;}
+.src-list{padding:14px 20px 0;}
+.src-row{display:flex;align-items:center;gap:11px;padding:10px 12px;border:1px solid var(--color-border);border-radius:var(--radius-md);margin-bottom:8px;background:var(--color-surface);}
+.src-row .ic{width:30px;height:30px;flex:none;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:16px;}
+.src-row .ic.web{background:var(--color-info-subtle);color:var(--color-info);}
+.src-row .ic.doc{background:var(--color-destructive-subtle);color:var(--color-destructive);}
+.src-row .tx{flex:1;min-width:0;}
+.src-row .nm{font-size:var(--text-body);font-weight:var(--font-weight-label);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.src-row .mt{font-size:var(--text-meta);color:var(--color-muted-foreground);margin-top:2px;}
+.src-add{display:flex;gap:11px;padding:6px 20px 16px;}
+.src-add .btn-g{flex:1;justify-content:center;padding:12px;}
+.src-foot{display:flex;align-items:center;gap:10px;padding:13px 20px;border-top:1px solid var(--color-border);background:var(--color-surface);border-radius:0 0 var(--radius-lg) var(--radius-lg);}
+.src-foot .n{font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.7;}
+.src-foot .sp{margin-left:auto;flex:none;}
+/* AIが作ったものだと分かる印。直していいものだと伝える */
+.byai{display:inline-flex;align-items:center;gap:5px;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-accent-purple);background:var(--color-accent-purple-subtle);border-radius:var(--radius-full);padding:3px 9px;}
+
+/* 進み具合。「4/5」だけでは何が何だか分からないので、
+   5つの中身と、埋まっている/いないを一覧で出す。押すとその項目へ飛ぶ。 */
+.pg{background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:17px 20px;margin-bottom:18px;}
+.pg-hd{display:flex;align-items:baseline;gap:10px;}
+.pg-hd .t{font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);}
+.pg-hd .n{font-size:var(--text-label);color:var(--color-muted-foreground);font-weight:var(--font-weight-body-strong);}
+.pg-hd .n b{font-size:var(--text-h3);color:var(--color-primary);margin-right:1px;}
+.pg-items{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px;}
+.pg-i{display:inline-flex;align-items:center;gap:8px;border:1px solid transparent;border-radius:var(--radius-full);padding:9px 16px 9px 10px;font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;}
+.pg-i:hover{border-color:var(--color-primary);}
+/* 済みか未かは、丸の中身（チェック / 空）と、チップの塗りの両方で出す。
+   小さなアイコンの色だけだと、並んだときに差が目に入らない。 */
+.pg-i .mark{width:22px;height:22px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:13px;}
+.pg-i.done{background:var(--color-success-subtle);border-color:#c3e0bf;color:#0f6b0a;}
+.pg-i.done .mark{background:var(--color-success);color:#fff;}
+/* まだのものは、丸を空のまま・枠を破線にして、色以外でも分かるようにする */
+.pg-i.todo{background:var(--color-warning-subtle);border:1px dashed var(--color-warning-border);color:var(--color-warning);}
+.pg-i.todo .mark{background:transparent;border:2px dashed var(--color-warning-border);}
+.pg-i.todo .yet{font-size:var(--text-meta);font-weight:var(--font-weight-body);opacity:.85;}
+.pg-d{font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.8;margin-top:12px;}
+/* 飛んだ先が分かるように、その項目を一瞬だけ光らせる */
+@keyframes pjflash{0%{box-shadow:0 0 0 0 rgba(239,97,8,.45);}100%{box-shadow:0 0 0 10px rgba(239,97,8,0);}}
+.pj.flash{animation:pjflash 1s ease-out;border-color:var(--color-primary);}
+
+/* 項目カード */
+.pj{background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);margin-bottom:14px;}
+.pj.empty{border-style:dashed;border-color:var(--color-border-strong);background:var(--color-surface);}
+.pj-hd{display:flex;align-items:flex-start;gap:12px;padding:15px 18px 0;}
+.pj-hd .tx{flex:1;min-width:0;}
+.pj-hd .t{font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);}
+/* AIがその項目をどう使うか。設定の意味が分からないまま埋めさせない */
+/* 「AIがどこで使う情報か」の説明チップ。押せないが情報の格は高いのでオレンジ系で出す。
+   水色(info)は「作成中・下書き」等の状態バッジ専用に戻した（2026-08-19 決定） */
+.pj-use{display:inline-flex;align-items:center;gap:6px;font-size:var(--text-meta);color:var(--color-primary);background:var(--color-primary-subtle);border-radius:var(--radius-full);padding:3px 10px;margin-top:6px;}
+.pj-hd .sp{flex:none;display:flex;gap:8px;}
+.pj-bd{padding:12px 18px 17px;}
+.pj-p{font-size:var(--text-body);line-height:2;}
+.pj-ul{margin:0 0 0 20px;}
+.pj-ul li{font-size:var(--text-body);line-height:2;margin-bottom:2px;}
+.pj-ul b{font-weight:var(--font-weight-body-strong);}
+.pj-none{font-size:var(--text-body);color:var(--color-muted-foreground);line-height:1.9;}
+.pj-eg{margin-top:11px;padding:12px 14px;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-md);}
+.pj-eg .k{font-size:var(--text-meta);color:var(--color-muted-foreground);font-weight:var(--font-weight-body-strong);margin-bottom:5px;}
+.pj-eg .v{font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.9;}
+.pj-form{display:none;}
+.pj.editing .pj-form{display:block;}
+.pj.editing .pj-view{display:none;}
+.pj.editing .pj-hd .sp{display:none;}  /* 編集中は「編集」を出さない */
+.pj-foot{display:flex;align-items:center;gap:10px;margin-top:13px;}
+.pj-foot .n{font-size:var(--text-meta);color:var(--color-muted-foreground);}
+.pj-foot .sp{margin-left:auto;display:flex;gap:9px;}
+
+/* いまの情報でAIが書くとどうなるか */
+.pj-prev{background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:18px 20px;}
+.pj-prev .t{font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);margin-bottom:4px;}
+.pj-prev .d{font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.7;margin-bottom:13px;}
+.pj-sample{display:flex;gap:13px;border:1px solid var(--color-border);border-radius:var(--radius-md);padding:14px;background:var(--color-surface);}
+.pj-sample .sw{width:74px;height:74px;flex:none;border-radius:var(--radius-md);}
+.pj-sample .bd{flex:1;min-width:0;font-size:var(--text-body);line-height:1.9;}
+.pj-sample .tag{color:var(--color-info);}
+
+/* プラン一覧 */
+.pl-now{display:flex;align-items:center;gap:16px;padding:20px;}
+.pl-now .ic{width:48px;height:48px;flex:none;border-radius:var(--radius-md);background:var(--color-primary-subtle);color:var(--color-primary);display:flex;align-items:center;justify-content:center;font-size:24px;}
+.pl-now .tx{flex:1;min-width:0;}
+.pl-now .nm{font-size:var(--text-h2);font-weight:var(--font-weight-h2);}
+.pl-now .d{font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:4px;line-height:1.7;}
+.pl-use{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:0 20px 20px;}
+.pl-u{border:1px solid var(--color-border);border-radius:var(--radius-md);padding:13px 14px;}
+.pl-u .k{font-size:var(--text-label);color:var(--color-muted-foreground);}
+.pl-u .v{font-size:var(--text-h3);font-weight:var(--font-weight-body-strong);margin-top:4px;}
+.pl-u .bar{height:6px;background:var(--color-border);border-radius:var(--radius-full);overflow:hidden;margin-top:9px;}
+.pl-u .bar i{display:block;height:100%;background:var(--color-primary);border-radius:var(--radius-full);}
+.pl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.pl-card{background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:20px;display:flex;flex-direction:column;}
+.pl-card.cur{border:2px solid var(--color-primary);padding:19px;}
+.pl-card .tag{align-self:flex-start;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);background:var(--color-primary-subtle);color:var(--color-primary);border-radius:var(--radius-full);padding:3px 10px;margin-bottom:10px;}
+.pl-card .nm{font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);}
+.pl-card .pr{font-size:var(--text-h1);font-weight:var(--font-weight-h1);line-height:1.2;margin-top:8px;}
+.pl-card .pr .u{font-size:var(--text-label);font-weight:var(--font-weight-body);color:var(--color-muted-foreground);margin-left:3px;}
+.pl-card ul{list-style:none;margin:16px 0 18px;}
+.pl-card li{display:flex;align-items:flex-start;gap:8px;font-size:var(--text-label);line-height:1.9;margin-bottom:7px;}
+.pl-card li i{font-size:15px;color:var(--color-success);flex:none;margin-top:3px;}
+.pl-card .btm{margin-top:auto;}
+.pl-card .cur-lbl{width:100%;text-align:center;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);padding:11px;}
+.pl-card .btn-p,.pl-card .btn-o{width:100%;justify-content:center;margin-left:0;}
+
+/* ボタン。押せるものだけオレンジ */
+.btn-p{display:inline-flex;align-items:center;gap:7px;background:var(--color-primary);color:var(--color-on-primary);border:none;border-radius:var(--radius-md);padding:11px 22px;font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;}
+.btn-p:hover{background:var(--color-primary-hover);}
+.btn-o{display:inline-flex;align-items:center;gap:7px;border:1.5px solid var(--color-primary);color:var(--color-primary);background:transparent;border-radius:var(--radius-md);padding:9px 15px;font-family:inherit;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);cursor:pointer;white-space:nowrap;}
+.btn-o:hover{background:var(--color-primary);color:var(--color-on-primary);}
+.btn-g{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--color-border-strong);color:var(--color-muted-foreground);background:transparent;border-radius:var(--radius-md);padding:8px 13px;font-family:inherit;font-size:var(--text-label);font-weight:var(--font-weight-label);cursor:pointer;white-space:nowrap;}
+.btn-g:hover{border-color:var(--color-foreground);color:var(--color-foreground);}
+
+@media(max-width:1100px){ .picks,.rolehelp{grid-template-columns:1fr;} }
+</style></head><body>
+<div class="app">
+  <!-- サイドバー -->
+  <aside class="sb">
+    <div class="sbtop"><span class="logo">いいねAI</span><button class="create"><i class="ti ti-plus"></i>投稿作成</button></div>
+    <div class="nav">
+      <a class="ni" href="./shell_header_sidebar_wire.html"><i class="ti ti-layout-dashboard"></i>ホーム</a>
+      <a class="ni" href="./post_list_wire.html"><i class="ti ti-file-text"></i>投稿</a>
+      <a class="ni" href="./calendar_wire.html"><i class="ti ti-calendar"></i>カレンダー</a>
+      <a class="ni" href="./analysis_visual_wire.html"><i class="ti ti-chart-bar"></i>分析</a>
+      <a class="ni" href="./drive_wire.html"><i class="ti ti-folder"></i>ドライブ</a>
+      <div class="nidiv"></div>
+      <div class="ni" onclick="navToggle(this)"><i class="ti ti-settings"></i>設定<span class="cv"><i class="ti ti-chevron-down"></i></span></div>
+      <div class="nisub">
+        <a class="nis" href="./settings_wire.html#project">プロジェクト管理</a>
+        <a class="nis" href="./settings_wire.html#sns">SNSアカウント</a>
+        <a class="nis" href="./settings_wire.html#review">AIレビュー</a>
+        <a class="nis" href="./settings_wire.html#members">メンバー管理</a>
+      </div>
+      <div class="nidiv"></div>
+      <div class="ni" onclick="navToggle(this)"><i class="ti ti-dots"></i>その他<span class="cv"><i class="ti ti-chevron-down"></i></span></div>
+      <div class="nisub">
+        <a class="nis" href="./news_wire.html">NEWS</a>
+        <a class="nis" href="https://hinaiwagami0513.github.io/iineai/help/" target="_blank" rel="noopener">ヘルプセンター</a>
+      </div>
+    </div>
+    <div class="foot">
+      <div class="switcher"><div class="pic"><i class="ti ti-coffee"></i></div><div><div class="pn">犬カフェOne</div><div class="an">田中 陽菜</div></div><i class="ti ti-selector cv"></i></div>
+    </div>
+  </aside>
+
+  <!-- メイン -->
+  <div class="main">
+    <div class="hd">
+      <i class="ti ti-sparkles pgic"></i><span class="pgnm">料金一覧</span>
+      <div class="r">
+        <!-- 今いるページなので、ここだけはリンクにせず現在地として出す -->
+        <span class="planchip is-here"><i class="ti ti-sparkles"></i>ベーシックOne</span>
+        <button class="hdbtn" title="ToDo" aria-label="ToDo"><i class="ti ti-list-check"></i><span class="hdbadge">5</span></button>
+        <a class="hdbtn" href="./chat_wire.html" title="チャット（未読2件）" aria-label="チャット（未読2件）"><i class="ti ti-message-dots"></i><span class="hdbadge">2</span></a>
+        <a class="help" href="https://hinaiwagami0513.github.io/iineai/help/" target="_blank" rel="noopener" title="このページのヘルプ" aria-label="このページのヘルプ"><i class="ti ti-help"></i></a>
+      </div>
+    </div>
+
+    <div class="content">
+
+      <div class="pane on" id="paPlan">
+        <div class="card">
+          <div class="pl-now">
+            <span class="ic"><i class="ti ti-sparkles"></i></span>
+            <div class="tx">
+              <div class="nm">ベーシックOne</div>
+              <div class="d">月額 4,800円（税込）・次回のお支払いは 2026年9月1日</div>
+            </div>
+            <button class="btn-g">支払い方法を変える</button>
+          </div>
+          <div class="pl-use">
+            <div class="pl-u"><div class="k">つないだSNS</div><div class="v">3 / 3</div><div class="bar"><i style="width:100%"></i></div></div>
+            <div class="pl-u"><div class="k">今月つくった投稿</div><div class="v">18 / 30件</div><div class="bar"><i style="width:60%"></i></div></div>
+            <div class="pl-u"><div class="k">ドライブの容量</div><div class="v">2.1 / 10 GB</div><div class="bar"><i style="width:21%"></i></div></div>
+          </div>
+        </div>
+
+        <div class="fox-alert care">
+          <img src="./assets/iine-fox-worried.png" alt="">
+          <div>
+            <span class="lb">CHECK</span>
+            <div class="t">つないだSNSが上限の3つに達しています。<b>YouTube を追加するにはプランの変更が必要です。</b></div>
+          </div>
+        </div>
+
+        <div class="pl-grid">
+          <div class="pl-card cur">
+            <span class="tag">いまのプラン</span>
+            <div class="nm">ベーシックOne</div>
+            <div class="pr">4,800<span class="u">円 / 月</span></div>
+            <ul>
+              <li><i class="ti ti-check"></i>SNS 3アカウントまで</li>
+              <li><i class="ti ti-check"></i>投稿 月30件まで</li>
+              <li><i class="ti ti-check"></i>ドライブ 10GB</li>
+              <li><i class="ti ti-check"></i>メンバー 5人まで</li>
+            </ul>
+            <div class="btm"><div class="cur-lbl">ご利用中</div></div>
+          </div>
+          <div class="pl-card">
+            <div class="nm">スタンダード</div>
+            <div class="pr">9,800<span class="u">円 / 月</span></div>
+            <ul>
+              <li><i class="ti ti-check"></i>SNS 6アカウントまで</li>
+              <li><i class="ti ti-check"></i>投稿 月100件まで</li>
+              <li><i class="ti ti-check"></i>ドライブ 50GB</li>
+              <li><i class="ti ti-check"></i>メンバー 15人まで</li>
+              <li><i class="ti ti-check"></i>分析のレポート出力</li>
+            </ul>
+            <div class="btm"><button class="btn-p"><i class="ti ti-sparkles"></i>このプランにする</button></div>
+          </div>
+          <div class="pl-card">
+            <div class="nm">プロ</div>
+            <div class="pr">19,800<span class="u">円 / 月</span></div>
+            <ul>
+              <li><i class="ti ti-check"></i>SNS 無制限</li>
+              <li><i class="ti ti-check"></i>投稿 無制限</li>
+              <li><i class="ti ti-check"></i>ドライブ 無制限</li>
+              <li><i class="ti ti-check"></i>メンバー 無制限</li>
+              <li><i class="ti ti-check"></i>広告作成・出張撮影の割引</li>
+            </ul>
+            <div class="btm"><button class="btn-o"><i class="ti ti-sparkles"></i>このプランにする</button></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+// サイドバーの折りたたみ項目
+function navToggle(el){
+  var sub = el.nextElementSibling;
+  if(!sub || !sub.classList.contains('nisub')) return;
+  sub.classList.toggle('open');
+  el.classList.toggle('exp');
+}
+</script>
+</body></html>

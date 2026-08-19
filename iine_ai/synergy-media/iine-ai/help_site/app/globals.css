@@ -66,12 +66,13 @@
   --sidebar-border: #e9e8e6;
   --sidebar-ring: #ef6108;
 
-  /* チャート（分析まわりで使う場合の並び） -------------------------------- */
+  /* チャート：primary起点の単一色相ランプ。多い系列ほど濃い ------------------
+     旧: 色相バラバラ（青/緑/紫/ピンク）＝意味色の流用。DESIGN.md「グラフの色」で失効 */
   --chart-1: #ef6108;
-  --chart-2: #185fa5;
-  --chart-3: #12960a;
-  --chart-4: #9724ba;
-  --chart-5: #e25563;
+  --chart-2: #ff971e;
+  --chart-3: #ffc07a;
+  --chart-4: #ffdcb8;
+  --chart-5: #fff2e2;
 }
 
 @theme inline {

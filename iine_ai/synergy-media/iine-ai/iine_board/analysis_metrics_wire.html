@@ -890,6 +890,9 @@ body {
    現在のプラン（押せないので枠線のみ）+ ToDo + チャット。ヘルプの左に置く。 */
 .planchip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--color-border-strong,#cfcdc9);border-radius:var(--radius-full,9999px);padding:5px 12px;font-size:var(--text-label,.75rem);font-weight:700;color:var(--color-muted-foreground,#757575);white-space:nowrap;}
 .planchip i{font-size:15px;color:var(--color-primary,#ef6108);}
+.planchip{text-decoration:none;transition:border-color .15s,color .15s;}
+.planchip[href]:hover{border-color:var(--color-primary);color:var(--color-foreground);}
+.planchip.is-here{cursor:default;}
 .hdbtn{position:relative;width:38px;height:38px;flex:none;border:1px solid var(--color-border-strong,#cfcdc9);background:var(--color-card,#fff);color:var(--color-foreground,#2a2826);border-radius:var(--radius-full,9999px);display:flex;align-items:center;justify-content:center;font-size:19px;cursor:pointer;padding:0;text-decoration:none;}
 .hdbtn:hover{border-color:var(--color-primary,#ef6108);color:var(--color-primary,#ef6108);}
 .hdbadge{position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;padding:0 5px;border-radius:var(--radius-full,9999px);background:var(--color-primary,#ef6108);color:#fff;font-size:var(--text-meta,.625rem);font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid var(--color-card,#fff);}
@@ -904,7 +907,7 @@ body {
       <span class="hdr-page"><i class="ti ti-chart-bar"></i> 分析</span>
     </div>
     <div class="hdr-right">
-      <span class="planchip"><i class="ti ti-sparkles"></i>ベーシックOne</span>
+      <a class="planchip" href="./plan_wire.html" title="いまのプラン（押すと料金一覧へ）"><i class="ti ti-sparkles"></i>ベーシックOne</a>
         <button class="hdbtn" title="ToDo" aria-label="ToDo"><i class="ti ti-list-check"></i><span class="hdbadge">5</span></button>
         <a class="hdbtn" href="./chat_wire.html" title="チャット（未読2件）" aria-label="チャット（未読2件）"><i class="ti ti-message-dots"></i><span class="hdbadge">2</span></a>
         <a class="helpbtn" href="https://hinaiwagami0513.github.io/iineai/help/analytics/effect/" target="_blank" rel="noopener" title="このページのヘルプ（分析 > 数値変化（導入効果））" aria-label="このページのヘルプ">?</a>
@@ -927,7 +930,6 @@ body {
       <a class="sb-btn" href="#" onclick="sbNavToggle(this);return false;"><i class="ti ti-settings"></i> 設定<i class="ti ti-chevron-down sb-cv"></i></a>
       <div class="sb-sub">
         <a href="./settings_wire.html#project">プロジェクト管理</a>
-        <a href="./settings_wire.html#plan">プラン一覧</a>
         <a href="./settings_wire.html#sns">SNSアカウント</a>
         <a href="./settings_wire.html#review">AIレビュー</a>
         <a href="./settings_wire.html#members">メンバー管理</a>

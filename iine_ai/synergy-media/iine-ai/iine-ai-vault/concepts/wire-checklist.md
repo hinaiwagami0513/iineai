@@ -25,6 +25,25 @@
 font-face の woff2 だけでは表示されない。使う全アイコンの `:before{content:"\xxxx"}` ルールを書くこと。
 既存ワイヤーからコピーするか、Tabler Icons のコードポイント表を参照。
 
+## `<button>` の中身を `<span>` で組んだら display を必ず当てる
+
+カードを `<button>` にして中身を `<span>` で並べる書き方をよくやるが、**span は inline のまま**なので
+`aspect-ratio` / `overflow:hidden` / `width` / 縦の `padding` が効かない。
+サムネの高さが 0 になり、中の絶対配置バッジが極細の箱に押し込まれて**1文字ずつ縦に折れる**。
+
+実例: `ads_wire.html` の「なにを広告にしますか？」の投稿カード（2026-08-18 指摘）。
+`.pick .th` が `aspect-ratio:16/10` を持っていたのに span だったのでサムネが消え、
+「反応 いちばん」バッジがタイトルに重なって縦書きになっていた。
+
+- 親（`.pick`）に `display:flex; flex-direction:column`
+- 子（`.th` `.bd` `.t`）に `display:block`
+- バッジには `white-space:nowrap`
+- **潰れていたサムネが復活すると1列レイアウトで高さが爆発する**。`@media` 側で横並びの行に組み替える
+  （`.pick{flex-direction:row}` + `.th{width:120px;aspect-ratio:1}`）。潰れている間は誰も気づかないので一緒に直す。
+
+選択中の枠を `border:1px → 2px` で太らせると中身が1pxずれて跳ねる。
+padding で相殺できない部品は **`box-shadow: inset 0 0 0 1px`** で太く見せる。
+
 ## コピー元
 - CSS + HTML の正規版: **`shell_header_sidebar_wire.html`**（ダッシュボード）
 - DESIGN.md の Layout / Components > ヘッダー 節

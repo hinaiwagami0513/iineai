@@ -14,4 +14,10 @@
 - 見出しアイコン・補助バッジ・非対話要素にオレンジを乗せない。
 - 本文サイズの白文字をオレンジ地に乗せない（約3.3:1で通常サイズは割る）。白文字は大字・太字ラベル限定。
 
-関連: [[warm-neutral-no-black]] / [[state-color-plus-glyph]] / [[design-tokens]]
+## 唯一の例外＝グラフ（2026-08-19確定）
+グラフの系列色は `chart-1..5`＝**primary起点のオレンジランプ**を使う。
+青(info)で組んでみたが他所で面として使われておらず浮いたため、オレンジに確定した。
+押せないことは色ではなく形で担保する：**グラフ面に枠・影・`cursor:pointer` を付けない**。
+ボタン/チップは従来どおり「オレンジ枠 or 塗り + ラベル」なので読み分く。詳細は [[chart-single-hue-ramp]]。
+
+関連: [[warm-neutral-no-black]] / [[state-color-plus-glyph]] / [[design-tokens]] / [[chart-single-hue-ramp]]
