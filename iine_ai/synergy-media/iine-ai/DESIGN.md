@@ -452,7 +452,7 @@ shadcn/ui のコンポーネントを土台にし、上のトークンでテー�
 | 変種 | 意味 | 背景 | 枠 | キツネ |
 |---|---|---|---|---|
 | `.fox-alert.ok` | できた・うまくいっている | `success-subtle` | `success` 30% | `iine-fox-happy.png`（笑顔） |
-| `.fox-alert.care` | 気をつけて・確認して | `warning-subtle` | `warning` 30% | `iine-fox-worried.png`（困り顔）※未完成 |
+| `.fox-alert.care` | 気をつけて・確認して | `warning-subtle` | `warning` 30% | `iine-fox-worried.png`（注意顔） |
 | `.fox-alert.err` | 失敗した・エラー | `destructive-subtle` | `destructive` 30% | `iine-fox-sad.png`（泣き顔） |
 
 **箱そのものがキツネの吹き出し。** キツネは吹き出しの外に立ち、しっぽがキツネの顔を指す。
@@ -524,10 +524,7 @@ shadcn/ui のコンポーネントを土台にし、上のトークンでテー�
 - 枠は「solid 色の 30%」で作る（Toast の枠と同じ式）。`#ffd8b0` のような**生の16進を書かない**。
 - `alt=""` で装飾扱いにし、意味は本文テキストが持つ。読み上げでキツネの説明は不要。
 
-⚠️ **`iine-fox-worried.png` は暫定で `iine-fox-face.png`（ヘッドセット付き）のコピー。**
-本来は sad / happy と同じ顔アップ構図で「涙なし・ハの字眉・口は横一文字」の困り顔を描く。
-絵ができたら同名で上書きすれば全画面に反映される（各HTMLが `img src` で参照しているだけ）。
-経緯は `iine_board/assets/README-fox-worried.txt`。
+
 
 **なぜアラートからオレンジを外したか。**
 オレンジは [[orange-only-interaction]] のとおり「押せる・選ばれてる・進む先」の色で、
