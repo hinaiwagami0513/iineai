@@ -405,6 +405,11 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);font-family:"No
 @media(max-width:430px){
   .topbar{height:44px;padding:0 10px;}
   .hdr-page{font-size:var(--text-body);}
+  /* 投稿一覧の表は列を潰さず横スクロールで見せる。
+     390pxに列を詰め込むと .td が12〜24pxになり、
+     「本 / 日 / の / キ / ャ / ス / ト」と1文字ずつ縦に並ぶ。 */
+  .post-table{display:block;overflow-x:auto;white-space:nowrap;}
+  .post-table td,.post-table th{white-space:nowrap;}
   /* account header */
   .acct-hd{flex-direction:column;align-items:flex-start;gap:10px;padding:12px 14px;border-bottom:1px solid var(--color-border);}
   .acct-row{flex-wrap:wrap;gap:8px;}

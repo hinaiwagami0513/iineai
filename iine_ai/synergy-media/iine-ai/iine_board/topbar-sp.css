@@ -42,6 +42,15 @@
   /* 固定幅の多カラムは1カラムに畳む（340px のペインなどが390pxに収まらない） */
   .panes,.zsplit,.facts{grid-template-columns:1fr !important;display:block !important;}
   .panes>*,.zsplit>*{width:auto !important;margin-bottom:12px;}
+  .cards,[class*="grid"]{grid-template-columns:1fr !important;}
+
+  /* 表は列を潰さず横スクロールで見せる。
+     列幅を詰めると .td が12pxになり「本 / 日 / の」と1文字ずつ縦に並ぶ。 */
+  table{display:block;overflow-x:auto;white-space:nowrap;}
+  table td,table th{white-space:nowrap;}
+
+  /* カード内の横並びは折り返して縦積みに */
+  .suglabel{white-space:nowrap;}
 
   /* ===== 下部の操作列 ===== */
   /* 「戻る」「編集する」「進む」を1行に詰めると重なる。折り返して縦に積む。 */

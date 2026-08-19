@@ -55,9 +55,46 @@
   .content{padding:16px;min-width:0;}
 
   /* 固定幅・多カラムを1カラムに畳む。指定が無いと本文が数十pxまで潰れて
-     「メ / ン / テ / ナ / ン / ス」のような縦一列になる。 */
-  .content .cards,
-  .content [class*="grid"]{grid-template-columns:1fr !important;}
+     「メ / ン / テ / ナ / ン / ス」のような縦一列になる。
+     .content の外に出ているグリッド（ドライブの3ペインなど）も対象にする。 */
+  .cards,
+  [class*="grid"]{grid-template-columns:1fr !important;}
+
+  /* ===== カード内の横並びを縦積みにする =====
+     「サムネ + 情報 + 数値 + 操作」を1行に並べたカードは、390pxだと
+     各列が30〜90pxに潰れて「看 / 板 / 犬」の柱になる。行を折り返す。
+     横スクロールで見せたい行（タブ・チップ・ステッパー・表）は下で個別に戻す。 */
+  .content .ad,.content .row1,
+  .content .hrow,.content .fstep,.content .pl-now,
+  .content .db-card,.content .db-help{flex-wrap:wrap;}
+  .content .ad>*,.content .hrow>*,.content .pl-now>*{min-width:0;}
+
+  /* ⚠️ flex-wrap:wrap だけでは効かない。
+     「サムネ112 + 情報78 + ボタン102」は合計292pxで358pxに“収まってしまう”ため
+     折り返しが起きず、情報列だけが78pxの柱のまま残る。
+     末尾のボタン列を独立行に落として、その幅を本文へ返す。 */
+  .content .ad .acts,
+  .content .hrow>.btn-o,.content .hrow>.btn-p,.content .hrow>.btn-g,
+  .content .pl-now>.btn-o,.content .pl-now>.btn-p,.content .pl-now>.btn-g{flex-basis:100%;margin-top:8px;}
+  .content .ad .acts{flex-direction:row;justify-content:flex-start;gap:8px;}
+  /* 広告カードの金額行「6,000円 / 14,000円 つかいました」+「1日あたり…」は
+     196pxの列に3つ並ぶと各50〜76pxになる。日割りの補足を次の行へ落とす。
+     .fox-alert の中のラベルピル（同名の .lb）に当たらないよう .ad 配下に限定する。 */
+  .content .ad .lb{flex-wrap:wrap;}
+  .content .ad .lb .rest{flex-basis:100%;margin-top:2px;}
+  /* サムネは112pxのままだと情報列が196pxしか残らず、中のキツネアラートの本文が
+     130px（12pxフォントで10文字）になる。SPではサムネを縮めて情報側に幅を回す。 */
+  .content .ad .thumb{width:72px;height:72px;flex:none;}
+
+  /* 表は列を潰さず横スクロールで見せる（列幅を詰めると1文字ずつ縦に並ぶ） */
+  .content table{display:block;overflow-x:auto;white-space:nowrap;}
+  .content table td,.content table th{white-space:nowrap;}
+
+  /* サービス切替タブ（広告作成 / 発注相談 / 出張撮影）は body-lg + 左右20px余白で
+     390pxに3つ入らず「広告 / 作成」と2行になる。余白と文字を詰めて1行に収める。 */
+  .svc{padding:0 12px;}
+  .svc a,.svc button,.svc span{padding:12px 10px;font-size:var(--text-body);gap:5px;white-space:nowrap;}
+  .svc i{font-size:16px;}
 
   /* ===== ボタン・ラベルの折り返し対策 =====
      ボタンのラベルは絶対に折り返さない（「読み込ん / で作る」になる）。

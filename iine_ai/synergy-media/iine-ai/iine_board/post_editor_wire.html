@@ -208,6 +208,13 @@ body {background:var(--color-background);padding:0;margin:0;color:var(--color-fo
   /* Tabs: tighter padding */
   .ed-xtab{padding:10px 12px !important;font-size:var(--text-label) !important;}
 }
+
+/* ===== SP調整 ===== */
+@media (max-width:430px){
+  /* 表は列を潰さず横スクロールで見せる。列を詰めると1文字ずつ縦に並ぶ。 */
+  table{display:block;overflow-x:auto;white-space:nowrap;}
+  table td,table th{white-space:nowrap;}
+}
 </style></head><body>
 <div class="page-header">
   <div class="hdr-left"><a href="flow_video_script_wire.html"><i class="ti ti-arrow-left"></i></a><span class="hdr-page"><i class="ti ti-video"></i>投稿を編集</span></div>
