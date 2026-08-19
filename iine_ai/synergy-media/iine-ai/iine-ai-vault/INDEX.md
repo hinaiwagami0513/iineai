@@ -67,3 +67,4 @@
 - [[raw/mtg-2026-07-24-iwagami]] — 7/24MTG（承認者は編集可・動画エディタをCapCut参考にアイコン化）。
 - [[raw/mtg-2026-07-31-iwagami]] — 7/31MTG（タイムライン改修・トークリール・Synergy Media移行）。
 - [[raw/mtg-2026-08-19-iwagami]] — ★8/19MTG（設定4項目・学習→AI読み取り資料・承認済みラベル/再承認・CapCut準拠・サイト作り直し）。
+- [[raw/design-audit-2026-08-19-home]] — ★8/19 ホーム画面デザイン監査（未修正）。影スケール3段が全て未使用・ヒーローグラデ未使用・セクション間が全部22px・ヒーローと見出しが同階層。Design C / AI Slop D。CSS6行のQuick Wins付き。
