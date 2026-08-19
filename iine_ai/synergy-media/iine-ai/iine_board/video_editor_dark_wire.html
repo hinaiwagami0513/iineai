@@ -851,13 +851,15 @@ body.props-resizing{cursor:col-resize;user-select:none;}
             </div>
           </div>
 
-          <!-- 詳細サブタブ: テキスト / ストローク / キャンバス / シャドウ / スペース -->
+          <!-- 詳細サブタブ: テキスト / ストローク / キャンバス / シャドウ / スペース / 曲線
+               CapCut と同じ並び。アーチ（曲線）は「エフェクト」ではなくここに置く（8/19確定） -->
           <div style="display:flex;gap:0;margin-bottom:14px;background:var(--color-editor-elevated);border-radius:var(--radius-md);padding:3px;border:1px solid var(--color-editor-border);">
             <span class="txtsub on" onclick="txtSub(this,0)" style="flex:1;text-align:center;padding:7px 0;font-size:11px;font-weight:700;border-radius:var(--radius-sm);cursor:pointer;color:var(--color-editor-foreground);background:var(--color-editor-surface);">テキスト</span>
             <span class="txtsub" onclick="txtSub(this,1)" style="flex:1;text-align:center;padding:7px 0;font-size:11px;font-weight:500;border-radius:var(--radius-sm);cursor:pointer;color:var(--color-editor-muted);background:transparent;">ストローク</span>
             <span class="txtsub" onclick="txtSub(this,2)" style="flex:1;text-align:center;padding:7px 0;font-size:11px;font-weight:500;border-radius:var(--radius-sm);cursor:pointer;color:var(--color-editor-muted);background:transparent;">キャンバス</span>
             <span class="txtsub" onclick="txtSub(this,3)" style="flex:1;text-align:center;padding:7px 0;font-size:11px;font-weight:500;border-radius:var(--radius-sm);cursor:pointer;color:var(--color-editor-muted);background:transparent;">シャドウ</span>
             <span class="txtsub" onclick="txtSub(this,4)" style="flex:1;text-align:center;padding:7px 0;font-size:11px;font-weight:500;border-radius:var(--radius-sm);cursor:pointer;color:var(--color-editor-muted);background:transparent;">スペース</span>
+            <span class="txtsub" onclick="txtSub(this,5)" style="flex:1;text-align:center;padding:7px 0;font-size:11px;font-weight:500;border-radius:var(--radius-sm);cursor:pointer;color:var(--color-editor-muted);background:transparent;">曲線</span>
           </div>
 
           <!-- サブ 0: テキスト -->
@@ -970,77 +972,112 @@ body.props-resizing{cursor:col-resize;user-select:none;}
               <div class="fsel" style="width:56px;text-align:center;font-size:12px;padding:6px;">0&deg;</div>
             </div>
           </div>
+
+          <!-- サブ 5: 曲線（旧「エフェクト > アーチ」。CapCut ではストローク等と同じ並びにある） -->
+          <div class="txtpane" id="txtpane-5" style="display:none;">
+            <div class="fl" style="margin-top:0;">曲線</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:14px;">
+              <div style="text-align:center;cursor:pointer;" onclick="pickCurve(this)">
+                <div class="curvepre on" style="aspect-ratio:1;border-radius:var(--radius-md);border:2px solid var(--color-primary);background:var(--color-editor-elevated);display:flex;align-items:center;justify-content:center;margin-bottom:4px;">
+                  <span style="font-size:16px;font-weight:900;color:var(--color-editor-foreground);">Aa</span>
+                </div>
+                <div style="font-size:10px;color:var(--color-editor-muted);">なし</div>
+              </div>
+              <div style="text-align:center;cursor:pointer;" onclick="pickCurve(this)">
+                <div class="curvepre" style="aspect-ratio:1;border-radius:var(--radius-md);border:1px solid var(--color-editor-border);background:var(--color-editor-elevated);display:flex;align-items:center;justify-content:center;margin-bottom:4px;">
+                  <svg width="56" height="34" viewBox="0 0 56 34"><path id="curveUp" d="M5 29 Q28 3 51 29" fill="none"/><text font-size="16" font-weight="900" fill="#f5f3f0"><textPath href="#curveUp" startOffset="50%" text-anchor="middle">Aa</textPath></text></svg>
+                </div>
+                <div style="font-size:10px;color:var(--color-editor-muted);">アーチ（上）</div>
+              </div>
+              <div style="text-align:center;cursor:pointer;" onclick="pickCurve(this)">
+                <div class="curvepre" style="aspect-ratio:1;border-radius:var(--radius-md);border:1px solid var(--color-editor-border);background:var(--color-editor-elevated);display:flex;align-items:center;justify-content:center;margin-bottom:4px;">
+                  <svg width="56" height="34" viewBox="0 0 56 34"><path id="curveDown" d="M5 8 Q28 34 51 8" fill="none"/><text font-size="16" font-weight="900" fill="#f5f3f0"><textPath href="#curveDown" startOffset="50%" text-anchor="middle">Aa</textPath></text></svg>
+                </div>
+                <div style="font-size:10px;color:var(--color-editor-muted);">アーチ（下）</div>
+              </div>
+            </div>
+            <div class="fl">曲がり</div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+              <input type="range" min="-100" max="100" value="40" style="flex:1;accent-color:var(--color-primary);">
+              <div class="fsel" style="width:64px;text-align:center;font-size:11px;padding:6px;">40</div>
+            </div>
+          </div>
+
         </div>
 
-        <!-- ========== メインタブ 2: エフェクト ========== -->
+<!-- ========== メインタブ 2: エフェクト ==========
+             8/19確定: エフェクト＝「動きを伴うプリセット」だけ。見た目の装飾（ゴールド・ネオン・立体・
+             レインボー等）は静止なので「スタイル > プリセット」の担当。以前はここに両方あって被っていた。
+             アーチは「スタイル > 曲線」へ移した。 -->
         <div class="txtmainpane" id="txtmainpane-2" style="display:none;">
-          <div class="fl" style="margin-top:0;">テキストエフェクト</div>
+          <div class="fl" style="margin-top:0;">動き</div>
+          <div style="font-size:10px;color:var(--color-editor-muted);line-height:1.7;margin:-4px 0 10px;">見た目の飾りは「スタイル」、出方や動きはここ。</div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
             <div style="text-align:center;cursor:pointer;" onclick="pickTextFx(this)">
               <div style="aspect-ratio:1;border-radius:var(--radius-md);border:2px solid var(--color-primary);background:var(--color-editor-elevated);display:flex;align-items:center;justify-content:center;margin-bottom:4px;">
-                <span style="font-size:16px;font-weight:900;color:var(--color-editor-foreground);">Aa</span>
+                <span style="font-size:16px;font-weight:900;color:var(--color-editor-foreground);opacity:1;">Aa</span>
               </div>
               <div style="font-size:10px;color:var(--color-editor-muted);">なし</div>
             </div>
             <div style="text-align:center;cursor:pointer;" onclick="pickTextFx(this)">
               <div style="aspect-ratio:1;border-radius:var(--radius-md);border:1px solid var(--color-editor-border);background:var(--color-editor-elevated);display:flex;align-items:center;justify-content:center;margin-bottom:4px;">
-                <span style="font-size:16px;font-weight:900;color:#fff;text-shadow:0 0 8px rgba(255,255,255,.8),0 0 16px rgba(255,255,255,.4);">Aa</span>
+                <span style="font-size:16px;font-weight:900;color:var(--color-editor-foreground);opacity:.45;">Aa</span>
               </div>
-              <div style="font-size:10px;color:var(--color-editor-muted);">グロー</div>
+              <div style="font-size:10px;color:var(--color-editor-muted);">フェードイン</div>
             </div>
             <div style="text-align:center;cursor:pointer;" onclick="pickTextFx(this)">
               <div style="aspect-ratio:1;border-radius:var(--radius-md);border:1px solid var(--color-editor-border);background:var(--color-editor-elevated);display:flex;align-items:center;justify-content:center;margin-bottom:4px;">
-                <span style="font-size:16px;font-weight:900;color:var(--color-editor-foreground);opacity:.3;">Aa</span>
+                <span style="font-size:16px;font-weight:900;color:var(--color-editor-foreground);border-right:2px solid var(--color-primary);padding-right:2px;">Aa</span>
               </div>
-              <div style="font-size:10px;color:var(--color-editor-muted);">透かし</div>
+              <div style="font-size:10px;color:var(--color-editor-muted);">タイピング</div>
             </div>
             <div style="text-align:center;cursor:pointer;" onclick="pickTextFx(this)">
               <div style="aspect-ratio:1;border-radius:var(--radius-md);border:1px solid var(--color-editor-border);background:var(--color-editor-elevated);display:flex;align-items:center;justify-content:center;margin-bottom:4px;">
-                <span style="font-size:16px;font-weight:900;background:linear-gradient(180deg,#ffd700,#b8860b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Aa</span>
+                <span style="font-size:16px;font-weight:900;color:var(--color-editor-foreground);transform:scale(1.15);display:inline-block;">Aa</span>
               </div>
-              <div style="font-size:10px;color:var(--color-editor-muted);">ゴールド</div>
+              <div style="font-size:10px;color:var(--color-editor-muted);">ポップ</div>
             </div>
             <div style="text-align:center;cursor:pointer;" onclick="pickTextFx(this)">
               <div style="aspect-ratio:1;border-radius:var(--radius-md);border:1px solid var(--color-editor-border);background:var(--color-editor-elevated);display:flex;align-items:center;justify-content:center;margin-bottom:4px;">
-                <span style="font-size:16px;font-weight:900;background:linear-gradient(135deg,#c0c0c0,#e8e8e8,#a0a0a0);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Aa</span>
+                <span style="font-size:16px;font-weight:900;color:var(--color-editor-foreground);transform:translateX(6px);display:inline-block;">Aa</span>
               </div>
-              <div style="font-size:10px;color:var(--color-editor-muted);">シルバー</div>
+              <div style="font-size:10px;color:var(--color-editor-muted);">スライドイン</div>
             </div>
             <div style="text-align:center;cursor:pointer;" onclick="pickTextFx(this)">
               <div style="aspect-ratio:1;border-radius:var(--radius-md);border:1px solid var(--color-editor-border);background:var(--color-editor-elevated);display:flex;align-items:center;justify-content:center;margin-bottom:4px;">
-                <span style="font-size:16px;font-weight:900;color:#00ffcc;text-shadow:0 0 4px #00ffcc,0 0 8px #00ffcc;">Aa</span>
+                <span style="font-size:16px;font-weight:900;color:var(--color-editor-foreground);transform:translateY(-4px);display:inline-block;">Aa</span>
               </div>
-              <div style="font-size:10px;color:var(--color-editor-muted);">ネオン</div>
+              <div style="font-size:10px;color:var(--color-editor-muted);">バウンス</div>
             </div>
             <div style="text-align:center;cursor:pointer;" onclick="pickTextFx(this)">
               <div style="aspect-ratio:1;border-radius:var(--radius-md);border:1px solid var(--color-editor-border);background:var(--color-editor-elevated);display:flex;align-items:center;justify-content:center;margin-bottom:4px;">
-                <span style="font-size:16px;font-weight:900;color:var(--color-editor-foreground);text-shadow:3px 3px 0 rgba(0,0,0,.3);">Aa</span>
+                <span style="font-size:16px;font-weight:900;color:var(--color-editor-foreground);transform:rotate(-8deg);display:inline-block;">Aa</span>
               </div>
-              <div style="font-size:10px;color:var(--color-editor-muted);">立体</div>
+              <div style="font-size:10px;color:var(--color-editor-muted);">ゆれ</div>
             </div>
             <div style="text-align:center;cursor:pointer;" onclick="pickTextFx(this)">
               <div style="aspect-ratio:1;border-radius:var(--radius-md);border:1px solid var(--color-editor-border);background:var(--color-editor-elevated);display:flex;align-items:center;justify-content:center;margin-bottom:4px;">
-                <span style="font-size:16px;font-weight:900;background:linear-gradient(135deg,#ff6b6b,#ffa500,#ffe66d,#4ecdc4,#45b7d1,#96c93d);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Aa</span>
+                <span style="font-size:16px;font-weight:900;color:var(--color-editor-foreground);text-shadow:0 0 6px #fff,0 0 12px rgba(255,255,255,.6);">Aa</span>
               </div>
-              <div style="font-size:10px;color:var(--color-editor-muted);">レインボー</div>
+              <div style="font-size:10px;color:var(--color-editor-muted);">キラキラ</div>
             </div>
             <div style="text-align:center;cursor:pointer;" onclick="pickTextFx(this)">
               <div style="aspect-ratio:1;border-radius:var(--radius-md);border:1px solid var(--color-editor-border);background:var(--color-editor-elevated);display:flex;align-items:center;justify-content:center;margin-bottom:4px;">
-                <span style="font-size:16px;font-weight:900;color:var(--color-editor-foreground);font-style:italic;transform:skewX(-10deg);display:inline-block;">Aa</span>
+                <span style="font-size:16px;font-weight:900;color:var(--color-editor-foreground);transform:skewY(-6deg);display:inline-block;">Aa</span>
               </div>
-              <div style="font-size:10px;color:var(--color-editor-muted);">スラント</div>
-            </div>
-            <div style="text-align:center;cursor:pointer;" onclick="pickTextFx(this)">
-              <div style="aspect-ratio:1;border-radius:var(--radius-md);border:1px solid var(--color-editor-border);background:var(--color-editor-elevated);display:flex;align-items:center;justify-content:center;margin-bottom:4px;">
-                <svg width="56" height="34" viewBox="0 0 56 34"><path id="archPath" d="M5 29 Q28 3 51 29" fill="none"/><text font-size="16" font-weight="900" fill="var(--color-editor-foreground)"><textPath href="#archPath" startOffset="50%" text-anchor="middle">Aa</textPath></text></svg>
-              </div>
-              <div style="font-size:10px;color:var(--color-editor-muted);">アーチ</div>
+              <div style="font-size:10px;color:var(--color-editor-muted);">波</div>
             </div>
           </div>
-          <!-- アーチ選択時のみ表示 -->
-          <div id="archCurveRow" style="display:none;">
-            <div class="fl">アーチの曲がり</div>
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;"><input type="range" min="-100" max="100" value="40" style="flex:1;accent-color:var(--color-primary);"> <div class="fsel" style="width:64px;text-align:center;font-size:11px;padding:6px;">40</div></div>
+          <div class="fl">速さ</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+            <input type="range" min="0.3" max="3" step="0.1" value="1" style="flex:1;accent-color:var(--color-primary);">
+            <div class="fsel" style="width:64px;text-align:center;font-size:11px;padding:6px;">1.0x</div>
+          </div>
+          <!-- CapCut はエフェクトの色を変えられない。そこは不便なのでこちらでは変えられるようにする（8/19 岩上） -->
+          <div class="fl">動きの色</div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <input type="color" value="#EF6108" style="width:34px;height:30px;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);background:var(--color-editor-elevated);cursor:pointer;padding:2px;">
+            <div class="fsel" style="flex:1;font-size:11px;padding:6px 10px;">#EF6108</div>
           </div>
         </div>
 
@@ -1593,6 +1630,11 @@ function txtSub(el,idx){
   document.querySelectorAll('#txtmainpane-1 .txtpane').forEach(function(p){p.style.display='none';});
   var tp=document.getElementById('txtpane-'+idx);if(tp)tp.style.display='block';
 }
+function pickCurve(el){
+  document.querySelectorAll('#txtpane-5 .curvepre').forEach(function(c){c.style.border='1px solid var(--color-editor-border)';});
+  var box=el.querySelector('.curvepre')||el.firstElementChild;
+  if(box) box.style.border='2px solid var(--color-primary)';
+}
 function stylePre(el){
   document.querySelectorAll('#txtmainpane-1 .stylepre').forEach(function(s){s.style.borderColor='transparent';});
   el.style.borderColor='var(--color-primary)';
@@ -1638,9 +1680,6 @@ function pickTextFx(el){
     if(box)box.style.border='1px solid var(--color-editor-border)';
   });
   if(el.firstElementChild)el.firstElementChild.style.border='2px solid var(--color-primary)';
-  var name=(el.lastElementChild.textContent||'').trim();
-  var row=document.getElementById('archCurveRow');
-  if(row)row.style.display=name==='アーチ'?'block':'none';
 }
 /* 動画（メイン）の音量を全クリップまとめてON/OFF */
 function toggleAllMainAudio(el){
