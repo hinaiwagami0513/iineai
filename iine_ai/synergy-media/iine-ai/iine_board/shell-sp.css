@@ -1,0 +1,84 @@
+/* ===== いいねAI 共通シェルのSP対応 =====
+   サイドバー + ヘッダー + メインの「シェル」を持つ画面が読み込む。
+   狙いは1つ: 幅390pxで横スクロールを出さず、文字を折り返させないこと。
+
+   前提のマークアップ（この構造を持つ画面だけが対象）:
+     .app > .sb（.sbtop / .nav > .ni / .foot） + .main（.hd > .pgnm / .content）
+
+   ⚠️ 幅を分け合う都合上、.nav の直下に置ける項目は「6つ + 中央の .ni-create」まで。
+   増やすならラベルを削るか、いずれかを .sp-hide でSPから外す。
+
+   PC側で .ni-create を隠すのは各画面の責任（このファイルはSPだけを見る）:
+     .ni-create{display:none;}
+*/
+
+@media (max-width:430px){
+  body{padding:0;}
+  .app{width:100%;height:auto;min-height:100vh;border-radius:0;border:none;flex-direction:column;}
+
+  /* ===== サイドバー → 下部固定ナビ ===== */
+  .sb{width:100%;height:60px;flex-direction:row;position:fixed;bottom:0;left:0;right:0;z-index:100;border-right:none;border-top:1px solid var(--color-border);flex:none;}
+  .sbtop{display:none;}
+  /* 横スクロールさせない。残り幅を項目で分け合う（flex:1 1 0 なので溢れない）。
+     overflow は visible のまま。hidden にすると中央の＋の頭が切られる。 */
+  .nav{display:flex;flex-direction:row;padding:0;overflow:visible;flex:1;gap:0;align-items:stretch;}
+  /* ラベルは折り返さない。「カレンダー」「ドライブ」が2行になると60pxの帯から溢れる。 */
+  .ni{flex:1 1 0;min-width:0;flex-direction:column;gap:2px;padding:6px 2px;font-size:10px;align-items:center;justify-content:center;white-space:nowrap;}
+  .ni .ti{font-size:20px;}
+  .ni .cv{display:none;}
+  .foot{display:none;}
+  /* 折りたたみはSPでは開かせない。60pxの帯の中に子リストが開くと確実に崩れる。 */
+  .sb .nisub{display:none !important;}
+  .sb .nidiv{display:none;}
+  /* SPで出さない項目に付ける */
+  .sb .sp-hide{display:none !important;}
+
+  /* 中央の投稿作成。丸にして帯から少し頭を出す。
+     ナビの中で唯一の塗り + 唯一の丸 + 唯一の浮きなので、押す場所が一目で決まる。
+     影は DESIGN.md §Elevation の raised（浮いている要素）。 */
+  /* 縁は帯と同じ surface。card(白)にすると帯のベージュに対して白い輪が浮いて見える。
+     54pxのうち43pxが帯（surface）に乗るので、そちらに合わせる。 */
+  .ni-create{flex:none;width:54px;height:54px;align-self:center;position:relative;top:-14px;margin:0 6px;display:flex;align-items:center;justify-content:center;background:var(--color-primary);color:var(--color-on-primary);border:3px solid var(--color-surface);border-radius:var(--radius-full);font-size:24px;line-height:1;cursor:pointer;padding:0;box-shadow:0 2px 8px rgb(0 0 0 / 0.08);}
+  .ni-create:hover{background:var(--color-primary-hover);}
+
+  /* ===== ヘッダー ===== */
+  .hd{height:52px;padding:0 16px;}
+  .hd .pgic{font-size:20px;}
+  /* ページ名は絶対に折り返さない。狭い幅では右側の要素を削って場所を作る。 */
+  .hd .pgnm{font-size:var(--text-body);white-space:nowrap;}
+  /* プラン名は状態表示で操作ではないので、タイトルを1行に保つ場所をここから作る。
+     ToDo・チャット・ヘルプは操作なので残す。 */
+  .hd .planchip{display:none;}
+
+  /* ===== メイン ===== */
+  .main{padding-bottom:70px;min-width:0;}
+  .content{padding:16px;min-width:0;}
+
+  /* 固定幅・多カラムを1カラムに畳む。指定が無いと本文が数十pxまで潰れて
+     「メ / ン / テ / ナ / ン / ス」のような縦一列になる。 */
+  .content .cards,
+  .content [class*="grid"]{grid-template-columns:1fr !important;}
+
+  /* ===== ボタン・ラベルの折り返し対策 =====
+     ボタンのラベルは絶対に折り返さない（「読み込ん / で作る」になる）。
+     代わりに余白と字送りを詰めて、幅の中に収める。 */
+  .content button,
+  .content a[class*="btn"],
+  .content [class*="btn"]{white-space:nowrap;}
+  .content .btn-p,.content .btn-o,.content .btn-g{padding:10px 14px;font-size:var(--text-label);gap:6px;}
+
+  /* 見出し + 件数 + ボタンを1行に詰めた行は、狭い幅で全部が折り返す。
+     行自体を折り返させて、見出しに1行を渡す。 */
+  .content .src-hd,
+  .content .card-h{flex-wrap:wrap;row-gap:8px;}
+  .content .src-hd .t,
+  .content .card-h .t{white-space:nowrap;}
+  /* 右端のボタン群は次の行に回して横いっぱいに使う */
+  .content .src-hd .sp,
+  .content .card-h .sp{margin-left:0;flex-basis:100%;}
+
+  /* 右下のトレイ・ポップオーバーは下ナビに重ならない高さへ */
+  .corner{right:12px;bottom:72px;}
+  .tray{width:calc(100vw - 24px);}
+  .pop{left:8px;right:8px;bottom:68px;}
+}

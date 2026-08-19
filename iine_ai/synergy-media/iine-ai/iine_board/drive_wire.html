@@ -93,8 +93,8 @@
   --radius-full: 9999px;
 }
 *{box-sizing:border-box;margin:0;padding:0;font-family:var(--font-body),'Hiragino Sans','Meiryo',sans-serif;-webkit-font-smoothing:antialiased;}
-body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
-.app{width:1240px;margin:0 auto;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-xl);overflow:hidden;display:flex;height:800px;position:relative;}
+body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
+.app{width:100%;background:var(--color-card);border-radius:0;overflow:hidden;display:flex;height:100vh;position:relative;}
 .ti{line-height:1;}
 
 /* ===== サイドバー（全画面共通） ===== */
@@ -109,6 +109,8 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .ni.on{background:var(--color-primary-subtle);color:var(--color-primary);font-weight:var(--font-weight-body-strong);}
 .ni.on .ti{color:var(--color-primary);}
 .nidiv{height:1px;background:var(--color-border);margin:8px 10px;}
+/* 中央の投稿作成はSP専用。PCはサイドバー上部の「投稿作成」が同じ役目 */
+.ni-create{display:none;}
 .ni.exp .cv{transform:rotate(180deg);}
 .nisub{display:none;}
 .nisub.open{display:block;}
@@ -138,9 +140,10 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .hdbtn:hover{border-color:var(--color-primary);color:var(--color-primary);}
 .hdbadge{position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;padding:0 5px;border-radius:var(--radius-full);background:var(--color-primary);color:var(--color-on-primary);font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);display:flex;align-items:center;justify-content:center;border:2px solid var(--color-card);}
 
-/* ===== 素材 / 学習 のタブ =====
-   旧「学習」はドライブに統合した。ただし性格が違う（素材=投稿に貼るもの／
-   学習=AIに読ませるもの）ので、フォルダで混ぜずタブで分ける。 */
+/* ===== 素材 / AI読み取り資料 のタブ =====
+   旧「学習」はドライブに統合し、2026-08-19 に「AI読み取り資料」へ改名した。
+   （「学習」だと自分が勉強する教材と読まれるため。DESIGN.md / vault: drive-vs-learning）
+   素材＝投稿に貼るもの／AI読み取り資料＝AIに読ませるもの。性格が違うのでタブで分ける。 */
 .tabs{display:flex;gap:0;padding:0 26px;border-bottom:1px solid var(--color-border);flex:none;background:var(--color-card);}
 .tab{display:flex;align-items:center;gap:8px;padding:13px 20px;font-family:inherit;font-size:var(--text-body-lg);font-weight:var(--font-weight-label);color:var(--color-muted-foreground);background:none;border:none;border-bottom:3px solid transparent;margin-bottom:-1px;cursor:pointer;}
 .tab i{font-size:18px;}
@@ -251,7 +254,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .dr-post .pt{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .dr-post .pd{font-size:var(--text-meta);color:var(--color-muted-foreground);margin-top:2px;}
 
-/* ===== 学習タブ ===== */
+/* ===== AI読み取り資料タブ ===== */
 .learn{flex:1;min-width:0;overflow-y:auto;padding:20px 24px 40px;background:var(--color-background);}
 .lrn-list{background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden;}
 .lrn{display:flex;align-items:center;gap:14px;padding:15px 18px;border-bottom:1px solid var(--color-border);}
@@ -277,7 +280,10 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
   .fgrid{grid-template-columns:repeat(2,1fr);}
   .drawer{width:100%;}
 }
-</style></head><body>
+</style>
+<!-- SP対応。インラインCSSの後に置く（@media は詳細度を上げないので後勝ちにする） -->
+<link rel="stylesheet" href="./shell-sp.css">
+</head><body>
 <div class="app">
   <!-- サイドバー -->
   <aside class="sb">
@@ -286,6 +292,8 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
       <a class="ni" href="./shell_header_sidebar_wire.html"><i class="ti ti-layout-dashboard"></i>ホーム</a>
       <a class="ni" href="./post_list_wire.html"><i class="ti ti-file-text"></i>投稿</a>
       <a class="ni" href="./calendar_wire.html"><i class="ti ti-calendar"></i>カレンダー</a>
+      <!-- SP専用：投稿作成の動線 -->
+      <button class="ni-create" aria-label="投稿を作る"><i class="ti ti-plus"></i></button>
       <a class="ni" href="./analysis_visual_wire.html"><i class="ti ti-chart-bar"></i>分析</a>
       <div class="ni on"><i class="ti ti-folder"></i>ドライブ</div>
       <div class="nidiv"></div>
@@ -296,9 +304,9 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
         <a class="nis" href="./settings_wire.html#review">AIレビュー</a>
         <a class="nis" href="./settings_wire.html#members">メンバー管理</a>
       </div>
-      <div class="nidiv"></div>
-      <div class="ni" onclick="navToggle(this)"><i class="ti ti-dots"></i>その他<span class="cv"><i class="ti ti-chevron-down"></i></span></div>
-      <div class="nisub">
+      <div class="nidiv sp-hide"></div>
+      <div class="ni sp-hide" onclick="navToggle(this)"><i class="ti ti-dots"></i>その他<span class="cv"><i class="ti ti-chevron-down"></i></span></div>
+      <div class="nisub sp-hide">
         <a class="nis" href="./news_wire.html">NEWS</a>
         <a class="nis" href="https://hinaiwagami0513.github.io/iineai/help/" target="_blank" rel="noopener">ヘルプセンター</a>
       </div>
@@ -320,10 +328,10 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
       </div>
     </div>
 
-    <!-- 素材 / 学習 -->
+    <!-- 素材 / AI読み取り資料 -->
     <div class="tabs">
       <button class="tab on" id="tabMat" onclick="drvTab('mat')"><i class="ti ti-photo"></i>素材</button>
-      <button class="tab" id="tabLrn" onclick="drvTab('lrn')"><i class="ti ti-world"></i>学習</button>
+      <button class="tab" id="tabLrn" onclick="drvTab('lrn')"><i class="ti ti-world"></i>AI読み取り資料</button>
     </div>
 
     <!-- ===== 素材タブ ===== -->
@@ -429,7 +437,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
       </div>
     </div>
 
-    <!-- ===== 学習タブ ===== -->
+    <!-- ===== AI読み取り資料タブ ===== -->
     <div class="pane" id="paneLrn">
       <div class="learn">
         <!-- 素材との違いを最初に言い切る。統合したぶん、ここが曖昧だと混ざる -->
@@ -437,7 +445,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
           <img src="./assets/iine-fox-worried.png" alt="">
           <div>
             <span class="lb">POINT</span>
-            <div class="t">学習は「AIに読ませるもの」。素材とは使われ方がちがいます。</div>
+            <div class="t">AI読み取り資料は「AIに読ませるもの」。素材とは使われ方がちがいます。</div>
             <div class="d">ここに入れた資料は、投稿文を作るときとAIレビューのときに<b>AIが参考にします</b>。
             素材タブの写真とちがって、<b>投稿にそのまま貼られることはありません</b>。<br>
             例：ブランドガイド、メニュー表、お店のサイト、よく使う言い回しをまとめた資料。</div>
@@ -445,7 +453,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
         </div>
 
         <div class="fhead">
-          <span class="h">学習させた資料</span>
+          <span class="h">読み込ませた資料</span>
           <span class="cnt">5件・うち1件を読み込み中</span>
           <span class="sp">
             <button class="btn-o"><i class="ti ti-world"></i>URLを追加</button>
@@ -457,13 +465,13 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
           <div class="lrn">
             <span class="ic doc"><i class="ti ti-file-text"></i></span>
             <div class="tx"><div class="nm">ブランドガイドライン_2026.pdf</div><div class="mt">PDF・4.2 MB・2026/07/02 に追加</div></div>
-            <span class="st ok"><i class="ti ti-check"></i>学習済み</span>
+            <span class="st ok"><i class="ti ti-check"></i>読み込み済み</span>
             <button class="more" aria-label="メニュー"><i class="ti ti-dots-vertical"></i></button>
           </div>
           <div class="lrn">
             <span class="ic web"><i class="ti ti-world"></i></span>
             <div class="tx"><div class="nm">犬カフェOne 公式サイト</div><div class="mt">https://inucafe-one.example.com・2026/07/02 に追加</div></div>
-            <span class="st ok"><i class="ti ti-check"></i>学習済み</span>
+            <span class="st ok"><i class="ti ti-check"></i>読み込み済み</span>
             <button class="more" aria-label="メニュー"><i class="ti ti-dots-vertical"></i></button>
           </div>
           <div class="lrn">
@@ -475,7 +483,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
           <div class="lrn">
             <span class="ic off"><i class="ti ti-file"></i></span>
             <div class="tx"><div class="nm">過去の人気投稿まとめ.pptx</div><div class="mt">PowerPoint・8.1 MB・2026/06/18 に追加</div></div>
-            <span class="st ok"><i class="ti ti-check"></i>学習済み</span>
+            <span class="st ok"><i class="ti ti-check"></i>読み込み済み</span>
             <button class="more" aria-label="メニュー"><i class="ti ti-dots-vertical"></i></button>
           </div>
           <div class="lrn">
@@ -541,7 +549,7 @@ function navToggle(el){
   el.classList.toggle('exp');
 }
 
-/* ===== 素材 / 学習 のタブ ===== */
+/* ===== 素材 / AI読み取り資料 のタブ ===== */
 function drvTab(which){
   var mat = which === 'mat';
   document.getElementById('paneMat').classList.toggle('on', mat);
@@ -551,7 +559,7 @@ function drvTab(which){
   closeFile();
 }
 
-// #learn 付きで開いたら学習タブから始める（画面一覧から直接呼べるように）
+// #learn 付きで開いたらAI読み取り資料タブから始める（画面一覧から直接呼べるように）
 if(location.hash === '#learn') drvTab('lrn');
 
 /* ===== ツリー ===== */

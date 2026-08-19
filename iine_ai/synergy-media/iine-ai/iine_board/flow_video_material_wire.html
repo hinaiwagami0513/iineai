@@ -128,8 +128,8 @@
   --spacing-3xl: 48px;
 }
 *{box-sizing:border-box;margin:0;padding:0;font-family:var(--font-body),'Hiragino Sans','Meiryo',sans-serif;-webkit-font-smoothing:antialiased;}
-body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
-.app{width:1120px;margin:0 auto;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-xl);overflow:hidden;display:flex;flex-direction:column;height:840px;}
+body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
+.app{width:100%;background:var(--color-card);border-radius:0;overflow:hidden;display:flex;flex-direction:column;height:100vh;}
 .ti{display:inline-block;font-family:"tabler-icons" !important;speak:none;font-style:normal;font-weight:normal;font-variant:normal;text-transform:none;line-height:1;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
 .grad{background:linear-gradient(135deg,var(--color-primary),var(--color-primary-light))!important;color:#fff!important;}
 .topbar{height:56px;flex:none;border-bottom:1px solid var(--color-border);display:flex;align-items:center;gap:12px;padding:0 24px;}
@@ -567,7 +567,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
         </div>
         <!-- いいねドライブ -->
         <div id="upPane1" style="display:none;">
-          <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;padding:9px 12px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.6;">いいねドライブの<b style="color:var(--color-foreground);">素材</b>から選びます。学習に入れた資料はここには出ません。<a href="./drive_wire.html" target="_blank" rel="noopener" style="margin-left:auto;flex:none;color:var(--color-primary);font-weight:var(--font-weight-body-strong);text-decoration:none;white-space:nowrap;">ドライブを開く &rarr;</a></div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;padding:9px 12px;background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.6;">いいねドライブの<b style="color:var(--color-foreground);">素材</b>から選びます。AI読み取り資料に入れたものはここには出ません。<a href="./drive_wire.html" target="_blank" rel="noopener" style="margin-left:auto;flex:none;color:var(--color-primary);font-weight:var(--font-weight-body-strong);text-decoration:none;white-space:nowrap;">ドライブを開く &rarr;</a></div>
           <div style="display:grid;grid-template-columns:200px 1fr;gap:16px;min-height:360px;">
             <!-- 左: フォルダ -->
             <div>

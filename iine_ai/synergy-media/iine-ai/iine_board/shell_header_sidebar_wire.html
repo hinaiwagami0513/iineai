@@ -142,8 +142,8 @@
   --spacing-3xl: 48px;
 }
 *{box-sizing:border-box;margin:0;padding:0;font-family:var(--font-body),'Hiragino Sans','Meiryo',sans-serif;-webkit-font-smoothing:antialiased;}
-body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
-.app{width:1240px;margin:0 auto;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-xl);overflow:hidden;display:flex;height:800px;position:relative;}
+body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
+.app{width:100%;background:var(--color-card);border-radius:0;overflow:hidden;display:flex;height:100vh;position:relative;}
 .ti{line-height:1;}
 /* ===== サイドバー ===== */
 .sb{width:250px;flex:none;background:var(--color-surface);border-right:1px solid var(--color-border);display:flex;flex-direction:column;}
@@ -158,6 +158,8 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .ni.on .ti{color:var(--color-primary);}
 /* グループ区切り線（作業 / 設定 / その他 の3グループに分ける） */
 .nidiv{height:1px;background:var(--color-border);margin:8px 10px;}
+/* 中央の投稿作成はSP専用。PCはサイドバー上部の「投稿作成」が同じ役目なので二重に出さない */
+.ni-create{display:none;}
 /* 折りたたみサブメニュー（設定 配下）。初期は閉じた状態。 */
 .ni.exp .cv{transform:rotate(180deg);}
 .nisub{display:none;}
@@ -454,32 +456,24 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .pbar{height:3px;background:var(--color-border);border-radius:var(--radius-full);margin-top:5px;overflow:hidden;}
 .pbar i{display:block;height:100%;background:var(--color-primary);border-radius:var(--radius-full);}
 @media (max-width:430px){
-  body{padding:0;}
-  .app{width:100%;height:auto;min-height:100vh;border-radius:0;border:none;flex-direction:column;}
-  /* ===== サイドバー → 下部固定ナビ ===== */
-  .sb{width:100%;height:60px;flex-direction:row;position:fixed;bottom:0;left:0;right:0;z-index:100;border-right:none;border-top:1px solid var(--color-border);overflow-x:auto;flex:none;}
-  .sbtop{display:none;}
-  .nav{display:flex;flex-direction:row;padding:0;overflow-x:auto;flex:1;gap:0;}
-  .ni{flex-direction:column;gap:2px;padding:6px 10px;font-size:10px;min-width:52px;align-items:center;}
-  .ni .ti{font-size:20px;}
-  .ni .cv{display:none;}
-  .foot{display:none;}
-  /* ===== メイン ===== */
-  .main{padding-bottom:70px;}
-  .hd{height:52px;padding:0 16px;}
-  .hd .pgic{font-size:20px;}
-  .hd .pgnm{font-size:var(--text-body);}
-  .content{padding:16px;}
+  /* この画面固有のSP調整。シェル共通（サイドバー→下ナビ・ヘッダー）は shell-sp.css。 */
+  .db-hello{flex-wrap:wrap;} .db-cta{margin-left:0;width:100%;justify-content:center;}
+  /* 本文はアイコン(17px)+gap(9px)を除いた残り幅を取る。
+     flex:1 1 0 だとチップが同じ行に入って本文が細い柱になり、
+     flex-basis:100% だとアイコンが単独行に落ちる。差し引いた幅がその中間。 */
+  .db-hello .rec{align-items:flex-start;}
+  .db-hello .rec>i{margin-top:3px;}
+  .db-hello .rec>span{flex:0 1 calc(100% - 26px);min-width:0;}
+  .db-hello .rec-chip{margin-left:26px;}
+  .db-week{grid-template-columns:repeat(2,1fr);}
+  .db-stats{grid-template-columns:repeat(2,1fr);}
+  .db-tri{grid-template-columns:1fr;}
   .h1{font-size:var(--text-h3);margin-bottom:12px;}
-  .cards{grid-template-columns:1fr;gap:12px;margin-bottom:16px;}
-  .panel{padding:16px;}
-  /* ===== 右下コーナートレイ ===== */
-  .corner{right:12px;bottom:72px;}
-  .tray{width:calc(100vw - 24px);}
-  /* ===== ポップオーバー ===== */
-  .pop{left:8px;right:8px;bottom:68px;}
 }
-</style></head><body>
+</style>
+<!-- SP対応。インラインCSSの後に置く（@media は詳細度を上げないので後勝ちにする） -->
+<link rel="stylesheet" href="./shell-sp.css">
+</head><body>
 <div class="app">
   <!-- サイドバー -->
   <aside class="sb">
@@ -488,6 +482,8 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
       <div class="ni on"><i class="ti ti-layout-dashboard"></i>ホーム</div>
       <div class="ni"><i class="ti ti-file-text"></i>投稿</div>
       <a class="ni" href="./calendar_wire.html"><i class="ti ti-calendar"></i>カレンダー</a>
+      <!-- SP専用：投稿作成の動線。PCはサイドバー上部の「投稿作成」が担うのでここは出さない -->
+      <button class="ni-create" aria-label="投稿を作る"><i class="ti ti-plus"></i></button>
       <div class="ni"><i class="ti ti-chart-bar"></i>分析</div>
       <a class="ni" href="./drive_wire.html"><i class="ti ti-folder"></i>ドライブ</a>
       <div class="nidiv"></div>
@@ -498,9 +494,9 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
         <a class="nis" href="./settings_wire.html#review">AIレビュー</a>
         <a class="nis" href="./settings_wire.html#members">メンバー管理</a>
       </div>
-      <div class="nidiv"></div>
-      <div class="ni" onclick="navToggle(this)"><i class="ti ti-dots"></i>その他<span class="cv"><i class="ti ti-chevron-down"></i></span></div>
-      <div class="nisub">
+      <div class="nidiv sp-hide"></div>
+      <div class="ni sp-hide" onclick="navToggle(this)"><i class="ti ti-dots"></i>その他<span class="cv"><i class="ti ti-chevron-down"></i></span></div>
+      <div class="nisub sp-hide">
         <a class="nis" href="./news_wire.html">NEWS</a>
         <a class="nis" href="https://hinaiwagami0513.github.io/iineai/help/" target="_blank" rel="noopener">ヘルプセンター</a>
       </div>

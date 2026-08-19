@@ -86,7 +86,7 @@
   --spacing-3xl: 48px;
 }
 *{box-sizing:border-box;margin:0;padding:0;font-family:var(--font-body),'Hiragino Sans','Meiryo',sans-serif;-webkit-font-smoothing:antialiased;}
-body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
+body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 .ti{display:inline-block;font-family:"tabler-icons" !important;speak:none;font-style:normal;font-weight:normal;font-variant:normal;text-transform:none;line-height:1;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;}
 .ti-arrows-sort:before{content:"\ef4e"}
 .ti-bookmark:before{content:"\ea3a"}
@@ -123,7 +123,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .ti-x:before{content:"\eb55"}
 
 /* ===== APP SHELL ===== */
-.app{width:1280px;height:900px;margin:0 auto;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-xl);overflow:hidden;display:flex;flex-direction:row;}
+.app{width:100%;height:100vh;background:var(--color-card);border-radius:0;overflow:hidden;display:flex;flex-direction:row;}
 
 /* ===== SIDEBAR ===== */
 .sb{width:250px;flex:none;background:var(--color-surface);border-right:1px solid var(--color-border);display:flex;flex-direction:column;}
@@ -140,6 +140,8 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .ni:hover{background:var(--color-background);}
 /* グループ区切り線（作業 / 設定 / その他 の3グループに分ける） */
 .nidiv{height:1px;background:var(--color-border);margin:8px 10px;}
+/* 中央の投稿作成はSP専用。PCはサイドバー上部の「投稿作成」が同じ役目 */
+.ni-create{display:none;}
 /* 折りたたみサブメニュー（設定 配下）。初期は閉じた状態。 */
 .ni.exp .cv{transform:rotate(180deg);}
 .nisub{display:none;}
@@ -392,7 +394,10 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .hdbtn{position:relative;width:38px;height:38px;flex:none;border:1px solid var(--color-border-strong,#cfcdc9);background:var(--color-card,#fff);color:var(--color-foreground,#2a2826);border-radius:var(--radius-full,9999px);display:flex;align-items:center;justify-content:center;font-size:19px;cursor:pointer;padding:0;text-decoration:none;}
 .hdbtn:hover{border-color:var(--color-primary,#ef6108);color:var(--color-primary,#ef6108);}
 .hdbadge{position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;padding:0 5px;border-radius:var(--radius-full,9999px);background:var(--color-primary,#ef6108);color:#fff;font-size:var(--text-meta,.625rem);font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid var(--color-card,#fff);}
-</style></head><body>
+</style>
+<!-- SP対応。インラインCSSの後に置く（@media は詳細度を上げないので後勝ちにする） -->
+<link rel="stylesheet" href="./shell-sp.css">
+</head><body>
 <div class="app">
   <!-- Sidebar -->
   <aside class="sb">
@@ -401,6 +406,8 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
       <div class="ni"><i class="ti ti-layout-dashboard"></i>ホーム</div>
       <div class="ni on"><i class="ti ti-file-text"></i>投稿</div>
       <a class="ni" href="./calendar_wire.html"><i class="ti ti-calendar"></i>カレンダー</a>
+      <!-- SP専用：投稿作成の動線 -->
+      <button class="ni-create" aria-label="投稿を作る"><i class="ti ti-plus"></i></button>
       <div class="ni"><i class="ti ti-chart-bar"></i>分析</div>
       <a class="ni" href="./drive_wire.html"><i class="ti ti-folder"></i>ドライブ</a>
       <div class="nidiv"></div>
@@ -411,9 +418,9 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
         <a class="nis" href="./settings_wire.html#review">AIレビュー</a>
         <a class="nis" href="./settings_wire.html#members">メンバー管理</a>
       </div>
-      <div class="nidiv"></div>
-      <div class="ni" onclick="navToggle(this)"><i class="ti ti-dots"></i>その他<span class="cv"><i class="ti ti-chevron-down"></i></span></div>
-      <div class="nisub">
+      <div class="nidiv sp-hide"></div>
+      <div class="ni sp-hide" onclick="navToggle(this)"><i class="ti ti-dots"></i>その他<span class="cv"><i class="ti ti-chevron-down"></i></span></div>
+      <div class="nisub sp-hide">
         <a class="nis" href="./news_wire.html">NEWS</a>
         <a class="nis" href="https://hinaiwagami0513.github.io/iineai/help/" target="_blank" rel="noopener">ヘルプセンター</a>
       </div>

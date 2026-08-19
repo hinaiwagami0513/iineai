@@ -90,8 +90,8 @@
   --radius-full: 9999px;
 }
 *{box-sizing:border-box;margin:0;padding:0;font-family:var(--font-body),'Hiragino Sans','Meiryo',sans-serif;-webkit-font-smoothing:antialiased;}
-body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
-.app{width:1240px;margin:0 auto;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-xl);overflow:hidden;display:flex;height:800px;position:relative;}
+body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
+.app{width:100%;background:var(--color-card);border-radius:0;overflow:hidden;display:flex;height:100vh;position:relative;}
 .ti{line-height:1;}
 
 /* ===== サイドバー（全画面共通） =====
@@ -108,6 +108,8 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .ni.on{background:var(--color-primary-subtle);color:var(--color-primary);font-weight:var(--font-weight-body-strong);}
 .ni.on .ti{color:var(--color-primary);}
 .nidiv{height:1px;background:var(--color-border);margin:8px 10px;}
+/* 中央の投稿作成はSP専用。PCはサイドバー上部の「投稿作成」が同じ役目 */
+.ni-create{display:none;}
 .ni.exp .cv{transform:rotate(180deg);}
 .nisub{display:none;}
 .nisub.open{display:block;}
@@ -237,7 +239,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
    ・何を書けばいいか分からない ・どこを直したか分からない ・保存が怖い
    の3つが起きる。項目ごとに読み書きし、進み具合と使われ方を各項目に添える。 */
 
-/* もとになる資料。ここにURLやPDFを入れて「学習」を押すと、AIが読んで下の内容を作る */
+/* もとになる資料。ここにURLやPDFを入れて「読み込んで作る」を押すと、AIが読んで下の内容を作る */
 .src{background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);margin-bottom:18px;}
 .src-hd{display:flex;align-items:center;gap:12px;padding:16px 20px;cursor:pointer;}
 .src-hd:hover{background:var(--color-surface);border-radius:var(--radius-lg) var(--radius-lg) 0 0;}
@@ -364,7 +366,10 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .btn-g:hover{border-color:var(--color-foreground);color:var(--color-foreground);}
 
 @media(max-width:1100px){ .picks,.rolehelp{grid-template-columns:1fr;} }
-</style></head><body>
+</style>
+<!-- SP対応。インラインCSSの後に置く（@media は詳細度を上げないので後勝ちにする） -->
+<link rel="stylesheet" href="./shell-sp.css">
+</head><body>
 <div class="app">
   <!-- サイドバー -->
   <aside class="sb">
@@ -373,6 +378,8 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
       <a class="ni" href="./shell_header_sidebar_wire.html"><i class="ti ti-layout-dashboard"></i>ホーム</a>
       <a class="ni" href="./post_list_wire.html"><i class="ti ti-file-text"></i>投稿</a>
       <a class="ni" href="./calendar_wire.html"><i class="ti ti-calendar"></i>カレンダー</a>
+      <!-- SP専用：投稿作成の動線 -->
+      <button class="ni-create" aria-label="投稿を作る"><i class="ti ti-plus"></i></button>
       <a class="ni" href="./analysis_visual_wire.html"><i class="ti ti-chart-bar"></i>分析</a>
       <a class="ni" href="./drive_wire.html"><i class="ti ti-folder"></i>ドライブ</a>
       <div class="nidiv"></div>
@@ -383,9 +390,9 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
         <a class="nis" href="./settings_wire.html#review">AIレビュー</a>
         <a class="nis" href="./settings_wire.html#members">メンバー管理</a>
       </div>
-      <div class="nidiv"></div>
-      <div class="ni" onclick="navToggle(this)"><i class="ti ti-dots"></i>その他<span class="cv"><i class="ti ti-chevron-down"></i></span></div>
-      <div class="nisub">
+      <div class="nidiv sp-hide"></div>
+      <div class="ni sp-hide" onclick="navToggle(this)"><i class="ti ti-dots"></i>その他<span class="cv"><i class="ti ti-chevron-down"></i></span></div>
+      <div class="nisub sp-hide">
         <a class="nis" href="./news_wire.html">NEWS</a>
         <a class="nis" href="https://hinaiwagami0513.github.io/iineai/help/" target="_blank" rel="noopener">ヘルプセンター</a>
       </div>
