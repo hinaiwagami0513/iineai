@@ -390,7 +390,12 @@ body {background:#0a0908;padding:0;margin:0;color:var(--color-editor-foreground)
     min-height:0;
   }
   .left-props{
-    width:100% !important;
+    /* デスクトップでは左72pxのツールレールの隣に absolute で浮かせている。
+       SPではレールが無いので left:72 を消して全幅に伸ばす。
+       width:100% だけでは left:72 が残り、右72pxが app の overflow:hidden で切れる。 */
+    left:0 !important;
+    right:0 !important;
+    width:auto !important;
     border-right:none !important;
     border-bottom:1px solid var(--color-editor-border);
     max-height:300px;
@@ -429,7 +434,10 @@ body {background:#0a0908;padding:0;margin:0;color:var(--color-editor-foreground)
     max-height:340px;
     overflow:hidden;
   }
-  .mid,.tl{margin-right:0 !important;}
+  /* デスクトップは左392px/右360pxの浮きパネル用に margin で場所を空けている。
+     SPはパネルを全幅に伸ばすので両方の margin を打ち消す。
+     margin-left を残すと .mid の幅が 0 に潰れ、中身が app の外へ出て切れる。 */
+  .mid,.tl{margin-left:0 !important;margin-right:0 !important;}
   .tl{margin-left:0 !important;}
   .rbody{padding:12px;}
   /* Timeline: full width, reduced height */
@@ -449,6 +457,8 @@ body {background:#0a0908;padding:0;margin:0;color:var(--color-editor-foreground)
   .tmpl-dd-item{padding:8px 10px;}
   .tmpl-dd-item .tmpl-thumb{width:30px;height:30px;font-size:14px;}
 }
+
+
 </style></head><body>
 <div class="app">
   <div class="hd">

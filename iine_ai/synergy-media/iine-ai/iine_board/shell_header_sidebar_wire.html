@@ -133,6 +133,10 @@
   --radius-lg: 16px;
   --radius-xl: 20px;
   --radius-full: 9999px;
+  /* DESIGN.md §Elevation & Depth の確定値。監査 F1: 3段とも未使用だった */
+  --shadow-card: 0 1px 2px rgb(0 0 0 / 0.06);
+  --shadow-raised: 0 2px 8px rgb(0 0 0 / 0.08);
+  --shadow-overlay: 0 8px 24px rgb(0 0 0 / 0.12);
   --spacing-xs: 4px;
   --spacing-sm: 8px;
   --spacing-md: 12px;
@@ -265,33 +269,53 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
    ・数字は大きく、増減は「矢印＋色＋日本語の一文」の3点セットで出す
    ・押せるものだけオレンジ（[[orange-only-interaction]]）。情報カードはオレンジにしない */
 /* 右下の生成トレイ（約300×230px）に最後のカードが隠れないよう下に逃がす */
-.content{flex:1;overflow-y:auto;padding:22px 26px 260px;background:var(--color-background);}
-.db-sec{margin-bottom:22px;}
+.content{flex:1;overflow-y:auto;padding:24px 26px 260px;background:var(--color-background);}
+/* セクション間は32px、セクション内は16px。同値だとどこで話が変わるか分からない（監査 F3） */
+.db-sec{margin-bottom:32px;}
 .db-sec-h{display:flex;align-items:center;gap:9px;margin-bottom:12px;}
 .db-sec-h .ic{width:30px;height:30px;flex:none;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:17px;}
 /* 見出し・タイルのアイコンは既定でニュートラル。
    DESIGN.md「装飾・見出しアイコン・非対話の要素に色を使わない／迷ったらニュートラルに落とす」に従う。
    状態色（info/warning/success）を見出しの飾りに使うと、1画面で色数が増えて
    「どこを見ればいいか」が消える。色は下の .act（自分が動く必要があるもの）だけに残す。 */
-.db-sec-h .ic,.db-mini .mh .ic,.db-stat .ic{background:var(--color-background);color:var(--color-muted-foreground);}
+.db-sec-h .ic,.db-mini .mh .ic{background:var(--color-background);color:var(--color-muted-foreground);}
+/* 状況カードの色は [[post-list-page]] の状態色に合わせる。
+   投稿した=success / 予約済み=primary（一覧の予約済みタブがオレンジ強調）/ 下書き=info（作成中）/ 確認待ち=warning。
+   カード自体が押せるので、オレンジが1枚混じっても「押せる色」の意味は壊れない。 */
+.db-stat .ic{background:var(--color-background);color:var(--color-muted-foreground);}
+.db-stat.done .ic{background:var(--color-success-subtle);color:var(--color-success);}
+.db-stat.sched .ic{background:var(--color-primary-subtle);color:var(--color-primary);}
+.db-stat.draft .ic{background:var(--color-info-subtle);color:var(--color-info);}
+.db-stat.wait .ic{background:var(--color-warning-subtle);color:var(--color-warning);}
+/* 数字も状態色にする。ここが「ぱっと見でわかる」の効き所 */
+.db-stat.done .val{color:var(--color-success);}
+.db-stat.sched .val{color:var(--color-primary);}
+.db-stat.draft .val{color:var(--color-info);}
+.db-stat.wait .val{color:var(--color-warning);}
+.db-stat .val .u{color:var(--color-muted-foreground);}
 /* 要対応。1画面でここだけが色を持つので、視線が最初にここへ行く */
 .db-sec-h .ic.act,.db-mini .mh .ic.act,.db-stat .ic.act{background:var(--color-warning-subtle);color:var(--color-warning);}
-.db-sec-h .tt{font-size:var(--text-h2);font-weight:var(--font-weight-h2);}
+/* ミニカードの .tt(16px) と同名で2サイズを兼ねていたので分けた（監査 F7） */
+.db-sec-h .sec-tt{font-size:var(--text-h2);font-weight:var(--font-weight-h2);}
 .db-sec-h .cnt{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:#fff;background:var(--color-muted-foreground);border-radius:var(--radius-full);padding:2px 10px;}
-.db-sec-h .more{margin-left:auto;display:inline-flex;align-items:center;gap:4px;text-decoration:none;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-primary);cursor:pointer;}
-.db-card{background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);}
+/* 見た目は18pxのままだと指で押せない。padding で当たり判定を44pxにして、負のmarginで詰め戻す（監査 F8） */
+.db-sec-h .more{margin-left:auto;display:inline-flex;align-items:center;gap:4px;text-decoration:none;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-primary);cursor:pointer;padding:13px 6px;margin-top:-13px;margin-bottom:-13px;margin-right:-6px;}
+.db-card{background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);box-shadow:var(--shadow-card);}
 
 /* あいさつ */
-.db-hello{display:flex;align-items:center;gap:18px;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:18px 22px;margin-bottom:22px;}
+/* ページの主役。カードにも面にも載せず、ページに直接置く。
+   箱で囲うと下のカード群と同じ「並んでいるもの」に見えるので、囲わないことで主役として立たせる。 */
+.db-hello{display:flex;align-items:center;gap:18px;padding:4px 2px 0;margin-bottom:32px;}
 .db-hello .fox{width:76px;height:76px;flex:none;object-fit:contain;}
-.db-hello .hi{font-size:var(--text-h2);font-weight:var(--font-weight-h2);margin-bottom:5px;}
+/* セクション見出し(20px/700)と同じ声量だったので h1 まで上げる（監査 F4） */
+.db-hello .hi{font-size:var(--text-h1);font-weight:var(--font-weight-h1);line-height:1.2;margin-bottom:7px;}
 /* おすすめ：今日ならではの切り口 + 具体案を出して、右の「投稿を作る」へ送る。 */
 .db-hello .rec{display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin-top:7px;font-size:var(--text-body);line-height:1.6;color:var(--color-foreground);}
 /* 提案の目印。オレンジは右のチップ（押せる）に譲るので、ここはニュートラル */
 .db-hello .rec>i{font-size:17px;flex:none;color:var(--color-muted-foreground);}
 .db-hello .rec b{font-weight:var(--font-weight-body-strong);}
 /* 案のチップは押せるのでオレンジ（オレンジ = 押せる・進む先） */
-.db-hello .rec-chip{display:inline-flex;align-items:center;gap:5px;background:var(--color-primary-subtle);color:var(--color-primary);border:1px solid color-mix(in srgb,var(--color-primary) 30%,transparent);border-radius:var(--radius-full);padding:5px 13px;font-family:inherit;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);cursor:pointer;white-space:nowrap;}
+.db-hello .rec-chip{display:inline-flex;align-items:center;min-height:36px;gap:5px;background:var(--color-primary-subtle);color:var(--color-primary);border:1px solid color-mix(in srgb,var(--color-primary) 30%,transparent);border-radius:var(--radius-full);padding:5px 13px;font-family:inherit;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);cursor:pointer;white-space:nowrap;}
 .db-hello .rec-chip:hover{background:var(--color-primary);color:var(--color-on-primary);border-color:var(--color-primary);}
 .db-hello .rec-chip i{font-size:14px;}
 .db-cta{margin-left:auto;flex:none;display:inline-flex;align-items:center;gap:8px;background:var(--color-primary);color:var(--color-on-primary);border:none;border-radius:var(--radius-md);padding:16px 26px;font-family:inherit;font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);cursor:pointer;}
@@ -300,13 +324,15 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 
 /* ===== NEWS / ToDo / チャット の3枚 =====
    3つとも「頭だけ見せて、本体は別の場所」。ここで全部を読ませない。 */
-.db-tri{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px;}
-.db-mini{display:flex;flex-direction:column;min-height:186px;}
+/* 等幅3枚は「AIっぽい」形の代表。中身の量で幅を変える。ToDoが一番行数を持つので広く（監査 F5） */
+.db-tri{display:grid;grid-template-columns:1fr 1.25fr 1fr;gap:16px;margin-bottom:32px;}
+/* 小さいカードは md(12)。大カードの lg(16) と形で差を付ける（監査 F6） */
+.db-mini{display:flex;flex-direction:column;min-height:186px;border-radius:var(--radius-md);}
 .db-mini .mh{display:flex;align-items:center;gap:9px;padding:13px 15px;border-bottom:1px solid var(--color-border);}
 .db-mini .mh .ic{width:28px;height:28px;flex:none;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:16px;}
 .db-mini .mh .tt{font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);}
 .db-mini .mh .cnt{font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:#fff;background:var(--color-muted-foreground);border-radius:var(--radius-full);padding:2px 8px;}
-.db-mini .mh .more{margin-left:auto;display:inline-flex;align-items:center;gap:3px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-primary);cursor:pointer;text-decoration:none;white-space:nowrap;background:none;border:none;font-family:inherit;padding:0;}
+.db-mini .mh .more{margin-left:auto;display:inline-flex;align-items:center;gap:3px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-primary);cursor:pointer;text-decoration:none;white-space:nowrap;background:none;border:none;font-family:inherit;padding:13px 6px;margin:-13px -6px -13px auto;}
 .db-mini .mh .more:hover{text-decoration:underline;}
 .db-mini .mb{flex:1;padding:13px 15px;display:flex;flex-direction:column;gap:11px;}
 /* NEWS：最新1件だけ。続きは「もっと見る」でNEWSページへ */
@@ -333,9 +359,10 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 .db-msg .bd{font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 
 /* 状況カード4枚 */
-.db-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;}
-.db-stat{background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:16px;cursor:pointer;transition:border-color .15s,box-shadow .15s;}
-.db-stat:hover{border-color:var(--color-primary);box-shadow:0 2px 10px rgba(0,0,0,.06);}
+/* 一番見てほしい「確認待ち」だけ広く取る。4等分だと全部同じ重みに見える（監査 F5） */
+.db-stats{display:grid;grid-template-columns:1fr 1fr 1fr 1.3fr;gap:16px;}
+.db-stat{background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-md);padding:16px;cursor:pointer;box-shadow:var(--shadow-card);transition:border-color .15s,box-shadow .15s;}
+.db-stat:hover{border-color:var(--color-primary);box-shadow:var(--shadow-raised);}
 .db-stat .top{display:flex;align-items:center;gap:9px;margin-bottom:10px;}
 .db-stat .ic{width:34px;height:34px;flex:none;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:18px;}
 .db-stat .nm{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);color:var(--color-foreground);}
@@ -654,26 +681,26 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
       <div class="db-sec">
         <div class="db-sec-h">
           <span class="ic"><i class="ti ti-file-text"></i></span>
-          <span class="tt">今の状況</span>
+          <span class="sec-tt">今の状況</span>
           <span class="more">投稿一覧を見る<i class="ti ti-arrow-right"></i></span>
         </div>
         <div class="db-stats">
-          <div class="db-stat">
+          <div class="db-stat done">
             <div class="top"><span class="ic"><i class="ti ti-check"></i></span><span class="nm">今週 投稿した</span></div>
             <div class="val">12<span class="u">件</span></div>
             <div class="cmp up"><i class="ti ti-arrow-up"></i>先週より 3件 増えました</div>
           </div>
-          <div class="db-stat">
+          <div class="db-stat sched">
             <div class="top"><span class="ic"><i class="ti ti-calendar-event"></i></span><span class="nm">予約済み</span></div>
             <div class="val">5<span class="u">件</span></div>
             <div class="cmp flat"><i class="ti ti-clock"></i>次は 今日 19:00</div>
           </div>
-          <div class="db-stat">
+          <div class="db-stat draft">
             <div class="top"><span class="ic"><i class="ti ti-pencil"></i></span><span class="nm">下書き</span></div>
             <div class="val">8<span class="u">件</span></div>
             <div class="cmp flat"><i class="ti ti-calendar-event"></i>うち 3件 は日時未定</div>
           </div>
-          <div class="db-stat">
+          <div class="db-stat wait">
             <div class="top"><span class="ic act"><i class="ti ti-clock"></i></span><span class="nm">確認待ち</span></div>
             <div class="val">2<span class="u">件</span></div>
             <div class="cmp warn"><i class="ti ti-alert-circle"></i>あなたの確認待ちです</div>
@@ -685,7 +712,7 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
       <div class="db-sec">
         <div class="db-sec-h">
           <span class="ic"><i class="ti ti-calendar"></i></span>
-          <span class="tt">今週の投稿予定</span>
+          <span class="sec-tt">今週の投稿予定</span>
           <a class="more" href="./calendar_wire.html">カレンダーを見る<i class="ti ti-arrow-right"></i></a>
         </div>
         <div class="db-card db-week">
@@ -727,7 +754,7 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
       <div class="db-sec">
         <div class="db-sec-h">
           <span class="ic"><i class="ti ti-clock"></i></span>
-          <span class="tt">今月の作業時間</span>
+          <span class="sec-tt">今月の作業時間</span>
           <span class="more">くわしく見る<i class="ti ti-arrow-right"></i></span>
         </div>
         <!-- ChartContainer 相当。React 化するときは chartConfig の color に var(--chart-N) を渡す -->

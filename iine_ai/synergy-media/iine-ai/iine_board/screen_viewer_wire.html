@@ -77,6 +77,22 @@ body {margin:0;font-family:"Noto Sans JP",sans-serif;background:var(--color-back
 .vframe iframe{display:block;border:0;background:var(--color-card);}
 .vhint{position:fixed;right:22px;bottom:18px;font-size:var(--text-meta);color:var(--color-muted-foreground);
   background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-full);padding:6px 12px;}
+
+/* ===== SP対応 =====
+   .vtop は戻る/検索/S・M・L/PC・SP/新タブ を1行に並べていて 773px あるため、
+   390pxでは右半分が画面外に出る。折り返して2〜3行に積む。 */
+@media (max-width:430px){
+  .vtop{flex-wrap:wrap;row-gap:8px;padding:10px 14px;}
+  .vtitle{font-size:var(--text-body);white-space:nowrap;}
+  /* 検索は幅を取りすぎるので、行いっぱいに使わせて他を次の行へ落とす */
+  .vsearch{margin-left:0;flex-basis:100%;}
+  .vsearch input{width:100% !important;}
+  /* 右寄せをやめる。左から詰めて折り返す */
+  .vspacer{margin-left:0;}
+  .vseg{flex:none;}
+  .vopen{flex:none;}
+  .vmain{flex-direction:column;}
+}
 </style></head>
 <body>
 

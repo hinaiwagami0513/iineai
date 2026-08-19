@@ -77,6 +77,10 @@
   .content .src-hd .sp,
   .content .card-h .sp{margin-left:0;flex-basis:100%;}
 
+  /* 右スライドインのシートは幅固定（360〜400px）で390pxに収まらない。全画面にする
+     （DESIGN.md「詳細表示は PC = 右スライドインsheet / SP = 全画面遷移」）。 */
+  .sheet{width:100% !important;border-left:none;}
+
   /* 右下のトレイ・ポップオーバーは下ナビに重ならない高さへ */
   .corner{right:12px;bottom:72px;}
   .tray{width:calc(100vw - 24px);}
