@@ -20,6 +20,14 @@
 .ti-file-text:before{content:"\eaa2"}
 .ti-file-upload:before{content:"\ec91"}
 .ti-photo:before{content:"\eb0a"}
+/* SNSモックアップ用。字形コードは他のワイヤーで使用実績があるものだけを使う。
+   wifi / battery-4 / square-plus / ruler は同梱フォントで実在を確認できなかったため使わない
+   （推測で当てると別の字形＝豆腐になる）。 */
+.ti-device-mobile:before{content:"\ea8a"}
+.ti-dots:before{content:"\ea95"}
+.ti-message-circle:before{content:"\eaed"}
+.ti-home:before{content:"\eac1"}
+.ti-search:before{content:"\eb1c"}
 .ti-star:before{content:"\eb2e"}
 .ti-send:before{content:"\eb1e"}
 .ti-plus:before{content:"\eb0b"}
@@ -439,6 +447,61 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 .bk-qbtn.rec span{color:var(--color-primary);opacity:.75;}
 .bk-qbtn.rec i{font-size:13px;margin-right:4px;}
 @media(max-width:600px){ .bk-pop{width:calc(100vw - 24px);padding:16px;} .bk-quick{grid-template-columns:1fr;} }
+
+/* ===== SNSモックアップのダイアログ =====
+   画像・動画をクリックすると、実際のSNSのUIに当てはめた姿で見られる。
+   狙いは「文字が実寸で読めるか」の確認なので、スマホ枠は実機に近い幅(300px)で出し、
+   画像に焼かれた文字も同じ倍率で縮める。完成画面のスマホプレビューと同じ作りに揃える。 */
+.mk-ovl{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:200;padding:20px;}
+.mk-ovl.open{display:flex;}
+.mk-dlg{background:var(--color-card);border-radius:var(--radius-xl);box-shadow:0 8px 24px rgb(0 0 0 / .12);width:min(880px,100%);max-height:90vh;overflow-y:auto;padding:22px 24px 24px;}
+.mk-hd{display:flex;align-items:center;gap:10px;margin-bottom:4px;}
+.mk-hd .t{font-size:var(--text-h2);font-weight:var(--font-weight-h2);}
+.mk-hd .x{margin-left:auto;width:32px;height:32px;border:none;background:transparent;color:var(--color-muted-foreground);border-radius:var(--radius-sm);font-size:18px;cursor:pointer;}
+.mk-hd .x:hover{background:var(--color-background);}
+.mk-d{font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.7;margin-bottom:14px;}
+/* 媒体切替。押せるのでオレンジ */
+.mk-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+.mk-tab{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--color-border-strong);background:var(--color-card);color:var(--color-foreground);border-radius:var(--radius-full);padding:7px 14px;font-family:inherit;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);cursor:pointer;white-space:nowrap;}
+.mk-tab:hover{border-color:var(--color-primary);color:var(--color-primary);}
+.mk-tab.on{background:var(--color-primary-subtle);border-color:var(--color-primary);color:var(--color-primary);}
+.mk-tab i{font-size:15px;}
+.mk-body{display:flex;gap:24px;align-items:flex-start;}
+/* スマホ枠。実機の見え方に寄せるため幅は固定 */
+.mk-phone{width:300px;flex:none;border:3px solid #222;border-radius:28px;overflow:hidden;background:#000;padding:8px 0 0;}
+.mk-status{display:flex;justify-content:space-between;align-items:center;padding:0 16px 6px;font-size:10px;color:#fff;}
+.mk-status .r{display:flex;gap:4px;align-items:center;}
+.mk-app{background:#fff;}
+.mk-ighd{display:flex;align-items:center;gap:8px;padding:8px 12px;}
+.mk-av{width:28px;height:28px;border-radius:var(--radius-full);background:linear-gradient(135deg,var(--color-primary),var(--color-primary-light));flex:none;}
+.mk-acc{font-size:10px;font-weight:var(--font-weight-body-strong);}
+.mk-loc{font-size:8px;color:#999;}
+/* 画像の枠。ここに台本の文字を重ねて実寸感を出す */
+/* 文字を「画像の幅に対する割合」で置くため、コンテナクエリの基準にする。
+   ⚠️ font-size:% は親のフォントサイズ基準なので幅には連動しない（8.5% が約1.2pxになる）。
+   cqw なら .mk-canvas の幅に対する割合になり、実機との倍率が一致する。 */
+.mk-canvas{container-type:inline-size;position:relative;background:linear-gradient(135deg,#f0e6d3,#e8d5b8);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.mk-canvas .ph{font-size:30px;color:var(--color-primary);opacity:.45;}
+.mk-band{position:absolute;left:0;right:0;bottom:0;height:20%;background:rgba(255,255,255,.55);}
+.mk-ttl{position:absolute;left:0;right:0;top:9%;text-align:center;color:#fff;font-weight:900;line-height:1.25;padding:0 8%;text-shadow:0 1px 3px rgba(0,0,0,.45);}
+.mk-sub{position:absolute;left:0;right:0;bottom:4%;text-align:center;color:var(--color-foreground);font-weight:var(--font-weight-body-strong);line-height:1.3;padding:0 8%;}
+.mk-acts{display:flex;align-items:center;gap:10px;padding:8px 12px;font-size:18px;}
+.mk-acts .bm{margin-left:auto;}
+.mk-likes{padding:0 12px 4px;font-size:9px;font-weight:var(--font-weight-body-strong);}
+.mk-cap{padding:0 12px 10px;font-size:9px;line-height:1.5;}
+.mk-cap .mk-tag{color:var(--color-primary);}
+.mk-btm{background:#fff;padding:6px 0 10px;display:flex;justify-content:center;gap:24px;font-size:16px;}
+/* 右側の注意書き */
+.mk-side{flex:1;min-width:0;}
+.mk-note{font-size:var(--text-label);line-height:1.9;}
+.mk-note dt{font-weight:var(--font-weight-body-strong);margin-top:10px;}
+.mk-note dd{color:var(--color-muted-foreground);margin:0;}
+.mk-size{display:inline-flex;align-items:center;gap:6px;background:var(--color-background);border-radius:var(--radius-full);padding:4px 11px;font-size:var(--text-meta);color:var(--color-muted-foreground);margin-top:12px;}
+@media (max-width:430px){
+  .mk-dlg{padding:16px;}
+  .mk-body{flex-direction:column;}
+  .mk-phone{width:100%;max-width:300px;margin:0 auto;}
+}
 </style></head><body>
 <div class="app">
   <div class="topbar"><div class="hdr-left"><span class="hdr-page"><i class="ti ti-template"></i>投稿作成</span><span class="tag" id="flowtag" style="display:none"></span></div><div class="hdr-right"><a class="helpbtn" href="https://hinaiwagami0513.github.io/iineai/help/manage/detail/" target="_blank" rel="noopener" title="このページのヘルプ（投稿詳細・編集）" aria-label="このページのヘルプ">?</a><button class="close"><i class="ti ti-list"></i></button></div></div>
@@ -606,7 +669,12 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
               <div class="imgtb" onclick="pickSlide(4)" style="width:50px;height:50px;flex:none;border-radius:var(--radius-sm);border:1px solid var(--color-border);background:var(--color-surface);display:flex;align-items:center;justify-content:center;font-size:var(--text-label);color:var(--color-muted-foreground);cursor:pointer;">5</div>
               <div class="imgtb" onclick="pickSlide(5)" style="width:50px;height:50px;flex:none;border-radius:var(--radius-sm);border:1px solid var(--color-border);background:var(--color-surface);display:flex;align-items:center;justify-content:center;font-size:var(--text-label);color:var(--color-muted-foreground);cursor:pointer;">6</div>
             </div>
-            <div style="aspect-ratio:1;max-height:280px;border-radius:var(--radius-lg);background:#f5f3f0;border:1px solid var(--color-border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;position:relative;margin-bottom:12px;"><i class="ti ti-photo" style="font-size:42px;color:var(--color-border-strong);"></i><span style="font-size:var(--text-label);color:var(--color-muted-foreground);">1枚目プレビュー</span></div>
+            <!-- クリックでSNSモックアップ。押せることが分かるよう、枠線と下部のラベルで合図を出す -->
+            <div class="mk-open" onclick="openMockup()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openMockup();}" style="aspect-ratio:1;max-height:280px;border-radius:var(--radius-lg);background:#f5f3f0;border:1px solid var(--color-border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;position:relative;margin-bottom:12px;cursor:pointer;">
+              <i class="ti ti-photo" style="font-size:42px;color:var(--color-border-strong);"></i>
+              <span id="mkPrevLabel" style="font-size:var(--text-label);color:var(--color-muted-foreground);">1枚目プレビュー</span>
+              <span style="position:absolute;left:0;right:0;bottom:0;padding:7px 0;background:rgba(255,255,255,.92);border-top:1px solid var(--color-border);border-radius:0 0 var(--radius-lg) var(--radius-lg);display:flex;align-items:center;justify-content:center;gap:5px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-primary);"><i class="ti ti-device-mobile"></i>SNSでの見え方を見る</span>
+            </div>
             <a href="image_editor_dark_wire.html" target="_blank" class="grad" style="width:100%;padding:13px;border:none;border-radius:var(--radius-md);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;margin-bottom:8px;text-decoration:none;color:#fff;box-sizing:border-box;"><i class="ti ti-sparkles"></i>画像を生成・編集</a>
             <div style="display:flex;align-items:center;justify-content:center;gap:6px;padding:11px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);cursor:pointer;border:1px solid var(--color-border);border-radius:var(--radius-md);"><i class="ti ti-upload"></i>画像を差し替える</div>
           </div>
@@ -891,14 +959,21 @@ function show(){
   renderStep();renderSub();
   var cv=document.querySelector('.canvas');if(cv)cv.scrollTop=0;
 }
-function nav(d){var prev=i;i=Math.max(0,Math.min(SCR.length-1,i+d));if(SCR[i]==='base'&&i!==prev)baseReady=false;if(savedPlan&&SCR[i]==='proposal'){i+=(d>0?1:-1);}function pickSlide(n){
+function nav(d){var prev=i;i=Math.max(0,Math.min(SCR.length-1,i+d));if(SCR[i]==='base'&&i!==prev)baseReady=false;if(savedPlan&&SCR[i]==='proposal'){i+=(d>0?1:-1);}show();}
+
+/* 画像台本のスライド切替。
+   ⚠️ もとは nav() の内側に入り込んでいて、onclick="pickSlide(n)" から呼べていなかった
+   （pickSlide is not defined でサムネ6枚が全て無反応）。グローバルに戻す。 */
+var curSlide = 0;
+function pickSlide(n){
+  curSlide = n;
   document.querySelectorAll('.img-slide').forEach(function(s){s.style.display='none';});
   var sl=document.getElementById('slide'+n);if(sl)sl.style.display='block';
   document.querySelectorAll('.imgtb').forEach(function(t){t.style.border='1px solid var(--color-border)';t.style.background='var(--color-surface)';t.style.color='var(--color-muted-foreground)';t.style.fontWeight='';});
   var thumbs=document.querySelectorAll('.imgtb');
   if(thumbs[n]){thumbs[n].style.border='2px solid var(--color-primary)';thumbs[n].style.background='var(--color-primary-subtle)';thumbs[n].style.color='var(--color-primary)';thumbs[n].style.fontWeight='var(--font-weight-body-strong)';}
+  renderMockup();
 }
-show();}
 function jump(n){i=n;show();}
 /* ===== 排他アコーディオン ===== */
 function acc2(id){var t=document.getElementById(id);var was=t.classList.contains("open");var body=t.querySelector(".tpl-body")||t.querySelector(".mbody");if(was){t.classList.remove("open");if(body)body.style.display="none";}else{t.classList.add("open");if(body)body.style.display="block";}}
@@ -1376,7 +1451,110 @@ function applySelected(){var n=document.querySelectorAll('.rev-chk:checked').len
     if((b.textContent||'').trim()==='投稿を予約する')b.addEventListener('click',function(){openBk(b);});
   });
 })();
+
+/* ===== SNSモックアップ =====
+   台本の文字が実寸で読めるかを確かめる用。媒体ごとに縦横比と枠が変わる。
+   文字サイズは画像の幅に対する割合で持つ（実機とスマホ枠の倍率が同じになるので、
+   ここで読めれば実機でも読める）。 */
+var MK = {
+  ig:    {ratio:'1/1',    ttl:'8.5cqw', sub:'4.2cqw', chrome:true,  label:'Instagram フィード（正方形）'},
+  story: {ratio:'9/16',   ttl:'9cqw',   sub:'4.5cqw', chrome:false, label:'ストーリーズ（縦長）'},
+  x:     {ratio:'16/9',   ttl:'6cqw',   sub:'3cqw',   chrome:true,  label:'X（横長）'}
+};
+var mkCur = 'ig';
+
+/* 台本から、いま選んでいる枚の見出しを拾う。
+   台本の文言が変わってもモックアップが追従するよう、DOMから読む。 */
+function mkSlideText(){
+  var n = (typeof curSlide==='number'?curSlide:0);
+  var sl = document.getElementById('slide'+n);
+  // 見出しはクラスを持たない div なので、「N枚目：」で始まる最小の要素をテキストで探す
+  var raw = '';
+  if(sl){
+    var cands = [].slice.call(sl.querySelectorAll('*')).filter(function(e){
+      var t=(e.textContent||'').trim();
+      return /^[0-9]+枚目：/.test(t) && t.length<60;
+    });
+    if(cands.length) raw = cands[cands.length-1].textContent.trim();
+  }
+  var m = raw.match(/^[0-9]+枚目：(.+)$/);
+  var name = m ? m[1] : (n+1)+'枚目';
+  // 「表紙：今日の推し犬発表カード」→ 役割=表紙 / 画像に載る文字=後半
+  var parts = name.split('：');
+  return {which:(n+1)+'枚目：'+parts[0], title:parts[parts.length-1]||parts[0]};
+}
+
+function renderMockup(){
+  var ovl=document.getElementById('mkOvl');
+  if(!ovl) return;
+  var cfg=MK[mkCur], t=mkSlideText();
+  var app=document.getElementById('mkApp');
+  var canvas='<div class="mk-canvas" style="aspect-ratio:'+cfg.ratio+'">'
+    + '<i class="ti ti-photo ph"></i>'
+    + '<div class="mk-band"></div>'
+    + '<div class="mk-ttl" style="font-size:'+cfg.ttl+'">'+t.title+'</div>'
+    + '<div class="mk-sub" style="font-size:'+cfg.sub+'">犬カフェOne ・ 東京都</div>'
+    + '</div>';
+  if(cfg.chrome){
+    app.innerHTML='<div class="mk-ighd"><span class="mk-av"></span><span><span class="mk-acc">inucafe_one</span><br><span class="mk-loc">東京都</span></span><i class="ti ti-dots" style="margin-left:auto;font-size:14px;color:#666"></i></div>'
+      + canvas
+      + '<div class="mk-acts"><i class="ti ti-heart"></i><i class="ti ti-message-circle"></i><i class="ti ti-send"></i><i class="ti ti-bookmark bm"></i></div>'
+      + '<div class="mk-likes">128 likes</div>'
+      + '<div class="mk-cap"><b>inucafe_one</b> 今日の推し犬を発表します。<span class="mk-tag">#犬カフェ #看板犬</span></div>';
+  } else {
+    // ストーリーズはUIが被さるので、上下の余白に文字を置かない前提を見せる
+    app.innerHTML=canvas;
+  }
+  document.getElementById('mkBtm').style.display = cfg.chrome ? 'flex' : 'none';
+  document.getElementById('mkWhich').textContent = t.which;
+  document.getElementById('mkSize').textContent = cfg.label;
+}
+
+function mkPick(k, el){
+  mkCur=k;
+  document.querySelectorAll('#mkTabs .mk-tab').forEach(function(b){b.classList.remove('on');});
+  if(el) el.classList.add('on');
+  renderMockup();
+}
+function openMockup(){ renderMockup(); document.getElementById('mkOvl').classList.add('open'); }
+function closeMockup(){ document.getElementById('mkOvl').classList.remove('open'); }
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeMockup(); });
 </script>
 <script src="shadcn-select.js"></script>
 <script src="shadcn-date.js"></script>
+
+<!-- ===== SNSモックアップのダイアログ =====
+     台本の文字が実際のSNSで読める大きさかを、この画面のまま確かめられるようにする。
+     スマホ枠と中身の作りは完成画面のプレビューと同じ。 -->
+<div class="mk-ovl" id="mkOvl" onclick="if(event.target===this)closeMockup()">
+  <div class="mk-dlg" role="dialog" aria-modal="true" aria-label="SNSでの見え方">
+    <div class="mk-hd">
+      <i class="ti ti-device-mobile" style="font-size:22px;color:var(--color-primary)"></i>
+      <span class="t">SNSでの見え方</span>
+      <button class="x" onclick="closeMockup()" aria-label="閉じる"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="mk-d">実際のSNSの画面に当てはめた姿です。<b>画像に入れた文字がこの大きさで読めるか</b>を確かめてください。読みにくいときは台本の「タイトル文字」を短くするか、文字を大きくします。</div>
+    <div class="mk-tabs" id="mkTabs">
+      <button class="mk-tab on" onclick="mkPick('ig',this)"><i class="ti ti-brand-instagram"></i>Instagram フィード</button>
+      <button class="mk-tab" onclick="mkPick('story',this)"><i class="ti ti-brand-instagram"></i>ストーリーズ</button>
+      <button class="mk-tab" onclick="mkPick('x',this)"><i class="ti ti-brand-x"></i>X</button>
+    </div>
+    <div class="mk-body">
+      <div class="mk-phone">
+        <div class="mk-status"><span>9:41</span><span class="r"></span></div>
+        <div class="mk-app" id="mkApp"></div>
+        <div class="mk-btm" id="mkBtm"><i class="ti ti-home"></i><i class="ti ti-search"></i><i class="ti ti-plus"></i><i class="ti ti-heart"></i></div>
+      </div>
+      <div class="mk-side">
+        <dl class="mk-note">
+          <dt>いま見ているもの</dt>
+          <dd id="mkWhich">1枚目：表紙</dd>
+          <dt>確かめること</dt>
+          <dd>・タイトルが小さすぎないか<br>・下の帯に文字が隠れていないか<br>・スマホの明るさでも読めるか</dd>
+        </dl>
+        <span class="mk-size" id="mkSize">表示サイズ 実機とほぼ同じ</span>
+      </div>
+    </div>
+  </div>
+</div>
 </body></html>
