@@ -280,9 +280,26 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
   .fgrid{grid-template-columns:repeat(2,1fr);}
   .drawer{width:100%;}
 }
+
+/* ===== SP調整 ===== */
+@media (max-width:430px){
+  /* フォルダツリー(244px固定) + ファイル一覧を横に並べているため、390pxでは
+     ファイル側が146pxに潰れ、中の4列グリッドが各98pxになる。縦に積む。 */
+  .pane{flex-direction:column;}
+  .tree{width:auto !important;flex:none;border-right:none;border-bottom:1px solid var(--color-border);max-height:180px;overflow-y:auto;}
+  .files{padding:16px;}
+
+}
 </style>
 <!-- SP対応。インラインCSSの後に置く（@media は詳細度を上げないので後勝ちにする） -->
 <link rel="stylesheet" href="./shell-sp.css">
+<style>
+/* shell-sp.css の .grid{1fr} より後に置いて上書きする。
+   ファイル一覧を1列にすると縦3418px（4画面分）になるので2列に戻す。 */
+@media (max-width:430px){
+  .files .grid{grid-template-columns:repeat(2,1fr) !important;}
+}
+</style>
 </head><body>
 <div class="app">
   <!-- サイドバー -->

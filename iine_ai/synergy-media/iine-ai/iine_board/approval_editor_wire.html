@@ -121,6 +121,13 @@ body {background:var(--color-background);min-height:100vh;display:flex;flex-dire
 /* ── State visibility ── */
 .state{display:none}
 .state.active{display:contents}
+
+/* ===== SP調整 ===== */
+@media (max-width:430px){
+  /* 左右50%ずつの2カラムは390pxで各195pxに潰れる。縦に積む。 */
+  .editor-area{flex-direction:column;overflow:visible;}
+  .editor-left,.editor-right{width:auto !important;padding:16px;}
+}
 </style>
 <!-- SP対応（上部バー型）。インラインCSSの後に置く（@media は詳細度を上げないので後勝ちにする） -->
 <link rel="stylesheet" href="./topbar-sp.css">

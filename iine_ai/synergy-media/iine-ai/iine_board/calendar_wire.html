@@ -311,6 +311,13 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 
 /* ===== SP調整（この画面固有。シェル共通は shell-sp.css） ===== */
 @media (max-width:430px){
+  /* カレンダー本体(.cal)と右の未定トレイ(.tray 366px固定)を横に並べているため、
+     390pxではカレンダーが24pxまで潰れ、7曜日グリッドの各列が3.4pxになる。縦に積む。 */
+  .work{flex-direction:column;}
+  .work .tray{width:auto !important;flex:none;border-left:none;border-top:1px solid var(--color-border);}
+  /* 月グリッドは7曜日のまま。1列に潰すと42行の縦長になる。 */
+  .m-grid{grid-template-columns:repeat(7,minmax(0,1fr)) !important;}
+
   /* ツールバーは月移動 + 表示切替 + 操作ボタンを1行に並べていて390pxに入らない。
      折り返して2行に積む。 */
   .tb{flex-wrap:wrap;row-gap:8px;}

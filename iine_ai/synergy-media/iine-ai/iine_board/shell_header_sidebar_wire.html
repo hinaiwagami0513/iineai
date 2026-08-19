@@ -307,10 +307,11 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
    箱で囲うと下のカード群と同じ「並んでいるもの」に見えるので、囲わないことで主役として立たせる。 */
 .db-hello{display:flex;align-items:center;gap:18px;padding:4px 2px 0;margin-bottom:32px;}
 .db-hello .fox{width:76px;height:76px;flex:none;object-fit:contain;}
+.db-hello .hello-tx{flex:1 1 auto;min-width:0;}
 /* セクション見出し(20px/700)と同じ声量だったので h1 まで上げる（監査 F4） */
 .db-hello .hi{font-size:var(--text-h1);font-weight:var(--font-weight-h1);line-height:1.2;margin-bottom:7px;}
 /* おすすめ：今日ならではの切り口 + 具体案を出して、右の「投稿を作る」へ送る。 */
-.db-hello .rec{display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin-top:7px;font-size:var(--text-body);line-height:1.6;color:var(--color-foreground);}
+.db-hello .rec{display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin-top:2px;font-size:var(--text-body);line-height:1.6;color:var(--color-foreground);}
 /* 提案の目印。オレンジは右のチップ（押せる）に譲るので、ここはニュートラル */
 .db-hello .rec>i{font-size:17px;flex:none;color:var(--color-muted-foreground);}
 .db-hello .rec b{font-weight:var(--font-weight-body-strong);}
@@ -483,15 +484,28 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 .pbar{height:3px;background:var(--color-border);border-radius:var(--radius-full);margin-top:5px;overflow:hidden;}
 .pbar i{display:block;height:100%;background:var(--color-primary);border-radius:var(--radius-full);}
 @media (max-width:430px){
-  /* この画面固有のSP調整。シェル共通（サイドバー→下ナビ・ヘッダー）は shell-sp.css。 */
-  .db-hello{flex-wrap:wrap;} .db-cta{margin-left:0;width:100%;justify-content:center;}
-  /* 本文はアイコン(17px)+gap(9px)を除いた残り幅を取る。
+  /* この画面固有のSP調整。シェル共通（サイドバー→下ナビ・ヘッダー）は shell-sp.css。
+
+     あいさつ枠は縦386px＝画面(844px)の46%を占めていた。縦を詰める:
+     ・キツネを上に積まず本文の横に戻す（76→56px）
+     ・見出しは h1(30px) だと2行になるので h3(16px) で1行に収める
+     ・CTAだけを独立行に落とす（flex-basis:100%）
+     本文に flex:1 1 0 を与えるのが要。これが無いとキツネだけが単独行に残る。 */
+  .db-hello{flex-wrap:wrap;align-items:flex-start;gap:12px;padding:14px 16px;}
+  .db-hello .fox{width:56px;height:56px;}
+  .db-hello .hello-tx{flex:1 1 0;min-width:0;}
+  .db-hello .hi{font-size:var(--text-h3);line-height:1.3;margin-bottom:3px;}
+  .db-cta{flex-basis:100%;margin-left:0;width:auto;justify-content:center;padding:13px 20px;}
+
+  /* 提案文はアイコン(17px)+gap(9px)を除いた残り幅を取る。
      flex:1 1 0 だとチップが同じ行に入って本文が細い柱になり、
      flex-basis:100% だとアイコンが単独行に落ちる。差し引いた幅がその中間。 */
-  .db-hello .rec{align-items:flex-start;}
+  .db-hello .rec{align-items:flex-start;gap:7px;margin-top:5px;}
   .db-hello .rec>i{margin-top:3px;}
-  .db-hello .rec>span{flex:0 1 calc(100% - 26px);min-width:0;}
-  .db-hello .rec-chip{margin-left:26px;}
+  .db-hello .rec>span{flex:0 1 calc(100% - 24px);min-width:0;}
+  /* 案のチップは2つで358pxに入らず1行ずつ使っていた。字下げを外し余白を詰めて1行に寄せる */
+  .db-hello .rec-chip{margin-left:0;padding:5px 10px;}
+
   .db-week{grid-template-columns:repeat(2,1fr);}
   .db-stats{grid-template-columns:repeat(2,1fr);}
   .db-tri{grid-template-columns:1fr;}
@@ -608,13 +622,13 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
       <!-- あいさつ：今日の状況を1行で言い切る -->
       <div class="db-hello">
         <img class="fox" src="./assets/iine-fox-sit.png" alt="">
-        <div>
+        <div class="hello-tx">
           <div class="hi">こんにちは、犬カフェOne さん</div>
           <!-- おすすめ：今日の切り口 + 具体案。押すと投稿作成にその案が入った状態で入る -->
           <div class="rec">
-            <i class="ti ti-sparkles"></i>
-            <span>今日は <b>お盆の最終日</b>。夏休みの締めくくりにちなんだ投稿が伸びやすい日です。</span>
-            <button class="rec-chip">看板犬ポチの夏まとめ<i class="ti ti-arrow-right"></i></button>
+          <i class="ti ti-sparkles"></i>
+          <span>今日は <b>お盆の最終日</b>。夏休みの締めくくりにちなんだ投稿が伸びやすい日です。</span>
+          <button class="rec-chip">看板犬ポチの夏まとめ<i class="ti ti-arrow-right"></i></button>
             <button class="rec-chip">夏休みありがとうポスト<i class="ti ti-arrow-right"></i></button>
           </div>
         </div>
