@@ -8,7 +8,7 @@
      <div class="fox-alert care">
        <img src="./assets/iine-fox-worried.png" alt="">
        <div>
-         <span class="lb">POINT</span>
+         <span class="lb">ATTENTION</span>
          <div class="t">見出し</div>
          <div class="d">説明</div>
        </div>
@@ -38,7 +38,7 @@
 .fox-alert b,.fox-alert strong{font-weight:var(--font-weight-body-strong);}
 /* 右端にボタンを1つ置く場合（「予算を決める」等）。吹き出しの外に出る */
 .fox-alert .sp{flex:none;}
-/* 小さい英字ラベル。DONE / GOOD / POINT / CHECK / ADVICE の5語だけ使う。
+/* 小さい英字ラベル。DONE / GOOD / POINT / ATTENTION / CHECK / ADVICE の6語だけ使う。
    しっぽは吹き出し本体が持つので、ラベルは無地のピルにとどめる（吹き出しの中の吹き出しにしない）。
    地は各変種の色をトークンから 78% に暗くして作る。生の色に白文字だと 4.5:1 を割るため
    （success #12960a に白は 3.89、78% に暗くすると 5.89 で通る）。新しいパレット色は足さない。 */
