@@ -139,7 +139,8 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;font-family:var(--font-body),'Hiragino Sans','Meiryo',sans-serif;-webkit-font-smoothing:antialiased;}
 body {background:#0a0908;padding:0;margin:0;color:var(--color-editor-foreground);overflow:hidden;}
-.app{width:100%;margin:0 auto;background:var(--color-editor-bg);border-radius:0;overflow:hidden;display:flex;flex-direction:column;height:100vh;position:relative;}
+/* --props-w: 左プロパティパネルの幅。ここ1つで .left-props と .mid の逃げ幅が連動する */
+.app{--props-w:320px;width:100%;margin:0 auto;background:var(--color-editor-bg);border-radius:0;overflow:hidden;display:flex;flex-direction:column;height:100vh;position:relative;}
 .ti{line-height:1;}
 .grad{background:linear-gradient(135deg,var(--color-primary),var(--color-primary-light))!important;color:#fff!important;}
 /* header */
@@ -171,9 +172,16 @@ body {background:#0a0908;padding:0;margin:0;color:var(--color-editor-foreground)
 .tmpl-dd-item .tmpl-check{font-size:14px;color:var(--color-primary);display:none;}
 .tmpl-dd-item.active .tmpl-check{display:block;}
 /* body: 左細/中央ステージ → 下タイムライン */
-.mid{flex:1;display:flex;flex-direction:column;min-height:0;overflow:hidden;margin-left:392px;margin-right:360px;}
+.mid{flex:1;display:flex;flex-direction:column;min-height:0;overflow:hidden;margin-left:calc(72px + var(--props-w));margin-right:360px;}
 /* 左プロパティパネル（ツールバー隣接、タイムラインの上まで） */
-.left-props{position:absolute;top:58px;left:72px;width:320px;bottom:300px;background:var(--color-editor-surface);border-right:1px solid var(--color-editor-border);display:flex;flex-direction:column;min-height:0;overflow-y:auto;overflow-x:hidden;z-index:10;}
+.left-props{position:absolute;top:58px;left:72px;width:var(--props-w);bottom:300px;background:var(--color-editor-surface);border-right:1px solid var(--color-editor-border);display:flex;flex-direction:column;min-height:0;overflow-y:auto;overflow-x:hidden;z-index:10;}
+/* パネルの右端をつかんで幅を変える。プリセットの列やサブタブが 320px だと入り切らないため。
+   見た目の線は .left-props の border-right が持つので、つまみ自体は透明の当たり判定＋ホバーで色が出るだけ。 */
+.props-resize{position:absolute;top:58px;bottom:300px;left:calc(72px + var(--props-w) - 3px);width:7px;cursor:col-resize;z-index:11;}
+.props-resize::after{content:"";position:absolute;top:0;bottom:0;left:2px;width:3px;background:transparent;transition:background .15s;}
+.props-resize:hover::after,.props-resize.dragging::after{background:var(--color-primary);}
+/* ドラッグ中は中身のテキスト選択と iframe の食い込みを止める */
+body.props-resizing{cursor:col-resize;user-select:none;}
 /* 左ツールバー（高さフル＝タイムライン含む） */
 .tools{position:absolute;top:58px;left:0;width:72px;bottom:0;border-right:1px solid var(--color-editor-border);padding:8px 0;background:var(--color-editor-surface);overflow-y:auto;display:flex;flex-direction:column;align-items:center;gap:4px;z-index:10;}
 .tool{width:56px;padding:8px 0;border:none;background:transparent;border-radius:var(--radius-md);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;color:var(--color-editor-foreground);}
@@ -483,6 +491,8 @@ body {background:#0a0908;padding:0;margin:0;color:var(--color-editor-foreground)
   </div>
 
   <!-- 左プロパティパネル（absolute、高さフル） -->
+  <div class="props-resize" id="propsResize" role="separator" aria-orientation="vertical"
+       aria-label="パネルの幅を変える（ダブルクリックで既定に戻る）" title="ドラッグで幅を変える／ダブルクリックで戻す"></div>
   <div class="left-props" id="leftProps">
       <!-- ===== 編集 ===== -->
       <div id="r-edit" class="rbody">
@@ -2269,4 +2279,39 @@ function pickTmpl(el,name){
 }
 </script>
 <script src="sonner.js"></script>
+<script>
+/* ===== 左プロパティパネルの幅を変える =====
+   320px 固定だと、スタイルのプリセット列やサブタブ（テキスト/ストローク/キャンバス/シャドウ/スペース）が
+   入り切らずに切れる。幅は --props-w 1つで持ち、.left-props と .mid の逃げ幅が同時に動く。 */
+(function(){
+  var MIN = 280, MAX = 560, DEFAULT = 320;
+  var app = document.querySelector('.app');
+  var grip = document.getElementById('propsResize');
+  if(!app || !grip) return;
+  var TOOLBAR = 72;   // 左ツールバーの幅。ここが幅の原点
+
+  function setW(px){
+    app.style.setProperty('--props-w', Math.min(MAX, Math.max(MIN, Math.round(px))) + 'px');
+  }
+  grip.addEventListener('pointerdown', function(e){
+    e.preventDefault();
+    grip.setPointerCapture(e.pointerId);
+    grip.classList.add('dragging');
+    document.body.classList.add('props-resizing');
+    var rect = app.getBoundingClientRect();
+    function move(ev){ setW(ev.clientX - rect.left - TOOLBAR); }
+    function up(ev){
+      grip.releasePointerCapture(ev.pointerId);
+      grip.classList.remove('dragging');
+      document.body.classList.remove('props-resizing');
+      grip.removeEventListener('pointermove', move);
+      grip.removeEventListener('pointerup', up);
+    }
+    grip.addEventListener('pointermove', move);
+    grip.addEventListener('pointerup', up);
+  });
+  // ダブルクリックで既定幅に戻す（つまみを見失っても復帰できるように）
+  grip.addEventListener('dblclick', function(){ app.style.setProperty('--props-w', DEFAULT + 'px'); });
+})();
+</script>
 </body></html>

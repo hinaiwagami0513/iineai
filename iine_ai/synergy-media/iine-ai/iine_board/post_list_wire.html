@@ -462,7 +462,7 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
         <button class="sort-dd"><i class="ti ti-arrows-sort"></i><span class="sort-label">更新日が新しい順</span><i class="ti ti-chevron-down"></i></button>
         <div class="sort-menu">
           <div class="sort-opt on" data-sort="更新日が新しい順">更新日が新しい順</div>
-          <div class="sort-opt" data-sort="投稿予定日が近い順">投稿予定日が近い順</div>
+          <div class="sort-opt" data-sort="投稿日が近い順">投稿日が近い順</div>
           <div class="sort-opt" data-sort="更新日が古い順">更新日が古い順</div>
           <div class="sort-opt" data-sort="作成日が新しい順">作成日が新しい順</div>
           <div class="sort-opt" data-sort="タイトル順">タイトル順</div>
@@ -479,7 +479,7 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
           <div class="pcard-thumb ph1"><span class="pcard-status st-draft">作成中</span></div>
           <div class="pcard-body">
             <div class="pcard-title">夏の新メニュー紹介 トロピカルスムージー</div>
-            <button class="pcard-plan empty" data-plan=""><i class="ti ti-calendar-event"></i>投稿予定を決める</button>
+            <button class="pcard-plan empty" data-plan=""><i class="ti ti-calendar-event"></i>投稿日を決める</button>
             <div class="pcard-foot"><span class="badge badge-ig"><i class="ti ti-brand-instagram"></i>フィード</span><span class="pcard-date">7/15 更新</span></div>
           </div>
         </div>
@@ -495,7 +495,7 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
           <div class="pcard-thumb ph3"><span class="pcard-status st-draft">作成中</span></div>
           <div class="pcard-body">
             <div class="pcard-title">看板犬ポチの朝ルーティン</div>
-            <button class="pcard-plan empty" data-plan=""><i class="ti ti-calendar-event"></i>投稿予定を決める</button>
+            <button class="pcard-plan empty" data-plan=""><i class="ti ti-calendar-event"></i>投稿日を決める</button>
             <div class="pcard-foot"><span class="badge badge-tk"><i class="ti ti-brand-tiktok"></i>ショート</span><span class="pcard-date">7/14 更新</span></div>
           </div>
         </div>
@@ -511,7 +511,7 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
           <div class="pcard-thumb ph5"><span class="pcard-status st-draft">作成中</span></div>
           <div class="pcard-body">
             <div class="pcard-title">犬カフェOneの1日密着ドキュメンタリー</div>
-            <button class="pcard-plan empty" data-plan=""><i class="ti ti-calendar-event"></i>投稿予定を決める</button>
+            <button class="pcard-plan empty" data-plan=""><i class="ti ti-calendar-event"></i>投稿日を決める</button>
             <div class="pcard-foot"><span class="badge badge-yt"><i class="ti ti-brand-youtube"></i>ロング</span><span class="pcard-date">7/12 更新</span></div>
           </div>
         </div>
@@ -644,7 +644,7 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
           <div class="sheet-row" id="sh-sns"><span class="lbl">SNS</span><span class="badge badge-ig"><i class="ti ti-brand-instagram"></i>Instagram</span></div>
           <div class="sheet-row"><span class="lbl">投稿タイプ</span><span>フィード</span></div>
           <div class="sheet-row" id="sh-status"><span class="lbl">ステータス</span><span class="pcard-status st-draft" style="position:static">作成中</span></div>
-          <div class="sheet-row" id="sh-plan"><span class="lbl">投稿予定</span><span class="plan-inline"><span class="plan-none">未設定</span><button class="plan-link">決める</button></span></div>
+          <div class="sheet-row" id="sh-plan"><span class="lbl">投稿日</span><span class="plan-inline"><span class="plan-none">未設定</span><button class="plan-link">決める</button></span></div>
           <div class="sheet-row"><span class="lbl">作成日</span><span>2026/07/12</span></div>
           <div class="sheet-row"><span class="lbl">更新日</span><span>2026/07/15 14:30</span></div>
         </div>
@@ -670,7 +670,7 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 
 <!-- 投稿予定ポップオーバー（下書き段階で予定を先に入れる） -->
 <div class="plan-overlay"></div>
-<div class="plan-pop" role="dialog" aria-label="投稿予定を決める">
+<div class="plan-pop" role="dialog" aria-label="投稿日を決める">
   <div class="plan-pop-hd"><i class="ti ti-calendar-event"></i>いつ投稿する？</div>
   <div class="plan-pop-note">ここで決めるのは仮の日時です。「予約を確定する」を押すまで投稿されません。</div>
   <div class="plan-quick" id="plan-quick"></div>
@@ -854,7 +854,7 @@ if(SOLO_MODE){
   /* 一人運用では「日時があるのに作成中・仮」という状態が成立しない
      （日時を決めた時点で予約済みへ移るため）。
      サンプルの下書きカードに最初から入っている仮日時を落として、
-     全部「投稿予定を決める」から始まる画にする。
+     全部「投稿日を決める」から始まる画にする。
      このループは card.dataset.plan を集約する初期化より前に走るので、
      ボタン側の data-plan を消しておかないと復活する。 */
   document.querySelectorAll('[data-panel="draft"] .pcard-plan').forEach(function(btn){
@@ -1101,7 +1101,7 @@ function renderCardPlan(card){
     btn.innerHTML='<i class="ti ti-calendar-event"></i><span class="plan-date">'+planLabel(v)+'</span>'+(SOLO_MODE?'':'<span class="plan-tmp">仮</span>')+'<span class="plan-act">変更</span>';
   }else{
     btn.classList.add('empty');
-    btn.innerHTML='<i class="ti ti-calendar-event"></i>投稿予定を決める';
+    btn.innerHTML='<i class="ti ti-calendar-event"></i>投稿日を決める';
   }
 }
 
@@ -1114,7 +1114,7 @@ function renderSheetPlan(card){
   row.style.display='';
   var v=card.dataset.plan||'';
   // 一人運用は日時を決めた時点で予約なので「（仮）」を付けない
-  var lbl=panel==='ready'?'予約日時':(SOLO_MODE?'投稿日時':'投稿予定（仮）');
+  var lbl=panel==='ready'?'予約日時':(SOLO_MODE?'投稿日時':'投稿日（仮）');
   row.innerHTML='<span class="lbl">'+lbl+'</span><span class="plan-inline">'+
     (v?'<span class="plan-set">'+planLabel(v)+'</span><button class="plan-link">変更</button>'
       :'<span class="plan-none">未設定</span><button class="plan-link">決める</button>')+'</span>';

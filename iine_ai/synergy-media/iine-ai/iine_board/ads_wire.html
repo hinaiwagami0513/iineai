@@ -315,7 +315,8 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 .confirm .t{font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);margin-bottom:12px;}
 .crow{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--color-border);font-size:var(--text-body);}
 .crow:last-of-type{border-bottom:none;}
-.crow .k{width:120px;flex:none;color:var(--color-muted-foreground);font-size:var(--text-label);}
+/* 確認表のラベルは口語をやめて短い一般語に。値までの距離も詰める（2026-08-19） */
+.crow .k{width:88px;flex:none;color:var(--color-muted-foreground);font-size:var(--text-label);}
 .crow .v{font-weight:var(--font-weight-body-strong);}
 .crow .ed2{margin-left:auto;color:var(--color-primary);font-size:var(--text-label);font-weight:var(--font-weight-body-strong);background:none;border:none;cursor:pointer;font-family:inherit;}
 .empty{background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:44px;text-align:center;}
@@ -591,7 +592,7 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
             <div class="op">×</div>
             <div><div class="k">日数</div><div class="v" id="dayN">7日</div></div>
             <div class="op">=</div>
-            <div class="total"><div class="k">かかるお金（合計）</div><div class="v" id="total">7,000円</div></div>
+            <div class="total"><div class="k">予算（合計）</div><div class="v" id="total">7,000円</div></div>
           </div>
           <input class="range" type="range" min="500" max="5000" step="100" value="1000" oninput="calc(this.value)" aria-label="1日あたりの金額">
           <div class="reach"><i class="ti ti-users"></i>
@@ -681,16 +682,16 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
             </div>
 
             <div class="confirm">
-              <div class="t">この内容で出します</div>
-              <div class="crow"><span class="k">なんのために</span><span class="v">お店を知ってもらう</span><button class="ed2" onclick="go('s1')">変える</button></div>
-              <div class="crow"><span class="k">どこに</span><span class="v">Instagram</span><button class="ed2" onclick="go('s2')">変える</button></div>
-              <div class="crow"><span class="k">だれに</span><span class="v">東京都・神奈川県／20代〜40代／犬・カフェめぐり</span><button class="ed2" onclick="go('s2')">変える</button></div>
-              <div class="crow"><span class="k">いつ</span><span class="v">9月1日 〜 9月7日（7日間）</span><button class="ed2" onclick="go('s2')">変える</button></div>
-              <div class="crow"><span class="k">かかるお金</span><span class="v" id="cTotal">合計 7,000円（1日 1,000円）</span><button class="ed2" onclick="go('s2')">変える</button></div>
+              <div class="t">出す前の確認</div>
+              <div class="crow"><span class="k">目的</span><span class="v">お店を知ってもらう</span><button class="ed2" onclick="go('s1')">変更</button></div>
+              <div class="crow"><span class="k">出すSNS</span><span class="v">Instagram</span><button class="ed2" onclick="go('s2')">変更</button></div>
+              <div class="crow"><span class="k">届ける相手</span><span class="v">東京都・神奈川県／20代〜40代／犬・カフェめぐり</span><button class="ed2" onclick="go('s2')">変更</button></div>
+              <div class="crow"><span class="k">期間</span><span class="v">9月1日 〜 9月7日（7日間）</span><button class="ed2" onclick="go('s2')">変更</button></div>
+              <div class="crow"><span class="k">予算</span><span class="v" id="cTotal">合計 7,000円（1日 1,000円）</span><button class="ed2" onclick="go('s2')">変更</button></div>
               <div class="navrow">
                 <button class="btn-g" onclick="go('s2')"><i class="ti ti-arrow-left"></i>前へ</button>
                 <span class="sp" style="display:flex;gap:10px">
-                  <button class="btn-g" onclick="go('list')">下書きのまま置く</button>
+                  <button class="btn-g" onclick="go('list')">下書きに保存</button>
                   <button class="btn-p" onclick="publish()"><i class="ti ti-check"></i>この内容で出す</button>
                 </span>
               </div>
