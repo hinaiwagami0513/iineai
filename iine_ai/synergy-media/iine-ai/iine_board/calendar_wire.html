@@ -1,6 +1,7 @@
 <!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>カレンダー — いいねAI</title>
 <link rel="stylesheet" href="./tabler-icons-inline.css">
+<link rel="stylesheet" href="./fox-alert.css">
 <style>
 /* このファイルで使うアイコンだけ定義する（フォント実体は tabler-icons-inline.css）。
    字形コードは同梱フォントで実物を描画して確認済み。 */
@@ -125,6 +126,9 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .help:hover{background:var(--color-primary);color:var(--color-on-primary);}
 .planchip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--color-border-strong);border-radius:var(--radius-full);padding:5px 12px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);white-space:nowrap;}
 .planchip i{font-size:15px;color:var(--color-primary);}
+.planchip{text-decoration:none;transition:border-color .15s,color .15s;}
+.planchip[href]:hover{border-color:var(--color-primary);color:var(--color-foreground);}
+.planchip.is-here{cursor:default;}
 .hdbtn{position:relative;width:38px;height:38px;flex:none;border:1px solid var(--color-border-strong);background:var(--color-card);color:var(--color-foreground);border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:19px;cursor:pointer;padding:0;text-decoration:none;}
 .hdbtn:hover{border-color:var(--color-primary);color:var(--color-primary);}
 .hdbadge{position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;padding:0 5px;border-radius:var(--radius-full);background:var(--color-primary);color:var(--color-on-primary);font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);display:flex;align-items:center;justify-content:center;border:2px solid var(--color-card);}
@@ -149,9 +153,6 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .btn-g:hover{border-color:var(--color-foreground);color:var(--color-foreground);}
 
 /* 日にちが決まっていない投稿。カレンダーは「置き場所を決める」画面でもある */
-.unsched{flex:none;display:flex;align-items:center;gap:11px;padding:11px 22px;background:var(--color-warning-subtle);border-bottom:1px solid var(--color-warning-border);}
-.unsched i{font-size:17px;color:var(--color-warning);}
-.unsched .t{flex:1;font-size:var(--text-label);color:var(--color-warning);font-weight:var(--font-weight-body-strong);}
 
 /* ===== 未確定の置き場 =====
    日にちが決まっていない投稿は、カレンダーの外に出しておいて、
@@ -300,8 +301,6 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .pop-draft .nm{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .pop-draft .mt{font-size:var(--text-meta);color:var(--color-muted-foreground);margin-top:2px;}
 /* 置いた直後の確認 */
-.done-msg{display:flex;align-items:flex-start;gap:10px;background:var(--color-success-subtle);border:1px solid #c3e0bf;border-radius:var(--radius-md);padding:12px 13px;font-size:var(--text-label);line-height:1.8;color:#0f6b0a;}
-.done-msg i{font-size:16px;flex:none;margin-top:2px;}
 </style></head><body>
 <div class="app">
   <!-- サイドバー -->
@@ -317,7 +316,6 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
       <div class="ni" onclick="navToggle(this)"><i class="ti ti-settings"></i>設定<span class="cv"><i class="ti ti-chevron-down"></i></span></div>
       <div class="nisub">
         <a class="nis" href="./settings_wire.html#project">プロジェクト管理</a>
-        <a class="nis" href="./settings_wire.html#plan">プラン一覧</a>
         <a class="nis" href="./settings_wire.html#sns">SNSアカウント</a>
         <a class="nis" href="./settings_wire.html#review">AIレビュー</a>
         <a class="nis" href="./settings_wire.html#members">メンバー管理</a>
@@ -339,7 +337,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
     <div class="hd">
       <i class="ti ti-calendar pgic"></i><span class="pgnm">カレンダー</span>
       <div class="r">
-        <span class="planchip"><i class="ti ti-sparkles"></i>ベーシックOne</span>
+        <a class="planchip" href="./plan_wire.html" title="いまのプラン（押すと料金一覧へ）"><i class="ti ti-sparkles"></i>ベーシックOne</a>
         <button class="hdbtn" title="ToDo" aria-label="ToDo"><i class="ti ti-list-check"></i><span class="hdbadge">5</span></button>
         <a class="hdbtn" href="./chat_wire.html" title="チャット（未読2件）" aria-label="チャット（未読2件）"><i class="ti ti-message-dots"></i><span class="hdbadge">2</span></a>
         <a class="help" href="https://hinaiwagami0513.github.io/iineai/help/" target="_blank" rel="noopener" title="このページのヘルプ" aria-label="このページのヘルプ"><i class="ti ti-help"></i></a>
@@ -778,7 +776,7 @@ function placeFromPop(id){
   var cell = document.querySelector('.d[data-date="' + dateLabel + '"]');
   place(d, cell ? parseInt(cell.dataset.day, 10) : 0, dateLabel, time);
   document.getElementById('popBody').innerHTML =
-    '<div class="done-msg"><i class="ti ti-check"></i><div><b>' + dateLabel + ' ' + time + '</b> に予約しました。<br>' +
+    '<div class="fox-alert ok"><img src="./assets/iine-fox-happy.png" alt=""><div><span class="lb">DONE</span><b>' + dateLabel + ' ' + time + '</b> に予約しました。<br>' +
     'この時間になると、自動でSNSに出ます。取り消したいときは、投稿を押して「予約を取り消す」を選んでください。</div></div>' +
     '<div class="pop-acts" style="margin-top:13px"><button class="btn-g" onclick="closeAdd()">閉じる</button></div>';
 }

@@ -1,6 +1,7 @@
 <!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>広告 — いいねAI</title>
 <link rel="stylesheet" href="./tabler-icons-inline.css">
+<link rel="stylesheet" href="./fox-alert.css">
 <style>
 /* このファイルで使うアイコンだけ定義する（フォント実体は tabler-icons-inline.css）。
    字形コードは同梱フォントで実物を描画して確認済み。 */
@@ -8,6 +9,7 @@
 .ti-layout-dashboard:before{content:"\f02c"}
 .ti-file-text:before{content:"\eaa2"}
 .ti-calendar:before{content:"\ea53"}
+.ti-camera:before{content:"\ea54"}
 .ti-chart-bar:before{content:"\ea59"}
 .ti-folder:before{content:"\eaad"}
 .ti-dots:before{content:"\ea95"}
@@ -135,9 +137,21 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .help:hover{background:var(--color-primary);color:var(--color-on-primary);}
 .planchip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--color-border-strong);border-radius:var(--radius-full);padding:5px 12px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);white-space:nowrap;}
 .planchip i{font-size:15px;color:var(--color-primary);}
+.planchip{text-decoration:none;transition:border-color .15s,color .15s;}
+.planchip[href]:hover{border-color:var(--color-primary);color:var(--color-foreground);}
+.planchip.is-here{cursor:default;}
 .hdbtn{position:relative;width:38px;height:38px;flex:none;border:1px solid var(--color-border-strong);background:var(--color-card);color:var(--color-foreground);border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:19px;cursor:pointer;padding:0;text-decoration:none;}
 .hdbtn:hover{border-color:var(--color-primary);color:var(--color-primary);}
 .hdbadge{position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;padding:0 5px;border-radius:var(--radius-full);background:var(--color-primary);color:var(--color-on-primary);font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);display:flex;align-items:center;justify-content:center;border:2px solid var(--color-card);}
+
+/* ===== 3つのサービスの切替 =====
+   広告作成・発注相談・出張撮影は「プロに頼む」仲間なので、同じ場所で行き来できるようにする。
+   この画面は広告作成が現在地なので、そこだけ span で出して押せないようにしている。 */
+.svc{flex:none;display:flex;gap:0;padding:0 26px;border-bottom:1px solid var(--color-border);background:var(--color-card);}
+.svc a,.svc button,.svc span{display:flex;align-items:center;gap:8px;padding:13px 20px;font-family:inherit;font-size:var(--text-body-lg);font-weight:var(--font-weight-label);color:var(--color-muted-foreground);background:none;border:none;border-bottom:3px solid transparent;margin-bottom:-1px;cursor:pointer;text-decoration:none;}
+.svc a:hover,.svc button:hover{color:var(--color-foreground);}
+.svc .on{color:var(--color-primary);border-bottom-color:var(--color-primary);font-weight:var(--font-weight-body-strong);cursor:default;}
+.svc i{font-size:18px;}
 
 .content{flex:1;overflow-y:auto;padding:24px 30px 40px;background:var(--color-background);}
 .view{display:none;}
@@ -180,9 +194,6 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .res .k{font-size:var(--text-meta);color:var(--color-muted-foreground);display:flex;align-items:center;gap:5px;}
 .res .v{font-size:var(--text-h3);font-weight:var(--font-weight-body-strong);margin-top:4px;}
 .ad .acts{display:flex;flex-direction:column;gap:8px;justify-content:center;flex:none;}
-.warnbox{display:flex;align-items:center;gap:10px;background:var(--color-warning-subtle);border:1px solid var(--color-warning-border);border-radius:var(--radius-md);padding:11px 13px;margin-top:11px;font-size:var(--text-label);color:var(--color-warning);line-height:1.7;}
-.warnbox i{font-size:17px;flex:none;}
-.warnbox .sp{margin-left:auto;flex:none;}
 
 /* ===== ステップ ===== */
 .steps{display:flex;align-items:center;gap:0;margin-bottom:22px;}
@@ -211,13 +222,17 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .goal .e{font-size:var(--text-meta);color:var(--color-primary);margin-top:9px;font-weight:var(--font-weight-body-strong);}
 /* 何を広告にするか */
 .picks{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
-.pick{border:1px solid var(--color-border);border-radius:var(--radius-md);overflow:hidden;cursor:pointer;background:var(--color-card);text-align:left;font-family:inherit;padding:0;}
+/* ⚠️ 中身は button 直下の span。display を指定しないと inline のままで
+   aspect-ratio も overflow:hidden も効かない（サムネが潰れ、バッジが1文字ずつ縦に折れる）。
+   span を使うときは必ず block/flex を当てる。 */
+.pick{display:flex;flex-direction:column;border:1px solid var(--color-border);border-radius:var(--radius-md);overflow:hidden;cursor:pointer;background:var(--color-card);text-align:left;font-family:inherit;padding:0;}
 .pick:hover{border-color:var(--color-primary);}
-.pick.on{border:2px solid var(--color-primary);}
-.pick .th{aspect-ratio:16/10;position:relative;}
-.pick .badge{position:absolute;left:7px;top:7px;background:rgba(255,255,255,.94);border-radius:var(--radius-full);padding:2px 9px;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-success);}
-.pick .bd{padding:10px 11px;}
-.pick .t{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+/* 選択中は border を太くせず内側の影で2px相当にする（太らせると中身が2pxずれて跳ねる） */
+.pick.on{border-color:var(--color-primary);box-shadow:inset 0 0 0 1px var(--color-primary);}
+.pick .th{display:block;aspect-ratio:16/10;position:relative;flex:none;}
+.pick .badge{position:absolute;left:7px;top:7px;background:var(--color-primary-subtle);border-radius:var(--radius-full);padding:2px 9px;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-primary);white-space:nowrap;}
+.pick .bd{display:block;padding:10px 11px;}
+.pick .t{display:block;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .pick .m{font-size:var(--text-meta);color:var(--color-muted-foreground);margin-top:4px;display:flex;gap:9px;}
 .pick.new{display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;border-style:dashed;color:var(--color-primary);font-weight:var(--font-weight-body-strong);font-size:var(--text-body);min-height:150px;}
 
@@ -301,14 +316,19 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .crow .k{width:120px;flex:none;color:var(--color-muted-foreground);font-size:var(--text-label);}
 .crow .v{font-weight:var(--font-weight-body-strong);}
 .crow .ed2{margin-left:auto;color:var(--color-primary);font-size:var(--text-label);font-weight:var(--font-weight-body-strong);background:none;border:none;cursor:pointer;font-family:inherit;}
-.done-msg{display:flex;align-items:flex-start;gap:11px;background:var(--color-success-subtle);border:1px solid #c3e0bf;border-radius:var(--radius-md);padding:14px 15px;font-size:var(--text-body);line-height:1.9;color:#0f6b0a;}
-.done-msg i{font-size:18px;flex:none;margin-top:2px;}
 .empty{background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:44px;text-align:center;}
 .empty .ic{width:56px;height:56px;border-radius:var(--radius-full);background:var(--color-primary-subtle);color:var(--color-primary);display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 14px;}
 .empty .t{font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);margin-bottom:6px;}
 .empty .d{font-size:var(--text-body);color:var(--color-muted-foreground);line-height:1.9;margin-bottom:18px;}
 
-@media(max-width:1100px){ .goals,.picks,.res{grid-template-columns:1fr;} .result{grid-template-columns:1fr;} }
+@media(max-width:1100px){
+  .goals,.picks,.res{grid-template-columns:1fr;} .result{grid-template-columns:1fr;}
+  /* 1列になると 16:10 のサムネが横幅いっぱい＝高さ500px超になる。横並びの行に組み替える */
+  .pick{flex-direction:row;align-items:stretch;}
+  .pick .th{width:120px;aspect-ratio:1;}
+  .pick .bd{flex:1;min-width:0;display:flex;flex-direction:column;justify-content:center;}
+  .pick.new{flex-direction:row;min-height:76px;}
+}
 </style></head><body>
 <div class="app">
   <!-- サイドバー -->
@@ -324,7 +344,6 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
       <div class="ni" onclick="navToggle(this)"><i class="ti ti-settings"></i>設定<span class="cv"><i class="ti ti-chevron-down"></i></span></div>
       <div class="nisub">
         <a class="nis" href="./settings_wire.html#project">プロジェクト管理</a>
-        <a class="nis" href="./settings_wire.html#plan">プラン一覧</a>
         <a class="nis" href="./settings_wire.html#sns">SNSアカウント</a>
         <a class="nis" href="./settings_wire.html#review">AIレビュー</a>
         <a class="nis" href="./settings_wire.html#members">メンバー管理</a>
@@ -346,11 +365,18 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
     <div class="hd">
       <i class="ti ti-speakerphone pgic"></i><span class="pgnm" id="pgnm">広告</span>
       <div class="r">
-        <span class="planchip"><i class="ti ti-sparkles"></i>ベーシックOne</span>
+        <a class="planchip" href="./plan_wire.html" title="いまのプラン（押すと料金一覧へ）"><i class="ti ti-sparkles"></i>ベーシックOne</a>
         <button class="hdbtn" title="ToDo" aria-label="ToDo"><i class="ti ti-list-check"></i><span class="hdbadge">5</span></button>
         <a class="hdbtn" href="./chat_wire.html" title="チャット（未読2件）" aria-label="チャット（未読2件）"><i class="ti ti-message-dots"></i><span class="hdbadge">2</span></a>
         <a class="help" href="https://hinaiwagami0513.github.io/iineai/help/" target="_blank" rel="noopener" title="このページのヘルプ" aria-label="このページのヘルプ"><i class="ti ti-help"></i></a>
       </div>
+    </div>
+
+    <!-- プロに頼む3つ -->
+    <div class="svc">
+      <span class="on" aria-current="page"><i class="ti ti-speakerphone"></i>広告作成</span>
+      <a href="./request_wire.html#order"><i class="ti ti-message-circle"></i>発注相談</a>
+      <a href="./request_wire.html#shoot"><i class="ti ti-camera"></i>出張撮影</a>
     </div>
 
     <div class="content" id="content">
@@ -398,9 +424,9 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
             </div>
             <div class="mt">来てもらう・9月1日 〜 9月14日の予定</div>
             <!-- いまのフローは、ここが空のまま完成扱いになっていた -->
-            <div class="warnbox">
-              <i class="ti ti-alert-triangle"></i>
-              <span>いくら使うかが決まっていないので、まだ出せません。</span>
+            <div class="fox-alert care sm">
+              <img src="./assets/iine-fox-worried.png" alt="">
+              <div><span class="lb">CHECK</span>いくら使うかが決まっていないので、まだ出せません。</div>
               <span class="sp"><button class="btn-o" onclick="go('s2')">予算を決める</button></span>
             </div>
           </div>
@@ -669,8 +695,8 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
       <!-- ===== 出した ===== -->
       <div class="view" id="vDone">
         <div class="gen">
-          <div class="done-msg"><i class="ti ti-check"></i>
-            <div><b>広告を出しました。</b><br>
+          <div class="fox-alert ok"><img src="./assets/iine-fox-happy.png" alt="">
+            <div><span class="lb">DONE</span><b>広告を出しました。</b><br>
             9月1日から7日間、Instagram に出ます。合計 7,000円です。<br>
             出はじめたら、この画面で「見られた回数」と「反応された回数」が見られます。いつでも止められます。</div>
           </div>

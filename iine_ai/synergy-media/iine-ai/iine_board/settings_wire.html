@@ -1,6 +1,7 @@
 <!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>設定 — いいねAI</title>
 <link rel="stylesheet" href="./tabler-icons-inline.css">
+<link rel="stylesheet" href="./fox-alert.css">
 <style>
 /* このファイルで使うアイコンだけ定義する（フォント実体は tabler-icons-inline.css）。
    字形コードは同梱フォントで実物を描画して確認済み。 */
@@ -130,6 +131,9 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .help:hover{background:var(--color-primary);color:var(--color-on-primary);}
 .planchip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--color-border-strong);border-radius:var(--radius-full);padding:5px 12px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);white-space:nowrap;}
 .planchip i{font-size:15px;color:var(--color-primary);}
+.planchip{text-decoration:none;transition:border-color .15s,color .15s;}
+.planchip[href]:hover{border-color:var(--color-primary);color:var(--color-foreground);}
+.planchip.is-here{cursor:default;}
 .hdbtn{position:relative;width:38px;height:38px;flex:none;border:1px solid var(--color-border-strong);background:var(--color-card);color:var(--color-foreground);border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:19px;cursor:pointer;padding:0;text-decoration:none;}
 .hdbtn:hover{border-color:var(--color-primary);color:var(--color-primary);}
 .hdbadge{position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;padding:0 5px;border-radius:var(--radius-full);background:var(--color-primary);color:var(--color-on-primary);font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);display:flex;align-items:center;justify-content:center;border:2px solid var(--color-card);}
@@ -232,13 +236,6 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
    実物は「全体を1つの編集モードで書き換える」形だが、それだと
    ・何を書けばいいか分からない ・どこを直したか分からない ・保存が怖い
    の3つが起きる。項目ごとに読み書きし、進み具合と使われ方を各項目に添える。 */
-.pj-note{display:flex;align-items:flex-start;gap:14px;background:var(--color-primary-subtle);border:1px solid #f6d9b8;border-radius:var(--radius-lg);padding:18px 20px;margin-bottom:16px;}
-.pj-note .tx{flex:1;min-width:0;}
-.pj-note .t{font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);color:var(--color-primary);margin-bottom:6px;}
-.pj-note .d{font-size:var(--text-body);line-height:1.9;}
-.pj-note img{width:64px;height:64px;flex:none;object-fit:contain;}
-.pj-note .x{flex:none;width:28px;height:28px;border:none;background:transparent;color:var(--color-muted-foreground);border-radius:var(--radius-sm);font-size:16px;cursor:pointer;}
-.pj-note .x:hover{background:rgba(0,0,0,.05);}
 
 /* もとになる資料。ここにURLやPDFを入れて「学習」を押すと、AIが読んで下の内容を作る */
 .src{background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);margin-bottom:18px;}
@@ -302,7 +299,9 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .pj-hd .tx{flex:1;min-width:0;}
 .pj-hd .t{font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);}
 /* AIがその項目をどう使うか。設定の意味が分からないまま埋めさせない */
-.pj-use{display:inline-flex;align-items:center;gap:6px;font-size:var(--text-meta);color:var(--color-info);background:var(--color-info-subtle);border-radius:var(--radius-full);padding:3px 10px;margin-top:6px;}
+/* 「AIがどこで使う情報か」の説明チップ。押せないが情報の格は高いのでオレンジ系で出す。
+   水色(info)は「作成中・下書き」等の状態バッジ専用に戻した（2026-08-19 決定） */
+.pj-use{display:inline-flex;align-items:center;gap:6px;font-size:var(--text-meta);color:var(--color-primary);background:var(--color-primary-subtle);border-radius:var(--radius-full);padding:3px 10px;margin-top:6px;}
 .pj-hd .sp{flex:none;display:flex;gap:8px;}
 .pj-bd{padding:12px 18px 17px;}
 .pj-p{font-size:var(--text-body);line-height:2;}
@@ -330,32 +329,6 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .pj-sample .bd{flex:1;min-width:0;font-size:var(--text-body);line-height:1.9;}
 .pj-sample .tag{color:var(--color-info);}
 
-/* プラン一覧 */
-.pl-now{display:flex;align-items:center;gap:16px;padding:20px;}
-.pl-now .ic{width:48px;height:48px;flex:none;border-radius:var(--radius-md);background:var(--color-primary-subtle);color:var(--color-primary);display:flex;align-items:center;justify-content:center;font-size:24px;}
-.pl-now .tx{flex:1;min-width:0;}
-.pl-now .nm{font-size:var(--text-h2);font-weight:var(--font-weight-h2);}
-.pl-now .d{font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:4px;line-height:1.7;}
-.pl-use{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:0 20px 20px;}
-.pl-u{border:1px solid var(--color-border);border-radius:var(--radius-md);padding:13px 14px;}
-.pl-u .k{font-size:var(--text-label);color:var(--color-muted-foreground);}
-.pl-u .v{font-size:var(--text-h3);font-weight:var(--font-weight-body-strong);margin-top:4px;}
-.pl-u .bar{height:6px;background:var(--color-border);border-radius:var(--radius-full);overflow:hidden;margin-top:9px;}
-.pl-u .bar i{display:block;height:100%;background:var(--color-primary);border-radius:var(--radius-full);}
-.pl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
-.pl-card{background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:20px;display:flex;flex-direction:column;}
-.pl-card.cur{border:2px solid var(--color-primary);padding:19px;}
-.pl-card .tag{align-self:flex-start;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);background:var(--color-primary-subtle);color:var(--color-primary);border-radius:var(--radius-full);padding:3px 10px;margin-bottom:10px;}
-.pl-card .nm{font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);}
-.pl-card .pr{font-size:var(--text-h1);font-weight:var(--font-weight-h1);line-height:1.2;margin-top:8px;}
-.pl-card .pr .u{font-size:var(--text-label);font-weight:var(--font-weight-body);color:var(--color-muted-foreground);margin-left:3px;}
-.pl-card ul{list-style:none;margin:16px 0 18px;}
-.pl-card li{display:flex;align-items:flex-start;gap:8px;font-size:var(--text-label);line-height:1.9;margin-bottom:7px;}
-.pl-card li i{font-size:15px;color:var(--color-success);flex:none;margin-top:3px;}
-.pl-card .btm{margin-top:auto;}
-.pl-card .cur-lbl{width:100%;text-align:center;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);padding:11px;}
-.pl-card .btn-p,.pl-card .btn-o{width:100%;justify-content:center;margin-left:0;}
-
 /* ボタン。押せるものだけオレンジ */
 .btn-p{display:inline-flex;align-items:center;gap:7px;background:var(--color-primary);color:var(--color-on-primary);border:none;border-radius:var(--radius-md);padding:11px 22px;font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;}
 .btn-p:hover{background:var(--color-primary-hover);}
@@ -363,8 +336,6 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .btn-o:hover{background:var(--color-primary);color:var(--color-on-primary);}
 .btn-g{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--color-border-strong);color:var(--color-muted-foreground);background:transparent;border-radius:var(--radius-md);padding:8px 13px;font-family:inherit;font-size:var(--text-label);font-weight:var(--font-weight-label);cursor:pointer;white-space:nowrap;}
 .btn-g:hover{border-color:var(--color-foreground);color:var(--color-foreground);}
-.note{display:flex;align-items:flex-start;gap:11px;background:var(--color-info-subtle);border:1px solid #cfe0f2;border-radius:var(--radius-md);padding:13px 15px;font-size:var(--text-label);line-height:1.8;margin-bottom:18px;}
-.note i{font-size:17px;color:var(--color-info);flex:none;margin-top:2px;}
 
 @media(max-width:1100px){ .picks,.rolehelp{grid-template-columns:1fr;} }
 </style></head><body>
@@ -382,7 +353,6 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
       <div class="ni on exp" onclick="navToggle(this)"><i class="ti ti-settings"></i>設定<span class="cv"><i class="ti ti-chevron-down"></i></span></div>
       <div class="nisub open">
         <div class="nis on" id="navProject" onclick="setTab('project')">プロジェクト管理</div>
-        <div class="nis" id="navPlan" onclick="setTab('plan')">プラン一覧</div>
         <div class="nis" id="navSns" onclick="setTab('sns')">SNSアカウント</div>
         <div class="nis" id="navReview" onclick="setTab('review')">AIレビュー</div>
         <div class="nis" id="navMembers" onclick="setTab('members')">メンバー管理</div>
@@ -404,7 +374,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
     <div class="hd">
       <i class="ti ti-settings pgic"></i><span class="pgnm" id="pgnm">設定 / プロジェクト管理</span>
       <div class="r">
-        <span class="planchip"><i class="ti ti-sparkles"></i>ベーシックOne</span>
+        <a class="planchip" href="./plan_wire.html" title="いまのプラン（押すと料金一覧へ）"><i class="ti ti-sparkles"></i>ベーシックOne</a>
         <button class="hdbtn" title="ToDo" aria-label="ToDo"><i class="ti ti-list-check"></i><span class="hdbadge">5</span></button>
         <a class="hdbtn" href="./chat_wire.html" title="チャット（未読2件）" aria-label="チャット（未読2件）"><i class="ti ti-message-dots"></i><span class="hdbadge">2</span></a>
         <a class="help" href="https://hinaiwagami0513.github.io/iineai/help/" target="_blank" rel="noopener" title="このページのヘルプ" aria-label="このページのヘルプ"><i class="ti ti-help"></i></a>
@@ -415,13 +385,14 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 
       <!-- ============ プロジェクト管理 ============ -->
       <div class="pane on" id="paProject">
-        <div class="pj-note">
+        <div class="fox-alert care">
+          <img src="./assets/iine-fox-worried.png" alt="">
           <div class="tx">
+            <span class="lb">POINT</span>
             <div class="t">ここに書いたことは、AIが投稿を作るとき毎回かならず読みます</div>
             <div class="d">だから、書けば書くほどよいわけではありません。<b>いつ見ても変わらないこと</b>だけを書いてください。<br>
             セール期間のように<b>変わることは書かない</b>のがコツです（古い情報のまま投稿されてしまいます）。</div>
           </div>
-          <img src="./assets/iine-fox-happy.png" alt="">
           <button class="x" aria-label="閉じる"><i class="ti ti-x"></i></button>
         </div>
 
@@ -680,68 +651,6 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
         </div>
       </div>
 
-      <!-- ============ プラン一覧 ============ -->
-      <div class="pane" id="paPlan">
-        <div class="card">
-          <div class="pl-now">
-            <span class="ic"><i class="ti ti-sparkles"></i></span>
-            <div class="tx">
-              <div class="nm">ベーシックOne</div>
-              <div class="d">月額 4,800円（税込）・次回のお支払いは 2026年9月1日</div>
-            </div>
-            <button class="btn-g">支払い方法を変える</button>
-          </div>
-          <div class="pl-use">
-            <div class="pl-u"><div class="k">つないだSNS</div><div class="v">3 / 3</div><div class="bar"><i style="width:100%"></i></div></div>
-            <div class="pl-u"><div class="k">今月つくった投稿</div><div class="v">18 / 30件</div><div class="bar"><i style="width:60%"></i></div></div>
-            <div class="pl-u"><div class="k">ドライブの容量</div><div class="v">2.1 / 10 GB</div><div class="bar"><i style="width:21%"></i></div></div>
-          </div>
-        </div>
-
-        <div class="note"><i class="ti ti-alert-triangle" style="color:var(--color-warning)"></i>
-          <div>つないだSNSが上限の3つに達しています。<b>YouTube を追加するにはプランの変更が必要です。</b></div>
-        </div>
-
-        <div class="pl-grid">
-          <div class="pl-card cur">
-            <span class="tag">いまのプラン</span>
-            <div class="nm">ベーシックOne</div>
-            <div class="pr">4,800<span class="u">円 / 月</span></div>
-            <ul>
-              <li><i class="ti ti-check"></i>SNS 3アカウントまで</li>
-              <li><i class="ti ti-check"></i>投稿 月30件まで</li>
-              <li><i class="ti ti-check"></i>ドライブ 10GB</li>
-              <li><i class="ti ti-check"></i>メンバー 5人まで</li>
-            </ul>
-            <div class="btm"><div class="cur-lbl">ご利用中</div></div>
-          </div>
-          <div class="pl-card">
-            <div class="nm">スタンダード</div>
-            <div class="pr">9,800<span class="u">円 / 月</span></div>
-            <ul>
-              <li><i class="ti ti-check"></i>SNS 6アカウントまで</li>
-              <li><i class="ti ti-check"></i>投稿 月100件まで</li>
-              <li><i class="ti ti-check"></i>ドライブ 50GB</li>
-              <li><i class="ti ti-check"></i>メンバー 15人まで</li>
-              <li><i class="ti ti-check"></i>分析のレポート出力</li>
-            </ul>
-            <div class="btm"><button class="btn-p"><i class="ti ti-sparkles"></i>このプランにする</button></div>
-          </div>
-          <div class="pl-card">
-            <div class="nm">プロ</div>
-            <div class="pr">19,800<span class="u">円 / 月</span></div>
-            <ul>
-              <li><i class="ti ti-check"></i>SNS 無制限</li>
-              <li><i class="ti ti-check"></i>投稿 無制限</li>
-              <li><i class="ti ti-check"></i>ドライブ 無制限</li>
-              <li><i class="ti ti-check"></i>メンバー 無制限</li>
-              <li><i class="ti ti-check"></i>広告作成・出張撮影の割引</li>
-            </ul>
-            <div class="btm"><button class="btn-o"><i class="ti ti-sparkles"></i>このプランにする</button></div>
-          </div>
-        </div>
-      </div>
-
       <!-- ============ SNSアカウント ============ -->
       <div class="pane" id="paSns">
         <div class="lead">投稿を出すSNSをつなぎます。つながっていないSNSには投稿できません。</div>
@@ -796,8 +705,12 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
           </div>
         </div>
 
-        <div class="note"><i class="ti ti-sparkles"></i>
-          <div>つなげるSNSを増やすと、同じ投稿をまとめて出せます。<b>プランの変更</b>は左下のアカウントメニュー →「プラン・支払い」から。</div>
+        <div class="fox-alert care">
+          <img src="./assets/iine-fox-worried.png" alt="">
+          <div>
+            <span class="lb">POINT</span>
+            <div class="t">つなげるSNSを増やすと、同じ投稿をまとめて出せます。<b>プランの変更</b>は左下のアカウントメニュー →「プラン・支払い」から。</div>
+          </div>
         </div>
       </div>
 
@@ -950,7 +863,6 @@ function navToggle(el){
    サイドバーのサブ項目が、そのままこの画面のルートになる。 */
 var TABS = {
   project: {pane:'paProject', nav:'navProject', name:'プロジェクト管理'},
-  plan:    {pane:'paPlan',    nav:'navPlan',    name:'プラン一覧'},
   sns:     {pane:'paSns',     nav:'navSns',     name:'SNSアカウント'},
   review:  {pane:'paReview',  nav:'navReview',  name:'AIレビュー'},
   members: {pane:'paMembers', nav:'navMembers', name:'メンバー管理'}

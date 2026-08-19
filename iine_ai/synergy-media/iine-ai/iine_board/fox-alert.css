@@ -1,0 +1,78 @@
+/* ===== いいねAI キツネアラート（DESIGN.md §Alert（キツネアラート）） =====
+   画面内に据え置きで出す通知・注意・結果は、この3変種だけを使う。
+   info の青、primary のオレンジはアラートに使わない（オレンジは「押せる」の色）。
+
+   キツネが喋っている吹き出しの形で出す。キツネは吹き出しの外に立ち、
+   しっぽがキツネの顔を指す。直下の1枚（div か p）が吹き出し本体になる。
+
+     <div class="fox-alert care">
+       <img src="./assets/iine-fox-worried.png" alt="">
+       <div>
+         <span class="lb">POINT</span>
+         <div class="t">見出し</div>
+         <div class="d">説明</div>
+       </div>
+     </div>
+
+   色を持つのは背景・枠・しっぽ・ラベル・キツネだけ。本文は foreground のまま置く。
+   キツネの表情が「形」を担うので、ti-alert-triangle 等の記号は併記しない。 */
+
+/* 外枠は透明なラッパ。キツネは吹き出しの外に立ち、背景・枠・しっぽは本文ブロックが持つ。
+   余白は 4px グリッド（Layout 準拠）。上下とも持たせるのは、見出しに margin-bottom が無い画面
+   （flow_skeleton の .h1 など）で吹き出しが見出しにくっつくため。隣の要素が余白を持つ場合は
+   兄弟間のマージン相殺で大きい方だけが効くので、足し算で開きすぎることはない。 */
+.fox-alert{--fox:40px;display:flex;align-items:flex-start;gap:12px;margin:16px 0 20px;font-size:var(--text-body);line-height:1.6;color:var(--color-foreground);}
+.fox-alert>img{width:var(--fox);height:var(--fox);flex:none;object-fit:contain;}
+
+/* 吹き出しの本体 */
+.fox-alert>div,.fox-alert>p{position:relative;flex:1;min-width:0;margin:0;padding:14px 16px;border-radius:var(--radius-lg);border:1px solid var(--bb-bd);background:var(--bb-bg);}
+/* しっぽ。外側の三角で枠線、内側の三角で地色を1px内側に重ねる。
+   縦位置はキツネの顔の中心（--fox の半分）に合わせるので、キツネのサイズを変えても追従する。
+   出っぱり（border-right-width）より上下（border-top/bottom-width）を小さく取って、
+   鋭く細いしっぽにする。上下を出っぱりと同値にすると鈍い二等辺三角形になって太く見える。 */
+.fox-alert>div::before,.fox-alert>p::before,
+.fox-alert>div::after,.fox-alert>p::after{content:"";position:absolute;top:calc(var(--fox) / 2);transform:translateY(-50%);border-style:solid;border-color:transparent;border-left-width:0;border-right-width:8px;}
+.fox-alert>div::before,.fox-alert>p::before{left:-8px;border-top-width:5px;border-bottom-width:5px;border-right-color:var(--bb-bd);}
+.fox-alert>div::after,.fox-alert>p::after{left:-7px;border-top-width:4px;border-bottom-width:4px;border-right-color:var(--bb-bg);}
+
+.fox-alert b,.fox-alert strong{font-weight:var(--font-weight-body-strong);}
+/* 右端にボタンを1つ置く場合（「予算を決める」等）。吹き出しの外に出る */
+.fox-alert .sp{flex:none;}
+/* 小さい英字ラベル。DONE / GOOD / POINT / CHECK / ADVICE の5語だけ使う。
+   しっぽは吹き出し本体が持つので、ラベルは無地のピルにとどめる（吹き出しの中の吹き出しにしない）。
+   地は各変種の色をトークンから 78% に暗くして作る。生の色に白文字だと 4.5:1 を割るため
+   （success #12960a に白は 3.89、78% に暗くすると 5.89 で通る）。新しいパレット色は足さない。 */
+.fox-alert .lb{display:inline-block;margin-bottom:7px;padding:4px 9px;background:var(--lb-bg);color:#fff;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);letter-spacing:.09em;line-height:1;border-radius:var(--radius-full);}
+/* 標準サイズはラベルを必ず単独行に置く。display:table は幅が中身に縮む block なので、
+   後ろが見出しブロックでも素の inline テキストでも同じ見た目になる（inline-block だと
+   素のテキストが同じ行に回り込んで画面ごとにばらつく）。 */
+.fox-alert:not(.sm) .lb{display:table;}
+/* sm はラベルと本文を1行に詰める */
+.fox-alert.sm .lb{margin-bottom:0;margin-right:8px;}
+
+/* 見出し + 説明の2段構成 */
+.fox-alert .tx{flex:1;min-width:0;}
+.fox-alert .t{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);margin-bottom:4px;}
+.fox-alert .d{font-size:var(--text-label);line-height:1.8;}
+/* 閉じるボタン付き（設定画面の説明など）。吹き出しの外に出る */
+.fox-alert .x{flex:none;width:28px;height:28px;border:none;background:transparent;color:var(--color-muted-foreground);border-radius:var(--radius-sm);font-size:16px;cursor:pointer;}
+.fox-alert .x:hover{background:rgba(0,0,0,.05);}
+
+/* 変種。しっぽも同じ変数から色を引くので、地・枠・しっぽがずれない。 */
+/* できた・うまくいっている */
+.fox-alert.ok{--bb-bg:var(--color-success-subtle);--bb-bd:color-mix(in srgb,var(--color-success) 30%,transparent);--lb-bg:color-mix(in srgb,var(--color-success) 78%,#000);}
+/* 気をつけて・確認して */
+.fox-alert.care{--bb-bg:var(--color-warning-subtle);--bb-bd:color-mix(in srgb,var(--color-warning) 30%,transparent);--lb-bg:color-mix(in srgb,var(--color-warning) 78%,#000);}
+/* 失敗した・エラー */
+.fox-alert.err{--bb-bg:var(--color-destructive-subtle);--bb-bd:color-mix(in srgb,var(--color-destructive) 30%,transparent);--lb-bg:color-mix(in srgb,var(--color-destructive) 78%,#000);}
+
+/* 密なカード内・シート内で使う小さい版。直前の内容にぶら下がる形なので margin は上に置く。 */
+.fox-alert.sm{--fox:30px;gap:10px;margin:8px 0 0;font-size:var(--text-label);}
+.fox-alert.sm>div,.fox-alert.sm>p{padding:10px 13px;border-radius:var(--radius-md);}
+.fox-alert.sm>div::before,.fox-alert.sm>p::before,
+.fox-alert.sm>div::after,.fox-alert.sm>p::after{border-right-width:6px;}
+.fox-alert.sm>div::before,.fox-alert.sm>p::before{left:-6px;border-top-width:4px;border-bottom-width:4px;}
+.fox-alert.sm>div::after,.fox-alert.sm>p::after{left:-5px;border-top-width:3px;border-bottom-width:3px;}
+
+/* 吹き出しの外に置く要素（右端のボタン・閉じるボタン）はキツネの顔の高さに揃える */
+.fox-alert>.sp,.fox-alert>.x{align-self:flex-start;margin-top:calc((var(--fox) - 28px) / 2);}

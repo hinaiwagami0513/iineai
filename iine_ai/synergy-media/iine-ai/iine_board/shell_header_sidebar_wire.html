@@ -87,6 +87,12 @@
   --color-like-subtle: #fdecee;
   --color-accent-purple: #9724ba;
   --color-accent-purple-subtle: #f5e7f8;
+  /* グラフ専用ランプ（shadcn Chart の --chart-N）。primary を起点に「多い系列ほど濃い」単一色相 */
+  --chart-1: #ef6108;
+  --chart-2: #ff971e;
+  --chart-3: #ffc07a;
+  --chart-4: #ffdcb8;
+  --chart-5: #fff2e2;
   --color-sns-instagram: #b02a78;
   --color-sns-instagram-subtle: #fce7f3;
   --color-sns-x: #2a2826;
@@ -199,6 +205,9 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 /* 現在のプラン（ホームヘッダに常時表示）。押せないので枠線＋文字のみ＝オレンジにしない */
 .planchip{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--color-border-strong);border-radius:var(--radius-full);padding:5px 12px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);white-space:nowrap;}
 .planchip i{font-size:15px;color:var(--color-primary);}
+.planchip{text-decoration:none;transition:border-color .15s,color .15s;}
+.planchip[href]:hover{border-color:var(--color-primary);color:var(--color-foreground);}
+.planchip.is-here{cursor:default;}
 /* ヘッダーの丸ボタン（ToDo・チャット）。数はバッジで出す */
 .hdwrap{position:relative;display:flex;}
 .hdbtn{position:relative;width:38px;height:38px;flex:none;border:1px solid var(--color-border-strong);background:var(--color-card);color:var(--color-foreground);border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:19px;cursor:pointer;padding:0;text-decoration:none;}
@@ -258,6 +267,13 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .db-sec{margin-bottom:22px;}
 .db-sec-h{display:flex;align-items:center;gap:9px;margin-bottom:12px;}
 .db-sec-h .ic{width:30px;height:30px;flex:none;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:17px;}
+/* 見出し・タイルのアイコンは既定でニュートラル。
+   DESIGN.md「装飾・見出しアイコン・非対話の要素に色を使わない／迷ったらニュートラルに落とす」に従う。
+   状態色（info/warning/success）を見出しの飾りに使うと、1画面で色数が増えて
+   「どこを見ればいいか」が消える。色は下の .act（自分が動く必要があるもの）だけに残す。 */
+.db-sec-h .ic,.db-mini .mh .ic,.db-stat .ic{background:var(--color-background);color:var(--color-muted-foreground);}
+/* 要対応。1画面でここだけが色を持つので、視線が最初にここへ行く */
+.db-sec-h .ic.act,.db-mini .mh .ic.act,.db-stat .ic.act{background:var(--color-warning-subtle);color:var(--color-warning);}
 .db-sec-h .tt{font-size:var(--text-h2);font-weight:var(--font-weight-h2);}
 .db-sec-h .cnt{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:#fff;background:var(--color-muted-foreground);border-radius:var(--radius-full);padding:2px 10px;}
 .db-sec-h .more{margin-left:auto;display:inline-flex;align-items:center;gap:4px;text-decoration:none;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-primary);cursor:pointer;}
@@ -265,11 +281,17 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 
 /* あいさつ */
 .db-hello{display:flex;align-items:center;gap:18px;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:18px 22px;margin-bottom:22px;}
-.db-hello .fox{width:64px;height:64px;flex:none;object-fit:contain;}
+.db-hello .fox{width:76px;height:76px;flex:none;object-fit:contain;}
 .db-hello .hi{font-size:var(--text-h2);font-weight:var(--font-weight-h2);margin-bottom:5px;}
-.db-hello .sub{display:flex;align-items:center;gap:7px;font-size:var(--text-body-lg);color:var(--color-muted-foreground);line-height:1.6;}
-.db-hello .sub i{font-size:17px;color:var(--color-muted-foreground);}
-.db-hello .sub b{color:var(--color-foreground);font-weight:var(--font-weight-body-strong);}
+/* おすすめ：今日ならではの切り口 + 具体案を出して、右の「投稿を作る」へ送る。 */
+.db-hello .rec{display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin-top:7px;font-size:var(--text-body);line-height:1.6;color:var(--color-foreground);}
+/* 提案の目印。オレンジは右のチップ（押せる）に譲るので、ここはニュートラル */
+.db-hello .rec>i{font-size:17px;flex:none;color:var(--color-muted-foreground);}
+.db-hello .rec b{font-weight:var(--font-weight-body-strong);}
+/* 案のチップは押せるのでオレンジ（オレンジ = 押せる・進む先） */
+.db-hello .rec-chip{display:inline-flex;align-items:center;gap:5px;background:var(--color-primary-subtle);color:var(--color-primary);border:1px solid color-mix(in srgb,var(--color-primary) 30%,transparent);border-radius:var(--radius-full);padding:5px 13px;font-family:inherit;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);cursor:pointer;white-space:nowrap;}
+.db-hello .rec-chip:hover{background:var(--color-primary);color:var(--color-on-primary);border-color:var(--color-primary);}
+.db-hello .rec-chip i{font-size:14px;}
 .db-cta{margin-left:auto;flex:none;display:inline-flex;align-items:center;gap:8px;background:var(--color-primary);color:var(--color-on-primary);border:none;border-radius:var(--radius-md);padding:16px 26px;font-family:inherit;font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);cursor:pointer;}
 .db-cta:hover{background:var(--color-primary-hover);}
 .db-cta i{font-size:19px;}
@@ -286,7 +308,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .db-mini .mh .more:hover{text-decoration:underline;}
 .db-mini .mb{flex:1;padding:13px 15px;display:flex;flex-direction:column;gap:11px;}
 /* NEWS：最新1件だけ。続きは「もっと見る」でNEWSページへ */
-.db-news .tag{display:inline-flex;align-items:center;gap:4px;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);border-radius:var(--radius-full);padding:2px 9px;background:var(--color-info-subtle);color:var(--color-info);}
+.db-news .tag{display:inline-flex;align-items:center;gap:4px;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);border-radius:var(--radius-full);padding:2px 9px;background:var(--color-primary-subtle);color:var(--color-primary);}
 .db-news .tag.warn{background:var(--color-warning-subtle);color:var(--color-warning);}
 .db-news .t{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);line-height:1.6;margin-top:7px;}
 .db-news .dt{font-size:var(--text-meta);color:var(--color-muted-foreground);margin-top:5px;}
@@ -294,13 +316,16 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .db-tdlist{display:flex;flex-direction:column;gap:9px;}
 .db-td{display:flex;align-items:center;gap:9px;font-size:var(--text-body);line-height:1.5;}
 .db-td .dot{width:22px;height:22px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:13px;}
-.db-td .dot.warn{background:var(--color-warning-subtle);color:var(--color-warning);}
-.db-td .dot.info{background:var(--color-info-subtle);color:var(--color-info);}
-.db-td .dot.man{background:var(--color-surface);color:var(--color-muted-foreground);border:1px solid var(--color-border-strong);}
+/* ToDo抜粋のドットは種類で色を散らさない。3行しか出ない場所で3色に分けると
+   画面の色数だけが増えて、種類はテキストを読めば分かる。完了済みだけ枠線で差を付ける。 */
+.db-td .dot{background:var(--color-background);color:var(--color-muted-foreground);}
+.db-td .dot.man{background:var(--color-surface);border:1px solid var(--color-border-strong);}
 .db-td .t{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 /* チャット：未読の頭だけ */
 .db-msg{display:flex;align-items:flex-start;gap:9px;}
 .db-msg .av{width:28px;height:28px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);}
+/* アバターは人ごとに色を振らない。名前が読めれば区別できるので、色は情報を足していない */
+.db-msg .av{background:var(--color-background);color:var(--color-muted-foreground);}
 .db-msg .tx{flex:1;min-width:0;}
 .db-msg .nm{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);}
 .db-msg .bd{font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.5;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
@@ -320,55 +345,18 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 /* 今週の予定（曜日バー） */
 .db-week{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;padding:14px;}
 .db-day{border:1px solid var(--color-border);border-radius:var(--radius-md);padding:10px 8px;min-height:118px;display:flex;flex-direction:column;gap:7px;background:var(--color-surface);}
-.db-day.today{border:2px solid var(--color-primary);background:var(--color-primary-subtle);}
+.db-day.today{border:2px solid var(--color-primary);background:var(--color-primary-subtle);position:relative;}
 .db-day .dh{display:flex;flex-direction:column;align-items:center;gap:2px;}
 .db-day .dw{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);}
 .db-day .dd{font-size:var(--text-h3);font-weight:var(--font-weight-h3);}
 .db-day.today .dw,.db-day.today .dd{color:var(--color-primary);}
-.db-day .badge-today{font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:#fff;background:var(--color-primary);border-radius:var(--radius-full);padding:1px 8px;}
+/* 「今日」は上端の罫に重ねる。フローから外すので、日付とチップは他の曜日と同じ高さに揃う */
+.db-day .badge-today{position:absolute;top:0;left:50%;transform:translate(-50%,-50%);z-index:1;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:#fff;background:var(--color-primary);border-radius:var(--radius-full);padding:1px 8px;white-space:nowrap;}
 .db-day .sat{color:var(--color-info);} .db-day .sun{color:var(--color-destructive);}
 .db-post{display:flex;align-items:center;gap:5px;border-radius:var(--radius-sm);padding:5px 6px;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);line-height:1.3;}
 .db-post i{font-size:12px;flex:none;}
 .db-post .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .db-none{font-size:var(--text-meta);color:var(--color-muted-foreground);text-align:center;margin-top:6px;}
-
-/* 下段2カラム */
-.db-cols{display:grid;grid-template-columns:1.35fr 1fr;gap:18px;align-items:start;}
-
-/* 反応の伸び */
-.db-growth{padding:6px 16px 14px;}
-.db-grow{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--color-border);}
-.db-grow:last-child{border-bottom:none;}
-.db-grow .ic{width:40px;height:40px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:19px;}
-.db-grow .tx{flex:1;min-width:0;}
-.db-grow .nm{font-size:var(--text-body);color:var(--color-muted-foreground);}
-.db-grow .vl{font-size:var(--text-h2);font-weight:var(--font-weight-h2);line-height:1.2;}
-.db-grow .msg{font-size:var(--text-label);margin-top:2px;display:flex;align-items:center;gap:4px;font-weight:var(--font-weight-body-strong);}
-.db-grow .msg.up{color:var(--color-success);} .db-grow .msg.down{color:var(--color-destructive);}
-.db-bar{width:74px;flex:none;display:flex;align-items:flex-end;gap:3px;height:38px;}
-.db-bar i{flex:1;border-radius:2px 2px 0 0;display:block;}
-
-/* 最近の投稿 */
-.db-recent{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:14px;}
-.db-rp{border:1px solid var(--color-border);border-radius:var(--radius-md);overflow:hidden;background:var(--color-surface);cursor:pointer;}
-.db-rp .th{aspect-ratio:1;display:flex;align-items:center;justify-content:center;position:relative;}
-.db-rp .th .sns{position:absolute;top:7px;left:7px;width:24px;height:24px;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:13px;background:#fff;}
-.db-rp .bd{padding:9px 10px;}
-.db-rp .ti-t{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);line-height:1.5;height:2.9em;overflow:hidden;}
-.db-rp .mt{display:flex;align-items:center;gap:10px;margin-top:7px;font-size:var(--text-meta);color:var(--color-muted-foreground);font-weight:var(--font-weight-body-strong);}
-.db-rp .mt span{display:inline-flex;align-items:center;gap:3px;}
-.db-rp .mt i{font-size:12px;}
-
-/* SNS接続 */
-.db-sns{padding:8px 14px 14px;}
-.db-snsrow{display:flex;align-items:center;gap:11px;padding:11px 0;border-bottom:1px solid var(--color-border);}
-.db-snsrow:last-child{border-bottom:none;}
-.db-snsrow .ic{width:36px;height:36px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:18px;}
-.db-snsrow .nm{flex:1;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);}
-.db-snsrow .nm small{display:block;font-size:var(--text-label);color:var(--color-muted-foreground);font-weight:var(--font-weight-body);margin-top:1px;}
-.db-ok{display:inline-flex;align-items:center;gap:4px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-success);background:var(--color-success-subtle);border-radius:var(--radius-full);padding:4px 10px;}
-.db-connect{border:1.5px solid var(--color-primary);color:var(--color-primary);background:transparent;border-radius:var(--radius-md);padding:8px 14px;font-family:inherit;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);cursor:pointer;}
-.db-connect:hover{background:var(--color-primary);color:var(--color-on-primary);}
 
 /* 困ったとき */
 .db-help{display:flex;align-items:center;gap:14px;padding:16px;}
@@ -379,31 +367,52 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .db-help .go i{font-size:17px;}
 .db-help .go:hover{background:var(--color-primary);color:var(--color-on-primary);}
 
-/* ===== 今月の作業時間（メンバー別の内訳＝円グラフ） =====
-   3人ぶんの色は検証済みの組み合わせ（青=info / ピンク=like / 紫=accent-purple の明るい1段）。
-   色覚特性がある人でも隣り合う2色を見分けられる値を選んでいる。オレンジは「押せるもの」専用なので使わない。
-   色だけに頼らないよう、円の外に名字を直接置き、凡例に分数と割合も出す。
-   区切りは2〜3pxのすき間で入れる（線を引かない）。 */
-.db-work{display:grid;grid-template-columns:300px 1fr;gap:24px;padding:18px 22px;align-items:center;}
-.wk-chart{position:relative;width:300px;height:220px;}
-.wk-chart svg{display:block;}
-.wk-seg{transition:opacity .15s;}
-.wk-seg:hover{opacity:.82;}
-.wk-slice-lb{font-family:var(--font-body),'Hiragino Sans','Meiryo',sans-serif;font-size:13px;font-weight:700;fill:var(--color-foreground);}
-/* 円の中心＝合計。ここが一番大きい数字 */
-.wk-center{position:absolute;left:130px;top:110px;transform:translate(-50%,-50%);text-align:center;pointer-events:none;width:110px;}
-.wk-center .lb{font-size:var(--text-meta);color:var(--color-muted-foreground);font-weight:var(--font-weight-body-strong);}
-.wk-center .vl{font-size:var(--text-h2);font-weight:var(--font-weight-h1);line-height:1.2;white-space:nowrap;}
+/* ===== 今月の作業時間（メンバー別の内訳＝ドーナツ） =====
+   shadcn Chart（ChartContainer / ChartTooltip / ChartLegend）に写せる構造で組む。
+   色は --chart-1..5 のランプからしか取らない。primary を起点にした単一色相で「多い人ほど濃い」。
+   グラフは「オレンジ＝押せるもの」の唯一の例外（2026-08-19 決定・DESIGN.md「グラフの色」）。
+   押せないことは形で担保する ── 面に枠・影・cursor:pointer を付けない。
+   意味色（success/like）は流用しない。緑赤は good/bad と読まれるため。
+   色だけに頼らせないため ①円の外に名字を直置き ②凡例に実数と割合 ③凡例下に構成比バー の3点を必ず持たせる。 */
+.db-work{display:grid;grid-template-columns:296px 1fr;gap:32px;padding:20px 24px;align-items:center;}
+.wk-chart{position:relative;width:296px;height:224px;}
+.wk-chart svg{display:block;overflow:visible;}
+/* 下敷きのトラック。すき間が「欠け」ではなく意図した区切りに見える */
+.wk-track{stroke:var(--color-background);}
+.wk-seg{cursor:default;transition:stroke-width .18s ease,opacity .18s ease;}
+/* ホバー中の1本だけ太くする。他は落とす（shadcn Chart のホバー挙動に合わせる） */
+.db-work.is-hover .wk-seg{opacity:.35;}
+.db-work.is-hover .wk-seg.is-on{opacity:1;stroke-width:32;}
+.wk-slice-lb{font-family:var(--font-body),'Hiragino Sans','Meiryo',sans-serif;font-size:11px;font-weight:var(--font-weight-body-strong);fill:var(--color-muted-foreground);letter-spacing:.02em;transition:fill .18s ease,opacity .18s ease;}
+.db-work.is-hover .wk-slice-lb{opacity:.4;}
+.db-work.is-hover .wk-slice-lb.is-on{opacity:1;fill:var(--color-foreground);}
+/* 円の中心。既定は合計、ホバー中はその人の内訳に差し替わる（ChartTooltip を浮かせず中心で読ませる。
+   ドーナツの中は元から空きなので、浮くカードで円や合計を隠さずに済む） */
+.wk-center{position:absolute;left:130px;top:112px;transform:translate(-50%,-50%);text-align:center;pointer-events:none;width:118px;display:grid;}
+.wk-center>div{grid-area:1/1;transition:opacity .16s ease;}
+.wk-center .lb{font-size:var(--text-meta);color:var(--color-muted-foreground);font-weight:var(--font-weight-body-strong);letter-spacing:.06em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.wk-center .vl{font-size:var(--text-h2);font-weight:var(--font-weight-h1);line-height:1.2;white-space:nowrap;font-variant-numeric:tabular-nums;}
 .wk-center .vl .u{font-size:var(--text-label);font-weight:var(--font-weight-body);color:var(--color-muted-foreground);margin:0 1px;}
-/* 凡例：色の丸 + 名前 + 分 + 割合 */
-.wk-legend{display:flex;flex-direction:column;gap:12px;min-width:0;}
-.wk-lg{display:grid;grid-template-columns:14px 1fr auto auto;align-items:center;gap:11px;}
-.wk-lg .sw{width:14px;height:14px;border-radius:var(--radius-sm);}
+.wk-center .pc{font-size:var(--text-meta);color:var(--color-muted-foreground);font-weight:var(--font-weight-body-strong);margin-top:1px;}
+.wk-c-act{opacity:0;}
+.wk-c-act .lb{color:var(--color-foreground);}
+.db-work.is-hover .wk-c-def{opacity:0;}
+.db-work.is-hover .wk-c-act{opacity:1;}
+/* ChartLegend 相当：色の丸 + 名前 + 分 + 割合 + 構成比バー */
+.wk-legend{display:flex;flex-direction:column;gap:4px;min-width:0;}
+.wk-lg{display:block;padding:7px 10px;margin:0 -10px;border-radius:var(--radius-md);cursor:default;transition:background .15s ease;}
+.wk-lg.is-on{background:var(--color-surface);}
+.wk-lg-top{display:grid;grid-template-columns:12px 1fr auto auto;align-items:center;gap:11px;}
+.wk-lg .sw{width:12px;height:12px;border-radius:var(--radius-full);} /* 丸ドット。ドーナツの丸い端と手触りを揃える */
 .wk-lg .nm{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.wk-lg .vl{font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);white-space:nowrap;}
+.wk-lg .vl{font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);white-space:nowrap;font-variant-numeric:tabular-nums;}
 .wk-lg .vl .u{font-size:var(--text-label);font-weight:var(--font-weight-body);color:var(--color-muted-foreground);margin-left:2px;}
-.wk-lg .pc{font-size:var(--text-label);color:var(--color-muted-foreground);font-weight:var(--font-weight-body-strong);width:42px;text-align:right;}
-.wk-note{font-size:var(--text-meta);color:var(--color-muted-foreground);margin-top:4px;}
+.wk-lg .pc{font-size:var(--text-label);color:var(--color-muted-foreground);font-weight:var(--font-weight-body-strong);width:38px;text-align:right;font-variant-numeric:tabular-nums;}
+/* 構成比バー＝色以外の手がかり。凡例の色を見なくても長さで順位が分かる */
+.wk-lg-bar{height:4px;border-radius:var(--radius-full);background:var(--color-background);margin:7px 0 0 23px;overflow:hidden;}
+.wk-lg-bar i{display:block;height:100%;border-radius:var(--radius-full);transition:filter .15s ease;}
+.wk-note{display:flex;align-items:center;gap:6px;font-size:var(--text-meta);color:var(--color-muted-foreground);margin-top:12px;padding-left:0;}
+.wk-note i{font-size:12px;}
 /* ===== ホーム末尾：相談まどぐち ===== */
 .db-footer{border-top:1px solid var(--color-border);padding-top:20px;margin-top:4px;display:flex;flex-wrap:wrap;align-items:center;gap:12px;}
 .db-footer .lb{font-size:var(--text-label);color:var(--color-muted-foreground);margin-right:4px;}
@@ -412,15 +421,14 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 .db-fbtn:hover{background:var(--color-primary);color:var(--color-on-primary);}
 @media(max-width:1100px){
   .db-stats{grid-template-columns:repeat(2,1fr);}
-  .db-cols{grid-template-columns:1fr;}
   .db-tri{grid-template-columns:1fr;}
-  .db-work{grid-template-columns:1fr;justify-items:center;}
-  .wk-legend{width:100%;max-width:340px;}
+  .db-work{grid-template-columns:1fr;justify-items:center;gap:20px;}
+  .db-work>div:last-child{width:100%;max-width:360px;} /* 凡例側を横いっぱいに。名前と数値を両端に寄せる */
+  .wk-legend{width:100%;}
 }
 @media(max-width:760px){
   .db-hello{flex-wrap:wrap;} .db-cta{margin-left:0;width:100%;justify-content:center;}
   .db-week{grid-template-columns:repeat(2,1fr);}
-  .db-recent{grid-template-columns:repeat(2,1fr);}
   .db-fbtn{flex:1;justify-content:center;}
   .tdp{width:auto;left:12px;right:12px;position:fixed;top:60px;}
 }
@@ -486,7 +494,6 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
       <div class="ni" onclick="navToggle(this)"><i class="ti ti-settings"></i>設定<span class="cv"><i class="ti ti-chevron-down"></i></span></div>
       <div class="nisub">
         <a class="nis" href="./settings_wire.html#project">プロジェクト管理</a>
-        <a class="nis" href="./settings_wire.html#plan">プラン一覧</a>
         <a class="nis" href="./settings_wire.html#sns">SNSアカウント</a>
         <a class="nis" href="./settings_wire.html#review">AIレビュー</a>
         <a class="nis" href="./settings_wire.html#members">メンバー管理</a>
@@ -525,7 +532,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
     <div class="hd">
       <i class="ti ti-layout-dashboard pgic"></i><span class="pgnm">ホーム</span>
       <div class="r">
-        <span class="planchip"><i class="ti ti-sparkles"></i>ベーシックOne</span>
+        <a class="planchip" href="./plan_wire.html" title="いまのプラン（押すと料金一覧へ）"><i class="ti ti-sparkles"></i>ベーシックOne</a>
         <!-- ToDo：全画面共通。ここが ToDo の本体で、ホームのカードは抜粋 -->
         <div class="hdwrap">
           <button class="hdbtn" id="todoBtn" onclick="todoToggle()" title="ToDo" aria-label="ToDo"><i class="ti ti-list-check"></i><span class="hdbadge" id="todoBadge">5</span></button>
@@ -577,10 +584,16 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
 
       <!-- あいさつ：今日の状況を1行で言い切る -->
       <div class="db-hello">
-        <img class="fox" src="./assets/iine-fox-happy.png" alt="">
+        <img class="fox" src="./assets/iine-fox-sit.png" alt="">
         <div>
           <div class="hi">こんにちは、犬カフェOne さん</div>
-          <div class="sub"><i class="ti ti-calendar-event"></i>今日は 8月16日（日）。今日出す投稿が <b>1件</b> あります。</div>
+          <!-- おすすめ：今日の切り口 + 具体案。押すと投稿作成にその案が入った状態で入る -->
+          <div class="rec">
+            <i class="ti ti-sparkles"></i>
+            <span>今日は <b>お盆の最終日</b>。夏休みの締めくくりにちなんだ投稿が伸びやすい日です。</span>
+            <button class="rec-chip">看板犬ポチの夏まとめ<i class="ti ti-arrow-right"></i></button>
+            <button class="rec-chip">夏休みありがとうポスト<i class="ti ti-arrow-right"></i></button>
+          </div>
         </div>
         <button class="db-cta"><i class="ti ti-plus"></i>投稿を作る</button>
       </div>
@@ -590,7 +603,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
         <!-- NEWS：最新1件だけ。本体は その他 > NEWS -->
         <div class="db-card db-mini db-news">
           <div class="mh">
-            <span class="ic" style="background:var(--color-info-subtle);color:var(--color-info)"><i class="ti ti-bell"></i></span>
+            <span class="ic"><i class="ti ti-bell"></i></span>
             <span class="tt">NEWS</span>
             <a class="more" href="./news_wire.html">もっと見る<i class="ti ti-arrow-right"></i></a>
           </div>
@@ -606,7 +619,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
         <!-- ToDo：ヘッダーのパネルと同じ中身の抜粋。すべて見る＝パネルを開く -->
         <div class="db-card db-mini">
           <div class="mh">
-            <span class="ic" style="background:var(--color-warning-subtle);color:var(--color-warning)"><i class="ti ti-list-check"></i></span>
+            <span class="ic"><i class="ti ti-list-check"></i></span>
             <span class="tt">ToDo</span>
             <span class="cnt" id="todoCntHome">5件</span>
             <button class="more" onclick="todoToggle()">すべて見る<i class="ti ti-arrow-right"></i></button>
@@ -623,18 +636,18 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
         <!-- チャット：未読の頭だけ -->
         <div class="db-card db-mini">
           <div class="mh">
-            <span class="ic" style="background:var(--color-accent-purple-subtle);color:var(--color-accent-purple)"><i class="ti ti-message-dots"></i></span>
+            <span class="ic"><i class="ti ti-message-dots"></i></span>
             <span class="tt">チャット</span>
             <span class="cnt">未読2</span>
             <a class="more" href="./chat_wire.html">開く<i class="ti ti-arrow-right"></i></a>
           </div>
           <div class="mb">
             <div class="db-msg">
-              <span class="av" style="background:var(--color-info-subtle);color:var(--color-info)">佐</span>
+              <span class="av">佐</span>
               <div class="tx"><div class="nm">佐藤 正太郎</div><div class="bd">パフェの写真、差し替えました！</div></div>
             </div>
             <div class="db-msg">
-              <span class="av" style="background:var(--color-like-subtle);color:var(--color-like)">奥</span>
+              <span class="av">奥</span>
               <div class="tx"><div class="nm">奥澤 汐莉</div><div class="bd">来週の撮影、水曜でお願いできますか</div></div>
             </div>
           </div>
@@ -644,28 +657,28 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
       <!-- 今の状況：数字4枚。クリックで投稿一覧の該当タブへ -->
       <div class="db-sec">
         <div class="db-sec-h">
-          <span class="ic" style="background:var(--color-info-subtle);color:var(--color-info)"><i class="ti ti-file-text"></i></span>
+          <span class="ic"><i class="ti ti-file-text"></i></span>
           <span class="tt">今の状況</span>
           <span class="more">投稿一覧を見る<i class="ti ti-arrow-right"></i></span>
         </div>
         <div class="db-stats">
           <div class="db-stat">
-            <div class="top"><span class="ic" style="background:var(--color-success-subtle);color:var(--color-success)"><i class="ti ti-check"></i></span><span class="nm">今週 投稿した</span></div>
+            <div class="top"><span class="ic"><i class="ti ti-check"></i></span><span class="nm">今週 投稿した</span></div>
             <div class="val">12<span class="u">件</span></div>
             <div class="cmp up"><i class="ti ti-arrow-up"></i>先週より 3件 増えました</div>
           </div>
           <div class="db-stat">
-            <div class="top"><span class="ic" style="background:var(--color-info-subtle);color:var(--color-info)"><i class="ti ti-calendar-event"></i></span><span class="nm">予約済み</span></div>
+            <div class="top"><span class="ic"><i class="ti ti-calendar-event"></i></span><span class="nm">予約済み</span></div>
             <div class="val">5<span class="u">件</span></div>
             <div class="cmp flat"><i class="ti ti-clock"></i>次は 今日 19:00</div>
           </div>
           <div class="db-stat">
-            <div class="top"><span class="ic" style="background:var(--color-accent-purple-subtle);color:var(--color-accent-purple)"><i class="ti ti-pencil"></i></span><span class="nm">下書き</span></div>
+            <div class="top"><span class="ic"><i class="ti ti-pencil"></i></span><span class="nm">下書き</span></div>
             <div class="val">8<span class="u">件</span></div>
             <div class="cmp flat"><i class="ti ti-calendar-event"></i>うち 3件 は日時未定</div>
           </div>
           <div class="db-stat">
-            <div class="top"><span class="ic" style="background:var(--color-warning-subtle);color:var(--color-warning)"><i class="ti ti-clock"></i></span><span class="nm">確認待ち</span></div>
+            <div class="top"><span class="ic act"><i class="ti ti-clock"></i></span><span class="nm">確認待ち</span></div>
             <div class="val">2<span class="u">件</span></div>
             <div class="cmp warn"><i class="ti ti-alert-circle"></i>あなたの確認待ちです</div>
           </div>
@@ -675,7 +688,7 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
       <!-- 今週の予定：文字を読まなくても「いつ何が出るか」が図で分かる -->
       <div class="db-sec">
         <div class="db-sec-h">
-          <span class="ic" style="background:var(--color-primary-subtle);color:var(--color-primary)"><i class="ti ti-calendar"></i></span>
+          <span class="ic"><i class="ti ti-calendar"></i></span>
           <span class="tt">今週の投稿予定</span>
           <a class="more" href="./calendar_wire.html">カレンダーを見る<i class="ti ti-arrow-right"></i></a>
         </div>
@@ -706,194 +719,101 @@ body{background:#e6e5e3;padding:20px;color:var(--color-foreground);}
             <div class="db-post" style="background:var(--color-sns-youtube-subtle);color:var(--color-sns-youtube)"><i class="ti ti-brand-youtube"></i><span class="nm">1日密着</span></div>
           </div>
           <div class="db-day today">
-            <div class="dh"><span class="dw">日</span><span class="dd">16</span><span class="badge-today">今日</span></div>
+            <span class="badge-today">今日</span>
+            <div class="dh"><span class="dw">日</span><span class="dd">16</span></div>
             <div class="db-post" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i><span class="nm">パフェのお知らせ</span></div>
           </div>
         </div>
       </div>
 
-      <!-- 下段：左＝最近の投稿 / 右＝伸び・接続・ヘルプ -->
-      <div class="db-cols">
-        <div>
-          <div class="db-sec">
-            <div class="db-sec-h">
-              <span class="ic" style="background:var(--color-like-subtle);color:var(--color-like)"><i class="ti ti-photo"></i></span>
-              <span class="tt">最近出した投稿</span>
-              <span class="more">すべて見る<i class="ti ti-arrow-right"></i></span>
-            </div>
-            <div class="db-card db-recent">
-              <div class="db-rp">
-                <div class="th" style="background:linear-gradient(135deg,#f7d9b0,#efc189)">
-                  <span class="sns" style="color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i></span>
-                  <i class="ti ti-photo" style="font-size:30px;color:rgba(255,255,255,.85)"></i>
-                </div>
-                <div class="bd">
-                  <div class="ti-t">夏の新メニュー トロピカルスムージー</div>
-                  <div class="mt"><span><i class="ti ti-heart"></i>128</span><span><i class="ti ti-eye"></i>2,410</span><span><i class="ti ti-bookmark"></i>36</span></div>
-                </div>
-              </div>
-              <div class="db-rp">
-                <div class="th" style="background:linear-gradient(135deg,#b9dcc0,#93c8a0)">
-                  <span class="sns" style="color:var(--color-sns-tiktok)"><i class="ti ti-brand-tiktok"></i></span>
-                  <i class="ti ti-video" style="font-size:30px;color:rgba(255,255,255,.9)"></i>
-                </div>
-                <div class="bd">
-                  <div class="ti-t">看板犬ポチの朝ルーティン</div>
-                  <div class="mt"><span><i class="ti ti-heart"></i>642</span><span><i class="ti ti-eye"></i>9,180</span><span><i class="ti ti-bookmark"></i>91</span></div>
-                </div>
-              </div>
-              <div class="db-rp">
-                <div class="th" style="background:linear-gradient(135deg,#eec3d8,#e0a5c4)">
-                  <span class="sns" style="color:var(--color-sns-x)"><i class="ti ti-brand-x"></i></span>
-                  <i class="ti ti-photo" style="font-size:30px;color:rgba(255,255,255,.9)"></i>
-                </div>
-                <div class="bd">
-                  <div class="ti-t">お客様の声まとめ 7月前半</div>
-                  <div class="mt"><span><i class="ti ti-heart"></i>75</span><span><i class="ti ti-eye"></i>1,320</span><span><i class="ti ti-bookmark"></i>12</span></div>
-                </div>
-              </div>
-            </div>
-          </div>
 
-          <!-- SNSの接続：つながってないと投稿できないので、状態を色＋アイコン＋文字で -->
-          <div class="db-sec">
-            <div class="db-sec-h">
-              <span class="ic" style="background:var(--color-surface);color:var(--color-muted-foreground);border:1px solid var(--color-border)"><i class="ti ti-device-mobile"></i></span>
-              <span class="tt">SNSの連携</span>
-            </div>
-            <div class="db-card db-sns">
-              <div class="db-snsrow">
-                <span class="ic" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i></span>
-                <span class="nm">Instagram<small>@inucafe_one</small></span>
-                <span class="db-ok"><i class="ti ti-check"></i>連携しています</span>
-              </div>
-              <div class="db-snsrow">
-                <span class="ic" style="background:var(--color-sns-x-subtle);color:var(--color-sns-x)"><i class="ti ti-brand-x"></i></span>
-                <span class="nm">X<small>@inucafe_one</small></span>
-                <span class="db-ok"><i class="ti ti-check"></i>連携しています</span>
-              </div>
-              <div class="db-snsrow">
-                <span class="ic" style="background:var(--color-sns-tiktok-subtle);color:var(--color-sns-tiktok)"><i class="ti ti-brand-tiktok"></i></span>
-                <span class="nm">TikTok<small>@inucafe_one</small></span>
-                <span class="db-ok"><i class="ti ti-check"></i>連携しています</span>
-              </div>
-              <div class="db-snsrow">
-                <span class="ic" style="background:var(--color-surface);color:var(--color-muted-foreground)"><i class="ti ti-brand-youtube"></i></span>
-                <span class="nm">YouTube<small style="color:var(--color-destructive)">まだ連携していません</small></span>
-                <button class="db-connect">連携する</button>
-              </div>
-            </div>
-          </div>
+      <!-- 今月の作業時間：合計を誰がどれだけ分け合ったか。1つの量の内訳なので単一色相ランプ（--chart-N） -->
+      <div class="db-sec">
+        <div class="db-sec-h">
+          <span class="ic"><i class="ti ti-clock"></i></span>
+          <span class="tt">今月の作業時間</span>
+          <span class="more">くわしく見る<i class="ti ti-arrow-right"></i></span>
         </div>
-
-        <div>
-          <!-- 反応の伸び：グラフ＋矢印＋日本語の一文の3点セット -->
-          <div class="db-sec">
-            <div class="db-sec-h">
-              <span class="ic" style="background:var(--color-success-subtle);color:var(--color-success)"><i class="ti ti-trending-up"></i></span>
-              <span class="tt">先週と比べて</span>
-            </div>
-            <div class="db-card db-growth">
-              <div class="db-grow">
-                <span class="ic" style="background:var(--color-info-subtle);color:var(--color-info)"><i class="ti ti-users"></i></span>
-                <div class="tx">
-                  <div class="nm">フォロワー</div>
-                  <div class="vl">1,284<span style="font-size:var(--text-body);font-weight:var(--font-weight-body);color:var(--color-muted-foreground)"> 人</span></div>
-                  <div class="msg up"><i class="ti ti-arrow-up"></i>38人 増えました</div>
-                </div>
-                <div class="db-bar">
-                  <i style="height:40%;background:var(--color-border-strong)"></i><i style="height:52%;background:var(--color-border-strong)"></i><i style="height:48%;background:var(--color-border-strong)"></i><i style="height:70%;background:var(--color-border-strong)"></i><i style="height:100%;background:var(--color-success)"></i>
-                </div>
+        <!-- ChartContainer 相当。React 化するときは chartConfig の color に var(--chart-N) を渡す -->
+        <div class="db-card db-work" id="wkWork">
+          <div class="wk-chart">
+            <!-- 円周 = 2πr = 2 × π × 72 = 452.39。持ち分は 岩上238.10 / 佐藤119.05 / 奥澤95.24。
+                 端は丸める（stroke-linecap:round）。丸いキャップは太さの半分（14）ずつ両端に飛び出すので
+                 dasharray = 持ち分 − すき間8 − 太さ28 / dashoffset = −(持ち分の開始 + 4 + 14) で詰める。
+                 詰めないと丸めたぶん隣とくっついて、すき間が消える。 -->
+            <svg viewBox="0 0 296 224" width="296" height="224" role="img" aria-label="今月の作業時間の内訳。岩上 陽菜 100分（53%）、佐藤 正太郎 50分（26%）、奥澤 汐莉 40分（21%）。合計3時間10分。">
+              <g fill="none" stroke-width="28">
+                <circle class="wk-track" cx="130" cy="112" r="72"></circle>
+                <g transform="rotate(-90 130 112)" stroke-linecap="round">
+                  <circle class="wk-seg" data-k="1" cx="130" cy="112" r="72" stroke="var(--chart-1)" stroke-dasharray="202.10 452.39" stroke-dashoffset="-18"><title>岩上 陽菜 — 100分（全体の53%）</title></circle>
+                  <circle class="wk-seg" data-k="2" cx="130" cy="112" r="72" stroke="var(--chart-2)" stroke-dasharray="83.05 452.39" stroke-dashoffset="-256.10"><title>佐藤 正太郎 — 50分（全体の26%）</title></circle>
+                  <circle class="wk-seg" data-k="3" cx="130" cy="112" r="72" stroke="var(--chart-3)" stroke-dasharray="59.24 452.39" stroke-dashoffset="-375.15"><title>奥澤 汐莉 — 40分（全体の21%）</title></circle>
+                </g>
+              </g>
+              <!-- 色だけに頼らないための直接ラベル。各スライスの中心角の外側に名字を直置きする
+                   （引き出し線で結ぶ案は試したが不採用。円まわりが増えて重くなる） -->
+              <text class="wk-slice-lb" data-k="1" x="221" y="120" dominant-baseline="middle" text-anchor="start">岩上</text>
+              <text class="wk-slice-lb" data-k="2" x="52"  y="167" dominant-baseline="middle" text-anchor="end">佐藤</text>
+              <text class="wk-slice-lb" data-k="3" x="72"  y="33"  dominant-baseline="middle" text-anchor="end">奥澤</text>
+            </svg>
+            <div class="wk-center">
+              <div class="wk-c-def">
+                <div class="lb">合計</div>
+                <div class="vl">3<span class="u">時間</span>10<span class="u">分</span></div>
               </div>
-              <div class="db-grow">
-                <span class="ic" style="background:var(--color-like-subtle);color:var(--color-like)"><i class="ti ti-heart"></i></span>
-                <div class="tx">
-                  <div class="nm">いいね</div>
-                  <div class="vl">845<span style="font-size:var(--text-body);font-weight:var(--font-weight-body);color:var(--color-muted-foreground)"> 回</span></div>
-                  <div class="msg up"><i class="ti ti-arrow-up"></i>112回 増えました</div>
-                </div>
-                <div class="db-bar">
-                  <i style="height:55%;background:var(--color-border-strong)"></i><i style="height:44%;background:var(--color-border-strong)"></i><i style="height:62%;background:var(--color-border-strong)"></i><i style="height:58%;background:var(--color-border-strong)"></i><i style="height:100%;background:var(--color-success)"></i>
-                </div>
-              </div>
-              <div class="db-grow">
-                <span class="ic" style="background:var(--color-accent-purple-subtle);color:var(--color-accent-purple)"><i class="ti ti-bookmark"></i></span>
-                <div class="tx">
-                  <div class="nm">保存</div>
-                  <div class="vl">139<span style="font-size:var(--text-body);font-weight:var(--font-weight-body);color:var(--color-muted-foreground)"> 回</span></div>
-                  <div class="msg down"><i class="ti ti-arrow-down"></i>9回 減りました</div>
-                </div>
-                <div class="db-bar">
-                  <i style="height:80%;background:var(--color-border-strong)"></i><i style="height:92%;background:var(--color-border-strong)"></i><i style="height:76%;background:var(--color-border-strong)"></i><i style="height:88%;background:var(--color-border-strong)"></i><i style="height:70%;background:var(--color-destructive)"></i>
-                </div>
+              <!-- ChartTooltip 相当。浮かせずに円の中心へ差し込む -->
+              <div class="wk-c-act" id="wkAct">
+                <div class="lb"></div>
+                <div class="vl"></div>
+                <div class="pc"></div>
               </div>
             </div>
           </div>
-
-          <!-- 困ったとき -->
-          <div class="db-sec" style="margin-bottom:0">
-            <div class="db-card db-help">
-              <img src="./assets/iine-fox-face.png" alt="">
-              <div>
-                <div class="t">やり方に迷ったら</div>
-                <div class="d">画面ごとの使い方を、写真付きで説明しています。</div>
+          <div>
+            <!-- ChartLegend 相当 -->
+            <div class="wk-legend">
+              <div class="wk-lg" data-k="1">
+                <div class="wk-lg-top">
+                  <span class="sw" style="background:var(--chart-1)"></span>
+                  <span class="nm">岩上 陽菜</span>
+                  <span class="vl">100<span class="u">分</span></span>
+                  <span class="pc">53%</span>
+                </div>
+                <div class="wk-lg-bar"><i style="width:53%;background:var(--chart-1)"></i></div>
               </div>
-              <button class="go"><i class="ti ti-school"></i>使い方を見る</button>
+              <div class="wk-lg" data-k="2">
+                <div class="wk-lg-top">
+                  <span class="sw" style="background:var(--chart-2)"></span>
+                  <span class="nm">佐藤 正太郎</span>
+                  <span class="vl">50<span class="u">分</span></span>
+                  <span class="pc">26%</span>
+                </div>
+                <div class="wk-lg-bar"><i style="width:26%;background:var(--chart-2)"></i></div>
+              </div>
+              <div class="wk-lg" data-k="3">
+                <div class="wk-lg-top">
+                  <span class="sw" style="background:var(--chart-3)"></span>
+                  <span class="nm">奥澤 汐莉</span>
+                  <span class="vl">40<span class="u">分</span></span>
+                  <span class="pc">21%</span>
+                </div>
+                <div class="wk-lg-bar"><i style="width:21%;background:var(--chart-3)"></i></div>
+              </div>
             </div>
+            <div class="wk-note"><i class="ti ti-calendar-event"></i>8月1日 〜 8月16日</div>
           </div>
         </div>
       </div>
 
-      <!-- 今月の作業時間：誰がどれだけやったかを多い順の横棒で。1系列なので色は1色、凡例なし -->
+      <!-- 困ったとき -->
       <div class="db-sec">
-        <div class="db-sec-h">
-          <span class="ic" style="background:var(--color-info-subtle);color:var(--color-info)"><i class="ti ti-clock"></i></span>
-          <span class="tt">今月の作業時間</span>
-          <span class="more">くわしく見る<i class="ti ti-arrow-right"></i></span>
-        </div>
-        <div class="db-card db-work">
-          <div class="wk-chart">
-            <!-- 円周 = 2πr = 2 × π × 72 = 452.39。各人の分数の割合ぶんだけ線を描き、
-                 3px ずつ短くして間にすき間を作る（区切り線は引かない）。 -->
-            <svg viewBox="0 0 300 220" width="300" height="220" role="img" aria-label="今月の作業時間の内訳。岩上 陽菜 100分、佐藤 正太郎 50分、奥澤 汐莉 40分。">
-              <g transform="rotate(-90 130 110)" fill="none" stroke-width="28">
-                <circle class="wk-seg" cx="130" cy="110" r="72" stroke="#185fa5" stroke-dasharray="235.10 452.39" stroke-dashoffset="0"><title>岩上 陽菜 — 100分（全体の53%）</title></circle>
-                <circle class="wk-seg" cx="130" cy="110" r="72" stroke="#e25563" stroke-dasharray="116.05 452.39" stroke-dashoffset="-238.10"><title>佐藤 正太郎 — 50分（全体の26%）</title></circle>
-                <circle class="wk-seg" cx="130" cy="110" r="72" stroke="#9c6bd8" stroke-dasharray="92.24 452.39" stroke-dashoffset="-357.15"><title>奥澤 汐莉 — 40分（全体の21%）</title></circle>
-              </g>
-              <!-- 色だけに頼らないための直接ラベル（円の外・本文色） -->
-              <text class="wk-slice-lb" x="234" y="118" dominant-baseline="middle" text-anchor="start">岩上</text>
-              <text class="wk-slice-lb" x="42" y="166" dominant-baseline="middle" text-anchor="end">佐藤</text>
-              <text class="wk-slice-lb" x="65" y="29" dominant-baseline="middle" text-anchor="end">奥澤</text>
-            </svg>
-            <div class="wk-center">
-              <div class="lb">合計</div>
-              <div class="vl">3<span class="u">時間</span>10<span class="u">分</span></div>
-            </div>
-          </div>
+        <div class="db-card db-help">
+          <img src="./assets/iine-fox-face.png" alt="">
           <div>
-            <div class="wk-legend">
-              <div class="wk-lg">
-                <span class="sw" style="background:#185fa5"></span>
-                <span class="nm">岩上 陽菜</span>
-                <span class="vl">100<span class="u">分</span></span>
-                <span class="pc">53%</span>
-              </div>
-              <div class="wk-lg">
-                <span class="sw" style="background:#e25563"></span>
-                <span class="nm">佐藤 正太郎</span>
-                <span class="vl">50<span class="u">分</span></span>
-                <span class="pc">26%</span>
-              </div>
-              <div class="wk-lg">
-                <span class="sw" style="background:#9c6bd8"></span>
-                <span class="nm">奥澤 汐莉</span>
-                <span class="vl">40<span class="u">分</span></span>
-                <span class="pc">21%</span>
-              </div>
-            </div>
-            <div class="wk-note">8月1日 〜 8月16日</div>
+            <div class="t">やり方に迷ったら</div>
+            <div class="d">画面ごとの使い方を、写真付きで説明しています。</div>
           </div>
+          <button class="go"><i class="ti ti-school"></i>使い方を見る</button>
         </div>
       </div>
 
@@ -995,5 +915,36 @@ document.addEventListener('click', function(e){
   document.getElementById('todoBtn').classList.remove('on');
 });
 todoCount();
+
+/* ===== 今月の作業時間：ドーナツと凡例のホバー連動（shadcn Chart の挙動を素のHTMLで再現） =====
+   円か凡例のどちらに触れても、同じ系列が「太くなる / 行が浮く / ラベルが濃くなる」。
+   ツールチップは浮かせず、円の中心（元から空き）に差し込む。カードを浮かせると
+   296px 幅では合計や隣のスライスを必ず隠すため。 */
+(function(){
+  var root = document.getElementById('wkWork');
+  if(!root) return;
+  var act = document.getElementById('wkAct');
+  var DATA = {
+    '1': { nm:'岩上 陽菜',   v:'100', pc:'全体の53%' },
+    '2': { nm:'佐藤 正太郎', v:'50',  pc:'全体の26%' },
+    '3': { nm:'奥澤 汐莉',   v:'40',  pc:'全体の21%' }
+  };
+  function paint(k){
+    root.classList.toggle('is-hover', !!k);
+    root.querySelectorAll('[data-k]').forEach(function(el){
+      el.classList.toggle('is-on', el.getAttribute('data-k') === k);
+    });
+    if(!k) return;
+    var d = DATA[k];
+    act.querySelector('.lb').textContent = d.nm;
+    act.querySelector('.vl').innerHTML   = d.v + '<span class="u">分</span>';
+    act.querySelector('.pc').textContent = d.pc;
+  }
+  root.querySelectorAll('.wk-seg, .wk-lg').forEach(function(el){
+    var k = el.getAttribute('data-k');
+    el.addEventListener('mouseenter', function(){ paint(k); });
+    el.addEventListener('mouseleave', function(){ paint(null); });
+  });
+})();
 </script>
 </body></html>
