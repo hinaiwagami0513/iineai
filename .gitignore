@@ -3,3 +3,45 @@
 .gstack/
 # 別リポジトリ（.git を持つ）。この repo には取り込まない
 iine_ai/synergy-media/iine-ai/iineAI/
+
+# ===== 絶対に公開しないもの =====
+# このリポジトリは push すると GitHub Pages に公開配信される。
+# dev/ 直下は「作業を置くフォルダ」なので、いいねAI 以外の荷物が同居している。
+# うっかり `git add -A` してもここに書いたものは入らない。
+
+# APIキー（平文）。中身は Gemini のキー
+iine_ai/.nano-banana-config.json
+**/.nano-banana-config.json
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+
+# SHIP関係。いいねAI とは絶対的に別グループ（iine-ai-vault/concepts/ship-separation.md）
+ship/
+ship-inc/
+**/ship-inc/
+
+# いいねAI と関係ない別プロジェクト
+AID/
+line-harness-segn/
+line-harness-segn_v2/
+line-harness-segn.zip
+resme-mobile-lp/
+image2-mobile-lp-builder-unpacked/
+
+# 依存関係・ビルド成果物・書庫
+node_modules/
+**/node_modules/
+.next/
+**/.next/
+out/
+**/out/
+*.zip
+
+# エディタ・AIツールのローカル設定
+.cursor/
+**/.cursor/
+claude_skills/
+**/claude_skills/
