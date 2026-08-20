@@ -14,7 +14,7 @@
  *
  * キーの探索順:
  *   1. 環境変数 GEMINI_API_KEY
- *   2. iine_ai/.nano-banana-config.json の geminiApiKey
+ *   2. リポジトリルート（dev/）の .nano-banana-config.json の geminiApiKey
  * AI Studio (https://aistudio.google.com/apikey) のキーは "AIza" 始まりの39文字。
  */
 'use strict';

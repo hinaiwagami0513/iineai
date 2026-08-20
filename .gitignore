@@ -2,7 +2,7 @@
 **/.DS_Store
 .gstack/
 # 別リポジトリ（.git を持つ）。この repo には取り込まない
-iine_ai/synergy-media/iine-ai/iineAI/
+synergy-media/iine-ai/iineAI/
 
 # ===== 絶対に公開しないもの =====
 # このリポジトリは push すると GitHub Pages に公開配信される。
@@ -10,7 +10,7 @@ iine_ai/synergy-media/iine-ai/iineAI/
 # うっかり `git add -A` してもここに書いたものは入らない。
 
 # APIキー（平文）。中身は Gemini のキー
-iine_ai/.nano-banana-config.json
+.nano-banana-config.json
 **/.nano-banana-config.json
 .env
 .env.*

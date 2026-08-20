@@ -23,7 +23,7 @@
 | `line-harness-segn/` | 1.1GB / 33,780ファイル。独自 `.git` と `node_modules` を含む |
 | `line-harness-segn.zip` | 28MB |
 | `AID/` | 10MB |
-| `iine_ai/.nano-banana-config.json` | **Gemini APIキーの平文**。`.gitignore` に入っていない |
+| `.nano-banana-config.json` | **Gemini APIキーの平文**。`.gitignore` に入っていない |
 
 `main` への push は `.github/workflows/help-pages.yml` を起動して
 `https://hinaiwagami0513.github.io/iineai/` に**公開配信**される。
@@ -32,7 +32,7 @@ git 履歴に入るので、消しても取り返せない。
 
 ## 守り方（毎回）
 
-- **`git add` は必ずパスを明示する。** `iine_ai/synergy-media/iine-ai/...` のように書く。
+- **`git add` は必ずパスを明示する。** `synergy-media/iine-ai/...` のように書く。
 - **`git add -A` / `git add .` / `git commit -a` は使わない。** 「未コミット全部コミット」も同じ理由で通さない。
 - ステージ後に `git diff --cached --name-only` で、いいねAI 配下だけか目で確認する。
 - **push = 公開配信**。ローカル確認のつもりで push しない。

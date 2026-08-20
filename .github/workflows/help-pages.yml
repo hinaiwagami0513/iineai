@@ -30,7 +30,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: iine_ai/synergy-media/iine-ai/help_site
+        working-directory: synergy-media/iine-ai/help_site
     steps:
       - uses: actions/checkout@v4
 
@@ -38,7 +38,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: iine_ai/synergy-media/iine-ai/help_site/package-lock.json
+          cache-dependency-path: synergy-media/iine-ai/help_site/package-lock.json
 
       - run: npm ci
 
@@ -61,7 +61,7 @@ jobs:
           git ls-files -z | rsync -a --files-from=- --from0 ./ _site/
 
           # 新ヘルプを /help/ に配置
-          cp -R iine_ai/synergy-media/iine-ai/help_site/out _site/help
+          cp -R synergy-media/iine-ai/help_site/out _site/help
 
           # Pages の Jekyll 処理を止める（_next/ が消されるのを防ぐ）
           touch _site/.nojekyll
@@ -71,8 +71,8 @@ jobs:
           set -eu
           cd "$GITHUB_WORKSPACE/_site"
           for f in index.html \
-                   iine_ai/synergy-media/iine-ai/iine_board/board.html \
-                   iine_ai/synergy-media/iine-ai/iine_board/post_list_wire.html \
+                   synergy-media/iine-ai/iine_board/board.html \
+                   synergy-media/iine-ai/iine_board/post_list_wire.html \
                    help/index.html \
                    help/analytics/ai-report/index.html \
                    help/manage/list/index.html; do
