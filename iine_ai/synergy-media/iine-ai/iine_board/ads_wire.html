@@ -355,8 +355,8 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
       <div class="nidiv"></div>
       <div class="ni" onclick="navToggle(this)"><i class="ti ti-settings"></i>設定<span class="cv"><i class="ti ti-chevron-down"></i></span></div>
       <div class="nisub">
-        <a class="nis" href="./settings_wire.html#project">プロジェクト管理</a>
-        <a class="nis" href="./settings_wire.html#sns">SNSアカウント</a>
+        <a class="nis" href="./settings_wire.html#project">運用目的</a>
+        <a class="nis" href="./settings_wire.html#sns">SNS設定</a>
         <a class="nis" href="./settings_wire.html#review">AIレビュー</a>
         <a class="nis" href="./settings_wire.html#members">メンバー管理</a>
       </div>
@@ -406,7 +406,7 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
           <div class="bd">
             <div class="row1">
               <span class="nm">看板犬ポチに会いに来ませんか</span>
-              <span class="st run"><i class="ti ti-check"></i>出しています</span>
+              <span class="st run"><i class="ti ti-check"></i>配信中</span>
               <span class="snsdot" style="color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i>Instagram</span>
             </div>
             <div class="mt">お店を知ってもらう・8月10日 〜 8月24日（あと8日）</div>
@@ -421,8 +421,8 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
             </div>
           </div>
           <div class="acts">
-            <button class="btn-o">くわしく見る</button>
-            <button class="btn-g">止める</button>
+            <button class="btn-o">詳細</button>
+            <button class="btn-g">停止</button>
           </div>
         </div>
 
@@ -438,12 +438,12 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
             <!-- いまのフローは、ここが空のまま完成扱いになっていた -->
             <div class="fox-alert care sm">
               <img src="./assets/iine-fox-worried.png" alt="">
-              <div><span class="lb">CHECK</span>いくら使うかが決まっていないので、まだ出せません。</div>
+              <div><span class="lb">CHECK</span>予算が決まっていないので、まだ配信できません。</div>
               <span class="sp"><button class="btn-o" onclick="go('s2')">予算を決める</button></span>
             </div>
           </div>
           <div class="acts">
-            <button class="btn-g">中身を見る</button>
+            <button class="btn-g">編集</button>
           </div>
         </div>
 
@@ -452,7 +452,7 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
           <div class="bd">
             <div class="row1">
               <span class="nm">夏フェス 期間限定メニュー</span>
-              <span class="st end">終わりました</span>
+              <span class="st end">終了</span>
               <span class="snsdot" style="color:var(--color-sns-tiktok)"><i class="ti ti-brand-tiktok"></i>TikTok</span>
             </div>
             <div class="mt">お店を知ってもらう・7月20日 〜 8月3日</div>
@@ -467,8 +467,8 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
             </div>
           </div>
           <div class="acts">
-            <button class="btn-o">同じ内容でまた出す</button>
-            <button class="btn-g">結果を見る</button>
+            <button class="btn-o">再配信</button>
+            <button class="btn-g">レポート</button>
           </div>
         </div>
       </div>
@@ -542,7 +542,7 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 
         <div class="card">
           <div class="card-t">どこに出しますか</div>
-          <div class="card-d">つないでいるSNSにだけ出せます。</div>
+          <div class="card-d">連携中のSNSにだけ出せます。</div>
           <div class="chips">
             <button class="chip on" onclick="this.classList.toggle('on')"><i class="ti ti-brand-instagram" style="color:var(--color-sns-instagram)"></i>Instagram</button>
             <button class="chip" onclick="this.classList.toggle('on')"><i class="ti ti-brand-x"></i>X</button>
@@ -552,7 +552,7 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 
         <div class="card">
           <div class="card-t">だれに届けますか</div>
-          <div class="card-d">設定の「プロジェクト管理 &gt; お客様」から入れています。ここで変えても、そちらは変わりません。</div>
+          <div class="card-d">設定の「運用目的 &gt; お客様」から入れています。ここで変えても、そちらは変わりません。</div>
           <div class="grid2">
             <div class="field">
               <label class="lbl" for="area">場所</label>
@@ -616,7 +616,7 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
           <div class="t">広告を作っています</div>
           <div class="d">1分ほどかかります。この画面を閉じても止まりません。<br>できあがったら、右下のお知らせでお伝えします。</div>
           <div class="gsteps" id="gsteps">
-            <div class="gstep now" data-i="0"><span class="m"></span>お店のことを読んでいます（プロジェクト管理）</div>
+            <div class="gstep now" data-i="0"><span class="m"></span>お店のことを読んでいます（運用目的）</div>
             <div class="gstep" data-i="1"><span class="m"></span>反応がよかった投稿を見ています</div>
             <div class="gstep" data-i="2"><span class="m"></span>広告の文章を書いています</div>
             <div class="gstep" data-i="3"><span class="m"></span>出す画像を選んでいます</div>

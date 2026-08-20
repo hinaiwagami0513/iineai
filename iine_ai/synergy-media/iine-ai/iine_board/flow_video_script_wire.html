@@ -35,6 +35,24 @@
 .ti-edit:before{content:"\ea98"}
 .ti-list:before{content:"\eb6b"}
 .ti-calendar-event:before{content:"\ea52"}
+/* SNSモックアップ用。字形コードは @tabler/icons の icons.json（公式）から引く。
+   同梱フォントは tabler-icons の完全版なので、公式コードならそのまま正しい絵になる。
+   ただし filled 系（例: player-play-filled）は別フォントなので入っていない。 */
+.ti-device-mobile:before{content:"\ea8a"}
+.ti-dots:before{content:"\ea95"}
+.ti-message-circle:before{content:"\eaed"}
+.ti-home:before{content:"\eac1"}
+.ti-search:before{content:"\eb1c"}
+/* 同梱フォントに入っているかブラウザで目視確認したもの */
+.ti-brand-tiktok:before{content:"\ec73"}
+/* 表示されていなかった字形を追加（コードは @tabler/icons 公式）*/
+.ti-alert-circle:before{content:"\ea05"}
+.ti-battery-4:before{content:"\ea32"}
+.ti-clock:before{content:"\ea70"}
+.ti-movie:before{content:"\eafa"}
+.ti-square-plus:before{content:"\eb2a"}
+.ti-user:before{content:"\eb4d"}
+.ti-wifi:before{content:"\eb52"}
 
 :root {
   --color-primary: #ef6108;
@@ -448,28 +466,6 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
   font-size:15px;cursor:pointer;border-radius:var(--radius-sm);}
 .sc-del:hover{color:var(--color-destructive);background:var(--color-destructive-subtle);}
 
-/* ===== 削除の確認ダイアログ =====
-   シーンは書いた内容ごと消える。×一発で消えるのは事故のもとなので一段挟む。 */
-.cfmask{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:950;}
-.cfmask.open{display:block;}
-.cfbox{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:951;
-  width:400px;max-width:calc(100vw - 32px);background:var(--color-card);border-radius:var(--radius-lg);
-  box-shadow:0 24px 64px rgba(0,0,0,.24);padding:24px;}
-.cfbox.open{display:block;}
-.cfttl{display:flex;align-items:center;gap:9px;font-size:var(--text-h3);font-weight:var(--font-weight-h3);margin-bottom:10px;}
-.cfttl i{color:var(--color-destructive);font-size:20px;}
-.cfmsg{font-size:var(--text-body);line-height:1.7;color:var(--color-muted-foreground);margin-bottom:14px;}
-.cfprev{background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);
-  padding:12px 14px;font-size:var(--text-label);line-height:1.7;color:var(--color-foreground);
-  margin-bottom:18px;white-space:pre-wrap;word-break:break-word;max-height:120px;overflow-y:auto;}
-.cfbtns{display:flex;gap:10px;justify-content:flex-end;}
-.cfbtn{height:44px;padding:0 20px;border-radius:var(--radius-md);font-family:inherit;font-size:var(--text-body);
-  font-weight:var(--font-weight-body-strong);cursor:pointer;display:inline-flex;align-items:center;gap:6px;}
-.cfbtn.ghost{border:1px solid var(--color-border);background:transparent;color:var(--color-foreground);}
-.cfbtn.ghost:hover{background:var(--color-background);}
-.cfbtn.danger{border:none;background:var(--color-destructive);color:var(--color-on-destructive);}
-.cfbtn.danger:hover{opacity:.9;}
-
 /* ===== まとめて作る（同時オプション） =====
    別ルートを増やさず、企画を考えるところに件数だけ足す。
    1件のときは今までどおり。複数なら編集を挟まず一覧で受け取る。 */
@@ -546,6 +542,36 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
   font-weight:var(--font-weight-body-strong);color:var(--color-foreground);cursor:pointer;}
 .bcredo:hover{border-color:var(--color-primary);color:var(--color-primary);background:var(--color-primary-subtle);}
 @media(max-width:768px){ .bcgrid{grid-template-columns:1fr;} }
+/* ===== 仮予約 =====
+   投稿日が未定のままだと「あとで決める」が積み上がるので、編集中にその場で押さえられるようにする。
+   「仮」なのであとから変えられるし、日付が入っていなくても確認依頼は出せる（8/19確定）。 */
+.karibtn{margin-left:16px;display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:var(--radius-md);
+  font-family:inherit;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);cursor:pointer;
+  background:var(--color-card);color:var(--color-foreground);border:1px solid var(--color-border-strong);
+  transition:border-color .15s,color .15s;}
+.karibtn i{font-size:16px;}
+.karibtn:hover{border-color:var(--color-primary);color:var(--color-primary);}
+.karibtn.empty{border-style:dashed;color:var(--color-muted-foreground);}
+.karibtn .kari{font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);
+  background:var(--color-background);border-radius:var(--radius-full);padding:1px 7px;}
+/* ダイアログ。おすすめ日程をここに寄せて、カレンダーを探しに行かせない */
+.kariov{position:fixed;inset:0;background:rgba(42,40,38,.45);z-index:120;display:none;align-items:center;justify-content:center;padding:20px;}
+.kariov.on{display:flex;}
+.karibox{width:min(460px,100%);background:var(--color-card);border-radius:var(--radius-lg);box-shadow:0 8px 24px rgb(0 0 0 / 0.12);overflow:hidden;}
+.karibox .h{display:flex;align-items:center;gap:9px;padding:16px 20px;border-bottom:1px solid var(--color-border);
+  font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);}
+.karibox .h .x{margin-left:auto;width:30px;height:30px;border:1px solid var(--color-border);background:none;border-radius:var(--radius-sm);
+  cursor:pointer;color:var(--color-muted-foreground);font-size:15px;display:flex;align-items:center;justify-content:center;}
+.karibox .b{padding:18px 20px;}
+.karibox .fl{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);margin-bottom:8px;}
+.kariin{display:flex;gap:8px;margin-bottom:16px;}
+.kariin input{flex:1;height:40px;padding:0 10px;border:1px solid var(--color-border-strong);border-radius:var(--radius-md);
+  font-family:inherit;font-size:var(--text-body);background:var(--color-input);color:var(--color-foreground);}
+.kariask{display:flex;align-items:flex-start;gap:9px;padding:12px 14px;border-radius:var(--radius-md);background:var(--color-surface);
+  border:1px solid var(--color-border);font-size:var(--text-label);line-height:1.7;cursor:pointer;}
+.kariask input{margin-top:3px;accent-color:var(--color-primary);flex:none;}
+.karibox .f{display:flex;gap:10px;padding:14px 20px;border-top:1px solid var(--color-border);background:var(--color-surface);}
+.karibox .f .sp{margin-left:auto;display:flex;gap:10px;}
 /* 分析のおすすめ時間（この画面から1タップで使えるようにする） */
 .bcrec{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:-8px 0 16px;padding:10px 14px;
   border:1px dashed var(--color-primary);border-radius:var(--radius-md);background:var(--color-primary-subtle);}
@@ -604,6 +630,88 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 .bk-qbtn.rec i{font-size:13px;margin-right:4px;}
 @media(max-width:600px){ .bk-pop{width:calc(100vw - 24px);padding:16px;} .bk-quick{grid-template-columns:1fr;} }
 
+/* ===== SNSモックアップのダイアログ =====
+   動画をクリックすると、実際のSNSのUIに当てはめた姿で見られる。
+   狙いは「テロップが実寸で読めるか」「UIに隠れていないか」の確認なので、
+   スマホ枠は実機に近い幅(300px)で出し、テロップも同じ倍率で縮める。
+   画像側（post_editor_image_wire.html）と作りを揃える。 */
+.mk-ovl{position:fixed;inset:0;background:rgba(0,0,0,.55);display:none;align-items:center;justify-content:center;z-index:200;padding:20px;}
+.mk-ovl.open{display:flex;}
+.mk-dlg{background:var(--color-card);border-radius:var(--radius-xl);box-shadow:0 8px 24px rgb(0 0 0 / .12);width:min(880px,100%);max-height:90vh;overflow-y:auto;padding:22px 24px 24px;}
+.mk-hd{display:flex;align-items:center;gap:10px;margin-bottom:4px;}
+.mk-hd .t{font-size:var(--text-h2);font-weight:var(--font-weight-h2);}
+.mk-hd .x{margin-left:auto;width:32px;height:32px;border:none;background:transparent;color:var(--color-muted-foreground);border-radius:var(--radius-sm);font-size:18px;cursor:pointer;}
+.mk-hd .x:hover{background:var(--color-background);}
+.mk-d{font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.7;margin-bottom:14px;}
+/* 媒体切替。押せるのでオレンジ */
+.mk-tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.mk-tab{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--color-border-strong);background:var(--color-card);color:var(--color-foreground);border-radius:var(--radius-full);padding:7px 14px;font-family:inherit;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);cursor:pointer;white-space:nowrap;}
+.mk-tab:hover{border-color:var(--color-primary);color:var(--color-primary);}
+.mk-tab.on{background:var(--color-primary-subtle);border-color:var(--color-primary);color:var(--color-primary);}
+.mk-tab i{font-size:15px;}
+/* シーン切替。テロップはシーンごとに変わるので、1本の中を送って確かめる */
+.mk-scenes{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;align-items:center;}
+.mk-scenes .lb{font-size:var(--text-meta);color:var(--color-muted-foreground);margin-right:2px;}
+.mk-sc{border:1px solid var(--color-border);background:var(--color-card);color:var(--color-muted-foreground);border-radius:var(--radius-sm);padding:5px 10px;font-family:inherit;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);cursor:pointer;white-space:nowrap;}
+.mk-sc:hover{border-color:var(--color-primary);color:var(--color-primary);}
+.mk-sc.on{background:var(--color-primary);border-color:var(--color-primary);color:#fff;}
+.mk-body{display:flex;gap:24px;align-items:flex-start;}
+/* スマホ枠。実機の見え方に寄せるため幅は固定 */
+.mk-phone{width:300px;flex:none;border:3px solid #222;border-radius:28px;overflow:hidden;background:#000;padding:8px 0 0;}
+.mk-status{display:flex;justify-content:space-between;align-items:center;padding:0 16px 6px;font-size:10px;color:#fff;}
+.mk-status .r{display:flex;gap:4px;align-items:center;}
+.mk-app{background:#000;}
+/* 動画の枠。ここにテロップを重ねて実寸感を出す。
+   文字を「動画の幅に対する割合」で置くため、コンテナクエリの基準にする。
+   ⚠️ font-size:% は親のフォントサイズ基準なので幅には連動しない。
+   cqw なら .mk-canvas の幅に対する割合になり、実機との倍率が一致する。 */
+.mk-canvas{container-type:inline-size;position:relative;background:linear-gradient(160deg,#3f3a33,#26221d);display:flex;align-items:center;justify-content:center;overflow:hidden;}
+.mk-canvas .ph{font-size:34px;color:var(--color-primary);opacity:.5;}
+/* テロップ。実機と同じく下寄せ・白抜き・縁取り */
+.mk-tel{position:absolute;left:0;right:0;text-align:center;color:#fff;font-weight:900;line-height:1.3;padding:0 7%;text-shadow:0 2px 4px rgba(0,0,0,.6);word-break:break-word;}
+/* セーフゾーン。SNSのUIが被る範囲を点線で見せる（隠れ確認が主目的） */
+.mk-safe{position:absolute;border:1px dashed rgba(255,255,255,.45);pointer-events:none;}
+.mk-safe.bt{left:0;right:0;bottom:0;border-left:none;border-right:none;border-bottom:none;background:rgba(255,0,0,.06);}
+.mk-safe.rt{top:0;bottom:0;right:0;border-top:none;border-right:none;border-bottom:none;background:rgba(255,0,0,.06);}
+.mk-safe.tp{left:0;right:0;top:0;border-left:none;border-right:none;border-top:none;background:rgba(255,0,0,.06);}
+/* リール/TikTok の右側アイコン列 */
+.mk-rail{position:absolute;right:6px;bottom:14%;display:flex;flex-direction:column;align-items:center;gap:11px;color:#fff;font-size:17px;text-shadow:0 1px 3px rgba(0,0,0,.5);}
+.mk-rail span{font-size:7px;font-weight:var(--font-weight-body-strong);margin-top:-8px;}
+/* リール/TikTok の下部キャプション */
+.mk-ovcap{position:absolute;left:10px;right:52px;bottom:8px;color:#fff;font-size:9px;line-height:1.5;text-shadow:0 1px 3px rgba(0,0,0,.6);}
+.mk-ovcap .ac{font-weight:var(--font-weight-body-strong);display:block;margin-bottom:2px;}
+/* クラス名は mk-hash。素の .tag はこの画面の別用途（トップバーのピル）に
+   背景と余白が当たっていて、キャプションだと白い箱になってしまう。 */
+.mk-ovcap .mk-hash{color:#9fd4ff;}
+/* ストーリーズの上部プログレスとヘッダー */
+.mk-prog{position:absolute;left:8px;right:8px;top:8px;display:flex;gap:3px;}
+.mk-prog i{flex:1;height:2px;background:rgba(255,255,255,.4);border-radius:2px;display:block;}
+.mk-prog i.on{background:#fff;}
+.mk-sthd{position:absolute;left:8px;right:8px;top:16px;display:flex;align-items:center;gap:6px;color:#fff;font-size:9px;font-weight:var(--font-weight-body-strong);text-shadow:0 1px 3px rgba(0,0,0,.5);}
+.mk-sthd .av{width:20px;height:20px;border-radius:var(--radius-full);background:linear-gradient(135deg,var(--color-primary),var(--color-primary-light));flex:none;}
+/* X はタイムラインの中に動画カードが載る */
+.mk-xhd{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#fff;}
+.mk-av{width:28px;height:28px;border-radius:var(--radius-full);background:linear-gradient(135deg,var(--color-primary),var(--color-primary-light));flex:none;}
+.mk-acc{font-size:10px;font-weight:var(--font-weight-body-strong);}
+.mk-loc{font-size:8px;color:#999;}
+.mk-xcap{background:#fff;padding:0 12px 8px;font-size:9px;line-height:1.5;}
+/* Xのハッシュタグはリンク色（青）。--color-sns-x はブランドの黒で本文と見分けが付かない */
+.mk-xcap .mk-hash{color:#1d9bf0;}
+.mk-acts{background:#fff;display:flex;align-items:center;gap:10px;padding:8px 12px;font-size:16px;color:#555;}
+.mk-btm{background:#000;padding:6px 0 10px;display:flex;justify-content:center;gap:24px;font-size:16px;color:#fff;}
+/* 右側の注意書き */
+.mk-side{flex:1;min-width:0;}
+.mk-note{font-size:var(--text-label);line-height:1.9;}
+.mk-note dt{font-weight:var(--font-weight-body-strong);margin-top:10px;}
+.mk-note dd{color:var(--color-muted-foreground);margin:0;}
+.mk-legend{display:flex;align-items:center;gap:6px;font-size:var(--text-meta);color:var(--color-muted-foreground);margin-top:10px;}
+.mk-legend .sw{width:22px;height:11px;border:1px dashed var(--color-border-strong);background:rgba(255,0,0,.08);flex:none;}
+.mk-size{display:inline-flex;align-items:center;gap:6px;background:var(--color-background);border-radius:var(--radius-full);padding:4px 11px;font-size:var(--text-meta);color:var(--color-muted-foreground);margin-top:12px;}
+@media (max-width:430px){
+  .mk-dlg{padding:16px;}
+  .mk-body{flex-direction:column;}
+  .mk-phone{width:100%;max-width:300px;margin:0 auto;}
+}
 </style></head><body>
 <div class="app">
   <div class="topbar"><div class="hdr-left"><span class="hdr-page"><i class="ti ti-template"></i>投稿作成</span><span class="tag" id="flowtag" style="display:none"></span></div><div class="hdr-right"><a class="helpbtn" href="https://hinaiwagami0513.github.io/iineai/help/create/video/" target="_blank" rel="noopener" title="このページのヘルプ（投稿作成 > 動画を作成）" aria-label="このページのヘルプ">?</a><button class="close"><i class="ti ti-list"></i></button></div></div>
@@ -696,11 +804,14 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
       </div>
 
       <div class="screen" id="sc_editor">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;"><i class="ti ti-video" style="color:var(--color-muted-foreground);font-size:20px;"></i><span id="titleView" onclick="startTitleEdit()" style="cursor:pointer;padding:4px 8px;border-radius:var(--radius-sm);border:1px solid transparent;display:inline-flex;align-items:center;gap:6px;font-size:var(--text-h2);font-weight:var(--font-weight-h2);" onmouseenter="this.style.borderColor='var(--color-border)'" onmouseleave="this.style.borderColor='transparent'">駅徒歩5分・南向き1LDK 新着物件<i class="ti ti-edit" style="font-size:14px;color:var(--color-muted-foreground);"></i></span><input id="titleInput" style="display:none;padding:4px 8px;border:1.5px solid var(--color-primary);border-radius:var(--radius-sm);background:var(--color-primary-subtle);font-size:var(--text-h2);font-weight:var(--font-weight-h2);outline:none;min-width:320px;" value="駅徒歩5分・南向き1LDK 新着物件" onblur="endTitleEdit()" onkeydown="if(event.key==='Enter')endTitleEdit()"><span style="margin-left:auto;font-size:var(--text-label);color:var(--color-success);font-weight:var(--font-weight-body-strong);display:inline-flex;align-items:center;gap:3px;"><i class="ti ti-check"></i>自動保存ずみ</span></div>
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;"><i class="ti ti-video" style="color:var(--color-muted-foreground);font-size:20px;"></i><span id="titleView" onclick="startTitleEdit()" style="cursor:pointer;padding:4px 8px;border-radius:var(--radius-sm);border:1px solid transparent;display:inline-flex;align-items:center;gap:6px;font-size:var(--text-h2);font-weight:var(--font-weight-h2);" onmouseenter="this.style.borderColor='var(--color-border)'" onmouseleave="this.style.borderColor='transparent'">駅徒歩5分・南向き1LDK 新着物件<i class="ti ti-edit" style="font-size:14px;color:var(--color-muted-foreground);"></i></span><input id="titleInput" style="display:none;padding:4px 8px;border:1.5px solid var(--color-primary);border-radius:var(--radius-sm);background:var(--color-primary-subtle);font-size:var(--text-h2);font-weight:var(--font-weight-h2);outline:none;min-width:320px;" value="駅徒歩5分・南向き1LDK 新着物件" onblur="endTitleEdit()" onkeydown="if(event.key==='Enter')endTitleEdit()"><!-- 仮予約：日付が未定でも先に押さえられる。ここで決めた日は「仮」で、あとから変えられる -->
+<button class="karibtn empty" id="kariBtn" onclick="openKari()"><i class="ti ti-calendar-event"></i><span id="kariLbl">仮予約</span></button>
+          <span style="margin-left:auto;font-size:var(--text-label);color:var(--color-success);font-weight:var(--font-weight-body-strong);display:inline-flex;align-items:center;gap:3px;"><i class="ti ti-check"></i>自動保存ずみ</span></div>
         <div style="display:grid;grid-template-columns:240px 1fr auto;gap:16px;min-height:420px;">
           <!-- Left -->
           <div style="display:flex;flex-direction:column;">
-            <div style="aspect-ratio:9/16;max-height:340px;border-radius:var(--radius-lg);background:#1a1a17;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;position:relative;margin-bottom:12px;"><i class="ti ti-video" style="font-size:42px;color:#555;"></i><span style="font-size:var(--text-label);color:#777;">動画がありません</span><span style="position:absolute;bottom:10px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.55);color:#fff;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);border-radius:var(--radius-full);padding:3px 12px;">0:00 / 0:24</span></div>
+            <!-- クリックでSNSモックアップ。押せることが分かるよう、下部のラベルで合図を出す -->
+            <div class="mk-open" onclick="openMockup()" role="button" tabindex="0" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openMockup();}" style="aspect-ratio:9/16;max-height:340px;border-radius:var(--radius-lg);background:#1a1a17;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;position:relative;margin-bottom:12px;cursor:pointer;"><i class="ti ti-video" style="font-size:42px;color:#555;"></i><span style="font-size:var(--text-label);color:#777;">動画がありません</span><span style="position:absolute;bottom:44px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,.55);color:#fff;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);border-radius:var(--radius-full);padding:3px 12px;">0:00 / 0:24</span><span style="position:absolute;left:0;right:0;bottom:0;padding:7px 0;background:rgba(255,255,255,.92);border-top:1px solid var(--color-border);border-radius:0 0 var(--radius-lg) var(--radius-lg);display:flex;align-items:center;justify-content:center;gap:5px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-primary);"><i class="ti ti-device-mobile"></i>SNSでの見え方を見る</span></div>
             <a href="video_editor_dark_wire.html" target="_blank" class="grad" style="width:100%;padding:13px;border:none;border-radius:var(--radius-md);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;margin-bottom:8px;text-decoration:none;color:#fff;box-sizing:border-box;"><i class="ti ti-sparkles"></i>動画を生成・編集</a>
             <div style="display:flex;align-items:center;justify-content:center;gap:6px;padding:11px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);cursor:pointer;border:1px solid var(--color-border);border-radius:var(--radius-md);"><i class="ti ti-upload"></i>撮った動画に差し替える</div>
           </div>
@@ -1239,6 +1350,38 @@ function closeChatPlusMenu(){document.getElementById('chatPlusMenu').classList.r
 function toggleChatPlusMenu2(e){e.stopPropagation();document.getElementById('chatPlusMenu2').classList.toggle('show');}
 function closeChatPlusMenu2(){document.getElementById('chatPlusMenu2').classList.remove('show');}
 document.addEventListener('click',function(){closeChatPlusMenu();closeChatPlusMenu2();closeTplDrop();});
+/* ===== 仮予約 =====
+   「投稿日が未定」を編集画面のうちに片づけるための小さいダイアログ。
+   おすすめ日程を上に置いて、カレンダーを開きに行かせない。 */
+function openKari(){ document.getElementById('kariOv').classList.add('on'); }
+function closeKari(){ document.getElementById('kariOv').classList.remove('on'); }
+function kariUseRec(el,d,t){
+  el.parentElement.querySelectorAll('.bcrec-chip').forEach(function(c){c.classList.remove('on');});
+  el.classList.add('on');
+  document.getElementById('kariDate').value = d;
+  document.getElementById('kariTime').value = t;
+}
+function saveKari(){
+  var d = document.getElementById('kariDate').value, t = document.getElementById('kariTime').value;
+  if(!d || !t){ toast.error('日付と時刻を選んでください'); return; }
+  var W = ['日','月','火','水','木','金','土'];
+  var dt = new Date(d + 'T' + t);
+  var lb = (dt.getMonth()+1) + '/' + dt.getDate() + '(' + W[dt.getDay()] + ') ' + t;
+  var b = document.getElementById('kariBtn');
+  b.classList.remove('empty');
+  document.getElementById('kariLbl').innerHTML = lb + '<span class="kari">仮</span>';
+  closeKari();
+  toast.success(document.getElementById('kariAsk').checked
+    ? lb + ' で仮予約して、確認をお願いしました'
+    : lb + ' で仮予約しました');
+}
+function clearKari(){
+  var b = document.getElementById('kariBtn');
+  b.classList.add('empty');
+  document.getElementById('kariLbl').textContent = '仮予約';
+  closeKari();
+  toast.success('投稿日を未定に戻しました');
+}
 function applyAll(){document.querySelectorAll('.rev-chk').forEach(function(c){c.checked=true;});toast.success('反映可能な改善案を全て投稿文に反映しました');}
 function applySelected(){var n=document.querySelectorAll('.rev-chk:checked').length;if(n===0){toast.error('反映するレビューを選択してください');return;}toast.success(n+'件の改善案を投稿文に反映しました');}
 /* === 添付フロー === */
@@ -1270,6 +1413,39 @@ function sendChatMsg(){
   setTimeout(function(){chatAdd('ai','承知しました！「'+msg+'」ですね。それをもとに進めましょう。');chatScroll();},300);
 }
 </script>
+<!-- 仮予約ダイアログ。おすすめ日程は「まとめて作る」画面と同じ分析データを見ている -->
+<div class="kariov" id="kariOv" role="dialog" aria-modal="true" aria-label="仮予約">
+  <div class="karibox">
+    <div class="h"><i class="ti ti-calendar-event" style="color:var(--color-primary)"></i>仮予約
+      <button class="x" onclick="closeKari()" aria-label="閉じる"><i class="ti ti-x"></i></button></div>
+    <div class="b">
+      <div class="bcrec" style="margin:0 0 16px;">
+        <i class="ti ti-sparkles"></i>
+        <span class="bcrec-t">おすすめ日程</span>
+        <button class="bcrec-chip best" onclick="kariUseRec(this,'2026-09-02','14:00')">9/2(水) 14:00<span>反応率 8.2%</span></button>
+        <button class="bcrec-chip" onclick="kariUseRec(this,'2026-09-05','11:00')">9/5(土) 11:00<span>7.4%</span></button>
+        <button class="bcrec-chip" onclick="kariUseRec(this,'2026-09-01','19:00')">9/1(火) 19:00<span>6.9%</span></button>
+        <a class="bcrec-link" href="./analysis_account_wire.html" target="_blank" rel="noopener">根拠を見る</a>
+      </div>
+      <div class="fl">日付と時刻</div>
+      <div class="kariin">
+        <input type="date" id="kariDate" value="2026-09-02">
+        <input type="time" id="kariTime" value="14:00" step="1800">
+      </div>
+      <label class="kariask">
+        <input type="checkbox" id="kariAsk" checked>
+        <span>あわせて<b>確認をお願いする</b>。仮予約でも確認依頼は出せます（日付はあとから変えられます）。</span>
+      </label>
+    </div>
+    <div class="f">
+      <button class="btn btn-ghost" onclick="clearKari()">未定に戻す</button>
+      <span class="sp">
+        <button class="btn btn-ghost" onclick="closeKari()">やめる</button>
+        <button class="btn btn-primary" onclick="saveKari()"><i class="ti ti-check"></i>仮予約する</button>
+      </span>
+    </div>
+  </div>
+</div>
 <script src="sonner.js"></script>
 
 <!-- 完成はページ遷移ではなくモーダルで出す（編集画面を閉じずに結果だけ見せる） -->
@@ -1378,10 +1554,45 @@ document.addEventListener('click',function(e){
 });
 renderScenes();
 
+/* ===== 承認済み =====
+   8/19確定: 承認と予約は別。日付が未定でも承認済みになれるので、この画面は
+   「承認は済んだ／日付はこれから」を出す。承認後も編集できるが、直したら承認を取り直す。 */
+function apvReserve(){
+  var lbl = document.getElementById('kariLbl');
+  var has = lbl && !document.getElementById('kariBtn').classList.contains('empty');
+  if(!has){ openKari(); return; }        // 日付が無いならまず決めさせる
+  toast.success(lbl.textContent.replace('仮','') + ' で予約しました');
+}
+/* 承認後に中身を触ったら、承認は取り直し。ボタンと文言を差し替える */
+function apvWatchEdits(){
+  var ed = document.getElementById('sc_editor');
+  var main = document.getElementById('apvMain');
+  if(!ed || !main) return;
+  var dirty = false;
+  function mark(){
+    if(dirty) return;
+    dirty = true;
+    main.innerHTML = '<i class="ti ti-send"></i>再度承認を依頼する';
+    main.onclick = function(){ toast.success('確認をお願いしました'); };
+    var b = document.getElementById('apvBanner');
+    if(b){
+      b.style.borderColor = 'var(--color-warning-border)';
+      b.style.background = 'var(--color-warning-subtle)';
+    }
+    var ico = document.getElementById('apvIco');
+    if(ico){ ico.className = 'ti ti-clock'; ico.style.color = 'var(--color-warning)'; }
+    var ttl = document.getElementById('apvTtl');
+    if(ttl) ttl.textContent = '承認後に変更しました';
+    var sub = document.getElementById('apvBannerSub');
+    if(sub) sub.textContent = 'もう一度、承認をお願いしてください。';
+  }
+  ed.addEventListener('input', mark, true);
+  ed.addEventListener('change', mark, true);
+}
 /* ===== 承認フロー状態（URLハッシュで切替） ===== */
 (function(){
   var h = location.hash.replace('#','');
-  if(h !== 'approval-request' && h !== 'approval-waiting' && h !== 'approval-review') return;
+  if(h !== 'approval-request' && h !== 'approval-waiting' && h !== 'approval-review' && h !== 'approval-approved') return;
   // バナー挿入（shadcn Alert スタイル）
   var bannerHTML = '';
   if(h === 'approval-request'){
@@ -1391,6 +1602,15 @@ renderScenes();
       + '<i class="ti ti-clock" style="font-size:16px;margin-top:1px;flex:none"></i>'
       + '<div style="flex:1"><div style="font-weight:var(--font-weight-body-strong);margin-bottom:2px">確認待ち</div><div style="font-size:var(--text-label);opacity:.85">承認者の確認が完了するまで編集できません</div></div>'
       + '<span onclick="alertDialog({title:\'確認依頼を取り下げますか？\',description:\'取り下げると再度編集できます。\',cancelLabel:\'キャンセル\',actionLabel:\'取り下げる\'},function(){toast(\'取り下げました\')})" style="cursor:pointer;color:var(--color-muted-foreground);font-size:var(--text-label);white-space:nowrap;margin-top:2px">取り下げる</span>'
+      + '</div>';
+  } else if(h === 'approval-approved'){
+    /* 承認は済んだが投稿日がまだ、という状態。承認＝予約完了ではないので、
+       残っている1手（日付を決める）を画面のいちばん上で名指しする。 */
+    bannerHTML = '<div id="apvBanner" style="display:flex;align-items:center;gap:12px;margin:16px 22px 0;padding:16px;border-radius:var(--radius-md);border:1px solid var(--color-success);background:var(--color-success-subtle);font-size:var(--text-body);line-height:1.5;">'
+      + '<i class="ti ti-check" id="apvIco" style="font-size:16px;flex:none;color:var(--color-success)"></i>'
+      + '<div style="flex:1"><div id="apvTtl" style="font-weight:var(--font-weight-body-strong);margin-bottom:2px;color:var(--color-foreground)">承認済み</div>'
+      + '<div id="apvBannerSub" style="font-size:var(--text-label);color:var(--color-muted-foreground)">あとは投稿日を決めるだけです。決めると予約済みになります。</div></div>'
+      + '<button class="btn btn-ghost" style="flex:none" onclick="openKari()"><i class="ti ti-calendar-event"></i>投稿日を決める</button>'
       + '</div>';
   } else {
     bannerHTML = '<div style="display:flex;align-items:flex-start;gap:12px;margin:16px 22px 0;padding:16px;border-radius:var(--radius-md);border:1px solid var(--color-info);background:var(--color-info-subtle);font-size:var(--text-body);line-height:1.5;">'
@@ -1425,6 +1645,9 @@ renderScenes();
     foot.innerHTML = '<button class="btn btn-ghost"><i class="ti ti-arrow-left"></i>戻る</button><button class="btn btn-primary" style="opacity:.4;cursor:not-allowed;pointer-events:none"><i class="ti ti-send"></i>確認をお願いする</button>';
     foot.style.position = 'relative';
     foot.style.zIndex = '6';
+  } else if(h === 'approval-approved'){
+    foot.innerHTML = '<button class="btn btn-ghost"><i class="ti ti-arrow-left"></i>一覧に戻る</button><button class="btn btn-primary" id="apvMain" onclick="apvReserve()"><i class="ti ti-calendar-event"></i>投稿を予約する</button>';
+    apvWatchEdits();
   } else {
     foot.innerHTML = '<button class="btn btn-ghost"><i class="ti ti-arrow-left"></i>一覧に戻る</button><button class="btn" style="background:var(--color-success);color:#fff;border-color:var(--color-success)" onclick="toast.success(\'承認しました\')"><i class="ti ti-check"></i>承認する</button>';
   }
@@ -1432,50 +1655,29 @@ renderScenes();
 
 </script>
 
-<!-- シーン削除の確認 -->
-<div class="cfmask" id="cfMask"></div>
-<div class="cfbox" id="cfBox" role="dialog" aria-modal="true" aria-labelledby="cfTitle">
-  <div class="cfttl"><i class="ti ti-alert-circle"></i><span id="cfTitle">このシーンを削除しますか？</span></div>
-  <div class="cfmsg">書いた内容も一緒に消えます。元に戻せません。</div>
-  <div class="cfprev" id="cfPrev"></div>
-  <div class="cfbtns">
-    <button class="cfbtn ghost" id="cfCancel">やめる</button>
-    <button class="cfbtn danger" id="cfOk"><i class="ti ti-x"></i>削除する</button>
-  </div>
-</div>
 <script>
-/* 削除の確認ダイアログ */
-var cfIndex=null;
+/* シーン削除の確認。共有の alertDialog（sonner.js）を使う。画面ごとにダイアログを自作しない。 */
 function askDeleteScene(idx){
-  cfIndex=idx;
   var sc=SCENES[idx]||{};
-  document.getElementById('cfTitle').textContent='シーン'+(idx+1)+'を削除しますか？';
   var body=[];
   if(sc.role)body.push(sc.role);
   if(sc.tel)body.push('テロップ: '+sc.tel);
   if(sc.shot)body.push(sc.shot);
-  document.getElementById('cfPrev').textContent=body.join('\n')||'（まだ何も書かれていません）';
-  document.getElementById('cfMask').classList.add('open');
-  document.getElementById('cfBox').classList.add('open');
-  document.getElementById('cfCancel').focus();
+  if(!body.length)body.push('まだ何も書かれていません');
+  alertDialog({
+    title:'シーン'+(idx+1)+'を削除しますか？',
+    description:'書いた内容も一緒に消えます。元に戻せません。',
+    points:body,
+    cancelLabel:'やめる',
+    actionLabel:'削除する',
+    destructive:true
+  },function(){
+    var n=idx+1;
+    SCENES.splice(idx,1);
+    renderScenes();
+    if(typeof toast!=='undefined')toast('シーン'+n+'を削除しました');
+  });
 }
-function closeConfirm(){
-  cfIndex=null;
-  document.getElementById('cfMask').classList.remove('open');
-  document.getElementById('cfBox').classList.remove('open');
-}
-document.getElementById('cfCancel').addEventListener('click',closeConfirm);
-document.getElementById('cfMask').addEventListener('click',closeConfirm);
-document.getElementById('cfOk').addEventListener('click',function(){
-  if(cfIndex===null)return;
-  var n=cfIndex+1;
-  SCENES.splice(cfIndex,1);
-  closeConfirm(); renderScenes();
-  if(typeof toast!=='undefined')toast('シーン'+n+'を削除しました');
-});
-document.addEventListener('keydown',function(e){
-  if(e.key==='Escape'&&cfIndex!==null)closeConfirm();
-});
 </script>
 
 <script>
@@ -1867,7 +2069,139 @@ document.addEventListener('click',function(e){
     if(typeof toast!=='undefined')toast('この投稿の編集を開きます');
     return; }
 });
+
+/* ===== SNSモックアップ =====
+   台本のテロップが実寸で読めるか、SNSのUIに隠れないかを確かめる用。
+   媒体ごとに縦横比・被さるUI・セーフゾーンが変わる。
+   テロップの大きさは動画の幅に対する割合(cqw)で持つ。実機とスマホ枠の倍率が
+   同じになるので、ここで読めれば実機でも読める。
+   telY はテロップの下端位置（下から何%）。実機の定番にあわせてUIの上に置く。 */
+var MK = {
+  reel:  {ratio:'9/16', tel:'7cqw',   telY:'24%', ui:'reel',  label:'Instagram リール（縦長 9:16）'},
+  story: {ratio:'9/16', tel:'7cqw',   telY:'24%', ui:'story', label:'ストーリーズ（縦長 9:16）'},
+  tiktok:{ratio:'9/16', tel:'7cqw',   telY:'26%', ui:'tiktok',label:'TikTok（縦長 9:16）'},
+  x:     {ratio:'16/9', tel:'4.5cqw', telY:'12%', ui:'x',     label:'X（横長 16:9）'}
+};
+var mkCur = 'reel';
+var mkScene = 0;
+
+/* いま選んでいるシーンのテロップを台本から拾う。
+   台本を直したらモックアップも追従するよう、SCENES から読む。 */
+function mkSceneText(){
+  if(mkScene >= SCENES.length) mkScene = 0;
+  var s = SCENES[mkScene] || {};
+  return {
+    which: 'シーン'+(mkScene+1)+(s.role?'：'+s.role:'')+(s.time?'（'+s.time+'）':''),
+    tel:   (s.tel||'').trim() || 'テロップが未記入です'
+  };
+}
+
+/* シーン切替のチップ。台本のシーン数に追従させる */
+function renderMkScenes(){
+  var box=document.getElementById('mkScenes'); if(!box) return;
+  box.innerHTML='<span class="lb">シーン</span>'+SCENES.map(function(s,i){
+    return '<button class="mk-sc'+(i===mkScene?' on':'')+'" onclick="mkScenePick('+i+')">'+(i+1)+'</button>';
+  }).join('');
+}
+
+function renderMockup(){
+  var ovl=document.getElementById('mkOvl');
+  if(!ovl) return;
+  var cfg=MK[mkCur], t=mkSceneText();
+  var app=document.getElementById('mkApp');
+
+  /* セーフゾーン（UIが被る範囲）。縦長はSNS共通でおおよそ下20%・右15%・上10% */
+  var safe = cfg.ui==='x' ? ''
+    : '<span class="mk-safe bt" style="height:20%"></span>'
+      + '<span class="mk-safe rt" style="width:15%"></span>'
+      + '<span class="mk-safe tp" style="height:10%"></span>';
+
+  var canvas='<div class="mk-canvas" style="aspect-ratio:'+cfg.ratio+'">'
+    + '<i class="ti ti-video ph"></i>'
+    + safe
+    + '<div class="mk-tel" style="font-size:'+cfg.tel+';bottom:'+cfg.telY+'">'+esc(t.tel)+'</div>';
+
+  if(cfg.ui==='reel' || cfg.ui==='tiktok'){
+    canvas += '<div class="mk-rail">'
+      + '<i class="ti ti-heart"></i><span>1.2万</span>'
+      + '<i class="ti ti-message-circle"></i><span>86</span>'
+      + '<i class="ti ti-send"></i>'
+      + '<i class="ti ti-dots"></i></div>'
+      + '<div class="mk-ovcap"><span class="ac">@sumika_fudosan</span>駅徒歩5分の南向き1LDK、新着です。<span class="mk-hash">#賃貸 #駅近</span></div>';
+  } else if(cfg.ui==='story'){
+    canvas += '<div class="mk-prog"><i class="on"></i><i></i><i></i></div>'
+      + '<div class="mk-sthd"><span class="av"></span>sumika_fudosan<span style="opacity:.7;font-weight:400">・1時間前</span></div>';
+  }
+  canvas += '</div>';
+
+  if(cfg.ui==='x'){
+    /* X はタイムラインの中に横長カードが載るので、上下に白いUIが付く */
+    app.innerHTML='<div class="mk-xhd"><span class="mk-av"></span><span><span class="mk-acc">すみか不動産</span><br><span class="mk-loc">@sumika_fudosan</span></span><i class="ti ti-dots" style="margin-left:auto;font-size:14px;color:#666"></i></div>'
+      + '<div class="mk-xcap">駅徒歩5分の南向き1LDK、新着です。<span class="mk-hash">#賃貸 #お部屋探し</span></div>'
+      + canvas
+      + '<div class="mk-acts"><i class="ti ti-message-circle"></i><i class="ti ti-refresh"></i><i class="ti ti-heart"></i><i class="ti ti-bookmark" style="margin-left:auto"></i></div>';
+  } else {
+    /* 縦長はUIが動画の上に被さるので、枠いっぱいに出す */
+    app.innerHTML=canvas;
+  }
+
+  /* 下部ナビ。ストーリーズは全画面なので出さない */
+  document.getElementById('mkBtm').style.display = (cfg.ui==='story') ? 'none' : 'flex';
+  document.getElementById('mkWhich').textContent = t.which;
+  document.getElementById('mkSize').textContent = cfg.label;
+  renderMkScenes();
+}
+
+function mkPick(k, el){
+  mkCur=k;
+  document.querySelectorAll('#mkTabs .mk-tab').forEach(function(b){b.classList.remove('on');});
+  if(el) el.classList.add('on');
+  renderMockup();
+}
+function mkScenePick(i){ mkScene=i; renderMockup(); }
+function openMockup(){ renderMockup(); document.getElementById('mkOvl').classList.add('open'); }
+function closeMockup(){ document.getElementById('mkOvl').classList.remove('open'); }
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeMockup(); });
 </script>
 <script src="shadcn-select.js"></script>
 <script src="shadcn-date.js"></script>
+
+<!-- ===== SNSモックアップのダイアログ =====
+     台本のテロップが実際のSNSで読める大きさか、UIに隠れないかを、
+     この画面のまま確かめられるようにする。
+     スマホ枠と中身の作りは画像側のモックアップと同じ。 -->
+<div class="mk-ovl" id="mkOvl" onclick="if(event.target===this)closeMockup()">
+  <div class="mk-dlg" role="dialog" aria-modal="true" aria-label="SNSでの見え方">
+    <div class="mk-hd">
+      <i class="ti ti-device-mobile" style="font-size:22px;color:var(--color-primary)"></i>
+      <span class="t">SNSでの見え方</span>
+      <button class="x" onclick="closeMockup()" aria-label="閉じる"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="mk-d">実際のSNSの画面に当てはめた姿です。<b>テロップがこの大きさで読めるか</b>、<b>SNSのUIに隠れていないか</b>を確かめてください。読みにくいときは台本の「テロップ」を短くします。</div>
+    <div class="mk-tabs" id="mkTabs">
+      <button class="mk-tab on" onclick="mkPick('reel',this)"><i class="ti ti-brand-instagram"></i>リール</button>
+      <button class="mk-tab" onclick="mkPick('story',this)"><i class="ti ti-brand-instagram"></i>ストーリーズ</button>
+      <button class="mk-tab" onclick="mkPick('tiktok',this)"><i class="ti ti-brand-tiktok"></i>TikTok</button>
+      <button class="mk-tab" onclick="mkPick('x',this)"><i class="ti ti-brand-x"></i>X</button>
+    </div>
+    <div class="mk-scenes" id="mkScenes"></div>
+    <div class="mk-body">
+      <div class="mk-phone">
+        <div class="mk-status"><span>9:41</span><span class="r"><i class="ti ti-wifi" style="font-size:12px"></i><i class="ti ti-battery-4" style="font-size:14px"></i></span></div>
+        <div class="mk-app" id="mkApp"></div>
+        <div class="mk-btm" id="mkBtm"><i class="ti ti-home"></i><i class="ti ti-search"></i><i class="ti ti-plus"></i><i class="ti ti-heart"></i></div>
+      </div>
+      <div class="mk-side">
+        <dl class="mk-note">
+          <dt>いま見ているもの</dt>
+          <dd id="mkWhich">シーン1</dd>
+          <dt>確かめること</dt>
+          <dd>・テロップが小さすぎないか<br>・点線の中に文字が入っていないか<br>・スマホの明るさでも読めるか</dd>
+        </dl>
+        <div class="mk-legend"><span class="sw"></span>SNSのUIが被る範囲（ここに文字を置かない）</div>
+        <span class="mk-size" id="mkSize">Instagram リール（縦長 9:16）</span>
+      </div>
+    </div>
+  </div>
+</div>
 </body></html>

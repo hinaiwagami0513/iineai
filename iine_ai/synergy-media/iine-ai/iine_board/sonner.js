@@ -214,19 +214,40 @@
 
   window.toast = toast;
 
-  /* ---- shadcn AlertDialog ---- */
+  /* ---- shadcn AlertDialog ----
+     アラート系ダイアログ（確認・警告・破壊操作）はこの1つだけを使う。
+     ワイヤーごとに .cfbox 等を自作しない（DESIGN.md §Components「手でコンポーネントを再発明しない」）。
+
+       alertDialog({
+         title:       '連携を解除しますか？',      // 必須
+         description: 'Instagram（@…）の連携を解除します。',
+         points:      ['予約している投稿は出せなくなります', ...],  // 任意。中黒つきの詳細ブロック
+         cancelLabel: 'やめる',                    // 既定 'キャンセル'
+         actionLabel: '連携を解除する',            // 既定 '続ける'
+         destructive: true                         // 赤塗り + 警告アイコン
+       }, function(){ ...OKのときの処理... });
+
+     見た目の値は DESIGN.md のトークンに合わせている。shadcn の既定値（角丸6px・18px見出し・
+     ほぼ黒のCTA）はスケール外／ブランド外なので使わない。 */
+  var ALERT_ICON = '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none;margin-top:1px;"><path d="M12 9v4"/><path d="M10.363 3.591 2.257 17.125a1.914 1.914 0 0 0 1.636 2.871h16.214a1.914 1.914 0 0 0 1.636-2.87L13.637 3.59a1.914 1.914 0 0 0-3.274 0z"/><path d="M12 16h.01"/></svg>';
+
   function alertDialog(opts, onConfirm) {
     var title = opts.title || '';
     var description = opts.description || '';
+    var points = opts.points || null;
     var cancelLabel = opts.cancelLabel || 'キャンセル';
     var actionLabel = opts.actionLabel || '続ける';
     var destructive = opts.destructive || false;
 
+    /* HTMLの style="…" に埋めるのでフォント名はシングルクォート。
+       ダブルクォートだと属性が early close して以降の指定（背景色など）が全部落ちる。 */
+    var FONT = "var(--font-body,'Noto Sans JP'),'Hiragino Sans','Meiryo',sans-serif";
+
     /* backdrop */
     var overlay = document.createElement('div');
-    overlay.style.cssText = 'position:fixed;inset:0;z-index:999999998;background:rgba(0,0,0,0.8);opacity:0;transition:opacity .15s ease;';
+    overlay.style.cssText = 'position:fixed;inset:0;z-index:999999998;background:rgba(0,0,0,0.45);opacity:0;transition:opacity .15s ease;';
 
-    /* dialog */
+    /* dialog: 大きめの面なので radius は lg(16px)、影は DESIGN.md §Elevation の overlay */
     var dialog = document.createElement('div');
     dialog.style.cssText = [
       'position:fixed',
@@ -236,36 +257,61 @@
       'display:flex',
       'flex-direction:column',
       'gap:0',
-      'width:100%',
-      'max-width:512px',
-      'border-radius:12px',
+      'width:calc(100vw - 32px)',
+      'max-width:440px',
+      'border-radius:16px',
       'background:var(--color-card,#fff)',
-      'border:1px solid var(--color-border,hsl(0,0%,93%))',
-      'box-shadow:0 16px 70px rgba(0,0,0,.2)',
+      'border:1px solid var(--color-border,#e9e8e6)',
+      'box-shadow:0 8px 24px rgb(0 0 0 / 0.12)',
       'padding:24px',
       'box-sizing:border-box',
-      'font-family:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif',
+      'font-family:' + FONT,
       'transform:translate(-50%,-50%) scale(.95)',
       'opacity:0',
       'transition:all .15s ease',
     ].join(';');
 
-    /* header */
+    /* header: タイトルは h3(16px)+700。破壊操作は色+形のセットで示す（色だけで表さない） */
+    var icon = destructive
+      ? '<span style="color:var(--color-destructive,#dc2626);display:flex;">' + ALERT_ICON + '</span>'
+      : '';
     var header = '<div style="display:flex;flex-direction:column;gap:8px;">' +
-      '<div style="font-size:18px;font-weight:600;line-height:1;letter-spacing:-0.01em;color:var(--color-foreground,hsl(0,0%,9%));">' + escapeHtml(title) + '</div>' +
-      (description ? '<div style="font-size:14px;line-height:1.5;color:var(--color-muted-foreground,hsl(0,0%,45%));">' + escapeHtml(description) + '</div>' : '') +
+      '<div style="display:flex;align-items:flex-start;gap:9px;font-size:1rem;font-weight:700;line-height:1.5;color:var(--color-foreground,#2a2826);">' +
+        icon + '<span>' + escapeHtml(title) + '</span>' +
+      '</div>' +
+      (description ? '<div style="font-size:0.875rem;line-height:1.7;color:var(--color-muted-foreground,#757575);">' + escapeHtml(description) + '</div>' : '') +
       '</div>';
 
-    /* footer */
-    var btnBase = 'display:inline-flex;align-items:center;justify-content:center;height:36px;padding:0 16px;border-radius:6px;font-size:14px;font-weight:500;cursor:pointer;transition:opacity .2s;outline:none;';
-    var cancelBtn = '<button data-cancel style="' + btnBase + 'background:transparent;border:1px solid var(--color-border,hsl(0,0%,90%));color:var(--color-foreground,hsl(0,0%,9%));">'+escapeHtml(cancelLabel)+'</button>';
+    /* points: 「何が起きるか」の箇条書き。これが無いと各画面が独自の詳細ブロックを作り始める */
+    var detail = '';
+    if (points && points.length) {
+      /* 改行を含む値も1行ずつに開き、すでに中黒が付いている行には足さない（・・になる） */
+      var lines = [];
+      points.forEach(function (p) {
+        String(p).split('\n').forEach(function (l) {
+          l = l.trim();
+          if (!l) return;
+          lines.push(l.charAt(0) === '・' ? l : '・' + l);
+        });
+      });
+      detail = '<div style="background:var(--color-surface,#fbfaf8);border:1px solid var(--color-border,#e9e8e6);' +
+        'border-radius:12px;padding:12px 14px;margin-top:14px;font-size:0.75rem;line-height:1.8;' +
+        'color:var(--color-foreground,#2a2826);max-height:150px;overflow-y:auto;word-break:break-word;">' +
+        lines.map(escapeHtml).join('<br>') +
+        '</div>';
+    }
+
+    /* footer: ボタンは radius md(12px)・高さ44px。通常アクションは primary（ほぼ黒のCTAは使わない） */
+    var btnBase = 'display:inline-flex;align-items:center;justify-content:center;height:44px;padding:0 20px;border-radius:12px;' +
+      'font-family:' + FONT + ';font-size:0.875rem;font-weight:700;cursor:pointer;transition:opacity .2s;outline:none;';
+    var cancelBtn = '<button data-cancel style="' + btnBase + 'background:transparent;border:1px solid var(--color-border,#e9e8e6);color:var(--color-foreground,#2a2826);">'+escapeHtml(cancelLabel)+'</button>';
     var actionColor = destructive
       ? 'background:var(--color-destructive,#dc2626);border:none;color:var(--color-on-destructive,#fff);'
-      : 'background:var(--color-foreground,hsl(0,0%,9%));border:none;color:var(--color-card,#fff);';
+      : 'background:var(--color-primary,#ef6108);border:none;color:var(--color-on-primary,#fff);';
     var actionBtn = '<button data-action style="' + btnBase + actionColor + '">'+escapeHtml(actionLabel)+'</button>';
-    var footer = '<div style="display:flex;justify-content:flex-end;gap:8px;margin-top:24px;">' + cancelBtn + actionBtn + '</div>';
+    var footer = '<div style="display:flex;justify-content:flex-end;gap:10px;margin-top:20px;">' + cancelBtn + actionBtn + '</div>';
 
-    dialog.innerHTML = header + footer;
+    dialog.innerHTML = header + detail + footer;
     document.body.appendChild(overlay);
     document.body.appendChild(dialog);
 
@@ -279,6 +325,7 @@
     });
 
     function close() {
+      document.removeEventListener('keydown', onKey);
       overlay.style.opacity = '0';
       dialog.style.transform = 'translate(-50%,-50%) scale(.95)';
       dialog.style.opacity = '0';
@@ -287,9 +334,14 @@
         if (dialog.parentNode) dialog.parentNode.removeChild(dialog);
       }, 150);
     }
+    /* Esc で閉じる。開いた時点のフォーカスは「やめる」側に置く（誤爆させない） */
+    function onKey(e) { if (e.key === 'Escape') close(); }
+    document.addEventListener('keydown', onKey);
 
     overlay.addEventListener('click', close);
-    dialog.querySelector('[data-cancel]').addEventListener('click', close);
+    var cancelEl = dialog.querySelector('[data-cancel]');
+    cancelEl.addEventListener('click', close);
+    cancelEl.focus();
     dialog.querySelector('[data-action]').addEventListener('click', function () {
       close();
       if (onConfirm) onConfirm();

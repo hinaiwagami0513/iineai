@@ -24,6 +24,7 @@
 .ti-check:before{content:"\ea5e"}
 .ti-x:before{content:"\eb55"}
 .ti-alert-triangle:before{content:"\ea06"}
+.ti-refresh:before{content:"\eb13"}
 .ti-trash:before{content:"\eb41"}
 .ti-pencil:before{content:"\eb04"}
 .ti-users:before{content:"\ebf2"}
@@ -59,6 +60,7 @@
   --color-info-subtle: #e6f1fb;
   --color-destructive: #dc2626;
   --color-destructive-subtle: #fee2e2;
+  --color-on-destructive: #ffffff;
   --color-accent-purple: #9724ba;
   --color-accent-purple-subtle: #f5e7f8;
   --color-sns-instagram: #b02a78;
@@ -198,9 +200,34 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 .sns .tx{flex:1;min-width:0;}
 .sns .nm{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);}
 .sns .ac{font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:3px;}
+/* 状態バッジは行をまたいで縦に揃える。後ろに来るのが ⋮ か「連携する」かで幅が変わるので、
+   バッジ列と操作列の幅を固定する（揃えないと連携済みと未連携が40pxずれる）。 */
+.sns .state{min-width:92px;justify-content:center;}
+.sns .act{width:118px;flex:none;display:flex;align-items:center;justify-content:flex-end;gap:4px;position:relative;}
+
+/* ===== ⋮ のメニュー =====
+   DESIGN.md §Components のドロップダウン仕様（card 背景 + border + overlay 影 + rounded.md）。
+   中身は「再連携」と「連携を解除」の2つだけ。ヘルプセンターがSNS行に対して案内している操作が
+   この2つで、それ以外は無い（help_site/content/start.ts・settings.ts）。 */
+.rowmenu{display:none;position:absolute;top:calc(100% + 4px);right:0;z-index:60;min-width:168px;
+  background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-md);
+  box-shadow:0 8px 24px rgb(0 0 0 / 0.12);padding:5px;}
+.rowmenu.open{display:block;}
+.rowmenu button{width:100%;display:flex;align-items:center;gap:9px;padding:9px 11px;border:none;background:none;
+  border-radius:var(--radius-sm);font-family:inherit;font-size:var(--text-body);color:var(--color-foreground);
+  cursor:pointer;text-align:left;white-space:nowrap;}
+.rowmenu button:hover{background:var(--color-surface);}
+.rowmenu button i{font-size:17px;color:var(--color-muted-foreground);}
+/* 一覧内の破壊操作は常時 ghost の赤字。赤塗りは確認ダイアログの最終ボタンだけ（DESIGN.md §Components）。 */
+.rowmenu button.danger,.rowmenu button.danger i{color:var(--color-destructive);}
+.rowmenu button.danger:hover{background:var(--color-destructive-subtle);}
+
+.rowmenu button:focus-visible{outline:2px solid var(--color-ring);outline-offset:2px;}
 .state{display:inline-flex;align-items:center;gap:5px;flex:none;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);border-radius:var(--radius-full);padding:5px 12px;}
 .state.ok{background:var(--color-success-subtle);color:var(--color-success);}
 .state.ng{background:var(--color-destructive-subtle);color:var(--color-destructive);}
+/* 未連携は異常ではないので状態色（success/warning/info/like）を使わない。中立の面+枠で出す。 */
+.state.off{background:var(--color-surface);color:var(--color-muted-foreground);border:1px solid var(--color-border);}
 
 /* メンバー */
 .mem{display:flex;align-items:center;gap:13px;padding:14px 20px;border-bottom:1px solid var(--color-border);}
@@ -239,6 +266,21 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
    ・何を書けばいいか分からない ・どこを直したか分からない ・保存が怖い
    の3つが起きる。項目ごとに読み書きし、進み具合と使われ方を各項目に添える。 */
 
+/* ===== 読み込み中のプログレスと、完了時のソナー =====
+   読み込みは数分かかるので、回りっぱなしのスピナーではなく「どこまで進んだか」を出す。
+   終わったら、AIが書き換えた場所そのものに波紋（ソナー）を1回出して、目を連れて行く。 */
+.srcpg{display:none;padding:0 20px 16px;}
+.src.loading .srcpg{display:block;}
+.srcpg .lbl{display:flex;align-items:center;gap:7px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-primary);margin-bottom:8px;}
+.srcpg .lbl .pct{margin-left:auto;font-variant-numeric:tabular-nums;color:var(--color-muted-foreground);font-weight:var(--font-weight-body);}
+.srcpg .bar{height:6px;border-radius:var(--radius-full);background:var(--color-background);overflow:hidden;}
+.srcpg .bar i{display:block;height:100%;width:0;border-radius:var(--radius-full);background:var(--color-primary);transition:width .4s ease;}
+/* 読み込み中は「読み込んで作る」を押せなくする（二重起動を防ぐ） */
+.src.loading .src-hd .btn-p{opacity:.45;pointer-events:none;}
+/* ソナー：更新された箱の縁から波紋が1回広がる。中身の見た目は変えない */
+@keyframes sonar{from{box-shadow:0 0 0 0 rgba(239,97,8,.45);}to{box-shadow:0 0 0 14px rgba(239,97,8,0);}}
+.sonar{animation:sonar 1.1s ease-out 2;border-color:var(--color-primary) !important;}
+@media(prefers-reduced-motion:reduce){.sonar{animation:none;}}
 /* もとになる資料。ここにURLやPDFを入れて「読み込んで作る」を押すと、AIが読んで下の内容を作る */
 .src{background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);margin-bottom:18px;}
 .src-hd{display:flex;align-items:center;gap:12px;padding:16px 20px;cursor:pointer;}
@@ -340,6 +382,16 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 .btn-g:hover{border-color:var(--color-foreground);color:var(--color-foreground);}
 
 @media(max-width:1100px){ .picks,.rolehelp{grid-template-columns:1fr;} }
+/* SP: アイコン42 + バッジ92 + 操作118 を1行に並べるとSNS名が40pxまで潰れる。
+   1行目をアイコン+名前で埋め、バッジと操作は2行目の右に落とす。 */
+@media(max-width:430px){
+  .sns{flex-wrap:wrap;row-gap:10px;padding:14px 16px;}
+  .sns .tx{flex:1 1 calc(100% - 55px);}
+  /* 2行目: バッジはアイコン列(42+gap13)の分だけ下げてSNS名と左を揃え、操作は右端に寄せる。
+     PCの固定幅は縦揃えのためのものなので、1列になるSPでは外す。 */
+  .sns .state{margin-left:55px;min-width:0;}
+  .sns .act{width:auto;margin-left:auto;}
+}
 </style>
 <!-- SP対応。インラインCSSの後に置く（@media は詳細度を上げないので後勝ちにする） -->
 <link rel="stylesheet" href="./shell-sp.css">
@@ -359,8 +411,8 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
       <div class="nidiv"></div>
       <div class="ni on exp" onclick="navToggle(this)"><i class="ti ti-settings"></i>設定<span class="cv"><i class="ti ti-chevron-down"></i></span></div>
       <div class="nisub open">
-        <div class="nis on" id="navProject" onclick="setTab('project')">プロジェクト管理</div>
-        <div class="nis" id="navSns" onclick="setTab('sns')">SNSアカウント</div>
+        <div class="nis on" id="navProject" onclick="setTab('project')">運用目的</div>
+        <div class="nis" id="navSns" onclick="setTab('sns')">SNS設定</div>
         <div class="nis" id="navReview" onclick="setTab('review')">AIレビュー</div>
         <div class="nis" id="navMembers" onclick="setTab('members')">メンバー管理</div>
       </div>
@@ -379,7 +431,7 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
   <!-- メイン -->
   <div class="main">
     <div class="hd">
-      <i class="ti ti-settings pgic"></i><span class="pgnm" id="pgnm">設定 / プロジェクト管理</span>
+      <i class="ti ti-settings pgic"></i><span class="pgnm" id="pgnm">設定 / 運用目的</span>
       <div class="r">
         <a class="planchip" href="./plan_wire.html" title="いまのプラン（押すと料金一覧へ）"><i class="ti ti-sparkles"></i>ベーシックOne</a>
         <button class="hdbtn" title="ToDo" aria-label="ToDo"><i class="ti ti-list-check"></i><span class="hdbadge">5</span></button>
@@ -413,6 +465,11 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
             <span class="sp"><button class="btn-p" onclick="event.stopPropagation();pjLearn()"><i class="ti ti-sparkles"></i>読み込んで作る</button></span>
           </div>
           <div class="src-sum">ホームページ 1件・PDF 3件／最後に読み込んだのは 2026年8月10日</div>
+          <!-- 読み込み中だけ出る。数分かかるので進み具合を数字で見せる -->
+          <div class="srcpg" id="srcPg">
+            <div class="lbl"><i class="ti ti-sparkles"></i><span id="srcPgTx">資料を読み込んでいます</span><span class="pct" id="srcPgPct">0%</span></div>
+            <div class="bar"><i id="srcPgBar"></i></div>
+          </div>
           <div class="src-body">
           <div class="src-d">
             お店やサービスのことが分かる<b>ホームページのURL</b>や<b>PDF</b>を入れてください。AIがそれを読んで、下の内容を作ります。<br>
@@ -658,42 +715,61 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
         </div>
       </div>
 
-      <!-- ============ SNSアカウント ============ -->
+      <!-- ============ SNS設定 ============ -->
       <div class="pane" id="paSns">
-        <div class="lead">投稿を出すSNSをつなぎます。つながっていないSNSには投稿できません。</div>
+        <div class="lead">投稿を出すSNSを連携します。連携していないSNSには投稿できません。</div>
 
         <div class="card">
-          <div class="card-h"><div><div class="t">つないでいるSNS</div><div class="d">3つ つながっています。</div></div></div>
+          <div class="card-h"><div><div class="t">連携中のSNS</div><div class="d">3つ 連携しています。</div></div></div>
+          <!-- 「再連携」は正常な行に常時置かない（毎回「切れているのか？」と読ませてしまう）。
+               正常な行は ⋮ メニューに入れ、連携が切れた行だけ .state.ng + 行内ボタンで出す。
+               → news_wire.html の「連携が切れているとSNS設定に再連携が出る」という説明と一致させる。 -->
           <div class="sns">
             <span class="ic" style="background:var(--color-sns-instagram-subtle);color:var(--color-sns-instagram)"><i class="ti ti-brand-instagram"></i></span>
-            <div class="tx"><div class="nm">Instagram</div><div class="ac">@inucafe_one・2026/06/12 につないだ</div></div>
-            <span class="state ok"><i class="ti ti-check"></i>つながっています</span>
-            <button class="btn-g">つなぎ直す</button>
-            <button class="iconbtn" aria-label="メニュー"><i class="ti ti-dots-vertical"></i></button>
+            <div class="tx"><div class="nm">Instagram</div><div class="ac">@inucafe_one・2026/06/12 に連携</div></div>
+            <span class="state ok"><i class="ti ti-check"></i>連携済み</span>
+            <span class="act">
+              <button class="iconbtn" aria-label="メニュー" aria-haspopup="true" aria-expanded="false" onclick="rowMenu(this)"><i class="ti ti-dots-vertical"></i></button>
+              <div class="rowmenu" role="menu">
+                <button role="menuitem" onclick="reconnect('Instagram')"><i class="ti ti-refresh"></i>再連携</button>
+                <button class="danger" role="menuitem" onclick="askDisconnect(this,'Instagram','@inucafe_one')"><i class="ti ti-x"></i>連携を解除</button>
+              </div>
+            </span>
           </div>
           <div class="sns">
             <span class="ic" style="background:var(--color-sns-x-subtle);color:var(--color-sns-x)"><i class="ti ti-brand-x"></i></span>
-            <div class="tx"><div class="nm">X</div><div class="ac">@inucafe_one・2026/06/12 につないだ</div></div>
-            <span class="state ok"><i class="ti ti-check"></i>つながっています</span>
-            <button class="btn-g">つなぎ直す</button>
-            <button class="iconbtn" aria-label="メニュー"><i class="ti ti-dots-vertical"></i></button>
+            <div class="tx"><div class="nm">X</div><div class="ac">@inucafe_one・2026/06/12 に連携</div></div>
+            <span class="state ok"><i class="ti ti-check"></i>連携済み</span>
+            <span class="act">
+              <button class="iconbtn" aria-label="メニュー" aria-haspopup="true" aria-expanded="false" onclick="rowMenu(this)"><i class="ti ti-dots-vertical"></i></button>
+              <div class="rowmenu" role="menu">
+                <button role="menuitem" onclick="reconnect('X')"><i class="ti ti-refresh"></i>再連携</button>
+                <button class="danger" role="menuitem" onclick="askDisconnect(this,'X','@inucafe_one')"><i class="ti ti-x"></i>連携を解除</button>
+              </div>
+            </span>
           </div>
           <div class="sns">
             <span class="ic" style="background:var(--color-sns-tiktok-subtle);color:var(--color-sns-tiktok)"><i class="ti ti-brand-tiktok"></i></span>
-            <div class="tx"><div class="nm">TikTok</div><div class="ac">@inucafe_one・2026/07/03 につないだ</div></div>
-            <span class="state ok"><i class="ti ti-check"></i>つながっています</span>
-            <button class="btn-g">つなぎ直す</button>
-            <button class="iconbtn" aria-label="メニュー"><i class="ti ti-dots-vertical"></i></button>
+            <div class="tx"><div class="nm">TikTok</div><div class="ac">@inucafe_one・2026/07/03 に連携</div></div>
+            <span class="state ok"><i class="ti ti-check"></i>連携済み</span>
+            <span class="act">
+              <button class="iconbtn" aria-label="メニュー" aria-haspopup="true" aria-expanded="false" onclick="rowMenu(this)"><i class="ti ti-dots-vertical"></i></button>
+              <div class="rowmenu" role="menu">
+                <button role="menuitem" onclick="reconnect('TikTok')"><i class="ti ti-refresh"></i>再連携</button>
+                <button class="danger" role="menuitem" onclick="askDisconnect(this,'TikTok','@inucafe_one')"><i class="ti ti-x"></i>連携を解除</button>
+              </div>
+            </span>
           </div>
           <div class="sns">
             <span class="ic" style="background:var(--color-surface);color:var(--color-muted-foreground)"><i class="ti ti-brand-youtube"></i></span>
-            <div class="tx"><div class="nm">YouTube</div><div class="ac">まだつないでいません</div></div>
-            <button class="btn-o"><i class="ti ti-plus"></i>つなぐ</button>
+            <div class="tx"><div class="nm">YouTube</div><div class="ac">投稿の出し先に追加できます</div></div>
+            <span class="state off">未連携</span>
+            <span class="act"><button class="btn-o"><i class="ti ti-plus"></i>連携する</button></span>
           </div>
         </div>
 
         <div class="card">
-          <div class="card-h"><div><div class="t">Instagram の設定</div><div class="d">つないだSNSごとに決められます。</div></div></div>
+          <div class="card-h"><div><div class="t">Instagram の設定</div><div class="d">連携中のSNSごとに決められます。</div></div></div>
           <div class="row">
             <div class="tx">
               <div class="t">Facebookページにも同時に出す</div>
@@ -716,7 +792,7 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
           <img src="./assets/iine-fox-worried.png" alt="">
           <div>
             <span class="lb">ATTENTION</span>
-            <div class="t">つなげるSNSを増やすと、同じ投稿をまとめて出せます。<b>プランの変更</b>は左下のアカウントメニュー →「プラン・支払い」から。</div>
+            <div class="t">連携できるSNSを増やすと、同じ投稿をまとめて出せます。<b>プランの変更</b>は左下のアカウントメニュー →「プラン・支払い」から。</div>
           </div>
         </div>
       </div>
@@ -817,7 +893,7 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
             <div class="seg"><button onclick="segPick(this)">必ず直す</button><button class="on" onclick="segPick(this)">教えてもらうだけ</button><button onclick="segPick(this)">見ない</button></div>
           </div>
           <div class="rule">
-            <div class="tx"><div class="t">言葉づかいがプロジェクト管理と合っているか</div><div class="d">「プロジェクト管理」で決めた言葉づかいとズレていないか。</div></div>
+            <div class="tx"><div class="t">言葉づかいが運用目的と合っているか</div><div class="d">「運用目的」で決めた言葉づかいとズレていないか。</div></div>
             <div class="seg"><button onclick="segPick(this)">必ず直す</button><button class="on" onclick="segPick(this)">教えてもらうだけ</button><button onclick="segPick(this)">見ない</button></div>
           </div>
           <div class="rule">
@@ -857,6 +933,7 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
   </div>
 </div>
 
+<script src="sonner.js"></script>
 <script>
 // サイドバーの折りたたみ項目
 function navToggle(el){
@@ -869,8 +946,8 @@ function navToggle(el){
 /* ===== 設定の画面切替 =====
    サイドバーのサブ項目が、そのままこの画面のルートになる。 */
 var TABS = {
-  project: {pane:'paProject', nav:'navProject', name:'プロジェクト管理'},
-  sns:     {pane:'paSns',     nav:'navSns',     name:'SNSアカウント'},
+  project: {pane:'paProject', nav:'navProject', name:'運用目的'},
+  sns:     {pane:'paSns',     nav:'navSns',     name:'SNS設定'},
   review:  {pane:'paReview',  nav:'navReview',  name:'AIレビュー'},
   members: {pane:'paMembers', nav:'navMembers', name:'メンバー管理'}
 };
@@ -904,7 +981,7 @@ function segPick(el){
   el.parentElement.querySelectorAll('button').forEach(function(b){ b.classList.remove('on'); });
   el.classList.add('on');
 }
-// プロジェクト管理は項目ごとに読み書きする。
+// 運用目的は項目ごとに読み書きする。
 // 全体を編集モードにすると「どこを直したか分からない」「保存が怖い」が起きるため。
 function pjEdit(key, on){
   document.getElementById('pj-' + key).classList.toggle('editing', on);
@@ -922,19 +999,114 @@ function pjGo(key){
 function srcToggle(){
   document.getElementById('srcCard').classList.toggle('closed');
 }
-// 資料を読み込ませたことが分かるように、状態だけ動かす
+/* 資料の読み込み。
+   ・読み込み中 … プログレス（何をしているかの一言 + %）。数分かかる処理なので回転だけでは足りない。
+   ・完了 …… AIが書き換えた箱にソナー（波紋）を1回出す。どこが変わったのかを探させない。 */
+var PJ_STEPS = [
+  {p:15, t:'資料を読み込んでいます'},
+  {p:45, t:'中身を解析しています'},
+  {p:75, t:'項目に書き込んでいます'},
+  {p:100,t:'仕上げています'}
+];
 function pjLearn(){
-  document.getElementById('srcCard').classList.remove('closed'); // 何を読んでいるか見えるように開く
-  var n = document.getElementById('pjLearned');
-  n.textContent = '資料を読み込んでいます…（数分かかります）';
-  setTimeout(function(){
-    n.innerHTML = '最後に読み込んだのは たった今。資料は <a href="./drive_wire.html#learn" style="color:var(--color-primary);font-weight:var(--font-weight-body-strong);text-decoration:none;">ドライブのAI読み取り資料</a> にも入っています。';
-  }, 1400);
+  var card = document.getElementById('srcCard');
+  card.classList.remove('closed');   // 何を読んでいるか見えるように開く
+  card.classList.add('loading');
+  var bar = document.getElementById('srcPgBar'), tx = document.getElementById('srcPgTx'), pct = document.getElementById('srcPgPct');
+  bar.style.width = '0%'; pct.textContent = '0%';
+  var i = 0;
+  (function step(){
+    if(i >= PJ_STEPS.length){ pjLearnDone(); return; }
+    var s = PJ_STEPS[i++];
+    tx.textContent = s.t;
+    bar.style.width = s.p + '%';
+    pct.textContent = s.p + '%';
+    setTimeout(step, 700);
+  })();
+}
+function pjLearnDone(){
+  document.getElementById('srcCard').classList.remove('loading');
+  document.getElementById('pjLearned').innerHTML =
+    '最後に読み込んだのは たった今。資料は <a href="./drive_wire.html#learn" style="color:var(--color-primary);font-weight:var(--font-weight-body-strong);text-decoration:none;">ドライブのAI読み取り資料</a> にも入っています。';
+  // 書き換わった場所にソナー。まず進み具合、続けて各項目を少しずつずらして出す
+  var targets = ['.pg', '#pj-overview', '#pj-feature', '#pj-price', '#pj-tone'];
+  targets.forEach(function(sel, n){
+    var el = document.querySelector(sel);
+    if(!el) return;
+    setTimeout(function(){
+      el.classList.remove('sonar');
+      void el.offsetWidth;              // 連続で押されても鳴り直すようにリセット
+      el.classList.add('sonar');
+      setTimeout(function(){ el.classList.remove('sonar'); }, 2400);
+    }, n * 160);
+  });
+  if(window.toast) toast.success('資料を読み込んで、5項目のうち4項目を書き直しました');
 }
 
 // 承認オフ＝ひとり運用。承認者の説明はしまう
 function apvChange(){
   document.getElementById('apvOn').style.display = document.getElementById('apv').checked ? '' : 'none';
+}
+
+/* ===== SNS行の ⋮ メニュー =====
+   開いているのは常に1つだけ。外側クリックと Esc で閉じる。 */
+function rowMenu(btn){
+  var m = btn.parentElement.querySelector('.rowmenu');
+  var wasOpen = m.classList.contains('open');
+  closeRowMenus();
+  if(!wasOpen){
+    m.classList.add('open');
+    btn.setAttribute('aria-expanded', 'true');
+  }
+}
+function closeRowMenus(){
+  document.querySelectorAll('.rowmenu.open').forEach(function(m){ m.classList.remove('open'); });
+  document.querySelectorAll('.act .iconbtn[aria-expanded="true"]').forEach(function(b){ b.setAttribute('aria-expanded','false'); });
+}
+document.addEventListener('click', function(e){ if(!e.target.closest('.act')) closeRowMenus(); });
+document.addEventListener('keydown', function(e){ if(e.key === 'Escape'){ closeRowMenus(); } });
+
+// 再連携は各SNSの認証画面へ飛ばすだけ。いいねAI側に入力欄は作らない
+function reconnect(sns){
+  closeRowMenus();
+  if(window.toast) toast.info(sns + 'の認証画面を開きます');
+}
+
+/* ===== 連携解除 =====
+   確認は共有の alertDialog（sonner.js）を使う。画面ごとにダイアログを自作しない。
+   ⚠️ 予約している投稿の扱い（自動で下書きに戻す / 当日エラーにする）はまだ決まっていない。
+   1行目の文言は「出せなくなります」で仮置き。 */
+function askDisconnect(el, sns, ac){
+  closeRowMenus();
+  var row = el.closest('.sns');
+  alertDialog({
+    title: '連携を解除しますか？',
+    description: sns + '（' + ac + '）の連携を解除します。',
+    points: [
+      '予約している投稿は出せなくなります',
+      '下書きと、出しおわった投稿は消えません',
+      'もう一度連携するには、SNS側の認証をやり直します'
+    ],
+    cancelLabel: 'やめる',
+    actionLabel: '連携を解除する',
+    destructive: true
+  }, function(){
+    // 解除した行は未連携の見た目に変える（YouTubeの行と同じ形）
+    row.querySelector('.ac').textContent = ac + '・連携を解除しました';
+    var st = row.querySelector('.state');
+    st.className = 'state off';
+    st.textContent = '未連携';
+    row.querySelector('.act').innerHTML = '<button class="btn-o"><i class="ti ti-plus"></i>連携する</button>';
+    snsCount();
+    if(window.toast) toast.success(sns + 'の連携を解除しました');
+  });
+}
+
+// カード見出しの件数を実際の行から数え直す
+function snsCount(){
+  var n = document.querySelectorAll('#paSns .sns .state.ok').length;
+  var d = document.querySelector('#paSns .card-h .d');
+  if(d) d.textContent = n + 'つ 連携しています。';
 }
 </script>
 </body></html>

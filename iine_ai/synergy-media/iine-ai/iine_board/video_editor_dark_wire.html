@@ -18,6 +18,7 @@
 .ti-microphone:before{content:"\eaf0"}
 .ti-volume:before{content:"\eb51"}
 .ti-eye:before{content:"\ea9a"}
+.ti-external-link:before{content:"\ea99"}
 .ti-player-play:before{content:"\ed46"}
 .ti-player-skip-back:before{content:"\ed48"}
 .ti-player-skip-forward:before{content:"\ed49"}
@@ -25,7 +26,7 @@
 .ti-player-track-next:before{content:"\ed4b"}
 .ti-plus:before{content:"\eb0b"}
 .ti-send:before{content:"\eb1e"}
-.ti-file-upload:before{content:"\ebc4"}
+.ti-file-upload:before{content:"\ec91"}
 .ti-folder:before{content:"\eaad"}
 .ti-arrow-down:before{content:"\ea16"}
 .ti-bold:before{content:"\eb7b"}
@@ -46,7 +47,7 @@
 .ti-lock:before{content:"\eae2"}
 .ti-lock-open:before{content:"\eae1"}
 .ti-eye-off:before{content:"\ecf0"}
-.ti-volume-off:before{content:"\eb50"}
+.ti-volume-off:before{content:"\f1c3"}
 .ti-ban:before{content:"\ea2e"}
 .ti-device-mobile:before{content:"\ea8a"}
 .ti-template:before{content:"\eb39"}
@@ -139,6 +140,17 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;font-family:var(--font-body),'Hiragino Sans','Meiryo',sans-serif;-webkit-font-smoothing:antialiased;}
 body {background:#0a0908;padding:0;margin:0;color:var(--color-editor-foreground);overflow:hidden;}
+/* ヘッダーの枠つきボタン（プレビュー / AI画像）。書き出しだけが塗り＝主役 */
+.hdbtn-lbl{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;font-size:var(--text-label);background:var(--color-editor-elevated);border:1px solid var(--color-editor-border);color:var(--color-editor-foreground);border-radius:var(--radius-md);cursor:pointer;font-weight:700;white-space:nowrap;font-family:inherit;transition:border-color .15s,color .15s;}
+.hdbtn-lbl:hover{border-color:var(--color-primary);color:var(--color-primary);}
+/* プレビュー：完成形を大きく見る。編集UIを全部どけて、出来上がりだけ見せる */
+.pvov{position:fixed;inset:0;background:rgba(10,9,8,.92);z-index:100;display:none;flex-direction:column;align-items:center;justify-content:center;gap:16px;}
+.pvov.on{display:flex;}
+.pvov .frame{width:min(46vh,300px);aspect-ratio:9/16;border-radius:var(--radius-lg);background:#000;border:1px solid var(--color-editor-border);position:relative;display:flex;align-items:flex-end;justify-content:center;padding-bottom:26px;}
+.pvov .cap{color:#fff;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);text-shadow:0 1px 3px rgba(0,0,0,.8);}
+.pvov .bar{display:flex;align-items:center;gap:14px;color:var(--color-editor-muted);font-size:var(--text-label);}
+.pvov .play{width:52px;height:52px;border-radius:var(--radius-full);border:none;background:var(--color-primary);color:#fff;font-size:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;}
+.pvov .side{position:absolute;top:18px;right:18px;display:flex;gap:8px;}
 /* --props-w: 左プロパティパネルの幅。ここ1つで .left-props と .mid の逃げ幅が連動する */
 .app{--props-w:320px;width:100%;margin:0 auto;background:var(--color-editor-bg);border-radius:0;overflow:hidden;display:flex;flex-direction:column;height:100vh;position:relative;}
 .ti{line-height:1;}
@@ -290,11 +302,11 @@ body.props-resizing{cursor:col-resize;user-select:none;}
 .ti-upload:before{content:"\eb47"}
 .ti-cloud-upload:before{content:"\ea75"}
 .ti-movie:before{content:"\eafa"}
-.ti-rotate:before{content:"\eb13"}
+.ti-rotate:before{content:"\eb16"}
 .ti-flip-horizontal:before{content:"\eaa7"}
 .ti-zoom-in:before{content:"\eb56"}
-.ti-zoom-out:before{content:"\eb2a"}
-.ti-palette:before{content:"\eb04"}
+.ti-zoom-out:before{content:"\eb57"}
+.ti-palette:before{content:"\eb01"}
 .ti-clock:before{content:"\ea70"}
 .ti-dots:before{content:"\ea95"}
 .tl{flex:none;height:300px;border-top:1px solid var(--color-editor-border);background:var(--color-editor-surface);display:flex;flex-direction:column;}
@@ -475,7 +487,9 @@ body.props-resizing{cursor:col-resize;user-select:none;}
     <button class="iconbtn"><i class="ti ti-arrow-forward-up"></i></button>
     <span class="title">短足ダックスあるある図鑑</span>
     <div class="hr">
-      <button style="padding:8px 14px;font-size:var(--text-label);background:var(--color-editor-elevated);border:1px solid var(--color-editor-border);color:var(--color-editor-foreground);border-radius:var(--radius-md);cursor:pointer;font-weight:700;white-space:nowrap;">AI画像</button>
+      <!-- 完成形の確認は「作る」より前の手数なので、書き出しの手前に置く（8/19: プレビュー機能の追加） -->
+      <button class="hdbtn-lbl" onclick="openPreview()"><i class="ti ti-player-play" style="font-size:15px"></i> プレビュー</button>
+      <button class="hdbtn-lbl">AI画像</button>
       <button class="export" style="white-space:nowrap;"><i class="ti ti-download" style="font-size:15px"></i> 書き出し</button>
     </div>
   </div>
@@ -2352,5 +2366,25 @@ function pickTmpl(el,name){
   // ダブルクリックで既定幅に戻す（つまみを見失っても復帰できるように）
   grip.addEventListener('dblclick', function(){ app.style.setProperty('--props-w', DEFAULT + 'px'); });
 })();
+</script>
+<!-- プレビュー（完成形の確認）。編集画面を離れずに見られるようにして、
+     「別タブで開く」も残す（8/19: 別タブで完成形が流れるのが無い、という指摘） -->
+<div class="pvov" id="previewOv" role="dialog" aria-modal="true" aria-label="プレビュー">
+  <div class="side">
+    <button class="hdbtn-lbl" onclick="window.open(location.href,'_blank','noopener')"><i class="ti ti-external-link" style="font-size:15px"></i> 別タブで開く</button>
+    <button class="hdbtn-lbl" onclick="closePreview()"><i class="ti ti-x" style="font-size:15px"></i> 閉じる</button>
+  </div>
+  <div class="frame"><span class="cap">美味しそうな後ろ足</span></div>
+  <div class="bar">
+    <button class="play" aria-label="再生"><i class="ti ti-player-play"></i></button>
+    <span>00:00 / 00:36</span>
+  </div>
+</div>
+<script>
+/* ===== プレビュー =====
+   ヘッダーから完成形だけを大きく見る。編集UIを全部どけるのが目的なので、パネルではなく全面に出す。 */
+function openPreview(){ document.getElementById('previewOv').classList.add('on'); }
+function closePreview(){ document.getElementById('previewOv').classList.remove('on'); }
+document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closePreview(); });
 </script>
 </body></html>

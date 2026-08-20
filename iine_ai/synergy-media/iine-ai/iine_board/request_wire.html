@@ -213,6 +213,12 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 .sent .srow .v{font-weight:var(--font-weight-body-strong);}
 
 @media(max-width:1100px){ .opts,.grid2,.grid3{grid-template-columns:1fr;} }
+/* SP: 4ステップを1行に並べると各53pxまで潰れて「相談を送 / る」と割れる。2×2に畳む。
+   番号バッジ1〜4で順番は読み取れるので、矢印は落として幅を本文に回す。 */
+@media(max-width:430px){
+  .flow{display:grid;grid-template-columns:1fr 1fr;gap:14px 10px;padding:16px;}
+  .flow .ar{display:none;}
+}
 </style>
 <!-- SP対応。インラインCSSの後に置く（@media は詳細度を上げないので後勝ちにする） -->
 <link rel="stylesheet" href="./shell-sp.css">
@@ -232,8 +238,8 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
       <div class="nidiv"></div>
       <div class="ni" onclick="navToggle(this)"><i class="ti ti-settings"></i>設定<span class="cv"><i class="ti ti-chevron-down"></i></span></div>
       <div class="nisub">
-        <a class="nis" href="./settings_wire.html#project">プロジェクト管理</a>
-        <a class="nis" href="./settings_wire.html#sns">SNSアカウント</a>
+        <a class="nis" href="./settings_wire.html#project">運用目的</a>
+        <a class="nis" href="./settings_wire.html#sns">SNS設定</a>
         <a class="nis" href="./settings_wire.html#review">AIレビュー</a>
         <a class="nis" href="./settings_wire.html#members">メンバー管理</a>
       </div>
@@ -350,7 +356,7 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 
         <div class="card">
           <div class="card-t">参考にしてほしいもの</div>
-          <div class="card-d">ドライブの素材や、こんな感じにしたいという例を渡せます。お店の情報は「プロジェクト管理」から自動で共有されます。</div>
+          <div class="card-d">ドライブの素材や、こんな感じにしたいという例を渡せます。お店の情報は「運用目的」から自動で共有されます。</div>
           <div class="refs">
             <span class="ref"><span class="sw" style="background:linear-gradient(135deg,#f7d9b0,#efc189)"></span>看板犬ポチ_01.jpg<button class="x" aria-label="外す"><i class="ti ti-x"></i></button></span>
             <span class="ref"><span class="sw" style="background:linear-gradient(135deg,#b9dcc0,#93c8a0)"></span>ポチの朝ルーティン.mp4<button class="x" aria-label="外す"><i class="ti ti-x"></i></button></span>
@@ -471,7 +477,7 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 
         <div class="card">
           <div class="card-t">場所</div>
-          <div class="card-d">「プロジェクト管理」に入っている住所を出しています。ちがう場所で撮る場合は書き換えてください。</div>
+          <div class="card-d">「運用目的」に入っている住所を出しています。ちがう場所で撮る場合は書き換えてください。</div>
           <div class="field">
             <label class="lbl" for="addr">住所</label>
             <input class="inp" id="addr" value="東京都渋谷区〇〇 1-2-3 犬カフェOne">

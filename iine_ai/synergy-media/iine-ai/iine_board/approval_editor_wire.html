@@ -269,8 +269,9 @@ function handleWithdraw() {
       title: '確認依頼を取り下げますか？',
       description: '取り下げると承認者への依頼が取り消され、再度編集できるようになります。',
       cancelLabel: 'キャンセル',
-      actionLabel: '取り下げる',
-      destructive: true
+      // 取り下げは何も消えない（「作成中」に戻るだけ）。赤塗りは削除・解除だけに使う。
+      // 他の4画面の同じ取り下げも通常アクションなので、こちらを揃えた。
+      actionLabel: '取り下げる'
     },
     () => {
       toast.info('確認依頼を取り下げました');

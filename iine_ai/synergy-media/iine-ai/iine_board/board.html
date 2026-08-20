@@ -30,6 +30,8 @@
 .ti-checks:before{content:"\ebaa"}
 .ti-upload:before{content:"\eb47"}
 .ti-video:before{content:"\ed22"}
+/* 表示されていなかった字形を追加（コードは @tabler/icons 公式）*/
+.ti-layout-grid:before{content:"\edba"}
 
 :root {
   --color-primary: #ef6108;
@@ -287,8 +289,8 @@ body{background:#eceae7;color:var(--color-foreground);padding-bottom:60px;}
 </div><div class="sec">
   <div class="sec-h"><span class="sec-ic"><i class="ti ti-settings"></i></span><span class="sec-name">設定</span><span class="sec-num">5/5</span></div>
   <div class="frames"><div class="frame">
-      <div class="flabel"><span class="ftitle">プロジェクト管理</span><span class="fnote">AIが投稿を作るとき毎回読む情報・閲覧と編集</span></div>
-      <div class="thumb" data-w="1240" data-href="./settings_wire.html#project" data-title="プロジェクト管理" onclick="openLB(this)">
+      <div class="flabel"><span class="ftitle">運用目的</span><span class="fnote">AIが投稿を作るとき毎回読む情報・閲覧と編集</span></div>
+      <div class="thumb" data-w="1240" data-href="./settings_wire.html#project" data-title="運用目的" onclick="openLB(this)">
         <span class="open-badge">クリックでプレビュー</span>
         <iframe src="./settings_wire.html#project" scrolling="no" tabindex="-1" data-w="1240"></iframe>
       </div>
@@ -301,8 +303,8 @@ body{background:#eceae7;color:var(--color-foreground);padding-bottom:60px;}
       </div>
     </div>
     <div class="frame">
-      <div class="flabel"><span class="ftitle">SNSアカウント</span><span class="fnote">SNS連携・媒体ごとの既定</span></div>
-      <div class="thumb" data-w="1240" data-href="./settings_wire.html#sns" data-title="SNSアカウント" onclick="openLB(this)">
+      <div class="flabel"><span class="ftitle">SNS設定</span><span class="fnote">SNS連携・媒体ごとの既定</span></div>
+      <div class="thumb" data-w="1240" data-href="./settings_wire.html#sns" data-title="SNS設定" onclick="openLB(this)">
         <span class="open-badge">クリックでプレビュー</span>
         <iframe src="./settings_wire.html#sns" scrolling="no" tabindex="-1" data-w="1240"></iframe>
       </div>
@@ -356,6 +358,9 @@ body{background:#eceae7;color:var(--color-foreground);padding-bottom:60px;}
   </div><div class="frame">
     <div class="flabel"><span class="ftitle">承認者確認中</span><span class="fnote">編集可+承認ボタン</span></div>
     <div class="thumb" data-w="1200" data-href="./flow_video_script_wire.html#approval-review" data-title="承認者確認中（動画）" onclick="openLB(this)"><span class="open-badge">クリックでプレビュー</span><iframe src="./flow_video_script_wire.html#approval-review" scrolling="no" tabindex="-1" data-w="1200"></iframe></div>
+  </div><div class="frame">
+    <div class="flabel"><span class="ftitle">承認済み</span><span class="fnote">承認は済み・投稿日はこれから。予約済みのカードから開いてもこの画面</span></div>
+    <div class="thumb" data-w="1200" data-href="./flow_video_script_wire.html#approval-approved" data-title="承認済み（動画）" onclick="openLB(this)"><span class="open-badge">クリックでプレビュー</span><iframe src="./flow_video_script_wire.html#approval-approved" scrolling="no" tabindex="-1" data-w="1200"></iframe></div>
   </div><div class="frame">
     <div class="flabel"><span class="ftitle">動画エディタ</span><span class="fnote">ダーク・タイムライン・AIアシスト</span></div>
     <div class="thumb" data-w="1320" data-href="./video_editor_dark_wire.html" data-title="動画エディタ" onclick="openLB(this)">

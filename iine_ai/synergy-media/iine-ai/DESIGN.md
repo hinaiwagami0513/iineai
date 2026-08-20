@@ -343,6 +343,9 @@ Latin 用フォントを主に据えない。
 | SNSアカウント（設定項目名） | **SNS設定** | |
 | 言ってはいけない表現 | **NG表現** | 開きすぎ。短い業務語で通じる |
 | 確認をお願いする（承認の意味で） | **承認する** | 「承認」は開かない |
+| つながっています / まだつないでいません | **連携済み** / **未連携** | 状態バッジは名詞で言い切る（動詞文にしない） |
+| つなぐ / つなぎ直す / つなげる | **連携する** / **再連携** / **連携できる** | SNS接続の語は「連携」で統一 |
+| つないでいるSNS / つないだSNS | **連携中のSNS** / **連携SNS** | 見出しは「連携中の」、表のラベルは短く「連携SNS」 |
 
 ### AIに書かせるときの注意
 
@@ -398,6 +401,18 @@ shadcn/ui のコンポーネントを土台にし、上のトークンでテー�
 - **button-primary**: オレンジ地 + 白太字ラベル + `rounded.md`。ホバーで `primary-hover`。
 - **button-secondary / ghost**: 白地 + `foreground` 文字。一覧内の破壊操作は常時 ghost の赤字で、
   赤塗り（button-destructive）は確認ダイアログの最終ボタンだけに使う。
+- **alert-dialog（確認・警告ダイアログ）**: shadcn AlertDialog 準拠。**実装は1つだけ**（`iine_board/sonner.js` の
+  `window.alertDialog()`）。画面ごとにダイアログを自作しない。呼び出しは
+  `alertDialog({title, description, points, cancelLabel, actionLabel, destructive}, onConfirm)`。
+  - **面** = `card` 背景 + `border` + `rounded.lg` + `overlay` 影 + padding 24。幅は最大440px（SPは `100vw - 32px`）。
+  - **マスク** = `rgba(0,0,0,.45)`。クリックで閉じる。**Esc でも閉じる**。開いたら取り消し側にフォーカスを置く。
+  - **タイトル** = `h3`(16px)/`weight 700`。`destructive` のときは頭に警告アイコン（色 + 形のセット。色だけで表さない）。
+  - **説明** = `body`(14px) / `muted-foreground`。1〜2行に収める。
+  - **points**（任意）= 「何が起きるか」の箇条書き。`surface` 面 + `border` + `rounded.md` + `label`(12px)。
+    ⚠️ これが無いと各画面が独自の詳細ブロックを作り始める（`.cfbox` 再発明の原因だった）。
+  - **ボタン** = 右寄せ2つ。高さ44・`rounded.md`・`body-strong`。取り消しは ghost（`border` 枠）。
+    実行は `destructive` なら赤塗り、そうでなければ **`primary`（オレンジ）**。ほぼ黒のCTAは使わない。
+  - **赤塗りにするのは削除・解除だけ。** 「取り下げる」のように何も消えない操作は通常アクション。
 - **input**: 白背景固定。フォーカスで**オレンジ枠 + primary-subtle 背景**。
 - **セレクト**: ReUI Select 準拠。ネイティブ `<select>` は使わない。
   トリガー = `input` と同じスタイル（`card` 背景 + `border` + `rounded.md`）+ 右に chevron（`ti-chevron-down`）。

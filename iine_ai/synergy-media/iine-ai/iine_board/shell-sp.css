@@ -106,6 +106,15 @@
   .content [class*="btn"]{white-space:nowrap;}
   .content .btn-p,.content .btn-o,.content .btn-g{padding:10px 14px;font-size:var(--text-label);gap:6px;}
 
+  /* ⚠️ 選択カード（.opt）は上の nowrap の対象外にする。
+     .opt は <button> だが「ラベル1行のボタン」ではなく、説明文と金額を持つカード。
+     nowrap を継ぐと min-content が max-content（本文まるごと385px）と同じになり、
+     grid の 1fr = minmax(auto,1fr) がそこまで膨らんで親（316px）から溢れ、右が切れる。
+     カードの中は折り返させ、トラックの下限も 0 にして親幅に閉じる。 */
+  .content .opt,.content .opt *{white-space:normal;}
+  .content .opts{grid-template-columns:minmax(0,1fr);}
+  .content .opts>*{min-width:0;}
+
   /* 見出し + 件数 + ボタンを1行に詰めた行は、狭い幅で全部が折り返す。
      行自体を折り返させて、見出しに1行を渡す。 */
   .content .src-hd,
