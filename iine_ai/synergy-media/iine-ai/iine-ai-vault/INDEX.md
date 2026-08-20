@@ -53,6 +53,7 @@
 - [[target-first]] — ターゲット整理が全ての前提。
 - [[wire-checklist]] — ワイヤーHTML新規作成時のヘッダー・サイドバー・アイコン確認リスト。
 - [[wording-level]] — UI文言の決まった経緯。ルール本体は DESIGN.md §Writing（対応表・書き分け・3原則）。
+- [[ship-separation]] — ★いいねAI と SHIP は絶対に混ぜない。参照も同一コミットも禁止。`git add` はパス明示（`~/dev` が公開リポジトリのルート）。
 - [[superseded]] — 失効した旧仕様と矛盾の裁定（★迷ったらここ）。
 
 ## raw/ — 生素材（読み取り専用・書き換え禁止）
