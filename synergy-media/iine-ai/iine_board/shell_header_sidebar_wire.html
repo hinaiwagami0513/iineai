@@ -185,8 +185,13 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 .switcher .pn{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .switcher .an{font-size:var(--text-meta);color:var(--color-muted-foreground);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .switcher .cv{color:var(--color-muted-foreground);font-size:17px;}
-/* ポップオーバー（上に展開） */
-.pop{position:absolute;left:12px;right:12px;bottom:70px;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);box-shadow:0 8px 24px rgba(0,0,0,.16);padding:8px;z-index:20;}
+/* ポップオーバー（上に展開）。
+   既定は閉じる。開いたままだとサイドバー下部（アップグレード枠・スイッチャー本体）が
+   ずっと隠れて、ホームの通常の姿がこのワイヤーから読み取れない。
+   影は overlay 規定の .12（DESIGN.md §Elevation & Depth）。 */
+.pop{display:none;position:absolute;left:12px;right:12px;bottom:70px;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);box-shadow:0 8px 24px rgb(0 0 0 / 0.12);padding:8px;z-index:20;}
+.pop.on{display:block;}
+.switcher{cursor:pointer;}
 .searchbox{display:flex;align-items:center;gap:7px;border:1px solid var(--color-border);border-radius:var(--radius-md);padding:7px 10px;margin-bottom:6px;}
 .searchbox .ti{font-size:15px;color:var(--color-muted-foreground);}
 .searchbox input{border:none;outline:none;font-size:var(--text-label);flex:1;background:transparent;}
@@ -549,9 +554,9 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
     <div class="foot">
       <div class="upg"><div class="ut">連携できるSNSを増やそう</div><button class="ub"><i class="ti ti-sparkles"></i>アップグレード</button></div>
       <!-- 複合スイッチャー -->
-      <div class="switcher"><div class="pic"><i class="ti ti-coffee"></i></div><div class="tx"><div class="pn">犬カフェOne</div><div class="an">田中 陽菜</div></div><i class="ti ti-selector cv"></i></div>
+      <div class="switcher" id="switcher" role="button" tabindex="0" aria-expanded="false" aria-controls="clientPop"><div class="pic"><i class="ti ti-coffee"></i></div><div class="tx"><div class="pn">犬カフェOne</div><div class="an">田中 陽菜</div></div><i class="ti ti-selector cv"></i></div>
       <!-- 展開ポップオーバー -->
-      <div class="pop">
+      <div class="pop" id="clientPop">
         <div class="searchbox"><i class="ti ti-search"></i><input placeholder="クライアントを検索"></div>
         <div class="plbl">クライアント</div>
         <div class="swi cur"><div class="swic" style="background:#fde9d3;color:var(--color-primary)"><i class="ti ti-coffee"></i></div><span class="nm">犬カフェOne</span><i class="ti ti-check ck"></i></div>
@@ -986,6 +991,25 @@ todoCount();
     el.addEventListener('mouseenter', function(){ paint(k); });
     el.addEventListener('mouseleave', function(){ paint(null); });
   });
+})();
+
+/* クライアント切替ポップオーバー。スイッチャーを押して開く。
+   外側クリックと Esc で閉じる。既定は閉じた状態＝サイドバーの通常の姿が見えるようにする。 */
+(function(){
+  var sw = document.getElementById('switcher');
+  var pop = document.getElementById('clientPop');
+  if(!sw || !pop) return;
+  function setOpen(v){
+    pop.classList.toggle('on', v);
+    sw.setAttribute('aria-expanded', v ? 'true' : 'false');
+  }
+  sw.addEventListener('click', function(e){ e.stopPropagation(); setOpen(!pop.classList.contains('on')); });
+  sw.addEventListener('keydown', function(e){
+    if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); setOpen(!pop.classList.contains('on')); }
+  });
+  pop.addEventListener('click', function(e){ e.stopPropagation(); });
+  document.addEventListener('click', function(){ setOpen(false); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') setOpen(false); });
 })();
 </script>
 </body></html>
