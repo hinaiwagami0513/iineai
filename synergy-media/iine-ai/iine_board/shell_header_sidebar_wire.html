@@ -321,6 +321,10 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 .db-hello .rec{display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin-top:2px;font-size:var(--text-body);line-height:1.6;color:var(--color-foreground);}
 /* 提案の目印。オレンジは右のチップ（押せる）に譲るので、ここはニュートラル */
 .db-hello .rec>i{font-size:17px;flex:none;color:var(--color-muted-foreground);}
+/* 文とチップを別の行に分ける。1行に混ぜると、文が長い日に1つ目のチップだけ文末に貼り付いて
+   2つ目が下に落ち、同じ種類の2択がバラバラに見える。チップは常に横に並べる。 */
+.db-hello .rec-tx{flex:1 1 auto;min-width:0;}
+.db-hello .rec-chips{flex:1 1 100%;display:flex;flex-wrap:wrap;gap:9px;}
 .db-hello .rec b{font-weight:var(--font-weight-body-strong);}
 /* 案のチップは押せるのでオレンジ（オレンジ = 押せる・進む先） */
 .db-hello .rec-chip{display:inline-flex;align-items:center;min-height:36px;gap:5px;background:var(--color-primary-subtle);color:var(--color-primary);border:1px solid color-mix(in srgb,var(--color-primary) 30%,transparent);border-radius:var(--radius-full);padding:5px 13px;font-family:inherit;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);cursor:pointer;white-space:nowrap;}
@@ -635,10 +639,12 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
           <div class="hi">こんにちは、犬カフェOne さん</div>
           <!-- おすすめ：今日の切り口 + 具体案。押すと投稿作成にその案が入った状態で入る -->
           <div class="rec">
-          <i class="ti ti-sparkles"></i>
-          <span>今日は <b>お盆の最終日</b>。夏休みの締めくくりにちなんだ投稿が伸びやすい日です。</span>
-          <button class="rec-chip">看板犬ポチの夏まとめ<i class="ti ti-arrow-right"></i></button>
-            <button class="rec-chip">夏休みありがとうポスト<i class="ti ti-arrow-right"></i></button>
+            <i class="ti ti-sparkles"></i>
+            <span class="rec-tx">今日は <b>お盆の最終日</b>。夏休みの締めくくりにちなんだ投稿が伸びやすい日です。</span>
+            <span class="rec-chips">
+              <button class="rec-chip">看板犬ポチの夏まとめ<i class="ti ti-arrow-right"></i></button>
+              <button class="rec-chip">夏休みありがとうポスト<i class="ti ti-arrow-right"></i></button>
+            </span>
           </div>
         </div>
         <button class="db-cta"><i class="ti ti-plus"></i>投稿を作る</button>
