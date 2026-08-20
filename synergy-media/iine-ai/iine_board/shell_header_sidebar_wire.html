@@ -494,7 +494,9 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
   .db-hello{flex-wrap:wrap;align-items:flex-start;gap:12px;padding:14px 16px;}
   .db-hello .fox{width:56px;height:56px;}
   .db-hello .hello-tx{flex:1 1 0;min-width:0;}
-  .db-hello .hi{font-size:var(--text-h3);line-height:1.3;margin-bottom:3px;}
+  /* 16px に落とすので weight も 700 まで下げる。900 は 30px 以上専用（DESIGN.md §Typography）で、
+     小さい字に当てると潰れて黒い塊になる。 */
+  .db-hello .hi{font-size:var(--text-h3);font-weight:var(--font-weight-h3);line-height:1.3;margin-bottom:3px;}
   .db-cta{flex-basis:100%;margin-left:0;width:auto;justify-content:center;padding:13px 20px;}
 
   /* 提案文はアイコン(17px)+gap(9px)を除いた残り幅を取る。
