@@ -231,7 +231,7 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 /* ===== ToDoパネル（ヘッダーから開く本体） =====
    自動ToDo＝システムが状態から作る。チェックは持たせず「その画面へ行く」ボタンだけ。
    手動ToDo＝ユーザーがその場で書く。チェックで完了、ゴミ箱で削除。 */
-.tdp{position:absolute;top:48px;right:0;width:448px;max-height:560px;display:none;flex-direction:column;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);box-shadow:0 10px 30px rgba(0,0,0,.16);z-index:40;overflow:hidden;}
+.tdp{position:absolute;top:48px;right:0;width:448px;max-height:560px;display:none;flex-direction:column;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);box-shadow:0 8px 24px rgb(0 0 0 / 0.12);z-index:40;overflow:hidden;}
 .tdp.open{display:flex;}
 .tdp-h{display:flex;align-items:center;gap:8px;padding:13px 14px;border-bottom:1px solid var(--color-border);background:var(--color-surface);flex:none;}
 .tdp-h .ic{font-size:19px;color:var(--color-primary);}
@@ -259,7 +259,7 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 /* 手動ToDo：行ごとチェックボックスのラベルにして、どこを押しても完了にできる */
 .tdp-man{cursor:pointer;}
 /* shadcn Checkbox 準拠：size-4 / rounded-[4px] / border-input / shadow-xs、checked で primary 塗り + 白チェック */
-.tdp-man input[type=checkbox]{appearance:none;-webkit-appearance:none;width:16px;height:16px;flex:none;margin:0;display:inline-grid;place-content:center;border:1px solid var(--color-border-strong);border-radius:4px;background:var(--color-input);box-shadow:0 1px 2px 0 rgba(0,0,0,.05);cursor:pointer;transition:background-color .15s,border-color .15s,box-shadow .15s;}
+.tdp-man input[type=checkbox]{appearance:none;-webkit-appearance:none;width:16px;height:16px;flex:none;margin:0;display:inline-grid;place-content:center;border:1px solid var(--color-border-strong);border-radius:var(--radius-sm);background:var(--color-input);box-shadow:0 1px 2px rgb(0 0 0 / 0.06);cursor:pointer;transition:background-color .15s,border-color .15s,box-shadow .15s;}
 .tdp-man input[type=checkbox]::before{content:"";width:11px;height:11px;background-color:var(--color-on-primary);-webkit-mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center/contain no-repeat;mask:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 6 9 17l-5-5'/%3E%3C/svg%3E") center/contain no-repeat;transform:scale(0);transition:transform .15s ease-out;}
 .tdp-man input[type=checkbox]:checked{background:var(--color-primary);border-color:var(--color-primary);}
 .tdp-man input[type=checkbox]:checked::before{transform:scale(1);}
@@ -475,7 +475,7 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 }
 /* ===== 右下：生成トレイ ===== */
 .corner{position:absolute;right:20px;bottom:20px;display:flex;flex-direction:column;align-items:flex-end;gap:12px;z-index:15;}
-.tray{width:300px;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);box-shadow:0 8px 24px rgba(0,0,0,.16);overflow:hidden;}
+.tray{width:300px;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);box-shadow:0 8px 24px rgb(0 0 0 / 0.12);overflow:hidden;}
 .trayhd{display:flex;align-items:center;gap:8px;padding:11px 13px;border-bottom:1px solid var(--color-border);background:var(--color-surface);}
 .trayhd .tt{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);}
 .trayhd .cnt{font-size:var(--text-meta);color:#fff;background:var(--color-primary);border-radius:var(--radius-full);padding:1px 7px;font-weight:var(--font-weight-body-strong);}
