@@ -242,6 +242,10 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 .btn .ti{font-size:16px;} .btn-ghost{background:var(--color-card);color:var(--color-foreground);border-color:var(--color-border);} .btn-primary{background:var(--color-primary);color:#fff;}
 @media(max-width:600px){
   .stepbar{overflow-x:auto;flex-wrap:nowrap;padding:10px 16px;gap:4px;max-width:100%;justify-content:flex-start;}
+  /* 2列のままだと 1fr = minmax(auto,1fr) がカードの最小幅まで膨らみ、390pxで親を17px超える。
+     flow_image_v3 等と同じく1列に畳む。下限を0にしてトラックを親幅に閉じる。 */
+  .g2{grid-template-columns:minmax(0,1fr);}
+  .g2>*{min-width:0;}
 }
 </style>
 <!-- SP対応（上部バー型）。インラインCSSの後に置く（@media は詳細度を上げないので後勝ちにする） -->
