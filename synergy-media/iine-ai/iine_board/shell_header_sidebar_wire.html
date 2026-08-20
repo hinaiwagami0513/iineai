@@ -155,7 +155,9 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 .logo{height:24px;margin-bottom:14px;display:block;}
 .create{width:100%;display:flex;align-items:center;justify-content:center;gap:7px;background:var(--color-primary);color:#fff;border:none;border-radius:var(--radius-md);padding:11px;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;}
 .nav{padding:6px 10px;overflow-y:auto;flex:1;}
-.ni{display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:var(--radius-md);font-size:var(--text-body);font-weight:var(--font-weight-label);color:var(--color-foreground);cursor:pointer;}
+/* 遷移先がある項目だけ <a> なので、下線を消さないと「カレンダー」「ドライブ」だけ下線付きになる。
+   下線はホバーの表現に取っておく（DESIGN.md §Do's and Don'ts）。 */
+.ni{display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:var(--radius-md);font-size:var(--text-body);font-weight:var(--font-weight-label);color:var(--color-foreground);cursor:pointer;text-decoration:none;}
 .ni .ti{font-size:18px;color:var(--color-muted-foreground);}
 .ni .cv{margin-left:auto;font-size:14px;color:var(--color-muted-foreground);}
 .ni.on{background:var(--color-primary-subtle);color:var(--color-primary);font-weight:var(--font-weight-body-strong);}
