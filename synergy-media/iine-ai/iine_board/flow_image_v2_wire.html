@@ -403,7 +403,11 @@ function show(){
      戻る／キャンセルは従来どおり残す。 */
   /* AUTO_NEXT は後ろの script で定義される場合がある。読み込み時の show() で
      未定義参照にならないよう typeof で守る（落ちるとこの block 以降が全部止まる） */
-  nx.style.display = (typeof AUTO_NEXT!=='undefined' && AUTO_NEXT[SCR[i]]) ? 'none' : '';
+  /* 「次へ」を隠してよいのは、その画面に実際に押せる選択肢がある場合だけ。
+     選択肢が無い画面まで隠すと進む手段が消える（flow_skeleton の count で発生した）。 */
+  var _sc = document.getElementById('sc_'+SCR[i]);
+  var _canAuto = (typeof AUTO_NEXT!=='undefined') && AUTO_NEXT[SCR[i]] && _sc && _sc.querySelector('.opt');
+  nx.style.display = _canAuto ? 'none' : '';
   nx.innerHTML=(i===SCR.length-1)?'完了 <i class="ti ti-check"></i>':(SCR[i]==='base'?'次へ：具体案を見る':(SCR[i]==='concept'?'次へ：編集する':'次へ <i class="ti ti-arrow-right"></i>'));
   renderStep();renderSub();
   var cv=document.querySelector('.canvas');if(cv)cv.scrollTop=0;
@@ -432,10 +436,21 @@ var AUTO_NEXT={sns:1,method:1,videotype:1,route:1,count:1};  // 1つ選ぶだけ
 function pickCard(el,g){
   el.parentElement.querySelectorAll('.'+g).forEach(function(o){o.classList.remove('sel');});
   el.classList.add('sel');
-  if(typeof SCR!=='undefined' && AUTO_NEXT[SCR[i]]){
-    setTimeout(function(){ if(el.classList.contains('sel') && AUTO_NEXT[SCR[i]]) nav(1); },240);
-  }
 }
+/* 自動遷移は pickCard の中ではなく、画面全体への委譲で拾う。
+   pickCard 内に書くと pickCount など別の選択関数を使う画面（count 等）で発火せず、
+   「次へ」だけ消えて誰も進めない行き止まりになる。実際に count で発生した。 */
+document.addEventListener('click', function(e){
+  if(typeof AUTO_NEXT==='undefined' || typeof SCR==='undefined') return;
+  if(!AUTO_NEXT[SCR[i]]) return;
+  var opt = e.target && e.target.closest ? e.target.closest('.opt') : null;
+  if(!opt) return;
+  var sc = document.getElementById('sc_'+SCR[i]);
+  if(!sc || !sc.contains(opt)) return;
+  var from = i;
+  /* 即座に切り替えると押せたのか分からないので、選択が見える間だけ待つ */
+  setTimeout(function(){ if(i===from && AUTO_NEXT[SCR[i]]) nav(1); }, 240);
+});
 function pickRow(el){el.closest('.selstack').querySelectorAll('.selrow').forEach(function(o){o.classList.remove('sel');});el.classList.add('sel');}
 /* ===== 予測変換チャット ===== */
 var TREE={
