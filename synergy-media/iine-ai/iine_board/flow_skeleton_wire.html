@@ -260,6 +260,12 @@ function show(){
   document.getElementById('sc_'+SCR[i]).classList.add('on');
   document.getElementById('back').style.visibility=(i===0)?'hidden':'visible';
   var nx=document.getElementById('next');
+  /* フッターの状態は毎回ここで初期化する。分岐の中でしか代入していなかったため、
+     一度「無効」になると条件が解けても onclick（ツールチップを出すだけ）と
+     btn-disabled が残り続け、永久に進めなくなっていた。分岐は必要ならこの後で上書きする。 */
+  nx.onclick=function(){nav(1);};
+  nx.classList.remove('btn-disabled');
+  nx.removeAttribute('title');
   /* 1つ選ぶだけの画面では「次へ」を出さない（2026-08-21 決定）。
      選択肢を押した時点で進むので、ボタンが残っていると「押さないと進めない」と読まれる。
      戻る／キャンセルは従来どおり残す。 */

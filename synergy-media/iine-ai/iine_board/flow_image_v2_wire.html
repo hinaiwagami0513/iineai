@@ -264,6 +264,11 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
    中央カラムが 188px まで潰れて文字が縦積みになる。エディタは横幅を使い切らせる。
    :has() で「いま表示中の画面がエディタのときだけ」に限定する。 */
 .canvas:has(> .screen.on#sc_editor){max-width:none;padding:20px 26px 32px;}
+
+/* 戻れる段だけ押せる見た目にする。いまの段より先は押しても動かないので手も出さない */
+.st.done,.st.done .tx,.snn.done,.snn.done .tx{cursor:pointer;}
+.st.done:hover .tx,.snn.done:hover .tx{color:var(--color-primary);text-decoration:underline;}
+.st.done:hover .n{border-color:var(--color-primary);}
 </style>
 <!-- SP対応（上部バー型）。インラインCSSの後に置く（@media は詳細度を上げないので後勝ちにする） -->
 <link rel="stylesheet" href="./topbar-sp.css">
@@ -398,6 +403,12 @@ function show(){
   document.getElementById('sc_'+SCR[i]).classList.add('on');
   document.getElementById('back').style.visibility=(i===0)?'hidden':'visible';
   var nx=document.getElementById('next');
+  /* フッターの状態は毎回ここで初期化する。分岐の中でしか代入していなかったため、
+     一度「無効」になると条件が解けても onclick（ツールチップを出すだけ）と
+     btn-disabled が残り続け、永久に進めなくなっていた。分岐は必要ならこの後で上書きする。 */
+  nx.onclick=function(){nav(1);};
+  nx.classList.remove('btn-disabled');
+  nx.removeAttribute('title');
   /* 1つ選ぶだけの画面では「次へ」を出さない（2026-08-21 決定）。
      選択肢を押した時点で進むので、ボタンが残っていると「押さないと進めない」と読まれる。
      戻る／キャンセルは従来どおり残す。 */
@@ -414,6 +425,34 @@ function show(){
 }
 function nav(d){i=Math.max(0,Math.min(SCR.length-1,i+d));show();}
 function jump(n){i=n;show();}
+
+/* ===== ステップ見出しを押して、その段の最初の画面に戻る（2026-08-21）=====
+   上段（1/2/3）と、その下の小見出し（作り方を選ぶ / 企画を考える）の両方が対象。
+   進む方向へは飛ばさない。飛ばした先で前提が埋まっていない事故を防ぐため、
+   いま居るところより手前の段だけを押せるようにする。
+   描画は renderStep/renderSub が innerHTML を作り直すので、
+   個々の要素ではなく親への委譲で拾う（作り直しても配線が外れない）。 */
+function stepFirstIndex(big, sub){
+  for(var k=0;k<SCR.length;k++){
+    var m = META[SCR[k]];
+    if(!m) continue;
+    if(m.big===big && (sub==null || m.sub===sub)) return k;
+  }
+  return -1;
+}
+function bindStepJump(boxId, sel, getTarget){
+  var box = document.getElementById(boxId);
+  if(!box) return;
+  box.addEventListener('click', function(e){
+    var el = e.target && e.target.closest ? e.target.closest(sel) : null;
+    if(!el) return;
+    var all = Array.prototype.slice.call(box.querySelectorAll(sel));
+    var t = getTarget(all.indexOf(el) + 1);
+    if(t >= 0 && t < i){ i = t; show(); }
+  });
+}
+bindStepJump('stepbar', '.st',  function(n){ return stepFirstIndex(n, null); });
+bindStepJump('subnav',  '.snn', function(n){ return stepFirstIndex(META[SCR[i]].big, n); });
 /* ===== チャットプラスメニュー ===== */
 function toggleChatPlusMenu(e){e.stopPropagation();document.getElementById('chatPlusMenu').classList.toggle('show');}
 function closeChatPlusMenu(){document.getElementById('chatPlusMenu').classList.remove('show');}

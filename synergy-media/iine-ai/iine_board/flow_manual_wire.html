@@ -433,6 +433,11 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
    中央カラムが 188px まで潰れて文字が縦積みになる。エディタは横幅を使い切らせる。
    :has() で「いま表示中の画面がエディタのときだけ」に限定する。 */
 .canvas:has(> .screen.on#sc_editor){max-width:none;padding:20px 26px 32px;}
+
+/* 戻れる段だけ押せる見た目にする。いまの段より先は押しても動かないので手も出さない */
+.st.done,.st.done .tx,.snn.done,.snn.done .tx{cursor:pointer;}
+.st.done:hover .tx,.snn.done:hover .tx{color:var(--color-primary);text-decoration:underline;}
+.st.done:hover .n{border-color:var(--color-primary);}
 </style></head><body>
 <div class="app">
   <div class="topbar"><div class="hdr-left"><span class="hdr-page"><i class="ti ti-upload"></i>投稿作成</span><span class="tag" id="flowtag">完成品から作る</span></div><div class="hdr-right"><a class="helpbtn" href="https://hinaiwagami0513.github.io/iineai/help/create/upload/" target="_blank" rel="noopener" title="このページのヘルプ（投稿作成 > 完成品から作る）" aria-label="このページのヘルプ">?</a><button class="close"><i class="ti ti-list"></i></button></div></div>
@@ -655,6 +660,12 @@ function show(){
   document.getElementById('sc_'+SCR[i]).classList.add('on');
   document.getElementById('back').style.visibility=(i===0)?'hidden':'visible';
   var nx=document.getElementById('next');
+  /* フッターの状態は毎回ここで初期化する。分岐の中でしか代入していなかったため、
+     一度「無効」になると条件が解けても onclick（ツールチップを出すだけ）と
+     btn-disabled が残り続け、永久に進めなくなっていた。分岐は必要ならこの後で上書きする。 */
+  nx.onclick=function(){nav(1);};
+  nx.classList.remove('btn-disabled');
+  nx.removeAttribute('title');
   /* 1つ選ぶだけの画面では「次へ」を出さない（2026-08-21 決定）。
      選択肢を押した時点で進むので、ボタンが残っていると「押さないと進めない」と読まれる。
      戻る／キャンセルは従来どおり残す。 */
@@ -681,6 +692,34 @@ function nav(d){
   show();
 }
 function jump(n){i=n;show();}
+
+/* ===== ステップ見出しを押して、その段の最初の画面に戻る（2026-08-21）=====
+   上段（1/2/3）と、その下の小見出し（作り方を選ぶ / 企画を考える）の両方が対象。
+   進む方向へは飛ばさない。飛ばした先で前提が埋まっていない事故を防ぐため、
+   いま居るところより手前の段だけを押せるようにする。
+   描画は renderStep/renderSub が innerHTML を作り直すので、
+   個々の要素ではなく親への委譲で拾う（作り直しても配線が外れない）。 */
+function stepFirstIndex(big, sub){
+  for(var k=0;k<SCR.length;k++){
+    var m = META[SCR[k]];
+    if(!m) continue;
+    if(m.big===big && (sub==null || m.sub===sub)) return k;
+  }
+  return -1;
+}
+function bindStepJump(boxId, sel, getTarget){
+  var box = document.getElementById(boxId);
+  if(!box) return;
+  box.addEventListener('click', function(e){
+    var el = e.target && e.target.closest ? e.target.closest(sel) : null;
+    if(!el) return;
+    var all = Array.prototype.slice.call(box.querySelectorAll(sel));
+    var t = getTarget(all.indexOf(el) + 1);
+    if(t >= 0 && t < i){ i = t; show(); }
+  });
+}
+bindStepJump('stepbar', '.st',  function(n){ return stepFirstIndex(n, null); });
+bindStepJump('subnav',  '.snn', function(n){ return stepFirstIndex(META[SCR[i]].big, n); });
 /* ===== editor tabs ===== */
 function edTab(idx,el){
   document.querySelectorAll('.ed-tab').forEach(function(t){t.style.color='var(--color-muted-foreground)';t.style.borderBottomColor='transparent';t.classList.remove('on');});
@@ -739,30 +778,6 @@ function toggleGen(){
 /* videotype / route は「台本から / 素材から」の2択。同じくカード1枚選ぶだけの画面。
    base・concept・count・upload は入力や複数操作を伴うので対象外にする。 */
 var AUTO_NEXT={sns:1,method:1,videotype:1,route:1,count:1};  // 1つ選ぶだけの画面は「次へ」を押させない（2026-08-21）
-/* ===== 作成方法・ルートを選んだら対応するワイヤーへ移動する（2026-08-21）=====
-   ワイヤーはルートごとに別ファイルなので、同じファイル内で進めてしまうと
-   「動画を作成を選んだのに画像の枚数を聞かれる」という食い違いが起きていた。
-   選択肢のラベルから行き先を引き、今のファイルと違うときだけ移動する。 */
-var FLOW_ROUTE = {
-  'method:画像を作成':     './flow_image_v3_wire.html',
-  'method:動画を作成':     './flow_video_script_wire.html',
-  'method:完成品から作る': './flow_manual_wire.html',
-  'route:台本から':        './flow_image_v3_wire.html',
-  'route:素材から':        './flow_image_material_wire.html',
-  'videotype:台本から':    './flow_video_script_wire.html',
-  'videotype:素材から':    './flow_video_material_wire.html'
-};
-function flowRoute(el){
-  if(typeof SCR==='undefined') return false;
-  var lbl = el.querySelector('.ot');
-  if(!lbl) return false;
-  var to = FLOW_ROUTE[SCR[i] + ':' + lbl.textContent.trim()];
-  if(!to) return false;
-  var here = location.pathname.split('/').pop();
-  if(to.replace('./','') === here) return false;   // 同じファイルなら移動しない
-  location.href = to;
-  return true;
-}
 function pickCard(el,g){
   el.parentElement.querySelectorAll('.'+g).forEach(function(o){o.classList.remove('sel');});
   el.classList.add('sel');
@@ -771,6 +786,30 @@ function pickCard(el,g){
 /* 自動遷移は pickCard の中ではなく、画面全体への委譲で拾う。
    pickCard 内に書くと pickCount など別の選択関数を使う画面（count 等）で発火せず、
    「次へ」だけ消えて誰も進めない行き止まりになる。実際に count で発生した。 */
+/* ===== 選んだ内容に合うワイヤーへ移動する（2026-08-21）=====
+   ワイヤーはルートごとに別ファイルなので、同じファイル内で進めると
+   「動画を作成を選んだのに画像の枚数を聞かれる」という食い違いが起きる。
+   行き先だけでなく **着地ステップ** も渡す。渡さないとアカウント選択からやり直しになる。 */
+var FLOW_ROUTE = {
+  'method:画像を作成':     ['./flow_image_v3_wire.html',       'route'],
+  'method:動画を作成':     ['./flow_video_script_wire.html',   'videotype'],
+  'method:完成品から作る': ['./flow_manual_wire.html',         'upload'],
+  'route:台本から':        ['./flow_image_v3_wire.html',       'count'],
+  'route:素材から':        ['./flow_image_material_wire.html', 'upload'],
+  'videotype:台本から':    ['./flow_video_script_wire.html',   'base'],
+  'videotype:素材から':    ['./flow_video_material_wire.html', 'upload']
+};
+function flowRoute(el){
+  if(typeof SCR==='undefined') return false;
+  var lbl = el.querySelector('.ot');
+  if(!lbl) return false;
+  var hit = FLOW_ROUTE[SCR[i] + ':' + lbl.textContent.trim()];
+  if(!hit) return false;
+  var to = hit[0], step = hit[1];
+  if(to.replace('./','') === location.pathname.split('/').pop()) return false;  // 同じファイルなら移動しない
+  location.href = to + '#step=' + step;
+  return true;
+}
 document.addEventListener('click', function(e){
   if(typeof AUTO_NEXT==='undefined' || typeof SCR==='undefined') return;
   if(!AUTO_NEXT[SCR[i]]) return;
@@ -778,6 +817,8 @@ document.addEventListener('click', function(e){
   if(!opt) return;
   var sc = document.getElementById('sc_'+SCR[i]);
   if(!sc || !sc.contains(opt)) return;
+  /* 別ルートを選んだら、この画面で進めるのではなく該当ワイヤーへ移す */
+  if(flowRoute(opt)) return;
   var from = i;
   setTimeout(function(){ if(i===from && AUTO_NEXT[SCR[i]]) nav(1); }, 240);
 });
@@ -800,6 +841,9 @@ if(window.location.hash==='#editor'){
   var scr=getSCR();
   for(var j=0;j<scr.length;j++){if(scr[j]==='editor'){i=j;break;}}
 }
+/* #step=xxx で来たら、そのステップから始める（他フローから移ってきたとき用・2026-08-21）。
+   これが無いと移動先でアカウント選択からやり直しになる。 */
+(function(){var h=location.hash;if(h){var m=h.match(/step=(\w+)/);if(m){var idx=SCR.indexOf(m[1]);if(idx>=0)i=idx;}}})();
 show();
 </script>
 <script src="sonner.js"></script>
@@ -952,7 +996,9 @@ show();
   });
   /* 完成画面の「投稿を予約する」ボタンに配線 */
   Array.prototype.forEach.call(document.querySelectorAll('button'),function(b){
-    if((b.textContent||'').trim()==='投稿を予約する')b.addEventListener('click',function(){openBk(b);});
+    /* 旧 bk-* ピッカーは日時しか選べず 仮予約 / 本予約 の区別が付けられないので、
+       新しい予約ダイアログに寄せる（2026-08-21）。予約の入口は全部ここを通す。 */
+    if((b.textContent||'').trim()==='投稿を予約する')b.addEventListener('click',function(){openKari();});
   });
 })();
 </script>
