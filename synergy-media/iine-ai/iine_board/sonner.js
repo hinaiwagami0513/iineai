@@ -241,7 +241,7 @@
 
     /* HTMLの style="…" に埋めるのでフォント名はシングルクォート。
        ダブルクォートだと属性が early close して以降の指定（背景色など）が全部落ちる。 */
-    var FONT = "var(--font-body,'Noto Sans JP'),'Hiragino Sans','Meiryo',sans-serif";
+    var FONT = "var(--font-body,Inter),'Noto Sans JP','Hiragino Sans','Meiryo',sans-serif";
 
     /* backdrop */
     var overlay = document.createElement('div');

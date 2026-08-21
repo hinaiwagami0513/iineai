@@ -19,7 +19,7 @@
 - [[post-list-page]] — 投稿一覧v16（3タブ・カードグリッド・承認フロー・詳細sheet）。
 - [[video-flow]] — AI動画生成フロー（4ステップ縦ステッパー）。
 - [[script-gen-page]] — AI台本生成ページ（2カラム+テスト動画）。
-- [[iine-drive]] — いいねドライブ（3ペイン・逆引き連携）。
+- [[iine-drive]] — いいねドライブ（3ペイン・逆引き連携・★8/21に素材/資料のタブ統合）。
 - [[template-feature]] — テンプレ機能（一覧v2・チャット作成・5画面）。
 - [[editing-surfaces]] — 画像編集/動画作成/投稿編集の各画面。
 - [[analysis-pages]] — 分析画面群（3タブ+掘り下げ2枚・期間表示は上部集約・CSS後勝ちの罠）。
@@ -49,7 +49,7 @@
 - [[tab-phase-optimization]] — 3タブは主役情報を変える。
 - [[ai-generation-two-patterns]] — AI生成2パターン・素材任意・即時反映。
 - [[vertical-stepper-standard]] — 手続きは縦ステッパー・ロックしない。
-- [[drive-vs-learning]] — ドライブ=素材/学習=外部情報の区別。
+- [[drive-vs-learning]] — 素材と資料の役割の違い。置き場所は1つ、違いは「できること」で出す（8/21転換）。
 - [[target-first]] — ターゲット整理が全ての前提。
 - [[wire-checklist]] — ワイヤーHTML新規作成時のヘッダー・サイドバー・アイコン確認リスト。
 - [[wording-level]] — UI文言の決まった経緯。ルール本体は DESIGN.md §Writing（対応表・書き分け・3原則）。
@@ -69,4 +69,5 @@
 - [[raw/mtg-2026-07-24-iwagami]] — 7/24MTG（承認者は編集可・動画エディタをCapCut参考にアイコン化）。
 - [[raw/mtg-2026-07-31-iwagami]] — 7/31MTG（タイムライン改修・トークリール・Synergy Media移行）。
 - [[raw/mtg-2026-08-19-iwagami]] — ★8/19MTG（設定4項目・学習→AI読み取り資料・承認済みラベル/再承認・CapCut準拠・サイト作り直し）。
+- [[raw/mtg-2026-08-21-iwagami]] — ★8/21MTG（「次へ」廃止・仮/本予約をフロー内・素材の入口統合・セーフティゾーン左右・**PRベース共同開発へ移行**）。グリーンアップサイクルの議題は意図的に除外。
 - [[raw/design-audit-2026-08-19-home]] — ★8/19 ホーム画面デザイン監査。影スケール3段が全て未使用・ヒーローグラデ未使用・セクション間が全部22px・ヒーローと見出しが同階層。Design C / AI Slop D。→ F1〜F8 をホームに反映済み（[[depth-and-rhythm]]）。他ワイヤーは未対応。

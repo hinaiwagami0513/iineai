@@ -4,7 +4,7 @@
 <title>いいねAI 画面ビューア</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="./tabler-icons-inline.css">
 <style>
 /* アイコン定義の不足ぶん */
@@ -15,16 +15,25 @@
 .ti-arrow-left:before{content:"\ea19"}
 .ti-layout-grid:before{content:"\edba"}
 :root{
-  --color-primary:#ef6108; --color-primary-hover:#d9570a; --color-primary-subtle:#fff2e2;
-  --color-background:#f2f1f0; --color-surface:#fbfaf8; --color-card:#ffffff;
+  /* 新パレット（藍・水色）由来の追加トークン */
+  --color-navy: #00347a;
+  --color-navy-subtle: #f1f7ff;
+  --color-primary-deep: #d54101;
+  --color-primary:#fe7235; --color-primary-hover:#d54101; --color-primary-subtle:#fff5f1;
+  --color-background:#fcf5ef; --color-surface:#fffdfb; --color-card:#ffffff;
   --color-foreground:#2a2826; --color-muted-foreground:#757575;
-  --color-border:#e9e8e6; --color-border-strong:#cfcdc9; --color-input:#ffffff;
+  --color-border:#efe7df; --color-border-strong:#ddd0c4; --color-input:#ffffff;
   --text-h3:1rem; --text-body:0.875rem; --text-label:0.8125rem; --text-meta:0.75rem;
   --font-weight-body-strong:700;
   --radius-sm:6px; --radius-md:10px; --radius-lg:14px; --radius-full:999px;
+  /* セカンダリ＝青系（primary橙＝押せる／secondary青＝情報・補助） */
+  --color-secondary: #0077ff;
+  --color-secondary-light: #00c3ff;
+  --color-secondary-subtle: #f1f7ff;
+  --color-secondary-deep: #0070f0;
 }
 *{box-sizing:border-box;}
-body {margin:0;font-family:"Noto Sans JP",sans-serif;background:var(--color-background);color:var(--color-foreground);
+body {margin:0;font-family:Inter, 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif;background:var(--color-background);color:var(--color-foreground);
   height:100vh;display:flex;flex-direction:column;overflow:hidden;}
 
 /* ===== 上部バー ===== */
@@ -137,7 +146,7 @@ var SCREENS=[
  {g:'設定', t:'SNS設定', h:'./settings_wire.html#sns', w:1240},
  {g:'設定', t:'AIレビュー', h:'./settings_wire.html#review', w:1240},
  {g:'設定', t:'メンバー管理', h:'./settings_wire.html#members', w:1240},
- {g:'ドライブ', t:'いいねドライブ（AI読み取り資料）', h:'./drive_wire.html#learn', w:1240},
+ {g:'ドライブ', t:'いいねドライブ（資料・URLで絞った状態）', h:'./drive_wire.html#learn', w:1240},
  {g:'投稿一覧', t:'下書き', h:'./post_list_wire.html#draft', w:1280},
  {g:'投稿一覧', t:'予約済み', h:'./post_list_wire.html#ready', w:1280},
  {g:'投稿一覧', t:'投稿済み', h:'./post_list_wire.html#posted', w:1280},
@@ -258,6 +267,40 @@ document.getElementById('vZoom').addEventListener('click',function(e){
   b.classList.add('on'); zoom=b.dataset.z; applyZoom();
 });
 window.addEventListener('resize',applyZoom);
+
+/* プレビュー枠の中でワイヤー間のリンクを押したときの逃がし先。
+
+   枠の幅は「いま選んでいる画面」の w（SCREENS の値）で固定されていて、フィット時は
+   さらに transform: scale() で縮んでいる。その中で別の画面へ遷移すると、遷移先が
+   自分の想定幅ではなく前の画面の幅で描かれるので、横幅が足りず本当の大きさで見えない。
+   枠の中の遷移はすべて新しいタブへ逃がして、実寸のブラウザ幅で開かせる。
+
+   ページ内アンカー（#…）は枠の中で完結するのでそのまま。
+   target 指定済み（ヘルプセンターなど）は元の指定に任せる。
+
+   実装は window.open ではなく「リンクに target を付ける」。window.open はユーザー操作の
+   文脈から外れるとポップアップブロックの対象になるが、target 付きリンクの通常遷移は
+   ブロックされない。読み込み時に一括で付け、あとから JS が足したリンクのために
+   クリックのキャプチャ段階（既定の遷移が走る前）でも同じ判定を通す。 */
+(function(){
+  function toNewTab(a){
+    if(!a) return;
+    var h=a.getAttribute('href');
+    if(!h||h.charAt(0)==='#') return;   /* ページ内アンカーは枠の中で完結する */
+    if(a.target) return;                /* 既に指定があるものは元の指定に任せる */
+    a.target='_blank';
+    a.rel='noopener';
+  }
+  document.getElementById('vIframe').addEventListener('load',function(){
+    var doc;
+    try{ doc=this.contentDocument; }catch(err){ return; }  /* 別オリジンなら触れない */
+    if(!doc) return;
+    doc.querySelectorAll('a[href]').forEach(toNewTab);
+    doc.addEventListener('click',function(e){
+      toNewTab(e.target&&e.target.closest?e.target.closest('a[href]'):null);
+    },true);
+  });
+})();
 
 /* 起動時：ハッシュがあればその画面、なければ先頭 */
 (function(){

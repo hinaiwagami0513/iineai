@@ -1,4 +1,6 @@
 <!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap">
 <title>プロに頼む — いいねAI</title>
 <link rel="stylesheet" href="./tabler-icons-inline.css">
 <link rel="stylesheet" href="./fox-alert.css">
@@ -37,34 +39,38 @@
 .ti-brand-tiktok:before{content:"\ec73"}
 
 :root {
-  --color-primary: #ef6108;
-  --color-primary-hover: #d9570a;
-  --color-primary-subtle: #fff2e2;
+  /* 新パレット（藍・水色）由来の追加トークン */
+  --color-navy: #00347a;
+  --color-navy-subtle: #f1f7ff;
+  --color-primary-deep: #d54101;
+  --color-primary: #fe7235;
+  --color-primary-hover: #d54101;
+  --color-primary-subtle: #fff5f1;
   --color-on-primary: #ffffff;
-  --color-background: #f2f1f0;
-  --color-surface: #fbfaf8;
+  --color-background: #fcf5ef;
+  --color-surface: #fffdfb;
   --color-card: #ffffff;
   --color-foreground: #2a2826;
   --color-muted-foreground: #757575;
-  --color-border: #e9e8e6;
-  --color-border-strong: #cfcdc9;
+  --color-border: #efe7df;
+  --color-border-strong: #ddd0c4;
   --color-input: #ffffff;
-  --color-ring: #ef6108;
-  --color-success: #12960a;
-  --color-success-subtle: #e7f3e6;
-  --color-warning: #8a6d0f;
-  --color-warning-border: #e8b931;
-  --color-warning-subtle: #fcf4d9;
-  --color-info: #185fa5;
-  --color-info-subtle: #e6f1fb;
-  --color-destructive: #dc2626;
+  --color-ring: #fe7235;
+  --color-success: #008a24; --color-success-vivid: #00ac2f;
+  --color-success-subtle: #f3fcf6;
+  --color-warning: #ad6201;
+  --color-warning-border: #fea735;
+  --color-warning-subtle: #fff9f1;
+  --color-info: #0070f0;
+  --color-info-subtle: #f1f7ff;
+  --color-destructive: #e90c2a;
   --color-accent-purple: #9724ba;
   --color-accent-purple-subtle: #f5e7f8;
   --color-sns-instagram: #b02a78;
   --color-sns-instagram-subtle: #fce7f3;
   --color-sns-tiktok: #0e7490;
   --color-sns-tiktok-subtle: #e0f7fa;
-  --font-body: "Noto Sans JP";
+  --font-body: Inter, "Noto Sans JP";
   --text-h1: 1.875rem;
   --text-h2: 1.25rem;
   --text-h3: 1rem;
@@ -83,9 +89,14 @@
   --radius-lg: 16px;
   --radius-xl: 20px;
   --radius-full: 9999px;
+  /* セカンダリ＝青系（primary橙＝押せる／secondary青＝情報・補助） */
+  --color-secondary: #0077ff;
+  --color-secondary-light: #00c3ff;
+  --color-secondary-subtle: #f1f7ff;
+  --color-secondary-deep: #0070f0;
 }
 *{box-sizing:border-box;margin:0;padding:0;font-family:var(--font-body),'Hiragino Sans','Meiryo',sans-serif;-webkit-font-smoothing:antialiased;}
-body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
+body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .app{width:100%;background:var(--color-card);border-radius:0;overflow:hidden;display:flex;height:100vh;position:relative;}
 .ti{line-height:1;}
 
@@ -93,25 +104,25 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 .sb{width:250px;flex:none;background:var(--color-surface);border-right:1px solid var(--color-border);display:flex;flex-direction:column;}
 .sbtop{padding:16px 16px 10px;}
 .logo{font-size:var(--text-h3);font-weight:var(--font-weight-h3);color:var(--color-primary);margin-bottom:14px;display:block;}
-.create{width:100%;display:flex;align-items:center;justify-content:center;gap:7px;background:var(--color-primary);color:#fff;border:none;border-radius:var(--radius-md);padding:11px;font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;}
+.create{text-decoration:none;width:100%;display:flex;align-items:center;justify-content:center;gap:7px;background:var(--color-primary);color:#fff;border:none;border-radius:var(--radius-md);padding:11px;font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;}
 .nav{padding:6px 10px;overflow-y:auto;flex:1;}
-.ni{display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:var(--radius-md);font-size:var(--text-body);font-weight:var(--font-weight-label);color:var(--color-foreground);cursor:pointer;text-decoration:none;}
-.ni .ti{font-size:18px;color:#6b6864;}
-.ni .cv{margin-left:auto;font-size:14px;color:#a8a6a2;}
+.ni{display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:var(--radius-md);font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);color:var(--color-foreground);cursor:pointer;text-decoration:none;}
+.ni .ti{font-size:18px;color:#6e655d;}
+.ni .cv{margin-left:auto;font-size:14px;color:#9a938c;}
 .nidiv{height:1px;background:var(--color-border);margin:8px 10px;}
 /* 中央の投稿作成はSP専用。PCはサイドバー上部の「投稿作成」が同じ役目 */
 .ni-create{display:none;}
 .ni.exp .cv{transform:rotate(180deg);}
 .nisub{display:none;}
 .nisub.open{display:block;}
-.nis{display:flex;align-items:center;text-decoration:none;padding:8px 10px 8px 41px;border-radius:var(--radius-md);font-size:var(--text-label);font-weight:var(--font-weight-label);color:var(--color-muted-foreground);cursor:pointer;}
+.nis{display:flex;align-items:center;text-decoration:none;padding:8px 10px 8px 41px;border-radius:var(--radius-md);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);cursor:pointer;}
 .nis:hover{background:var(--color-primary-subtle);color:var(--color-primary);}
 .foot{border-top:1px solid var(--color-border);padding:12px;}
 .switcher{display:flex;align-items:center;gap:10px;padding:9px 10px;border:1px solid var(--color-border-strong);border-radius:var(--radius-md);background:var(--color-card);cursor:pointer;}
-.switcher .pic{width:34px;height:34px;flex:none;border-radius:var(--radius-md);background:#fde9d3;color:var(--color-primary);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.switcher .pic{width:34px;height:34px;flex:none;border-radius:var(--radius-md);background:#ffe6dc;color:var(--color-primary);display:flex;align-items:center;justify-content:center;font-size:18px;}
 .switcher .pn{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);}
-.switcher .an{font-size:var(--text-meta);color:#a8a6a2;}
-.switcher .cv{margin-left:auto;color:#a8a6a2;font-size:17px;}
+.switcher .an{font-size:var(--text-meta);color:#9a938c;}
+.switcher .cv{margin-left:auto;color:#9a938c;font-size:17px;}
 
 /* ===== メイン ===== */
 .main{flex:1;min-width:0;display:flex;flex-direction:column;}
@@ -158,8 +169,7 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 .flow .ar{flex:1;text-align:center;color:var(--color-border-strong);font-size:15px;}
 
 .card{background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:20px;margin-bottom:16px;}
-.card-t{font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);margin-bottom:4px;}
-.card-d{font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.8;margin-bottom:14px;}
+.card-t{font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);margin-bottom:14px;}
 .opts{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;}
 .opt>span:last-child{min-width:0;}
 .opt{border:1px solid var(--color-border-strong);border-radius:var(--radius-md);padding:14px 15px;cursor:pointer;background:var(--color-card);text-align:left;font-family:inherit;display:flex;gap:12px;align-items:flex-start;}
@@ -219,6 +229,60 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
   .flow{display:grid;grid-template-columns:1fr 1fr;gap:14px 10px;padding:16px;}
   .flow .ar{display:none;}
 }
+/* ===== シェル：ヘッダーとサイドバーを角丸のカードにする =====
+   全面ベタ（角丸0・隙間0）だと面が窓枠に貼り付いて古く見える。
+   .app に余白と gap を持たせて、サイドバー / ヘッダー / 本文を
+   生成りの地に浮いた3枚のカードとして置く。 */
+.app{background:var(--color-background);padding:10px;gap:10px;}
+.sb{border-radius:var(--radius-xl);border-right:none;overflow:hidden;}
+.main{gap:10px;}
+.hd{border-radius:var(--radius-xl);border-bottom:none;background:var(--color-card);
+    box-shadow:var(--shadow-card);padding:0 22px;}
+.content{border-radius:var(--radius-xl);background:var(--color-card);
+    box-shadow:var(--shadow-card);}
+/* トレイは .app の余白ぶん内側に寄せる */
+.corner{right:26px;bottom:26px;}
+
+/* ===== サイドバーの文字を白に =====
+   地の #fe7235 に白は 2.74 で、15px の本文には足りない。
+   文字を白にすると決めた以上、地の側を下げてコントラストを作る。
+   ベタで暗くすると濁るので、上を鮮やかなまま残す縦グラデーションにして
+   「明るいオレンジ」の印象を保ちながら 4.5 を満たす。 */
+.sb{background:linear-gradient(180deg,#fe7235 0%,#e85513 55%,#d54101 100%);}
+.sb .logo{filter:brightness(0) invert(1);opacity:.96;}
+.sb .ni{color:rgba(255,255,255,.88);}
+.sb .ni .ti{color:rgba(255,255,255,.88);}
+/* hover / 選択中は薄い白の面だけで示す（2026-08-21）。縁は付けない。
+   面を白に寄せると白文字が沈むので寄せない（白100%なら 1.00、80%でも 1.27）。
+   薄いままなら文字は白で通る＝他の行と同じ読みやすさ（オレンジ地に白で 2.7）。
+   hover 10% / 選択 22% と差を付けて、面の濃さだけで状態を見分けさせる。 */
+.sb .ni:hover{background:rgba(255,255,255,.10);color:#fff;}
+.sb .ni:hover .ti{color:#fff;}
+/* 選択中は「薄い白」の面に反転させる（2026-08-21）。
+   もとは 24%白 + 白文字で、地のオレンジとの差が出ず沈んでいた（白文字は 2.67）。
+   ベタ白だと「投稿作成」ボタンと同じ強さになって重いので 80% に落とす。
+   ただし 80%白の面（rgb(251,222,209)）に #d54101 は 3.59 で AA に足りないので、
+   文字だけ1段濃い #a33200 にして 5.47 を確保する。地を薄くしたぶんは文字で補う。 */
+.sb .ni.on{background:rgba(255,255,255,.22);color:#fff;}
+.sb .ni.on .ti{color:#fff;}
+.sb .ni.on .cv{color:#fff;}
+/* サブ項目も同じ。.nis.on より .sb .nis が後勝ちして白文字になり、
+   薄い地（primary-subtle）と重なって完全に見えなくなっていた。 */
+.sb .nis.on{background:rgba(255,255,255,.22);color:#fff;}
+.sb .ni .cv{color:rgba(255,255,255,.7);}
+.sb .nis{color:rgba(255,255,255,.8);}
+.sb .nis:hover{background:rgba(255,255,255,.10);color:#fff;}
+.sb .nav,.sb .sbbtm,.sb .foot{border-color:rgba(255,255,255,.22);}
+.sb .switcher{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.30);}
+.sb .switcher .pn,.sb .switcher .nm{color:#fff;}
+.sb .switcher .an,.sb .switcher .cv{color:rgba(255,255,255,.72);}
+.sb .switcher .pic{background:#fff;color:#d54101;}
+.sb .upg{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.30);}
+.sb .upg .ut{color:#fff;}
+.sb .upg .ub{background:#fff !important;color:#d54101 !important;}
+.sb .upg .ub:hover{filter:brightness(.94);}
+.create{background:#fff !important;color:#d54101 !important;}
+.create:hover{background:#fff !important;filter:brightness(.96);}
 </style>
 <!-- SP対応。インラインCSSの後に置く（@media は詳細度を上げないので後勝ちにする） -->
 <link rel="stylesheet" href="./shell-sp.css">
@@ -226,13 +290,13 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 <div class="app">
   <!-- サイドバー -->
   <aside class="sb">
-    <div class="sbtop"><span class="logo">いいねAI</span><button class="create"><i class="ti ti-plus"></i>投稿作成</button></div>
+    <div class="sbtop"><span class="logo">いいねAI</span><a class="create" href="./flow_video_script_wire.html"><i class="ti ti-plus"></i>投稿作成</a></div>
     <div class="nav">
       <a class="ni" href="./shell_header_sidebar_wire.html"><i class="ti ti-layout-dashboard"></i>ホーム</a>
       <a class="ni" href="./post_list_wire.html"><i class="ti ti-file-text"></i>投稿</a>
       <a class="ni" href="./calendar_wire.html"><i class="ti ti-calendar"></i>カレンダー</a>
       <!-- SP専用：投稿作成の動線 -->
-      <button class="ni-create" aria-label="投稿を作る"><i class="ti ti-plus"></i></button>
+      <a class="ni-create" href="./flow_video_script_wire.html" aria-label="投稿を作る"><i class="ti ti-plus"></i></a>
       <a class="ni" href="./analysis_visual_wire.html"><i class="ti ti-chart-bar"></i>分析</a>
       <a class="ni" href="./drive_wire.html"><i class="ti ti-folder"></i>ドライブ</a>
       <div class="nidiv"></div>
@@ -300,7 +364,6 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 
         <div class="card">
           <div class="card-t">なにをお願いしますか</div>
-          <div class="card-d">いくつでも選べます。金額は目安です。</div>
           <div class="opts">
             <button class="opt on" onclick="this.classList.toggle('on')">
               <span class="ic"><i class="ti ti-photo"></i></span>
@@ -356,7 +419,6 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 
         <div class="card">
           <div class="card-t">参考にしてほしいもの</div>
-          <div class="card-d">ドライブの素材や、こんな感じにしたいという例を渡せます。お店の情報は「運用目的」から自動で共有されます。</div>
           <div class="refs">
             <span class="ref"><span class="sw" style="background:linear-gradient(135deg,#f7d9b0,#efc189)"></span>看板犬ポチ_01.jpg<button class="x" aria-label="外す"><i class="ti ti-x"></i></button></span>
             <span class="ref"><span class="sw" style="background:linear-gradient(135deg,#b9dcc0,#93c8a0)"></span>ポチの朝ルーティン.mp4<button class="x" aria-label="外す"><i class="ti ti-x"></i></button></span>
@@ -370,7 +432,6 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 
         <div class="card">
           <div class="card-t">伝えたいこと</div>
-          <div class="card-d">うまく書けなくて大丈夫です。箇条書きでも、話し言葉でもかまいません。</div>
           <textarea class="ta" placeholder="例：秋の新作パフェを推したいです。犬と一緒に写っている写真が多めがうれしいです。">秋の新作パフェを3本ぶん、Instagram向けにお願いしたいです。犬と一緒に写っている写真を多めにしてください。</textarea>
         </div>
 
@@ -426,7 +487,6 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 
         <div class="card">
           <div class="card-t">なにを撮ってほしいですか</div>
-          <div class="card-d">いくつでも選べます。</div>
           <div class="opts">
             <button class="opt on" onclick="this.classList.toggle('on')">
               <span class="ic"><i class="ti ti-coffee"></i></span>
@@ -449,7 +509,6 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 
         <div class="card">
           <div class="card-t">いつ来てほしいですか</div>
-          <div class="card-d">3つまで希望を出せます。お店が空いている時間だと、きれいに撮れます。</div>
           <div class="grid3">
             <div class="field" style="margin-bottom:0">
               <label class="lbl" for="d1">第1希望</label>
@@ -477,7 +536,6 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 
         <div class="card">
           <div class="card-t">場所</div>
-          <div class="card-d">「運用目的」に入っている住所を出しています。ちがう場所で撮る場合は書き換えてください。</div>
           <div class="field">
             <label class="lbl" for="addr">住所</label>
             <input class="inp" id="addr" value="東京都渋谷区〇〇 1-2-3 犬カフェOne">
@@ -495,7 +553,6 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 
         <div class="card">
           <div class="card-t">伝えたいこと</div>
-          <div class="card-d">当日のお願いや、気をつけてほしいことがあれば書いてください。</div>
           <textarea class="ta" placeholder="例：14時までは混んでいます。看板犬のポチは15時までお店にいます。">14時までは混んでいます。看板犬のポチは15時までお店にいるので、一緒に撮ってもらえるとうれしいです。</textarea>
         </div>
 

@@ -1,4 +1,6 @@
 <!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap">
 <title>チャット — いいねAI</title>
 <link rel="stylesheet" href="./tabler-icons-inline.css">
 <style>
@@ -29,33 +31,37 @@
 .ti-x:before{content:"\eb55"}
 
 :root {
-  --color-primary: #ef6108;
-  --color-primary-hover: #d9570a;
-  --color-primary-light: #ff971e;
-  --color-primary-subtle: #fff2e2;
+  /* 新パレット（藍・水色）由来の追加トークン */
+  --color-navy: #00347a;
+  --color-navy-subtle: #f1f7ff;
+  --color-primary-deep: #d54101;
+  --color-primary: #fe7235;
+  --color-primary-hover: #d54101;
+  --color-primary-light: #fea735;
+  --color-primary-subtle: #fff5f1;
   --color-on-primary: #ffffff;
-  --color-background: #f2f1f0;
-  --color-surface: #fbfaf8;
+  --color-background: #fcf5ef;
+  --color-surface: #fffdfb;
   --color-card: #ffffff;
   --color-foreground: #2a2826;
   --color-muted-foreground: #757575;
-  --color-border: #e9e8e6;
-  --color-border-strong: #cfcdc9;
+  --color-border: #efe7df;
+  --color-border-strong: #ddd0c4;
   --color-input: #ffffff;
-  --color-ring: #ef6108;
-  --color-success: #12960a;
-  --color-success-subtle: #e7f3e6;
-  --color-warning: #8a6d0f;
-  --color-warning-subtle: #fcf4d9;
-  --color-info: #185fa5;
-  --color-info-subtle: #e6f1fb;
-  --color-destructive: #dc2626;
-  --color-destructive-subtle: #fee2e2;
+  --color-ring: #fe7235;
+  --color-success: #008a24; --color-success-vivid: #00ac2f;
+  --color-success-subtle: #f3fcf6;
+  --color-warning: #ad6201;
+  --color-warning-subtle: #fff9f1;
+  --color-info: #0070f0;
+  --color-info-subtle: #f1f7ff;
+  --color-destructive: #e90c2a;
+  --color-destructive-subtle: #fddfe3;
   --color-accent-purple: #9724ba;
   --color-accent-purple-subtle: #f5e7f8;
-  --color-like: #e25563;
-  --color-like-subtle: #fdecee;
-  --font-body: "Noto Sans JP";
+  --color-like: #ef3a58;
+  --color-like-subtle: #fddfe3;
+  --font-body: Inter, "Noto Sans JP";
   --text-h1: 1.875rem;
   --text-h2: 1.25rem;
   --text-h3: 1rem;
@@ -74,9 +80,14 @@
   --radius-lg: 16px;
   --radius-xl: 20px;
   --radius-full: 9999px;
+  /* セカンダリ＝青系（primary橙＝押せる／secondary青＝情報・補助） */
+  --color-secondary: #0077ff;
+  --color-secondary-light: #00c3ff;
+  --color-secondary-subtle: #f1f7ff;
+  --color-secondary-deep: #0070f0;
 }
 *{box-sizing:border-box;margin:0;padding:0;font-family:var(--font-body),'Hiragino Sans','Meiryo',sans-serif;-webkit-font-smoothing:antialiased;}
-body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
+body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .app{width:100%;background:var(--color-card);border-radius:0;overflow:hidden;display:flex;height:100vh;position:relative;}
 .ti{line-height:1;}
 
@@ -85,11 +96,11 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 .sb{width:250px;flex:none;background:var(--color-surface);border-right:1px solid var(--color-border);display:flex;flex-direction:column;}
 .sbtop{padding:16px 16px 10px;}
 .logo{font-size:var(--text-h3);font-weight:var(--font-weight-h3);color:var(--color-primary);margin-bottom:14px;display:block;}
-.create{width:100%;display:flex;align-items:center;justify-content:center;gap:7px;background:var(--color-primary);color:#fff;border:none;border-radius:var(--radius-md);padding:11px;font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;}
+.create{text-decoration:none;width:100%;display:flex;align-items:center;justify-content:center;gap:7px;background:var(--color-primary);color:#fff;border:none;border-radius:var(--radius-md);padding:11px;font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;}
 .nav{padding:6px 10px;overflow-y:auto;flex:1;}
-.ni{display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:var(--radius-md);font-size:var(--text-body);font-weight:var(--font-weight-label);color:var(--color-foreground);cursor:pointer;text-decoration:none;}
-.ni .ti{font-size:18px;color:#6b6864;}
-.ni .cv{margin-left:auto;font-size:14px;color:#a8a6a2;}
+.ni{display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:var(--radius-md);font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);color:var(--color-foreground);cursor:pointer;text-decoration:none;}
+.ni .ti{font-size:18px;color:#6e655d;}
+.ni .cv{margin-left:auto;font-size:14px;color:#9a938c;}
 .ni.on{background:var(--color-primary-subtle);color:var(--color-primary);font-weight:var(--font-weight-body-strong);}
 .ni.on .ti{color:var(--color-primary);}
 .nidiv{height:1px;background:var(--color-border);margin:8px 10px;}
@@ -98,14 +109,14 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 .ni.exp .cv{transform:rotate(180deg);}
 .nisub{display:none;}
 .nisub.open{display:block;}
-.nis{display:flex;align-items:center;text-decoration:none;padding:8px 10px 8px 41px;border-radius:var(--radius-md);font-size:var(--text-label);font-weight:var(--font-weight-label);color:var(--color-muted-foreground);cursor:pointer;}
+.nis{display:flex;align-items:center;text-decoration:none;padding:8px 10px 8px 41px;border-radius:var(--radius-md);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);cursor:pointer;}
 .nis:hover{background:var(--color-primary-subtle);color:var(--color-primary);}
 .foot{border-top:1px solid var(--color-border);padding:12px;}
 .switcher{display:flex;align-items:center;gap:10px;padding:9px 10px;border:1px solid var(--color-border-strong);border-radius:var(--radius-md);background:var(--color-card);cursor:pointer;}
-.switcher .pic{width:34px;height:34px;flex:none;border-radius:var(--radius-md);background:#fde9d3;color:var(--color-primary);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.switcher .pic{width:34px;height:34px;flex:none;border-radius:var(--radius-md);background:#ffe6dc;color:var(--color-primary);display:flex;align-items:center;justify-content:center;font-size:18px;}
 .switcher .pn{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);}
-.switcher .an{font-size:var(--text-meta);color:#a8a6a2;}
-.switcher .cv{margin-left:auto;color:#a8a6a2;font-size:17px;}
+.switcher .an{font-size:var(--text-meta);color:#9a938c;}
+.switcher .cv{margin-left:auto;color:#9a938c;font-size:17px;}
 
 /* ===== メイン ===== */
 .main{flex:1;min-width:0;display:flex;flex-direction:column;}
@@ -243,6 +254,60 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
   .composer .bar{flex-wrap:wrap;row-gap:8px;}
   .attbtn{white-space:nowrap;}
 }
+/* ===== シェル：ヘッダーとサイドバーを角丸のカードにする =====
+   全面ベタ（角丸0・隙間0）だと面が窓枠に貼り付いて古く見える。
+   .app に余白と gap を持たせて、サイドバー / ヘッダー / 本文を
+   生成りの地に浮いた3枚のカードとして置く。 */
+.app{background:var(--color-background);padding:10px;gap:10px;}
+.sb{border-radius:var(--radius-xl);border-right:none;overflow:hidden;}
+.main{gap:10px;}
+.hd{border-radius:var(--radius-xl);border-bottom:none;background:var(--color-card);
+    box-shadow:var(--shadow-card);padding:0 22px;}
+.content{border-radius:var(--radius-xl);background:var(--color-card);
+    box-shadow:var(--shadow-card);}
+/* トレイは .app の余白ぶん内側に寄せる */
+.corner{right:26px;bottom:26px;}
+
+/* ===== サイドバーの文字を白に =====
+   地の #fe7235 に白は 2.74 で、15px の本文には足りない。
+   文字を白にすると決めた以上、地の側を下げてコントラストを作る。
+   ベタで暗くすると濁るので、上を鮮やかなまま残す縦グラデーションにして
+   「明るいオレンジ」の印象を保ちながら 4.5 を満たす。 */
+.sb{background:linear-gradient(180deg,#fe7235 0%,#e85513 55%,#d54101 100%);}
+.sb .logo{filter:brightness(0) invert(1);opacity:.96;}
+.sb .ni{color:rgba(255,255,255,.88);}
+.sb .ni .ti{color:rgba(255,255,255,.88);}
+/* hover / 選択中は薄い白の面だけで示す（2026-08-21）。縁は付けない。
+   面を白に寄せると白文字が沈むので寄せない（白100%なら 1.00、80%でも 1.27）。
+   薄いままなら文字は白で通る＝他の行と同じ読みやすさ（オレンジ地に白で 2.7）。
+   hover 10% / 選択 22% と差を付けて、面の濃さだけで状態を見分けさせる。 */
+.sb .ni:hover{background:rgba(255,255,255,.10);color:#fff;}
+.sb .ni:hover .ti{color:#fff;}
+/* 選択中は「薄い白」の面に反転させる（2026-08-21）。
+   もとは 24%白 + 白文字で、地のオレンジとの差が出ず沈んでいた（白文字は 2.67）。
+   ベタ白だと「投稿作成」ボタンと同じ強さになって重いので 80% に落とす。
+   ただし 80%白の面（rgb(251,222,209)）に #d54101 は 3.59 で AA に足りないので、
+   文字だけ1段濃い #a33200 にして 5.47 を確保する。地を薄くしたぶんは文字で補う。 */
+.sb .ni.on{background:rgba(255,255,255,.22);color:#fff;}
+.sb .ni.on .ti{color:#fff;}
+.sb .ni.on .cv{color:#fff;}
+/* サブ項目も同じ。.nis.on より .sb .nis が後勝ちして白文字になり、
+   薄い地（primary-subtle）と重なって完全に見えなくなっていた。 */
+.sb .nis.on{background:rgba(255,255,255,.22);color:#fff;}
+.sb .ni .cv{color:rgba(255,255,255,.7);}
+.sb .nis{color:rgba(255,255,255,.8);}
+.sb .nis:hover{background:rgba(255,255,255,.10);color:#fff;}
+.sb .nav,.sb .sbbtm,.sb .foot{border-color:rgba(255,255,255,.22);}
+.sb .switcher{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.30);}
+.sb .switcher .pn,.sb .switcher .nm{color:#fff;}
+.sb .switcher .an,.sb .switcher .cv{color:rgba(255,255,255,.72);}
+.sb .switcher .pic{background:#fff;color:#d54101;}
+.sb .upg{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.30);}
+.sb .upg .ut{color:#fff;}
+.sb .upg .ub{background:#fff !important;color:#d54101 !important;}
+.sb .upg .ub:hover{filter:brightness(.94);}
+.create{background:#fff !important;color:#d54101 !important;}
+.create:hover{background:#fff !important;filter:brightness(.96);}
 </style>
 <!-- SP対応。インラインCSSの後に置く（@media は詳細度を上げないので後勝ちにする） -->
 <link rel="stylesheet" href="./shell-sp.css">
@@ -250,13 +315,13 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 <div class="app">
   <!-- サイドバー -->
   <aside class="sb">
-    <div class="sbtop"><span class="logo">いいねAI</span><button class="create"><i class="ti ti-plus"></i>投稿作成</button></div>
+    <div class="sbtop"><span class="logo">いいねAI</span><a class="create" href="./flow_video_script_wire.html"><i class="ti ti-plus"></i>投稿作成</a></div>
     <div class="nav">
       <a class="ni" href="./shell_header_sidebar_wire.html"><i class="ti ti-layout-dashboard"></i>ホーム</a>
       <a class="ni" href="./post_list_wire.html"><i class="ti ti-file-text"></i>投稿</a>
       <a class="ni" href="./calendar_wire.html"><i class="ti ti-calendar"></i>カレンダー</a>
       <!-- SP専用：投稿作成の動線 -->
-      <button class="ni-create" aria-label="投稿を作る"><i class="ti ti-plus"></i></button>
+      <a class="ni-create" href="./flow_video_script_wire.html" aria-label="投稿を作る"><i class="ti ti-plus"></i></a>
       <a class="ni" href="./analysis_visual_wire.html"><i class="ti ti-chart-bar"></i>分析</a>
       <a class="ni" href="./drive_wire.html"><i class="ti ti-folder"></i>ドライブ</a>
       <div class="nidiv"></div>
@@ -317,13 +382,13 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
           <div class="lgrp" onclick="grpToggle(this)"><i class="ti ti-chevron-down cv"></i>ダイレクトメッセージ<button class="add" onclick="event.stopPropagation()" aria-label="追加"><i class="ti ti-plus"></i></button></div>
           <div class="lbody">
             <div class="conv" onclick="openConv(this)" data-kind="room"
-                 data-nm="佐藤 正太郎" data-color="#185fa5" data-ini="佐" data-members="2">
-              <span class="av" style="background:#185fa5">佐</span>
+                 data-nm="佐藤 正太郎" data-color="#0070f0" data-ini="佐" data-members="2">
+              <span class="av" style="background:#0070f0">佐</span>
               <div class="tx"><div class="nm">佐藤 正太郎</div><div class="last">パフェの写真、差し替えました！</div></div>
             </div>
             <div class="conv" onclick="openConv(this)" data-kind="room"
-                 data-nm="奥澤 汐莉" data-color="#e25563" data-ini="奥" data-members="2">
-              <span class="av" style="background:#e25563">奥</span>
+                 data-nm="奥澤 汐莉" data-color="#ef3a58" data-ini="奥" data-members="2">
+              <span class="av" style="background:#ef3a58">奥</span>
               <div class="tx"><div class="nm">奥澤 汐莉</div><div class="last">了解です、確認しておきます</div></div>
             </div>
           </div>
@@ -332,8 +397,8 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
           <div class="lgrp" onclick="grpToggle(this)"><i class="ti ti-chevron-down cv"></i>投稿のスレッド<span class="n">2</span></div>
           <div class="lbody">
             <div class="conv" onclick="openConv(this)" data-kind="room"
-                 data-nm="週末限定パフェのお知らせ" data-color="#ef6108" data-ini="投" data-members="3">
-              <span class="av" style="background:#ef6108">投</span>
+                 data-nm="週末限定パフェのお知らせ" data-color="#fe7235" data-ini="投" data-members="3">
+              <span class="av" style="background:#fe7235">投</span>
               <div class="tx">
                 <div class="nm">週末限定パフェのお知らせ</div>
                 <div class="post"><span class="sw" style="background:linear-gradient(135deg,#f7d9b0,#efc189)"></span>今日 19:00 に投稿予定</div>
@@ -362,8 +427,8 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
             <button class="members">
               <span class="faces">
                 <span style="background:#b02a78">犬</span>
-                <span style="background:#185fa5">佐</span>
-                <span style="background:#e25563">奥</span>
+                <span style="background:#0070f0">佐</span>
+                <span style="background:#ef3a58">奥</span>
               </span>
               <span class="n" id="rmMem">3人</span>
               <i class="ti ti-chevron-down cv"></i>
@@ -376,7 +441,7 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
           <div class="daydiv"><span>8月16日（日）</span></div>
 
           <div class="msg">
-            <span class="av" style="background:#185fa5">佐</span>
+            <span class="av" style="background:#0070f0">佐</span>
             <div class="col">
               <div class="who"><span class="n">佐藤 正太郎</span><span class="t">10:12</span></div>
               <div class="bub">パフェの写真、明るめに撮り直しました。ドライブの「Instagram用」に入れています。</div>
@@ -392,7 +457,7 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
           </div>
 
           <div class="msg me">
-            <span class="av" style="background:#ef6108">田</span>
+            <span class="av" style="background:#fe7235">田</span>
             <div class="col">
               <div class="who"><span class="n">田中 陽菜（自分）</span><span class="t">10:20</span></div>
               <div class="bub">ありがとうございます！こちらの方が断然おいしそうですね。差し替えておきます。</div>
@@ -400,7 +465,7 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
           </div>
 
           <div class="msg">
-            <span class="av" style="background:#185fa5">佐</span>
+            <span class="av" style="background:#0070f0">佐</span>
             <div class="col">
               <div class="who"><span class="n">佐藤 正太郎</span><span class="t">10:24</span></div>
               <div class="bub">お願いします。ついでに店内の様子も撮ってきました。</div>
@@ -411,7 +476,7 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
           <div class="unreaddiv"><span>ここから未読</span></div>
 
           <div class="msg">
-            <span class="av" style="background:#e25563">奥</span>
+            <span class="av" style="background:#ef3a58">奥</span>
             <div class="col">
               <div class="who"><span class="n">奥澤 汐莉</span><span class="t">14:02</span></div>
               <div class="bub">新人スタッフ紹介の投稿、確認おわりました。承認しておきます。</div>
@@ -419,7 +484,7 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
           </div>
 
           <div class="msg">
-            <span class="av" style="background:#e25563">奥</span>
+            <span class="av" style="background:#ef3a58">奥</span>
             <div class="col">
               <div class="who"><span class="n">奥澤 汐莉</span><span class="t">14:03</span></div>
               <div class="bub">来週の撮影、水曜でお願いできますか？</div>

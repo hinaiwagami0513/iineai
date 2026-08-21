@@ -1,4 +1,6 @@
 <!DOCTYPE html><html lang="ja"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Noto+Sans+JP:wght@400;500;700;900&display=swap">
 <title>いいねドライブ — いいねAI</title>
 <link rel="stylesheet" href="./tabler-icons-inline.css">
 <link rel="stylesheet" href="./fox-alert.css">
@@ -48,31 +50,35 @@
 .ti-external-link:before{content:"\ea99"}
 
 :root {
-  --color-primary: #ef6108;
-  --color-primary-hover: #d9570a;
-  --color-primary-light: #ff971e;
-  --color-primary-subtle: #fff2e2;
+  /* 新パレット（藍・水色）由来の追加トークン */
+  --color-navy: #00347a;
+  --color-navy-subtle: #f1f7ff;
+  --color-primary-deep: #d54101;
+  --color-primary: #fe7235;
+  --color-primary-hover: #d54101;
+  --color-primary-light: #fea735;
+  --color-primary-subtle: #fff5f1;
   --color-on-primary: #ffffff;
-  --color-background: #f2f1f0;
-  --color-surface: #fbfaf8;
+  --color-background: #fcf5ef;
+  --color-surface: #fffdfb;
   --color-card: #ffffff;
   --color-foreground: #2a2826;
   --color-muted-foreground: #757575;
-  --color-border: #e9e8e6;
-  --color-border-strong: #cfcdc9;
+  --color-border: #efe7df;
+  --color-border-strong: #ddd0c4;
   --color-input: #ffffff;
-  --color-ring: #ef6108;
-  --color-success: #12960a;
-  --color-success-subtle: #e7f3e6;
-  --color-warning: #8a6d0f;
-  --color-warning-subtle: #fcf4d9;
-  --color-info: #185fa5;
-  --color-info-subtle: #e6f1fb;
-  --color-destructive: #dc2626;
-  --color-destructive-subtle: #fee2e2;
+  --color-ring: #fe7235;
+  --color-success: #008a24; --color-success-vivid: #00ac2f;
+  --color-success-subtle: #f3fcf6;
+  --color-warning: #ad6201;
+  --color-warning-subtle: #fff9f1;
+  --color-info: #0070f0;
+  --color-info-subtle: #f1f7ff;
+  --color-destructive: #e90c2a;
+  --color-destructive-subtle: #fddfe3;
   --color-accent-purple: #9724ba;
   --color-accent-purple-subtle: #f5e7f8;
-  --font-body: "Noto Sans JP";
+  --font-body: Inter, "Noto Sans JP";
   --text-h1: 1.875rem;
   --text-h2: 1.25rem;
   --text-h3: 1rem;
@@ -91,9 +97,14 @@
   --radius-lg: 16px;
   --radius-xl: 20px;
   --radius-full: 9999px;
+  /* セカンダリ＝青系（primary橙＝押せる／secondary青＝情報・補助） */
+  --color-secondary: #0077ff;
+  --color-secondary-light: #00c3ff;
+  --color-secondary-subtle: #f1f7ff;
+  --color-secondary-deep: #0070f0;
 }
 *{box-sizing:border-box;margin:0;padding:0;font-family:var(--font-body),'Hiragino Sans','Meiryo',sans-serif;-webkit-font-smoothing:antialiased;}
-body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
+body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .app{width:100%;background:var(--color-card);border-radius:0;overflow:hidden;display:flex;height:100vh;position:relative;}
 .ti{line-height:1;}
 
@@ -101,11 +112,11 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 .sb{width:250px;flex:none;background:var(--color-surface);border-right:1px solid var(--color-border);display:flex;flex-direction:column;}
 .sbtop{padding:16px 16px 10px;}
 .logo{font-size:var(--text-h3);font-weight:var(--font-weight-h3);color:var(--color-primary);margin-bottom:14px;display:block;}
-.create{width:100%;display:flex;align-items:center;justify-content:center;gap:7px;background:var(--color-primary);color:#fff;border:none;border-radius:var(--radius-md);padding:11px;font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;}
+.create{text-decoration:none;width:100%;display:flex;align-items:center;justify-content:center;gap:7px;background:var(--color-primary);color:#fff;border:none;border-radius:var(--radius-md);padding:11px;font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;}
 .nav{padding:6px 10px;overflow-y:auto;flex:1;}
-.ni{display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:var(--radius-md);font-size:var(--text-body);font-weight:var(--font-weight-label);color:var(--color-foreground);cursor:pointer;text-decoration:none;}
-.ni .ti{font-size:18px;color:#6b6864;}
-.ni .cv{margin-left:auto;font-size:14px;color:#a8a6a2;}
+.ni{display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:var(--radius-md);font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);color:var(--color-foreground);cursor:pointer;text-decoration:none;}
+.ni .ti{font-size:18px;color:#6e655d;}
+.ni .cv{margin-left:auto;font-size:14px;color:#9a938c;}
 .ni.on{background:var(--color-primary-subtle);color:var(--color-primary);font-weight:var(--font-weight-body-strong);}
 .ni.on .ti{color:var(--color-primary);}
 .nidiv{height:1px;background:var(--color-border);margin:8px 10px;}
@@ -114,14 +125,14 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 .ni.exp .cv{transform:rotate(180deg);}
 .nisub{display:none;}
 .nisub.open{display:block;}
-.nis{display:flex;align-items:center;text-decoration:none;padding:8px 10px 8px 41px;border-radius:var(--radius-md);font-size:var(--text-label);font-weight:var(--font-weight-label);color:var(--color-muted-foreground);cursor:pointer;}
+.nis{display:flex;align-items:center;text-decoration:none;padding:8px 10px 8px 41px;border-radius:var(--radius-md);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);cursor:pointer;}
 .nis:hover{background:var(--color-primary-subtle);color:var(--color-primary);}
 .foot{border-top:1px solid var(--color-border);padding:12px;}
 .switcher{display:flex;align-items:center;gap:10px;padding:9px 10px;border:1px solid var(--color-border-strong);border-radius:var(--radius-md);background:var(--color-card);cursor:pointer;}
-.switcher .pic{width:34px;height:34px;flex:none;border-radius:var(--radius-md);background:#fde9d3;color:var(--color-primary);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.switcher .pic{width:34px;height:34px;flex:none;border-radius:var(--radius-md);background:#ffe6dc;color:var(--color-primary);display:flex;align-items:center;justify-content:center;font-size:18px;}
 .switcher .pn{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);}
-.switcher .an{font-size:var(--text-meta);color:#a8a6a2;}
-.switcher .cv{margin-left:auto;color:#a8a6a2;font-size:17px;}
+.switcher .an{font-size:var(--text-meta);color:#9a938c;}
+.switcher .cv{margin-left:auto;color:#9a938c;font-size:17px;}
 
 /* ===== メイン ===== */
 .main{flex:1;min-width:0;display:flex;flex-direction:column;}
@@ -140,14 +151,12 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 .hdbtn:hover{border-color:var(--color-primary);color:var(--color-primary);}
 .hdbadge{position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;padding:0 5px;border-radius:var(--radius-full);background:var(--color-primary);color:var(--color-on-primary);font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);display:flex;align-items:center;justify-content:center;border:2px solid var(--color-card);}
 
-/* ===== 素材 / AI読み取り資料 のタブ =====
-   旧「学習」はドライブに統合し、2026-08-19 に「AI読み取り資料」へ改名した。
+/* ===== 素材と資料は1つのドライブにまとめる（2026-08-21）=====
+   旧「学習」はドライブに統合し、2026-08-19 に「AI読み取り資料」へ改名。
    （「学習」だと自分が勉強する教材と読まれるため。DESIGN.md / vault: drive-vs-learning）
-   素材＝投稿に貼るもの／AI読み取り資料＝AIに読ませるもの。性格が違うのでタブで分ける。 */
-.tabs{display:flex;gap:0;padding:0 26px;border-bottom:1px solid var(--color-border);flex:none;background:var(--color-card);}
-.tab{display:flex;align-items:center;gap:8px;padding:13px 20px;font-family:inherit;font-size:var(--text-body-lg);font-weight:var(--font-weight-label);color:var(--color-muted-foreground);background:none;border:none;border-bottom:3px solid transparent;margin-bottom:-1px;cursor:pointer;}
-.tab i{font-size:18px;}
-.tab:hover{color:var(--color-foreground);}
+   8/21 で **タブ分割そのものを廃止**。何でもアップロードできるGoogleドライブ的な入れ物にして、
+   素材（画像・動画・音声）と資料（PDF・Office・URL）を同じ一覧に混ぜる。
+   性格の違いは「置き場所」ではなく **右の詳細パネルのアクション** で出す。 */
 .tab.on{color:var(--color-primary);border-bottom-color:var(--color-primary);font-weight:var(--font-weight-body-strong);}
 .pane{flex:1;min-height:0;display:none;}
 .pane.on{display:flex;}
@@ -160,11 +169,11 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 .tr{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:var(--radius-md);font-size:var(--text-body);color:var(--color-foreground);cursor:pointer;}
 .tr:hover{background:var(--color-primary-subtle);}
 .tr.on{background:var(--color-primary-subtle);color:var(--color-primary);font-weight:var(--font-weight-body-strong);}
-.tr .ti{font-size:17px;color:#6b6864;flex:none;}
+.tr .ti{font-size:17px;color:#6e655d;flex:none;}
 .tr.on .ti{color:var(--color-primary);}
 .tr .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .tr .num{font-size:var(--text-meta);color:var(--color-muted-foreground);font-weight:var(--font-weight-body-strong);}
-.tr .cv{font-size:13px;color:#a8a6a2;transition:transform .15s;}
+.tr .cv{font-size:13px;color:#9a938c;transition:transform .15s;}
 .tr.exp .cv{transform:rotate(90deg);}
 .trsub{display:none;margin-left:14px;border-left:1px solid var(--color-border);padding-left:4px;}
 .trsub.open{display:block;}
@@ -235,7 +244,7 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 .dr-menu .del{color:var(--color-destructive);}
 .dr-menu .del:hover{background:var(--color-destructive-subtle);}
 .dr-body{flex:1;overflow-y:auto;padding:18px;}
-.dr-prev{width:100%;aspect-ratio:1;border-radius:var(--radius-md);border:1px solid var(--color-border);margin-bottom:14px;}
+.dr-prev{width:100%;aspect-ratio:1;border-radius:var(--radius-md);border:1px solid var(--color-border);margin-bottom:14px;display:flex;align-items:center;justify-content:center;}
 .dr-nm{font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);line-height:1.6;word-break:break-all;}
 .dr-tbl{margin-top:14px;border:1px solid var(--color-border);border-radius:var(--radius-md);overflow:hidden;}
 .dr-tbl .row{display:flex;align-items:center;gap:12px;padding:11px 14px;border-bottom:1px solid var(--color-border);font-size:var(--text-label);}
@@ -254,26 +263,48 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 .dr-post .pt{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .dr-post .pd{font-size:var(--text-meta);color:var(--color-muted-foreground);margin-top:2px;}
 
-/* ===== AI読み取り資料タブ ===== */
-.learn{flex:1;min-width:0;overflow-y:auto;padding:20px 24px 40px;background:var(--color-background);}
-.lrn-list{background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden;}
-.lrn{display:flex;align-items:center;gap:14px;padding:15px 18px;border-bottom:1px solid var(--color-border);}
-.lrn:last-child{border-bottom:none;}
-.lrn:hover{background:var(--color-surface);}
-.lrn .ic{width:40px;height:40px;flex:none;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:19px;}
-.lrn .ic.doc{background:var(--color-destructive-subtle);color:var(--color-destructive);}
-.lrn .ic.off{background:var(--color-success-subtle);color:var(--color-success);}
-.lrn .ic.web{background:var(--color-info-subtle);color:var(--color-info);}
-.lrn .tx{flex:1;min-width:0;}
-.lrn .nm{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.lrn .mt{font-size:var(--text-meta);color:var(--color-muted-foreground);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
-.st{display:inline-flex;align-items:center;gap:5px;flex:none;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);border-radius:var(--radius-full);padding:5px 12px;}
-.st.ok{background:var(--color-success-subtle);color:var(--color-success);}
-.st.run{background:var(--color-info-subtle);color:var(--color-info);}
-.st.ng{background:var(--color-destructive-subtle);color:var(--color-destructive);}
-.lrn .more{flex:none;width:32px;height:32px;border:none;background:transparent;color:var(--color-muted-foreground);border-radius:var(--radius-sm);font-size:18px;cursor:pointer;}
-.lrn .more:hover{background:var(--color-border);color:var(--color-foreground);}
-.lrn-foot{font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.9;margin-top:16px;}
+/* ===== 資料・URL（素材と同じ一覧に混ぜる・2026-08-21）=====
+   カードの形は素材と同じ。違いはサムネの読み込み状態バッジと、右パネルのアクションだけ。 */
+.file .ld{position:absolute;left:8px;bottom:8px;display:inline-flex;align-items:center;gap:4px;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);border-radius:var(--radius-full);padding:3px 9px;}
+.file .ld.ok{background:var(--color-success-subtle);color:var(--color-success);}
+.file .ld.run{background:var(--color-info-subtle);color:var(--color-info);}
+.file .ld.ng{background:var(--color-destructive-subtle);color:var(--color-destructive);}
+.lrn-foot{font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.9;margin-top:20px;}
+
+/* ===== ダイアログ（新規フォルダ / アップロード / URLを追加）=====
+   flow_*_wire.html の .kariov / .karibox と同じ骨格。名前だけこの画面用にしている。 */
+.dlgov{position:fixed;inset:0;background:rgba(42,40,38,.45);z-index:120;display:none;align-items:center;justify-content:center;padding:20px;}
+.dlgov.on{display:flex;}
+.dlg{width:min(480px,100%);background:var(--color-card);border-radius:var(--radius-lg);box-shadow:0 8px 24px rgb(0 0 0 / 0.12);overflow:hidden;}
+.dlg .h{display:flex;align-items:center;gap:9px;padding:16px 20px;border-bottom:1px solid var(--color-border);font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);}
+.dlg .h > i{font-size:20px;color:var(--color-primary);}
+.dlg .h .x{margin-left:auto;width:30px;height:30px;border:1px solid var(--color-border);background:none;border-radius:var(--radius-sm);cursor:pointer;color:var(--color-muted-foreground);font-size:15px;display:flex;align-items:center;justify-content:center;}
+.dlg .b{padding:18px 20px;}
+.dlg .fl{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);margin-bottom:8px;}
+.dlg .in{width:100%;height:40px;padding:0 12px;border:1px solid var(--color-border-strong);border-radius:var(--radius-md);font-family:inherit;font-size:var(--text-body);background:var(--color-input);color:var(--color-foreground);}
+.dlg .in:focus{outline:2px solid var(--color-ring);outline-offset:-1px;}
+.dlg .note{font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.8;margin-top:12px;}
+.dlg .f{display:flex;gap:10px;padding:14px 20px;border-top:1px solid var(--color-border);background:var(--color-surface);}
+.dlg .f .sp{margin-left:auto;display:flex;gap:10px;}
+.dlg .btn-g{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--color-border-strong);color:var(--color-foreground);background:var(--color-card);border-radius:var(--radius-md);padding:10px 16px;font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-label);cursor:pointer;}
+.dlg .btn-g:hover{border-color:var(--color-primary);color:var(--color-primary);}
+/* アップロードの投下エリア。ワイヤーなので実際には受け取らない */
+.drop{border:2px dashed var(--color-border-strong);border-radius:var(--radius-md);background:var(--color-surface);padding:30px 20px;text-align:center;cursor:pointer;}
+.drop:hover{border-color:var(--color-primary);background:var(--color-primary-subtle);}
+.drop i{font-size:34px;color:var(--color-primary);}
+.drop .t{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);margin-top:10px;}
+.drop .d{font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:5px;line-height:1.7;}
+/* 入れたものがどっち扱いになるかを、入れる前に見せる */
+.kindrow{display:flex;gap:10px;margin-top:14px;}
+.kindcard{flex:1;min-width:0;border:1px solid var(--color-border);border-radius:var(--radius-md);padding:11px 13px;background:var(--color-surface);}
+.kindcard .k{display:flex;align-items:center;gap:6px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);}
+.kindcard .k i{font-size:15px;color:var(--color-primary);}
+.kindcard .v{font-size:var(--text-meta);color:var(--color-muted-foreground);line-height:1.7;margin-top:4px;}
+
+/* 右パネル：資料のときだけ出す説明と副ボタン */
+.dr-note{font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.8;background:var(--color-surface);border-radius:var(--radius-md);padding:12px 14px;margin-bottom:14px;}
+.dr-cta2{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;margin-top:10px;padding:12px 16px;font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-label);color:var(--color-foreground);background:var(--color-card);border:1px solid var(--color-border-strong);border-radius:var(--radius-md);cursor:pointer;}
+.dr-cta2:hover{border-color:var(--color-primary);color:var(--color-primary);}
 
 @media(max-width:1200px){
   .grid{grid-template-columns:repeat(3,1fr);}
@@ -290,6 +321,71 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
   .files{padding:16px;}
 
 }
+/* ===== シェル：ヘッダーとサイドバーを角丸のカードにする =====
+   全面ベタ（角丸0・隙間0）だと面が窓枠に貼り付いて古く見える。
+   .app に余白と gap を持たせて、サイドバー / ヘッダー / 本文を
+   生成りの地に浮いた3枚のカードとして置く。 */
+.app{background:var(--color-background);padding:10px;gap:10px;}
+.sb{border-radius:var(--radius-xl);border-right:none;overflow:hidden;}
+.main{gap:10px;}
+.hd{border-radius:var(--radius-xl);border-bottom:none;background:var(--color-card);
+    box-shadow:var(--shadow-card);padding:0 22px;}
+.content{border-radius:var(--radius-xl);background:var(--color-card);
+    box-shadow:var(--shadow-card);}
+/* トレイは .app の余白ぶん内側に寄せる */
+.corner{right:26px;bottom:26px;}
+
+/* ===== サイドバーの文字を白に =====
+   地の #fe7235 に白は 2.74 で、15px の本文には足りない。
+   文字を白にすると決めた以上、地の側を下げてコントラストを作る。
+   ベタで暗くすると濁るので、上を鮮やかなまま残す縦グラデーションにして
+   「明るいオレンジ」の印象を保ちながら 4.5 を満たす。 */
+.sb{background:linear-gradient(180deg,#fe7235 0%,#e85513 55%,#d54101 100%);}
+.sb .logo{filter:brightness(0) invert(1);opacity:.96;}
+.sb .ni{color:rgba(255,255,255,.88);}
+.sb .ni .ti{color:rgba(255,255,255,.88);}
+/* hover / 選択中は薄い白の面だけで示す（2026-08-21）。縁は付けない。
+   面を白に寄せると白文字が沈むので寄せない（白100%なら 1.00、80%でも 1.27）。
+   薄いままなら文字は白で通る＝他の行と同じ読みやすさ（オレンジ地に白で 2.7）。
+   hover 10% / 選択 22% と差を付けて、面の濃さだけで状態を見分けさせる。 */
+.sb .ni:hover{background:rgba(255,255,255,.10);color:#fff;}
+.sb .ni:hover .ti{color:#fff;}
+/* 選択中は「薄い白」の面に反転させる（2026-08-21）。
+   もとは 24%白 + 白文字で、地のオレンジとの差が出ず沈んでいた（白文字は 2.67）。
+   ベタ白だと「投稿作成」ボタンと同じ強さになって重いので 80% に落とす。
+   ただし 80%白の面（rgb(251,222,209)）に #d54101 は 3.59 で AA に足りないので、
+   文字だけ1段濃い #a33200 にして 5.47 を確保する。地を薄くしたぶんは文字で補う。 */
+.sb .ni.on{background:rgba(255,255,255,.22);color:#fff;}
+.sb .ni.on .ti{color:#fff;}
+.sb .ni.on .cv{color:#fff;}
+/* サブ項目も同じ。.nis.on より .sb .nis が後勝ちして白文字になり、
+   薄い地（primary-subtle）と重なって完全に見えなくなっていた。 */
+.sb .nis.on{background:rgba(255,255,255,.22);color:#fff;}
+.sb .ni .cv{color:rgba(255,255,255,.7);}
+.sb .nis{color:rgba(255,255,255,.8);}
+.sb .nis:hover{background:rgba(255,255,255,.10);color:#fff;}
+.sb .nav,.sb .sbbtm,.sb .foot{border-color:rgba(255,255,255,.22);}
+.sb .switcher{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.30);}
+.sb .switcher .pn,.sb .switcher .nm{color:#fff;}
+.sb .switcher .an,.sb .switcher .cv{color:rgba(255,255,255,.72);}
+.sb .switcher .pic{background:#fff;color:#d54101;}
+.sb .upg{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.30);}
+.sb .upg .ut{color:#fff;}
+.sb .upg .ub{background:#fff !important;color:#d54101 !important;}
+.sb .upg .ub:hover{filter:brightness(.94);}
+.create{background:#fff !important;color:#d54101 !important;}
+.create:hover{background:#fff !important;filter:brightness(.96);}
+
+/* ===== ドライブのツリーもカードへ（縁無し） =====
+   ヘッダー・サイドバー・本文を角丸カードにしたので、
+   ここだけ罫線で仕切られていると1枚だけ古い作りに見える。
+   境界は「線」ではなく「面と隙間」で表す。 */
+.pane.on{gap:10px;}
+.tree{border-right:none;border-radius:var(--radius-xl);background:var(--color-card);
+      box-shadow:var(--shadow-card);overflow:hidden;}
+.tree-foot{border-top-color:var(--color-border);}
+.files{border-radius:var(--radius-xl);background:var(--color-card);
+       box-shadow:var(--shadow-card);}
 </style>
 <!-- SP対応。インラインCSSの後に置く（@media は詳細度を上げないので後勝ちにする） -->
 <link rel="stylesheet" href="./shell-sp.css">
@@ -304,13 +400,13 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
 <div class="app">
   <!-- サイドバー -->
   <aside class="sb">
-    <div class="sbtop"><span class="logo">いいねAI</span><button class="create"><i class="ti ti-plus"></i>投稿作成</button></div>
+    <div class="sbtop"><span class="logo">いいねAI</span><a class="create" href="./flow_video_script_wire.html"><i class="ti ti-plus"></i>投稿作成</a></div>
     <div class="nav">
       <a class="ni" href="./shell_header_sidebar_wire.html"><i class="ti ti-layout-dashboard"></i>ホーム</a>
       <a class="ni" href="./post_list_wire.html"><i class="ti ti-file-text"></i>投稿</a>
       <a class="ni" href="./calendar_wire.html"><i class="ti ti-calendar"></i>カレンダー</a>
       <!-- SP専用：投稿作成の動線 -->
-      <button class="ni-create" aria-label="投稿を作る"><i class="ti ti-plus"></i></button>
+      <a class="ni-create" href="./flow_video_script_wire.html" aria-label="投稿を作る"><i class="ti ti-plus"></i></a>
       <a class="ni" href="./analysis_visual_wire.html"><i class="ti ti-chart-bar"></i>分析</a>
       <div class="ni on"><i class="ti ti-folder"></i>ドライブ</div>
       <div class="nidiv"></div>
@@ -345,13 +441,7 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
       </div>
     </div>
 
-    <!-- 素材 / AI読み取り資料 -->
-    <div class="tabs">
-      <button class="tab on" id="tabMat" onclick="drvTab('mat')"><i class="ti ti-photo"></i>素材</button>
-      <button class="tab" id="tabLrn" onclick="drvTab('lrn')"><i class="ti ti-world"></i>AI読み取り資料</button>
-    </div>
-
-    <!-- ===== 素材タブ ===== -->
+    <!-- ===== ドライブ本体（素材と資料は分けない・2026-08-21） ===== -->
     <div class="pane on" id="paneMat">
       <!-- 左：ツリー -->
       <div class="tree">
@@ -375,6 +465,8 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
           </div>
           <div class="tr" onclick="pickFolder(this,'音声・BGM')"><i class="ti ti-music"></i><span class="nm">音声・BGM</span></div>
           <div class="tr" onclick="pickFolder(this,'ブランド素材')"><i class="ti ti-star"></i><span class="nm">ブランド素材</span></div>
+          <!-- 素材と同じツリーに置く。分けない（2026-08-21） -->
+          <div class="tr" onclick="pickFolder(this,'資料・リンク')"><i class="ti ti-file-text"></i><span class="nm">資料・リンク</span><span class="num">5</span></div>
 
           <div class="tree-lbl">共有</div>
           <div class="tr" onclick="pickFolder(this,'チームと共有')"><i class="ti ti-users"></i><span class="nm">チームと共有</span></div>
@@ -392,11 +484,23 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
         <div class="crumb"><a>マイドライブ</a><i class="ti ti-chevron-right sep"></i><a>画像</a><i class="ti ti-chevron-right sep"></i><b>Instagram用</b></div>
         <div class="fhead">
           <span class="h" id="fTitle">Instagram用</span>
-          <span class="cnt">4フォルダ・8ファイル・245 MB</span>
+          <span class="cnt">4フォルダ・13ファイル・258 MB</span>
           <span class="sp">
-            <button class="btn-o"><i class="ti ti-plus"></i>新規フォルダ</button>
-            <button class="btn-p"><i class="ti ti-upload"></i>アップロード</button>
+            <button class="btn-o" onclick="openDlg('dlgFolder')"><i class="ti ti-plus"></i>新規フォルダ</button>
+            <button class="btn-o" onclick="openDlg('dlgUrl')"><i class="ti ti-world"></i>URLを追加</button>
+            <button class="btn-p" onclick="openDlg('dlgUp')"><i class="ti ti-upload"></i>アップロード</button>
           </span>
+        </div>
+
+        <!-- 何を入れてもいい入れ物にしたぶん、使われ方の違いは最初に言い切る -->
+        <div class="fox-alert care" style="margin-bottom:16px">
+          <img src="./assets/iine-fox-worried.png" alt="">
+          <div>
+            <span class="lb">ATTENTION</span>
+            <div class="t">写真も動画も、PDFやお店のサイトも、ぜんぶここに入れて大丈夫です。</div>
+            <div class="d"><b>画像・動画・音声</b>は投稿にそのまま貼れます。<b>PDF・Office・URL</b>は投稿文を作るときとAIレビューのときに<b>AIが参考にする資料</b>で、投稿に貼られることはありません。<br>
+            ファイルを押すと、右がわにそれぞれできることが出ます。</div>
+          </div>
         </div>
 
         <div class="chips">
@@ -404,6 +508,7 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
           <button class="chip" data-k="img" onclick="drvFilter(this)">画像</button>
           <button class="chip" data-k="vid" onclick="drvFilter(this)">動画</button>
           <button class="chip" data-k="aud" onclick="drvFilter(this)">音声</button>
+          <button class="chip" data-k="doc" onclick="drvFilter(this)">資料・URL</button>
           <button class="chip" data-k="ai" onclick="drvFilter(this)">AI生成のみ</button>
         </div>
 
@@ -415,7 +520,7 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
           <div class="fcard"><span class="ic"><i class="ti ti-folder"></i></span><div><div class="nm">商品撮影 RAW</div><div class="mt">12件・2週間前</div></div></div>
         </div>
 
-        <div class="sec-t">ファイル（8）</div>
+        <div class="sec-t">ファイル（13）</div>
         <div class="grid" id="fileGrid">
           <div class="file" data-k="img" data-ai="0" data-nm="看板犬ポチ_01.jpg" data-fmt="JPG・2048×2048" data-sz="2.4 MB" data-made="2026/08/12" data-edit="3日前" data-fav="1" data-g="linear-gradient(135deg,#f7d9b0,#efc189)" onclick="openFile(this)">
             <div class="th" style="background:linear-gradient(135deg,#f7d9b0,#efc189)"><span class="kind"><i class="ti ti-photo"></i></span><span class="fav"><i class="ti ti-star"></i></span></div>
@@ -449,74 +554,39 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
             <div class="th" style="background:linear-gradient(135deg,#f2d4d4,#dfa8a8)"><span class="kind"><i class="ti ti-video"></i></span></div>
             <div class="bd"><div class="nm">新人スタッフ紹介.mov</div><div class="mt">122 MB・3週間前</div></div>
           </div>
-        </div>
-        <div class="empty" id="fileEmpty" style="display:none">この種類のファイルはこのフォルダにありません。</div>
-      </div>
-    </div>
 
-    <!-- ===== AI読み取り資料タブ ===== -->
-    <div class="pane" id="paneLrn">
-      <div class="learn">
-        <!-- 素材との違いを最初に言い切る。統合したぶん、ここが曖昧だと混ざる -->
-        <div class="fox-alert care">
-          <img src="./assets/iine-fox-worried.png" alt="">
-          <div>
-            <span class="lb">ATTENTION</span>
-            <div class="t">AI読み取り資料は「AIに読ませるもの」。素材とは使われ方がちがいます。</div>
-            <div class="d">ここに入れた資料は、投稿文を作るときとAIレビューのときに<b>AIが参考にします</b>。
-            素材タブの写真とちがって、<b>投稿にそのまま貼られることはありません</b>。<br>
-            例：ブランドガイド、メニュー表、お店のサイト、よく使う言い回しをまとめた資料。</div>
+          <!-- ここから資料・URL。素材と同じ一覧に混ぜる（2026-08-21）。
+               data-ld = AIの読み込み状態（ok / run / ng）。素材側は持たない -->
+          <div class="file" data-k="doc" data-ai="0" data-ld="ok" data-nm="ブランドガイドライン_2026.pdf" data-fmt="PDF・24ページ" data-sz="4.2 MB" data-made="2026/07/02" data-edit="2026/07/02" data-fav="0" data-g="linear-gradient(135deg,#f4cfc7,#e6a89c)" onclick="openFile(this)">
+            <div class="th" style="background:linear-gradient(135deg,#f4cfc7,#e6a89c)"><span class="kind"><i class="ti ti-file-text"></i></span><span class="ld ok"><i class="ti ti-check"></i>読み込み済み</span></div>
+            <div class="bd"><div class="nm">ブランドガイドライン_2026.pdf</div><div class="mt">4.2 MB・2026/07/02</div></div>
           </div>
-        </div>
-
-        <div class="fhead">
-          <span class="h">読み込ませた資料</span>
-          <span class="cnt">5件・うち1件を読み込み中</span>
-          <span class="sp">
-            <button class="btn-o"><i class="ti ti-world"></i>URLを追加</button>
-            <button class="btn-p"><i class="ti ti-upload"></i>ファイルを追加</button>
-          </span>
-        </div>
-
-        <div class="lrn-list">
-          <div class="lrn">
-            <span class="ic doc"><i class="ti ti-file-text"></i></span>
-            <div class="tx"><div class="nm">ブランドガイドライン_2026.pdf</div><div class="mt">PDF・4.2 MB・2026/07/02 に追加</div></div>
-            <span class="st ok"><i class="ti ti-check"></i>読み込み済み</span>
-            <button class="more" aria-label="メニュー"><i class="ti ti-dots-vertical"></i></button>
+          <div class="file" data-k="doc" data-ai="0" data-ld="ok" data-nm="犬カフェOne 公式サイト" data-fmt="ウェブページ" data-sz="—" data-made="2026/07/02" data-edit="2026/07/02" data-fav="0" data-url="https://inucafe-one.example.com" data-g="linear-gradient(135deg,#cfe0f2,#9fc0e0)" onclick="openFile(this)">
+            <div class="th" style="background:linear-gradient(135deg,#cfe0f2,#9fc0e0)"><span class="kind"><i class="ti ti-world"></i></span><span class="ld ok"><i class="ti ti-check"></i>読み込み済み</span></div>
+            <div class="bd"><div class="nm">犬カフェOne 公式サイト</div><div class="mt">inucafe-one.example.com</div></div>
           </div>
-          <div class="lrn">
-            <span class="ic web"><i class="ti ti-world"></i></span>
-            <div class="tx"><div class="nm">犬カフェOne 公式サイト</div><div class="mt">https://inucafe-one.example.com・2026/07/02 に追加</div></div>
-            <span class="st ok"><i class="ti ti-check"></i>読み込み済み</span>
-            <button class="more" aria-label="メニュー"><i class="ti ti-dots-vertical"></i></button>
+          <div class="file" data-k="doc" data-ai="0" data-ld="run" data-nm="メニュー表_秋冬.xlsx" data-fmt="Excel" data-sz="620 KB" data-made="きょう" data-edit="きょう" data-fav="0" data-g="linear-gradient(135deg,#cfe8d4,#a3cfae)" onclick="openFile(this)">
+            <div class="th" style="background:linear-gradient(135deg,#cfe8d4,#a3cfae)"><span class="kind"><i class="ti ti-file"></i></span><span class="ld run"><i class="ti ti-refresh"></i>読み込み中</span></div>
+            <div class="bd"><div class="nm">メニュー表_秋冬.xlsx</div><div class="mt">620 KB・きょう</div></div>
           </div>
-          <div class="lrn">
-            <span class="ic off"><i class="ti ti-file"></i></span>
-            <div class="tx"><div class="nm">メニュー表_秋冬.xlsx</div><div class="mt">Excel・620 KB・きょう 追加</div></div>
-            <span class="st run"><i class="ti ti-refresh"></i>読み込み中</span>
-            <button class="more" aria-label="メニュー"><i class="ti ti-dots-vertical"></i></button>
+          <div class="file" data-k="doc" data-ai="0" data-ld="ok" data-nm="過去の人気投稿まとめ.pptx" data-fmt="PowerPoint・18ページ" data-sz="8.1 MB" data-made="2026/06/18" data-edit="2026/06/18" data-fav="0" data-g="linear-gradient(135deg,#f6d9bd,#e8b489)" onclick="openFile(this)">
+            <div class="th" style="background:linear-gradient(135deg,#f6d9bd,#e8b489)"><span class="kind"><i class="ti ti-file-text"></i></span><span class="ld ok"><i class="ti ti-check"></i>読み込み済み</span></div>
+            <div class="bd"><div class="nm">過去の人気投稿まとめ.pptx</div><div class="mt">8.1 MB・2026/06/18</div></div>
           </div>
-          <div class="lrn">
-            <span class="ic off"><i class="ti ti-file"></i></span>
-            <div class="tx"><div class="nm">過去の人気投稿まとめ.pptx</div><div class="mt">PowerPoint・8.1 MB・2026/06/18 に追加</div></div>
-            <span class="st ok"><i class="ti ti-check"></i>読み込み済み</span>
-            <button class="more" aria-label="メニュー"><i class="ti ti-dots-vertical"></i></button>
-          </div>
-          <div class="lrn">
-            <span class="ic web"><i class="ti ti-world"></i></span>
-            <div class="tx"><div class="nm">店舗紹介の記事（外部メディア）</div><div class="mt">https://example.com/inucafe-one・ページを開けませんでした</div></div>
-            <span class="st ng"><i class="ti ti-alert-triangle"></i>読み込み失敗</span>
-            <button class="more" aria-label="メニュー"><i class="ti ti-dots-vertical"></i></button>
+          <div class="file" data-k="doc" data-ai="0" data-ld="ng" data-nm="店舗紹介の記事（外部メディア）" data-fmt="ウェブページ" data-sz="—" data-made="2026/06/10" data-edit="2026/06/10" data-fav="0" data-url="https://example.com/inucafe-one" data-g="linear-gradient(135deg,#e6dcd2,#c7b7a6)" onclick="openFile(this)">
+            <div class="th" style="background:linear-gradient(135deg,#e6dcd2,#c7b7a6)"><span class="kind"><i class="ti ti-world"></i></span><span class="ld ng"><i class="ti ti-alert-triangle"></i>読み込み失敗</span></div>
+            <div class="bd"><div class="nm">店舗紹介の記事（外部メディア）</div><div class="mt">ページを開けませんでした</div></div>
           </div>
         </div>
 
         <div class="lrn-foot">
           読み込めるもの：PDF / 画像（JPEG・PNG）/ 動画（MP4・MOV）/ Office（PPTX・DOCX・XLSX）/ ウェブページのURL。<br>
-          読み込みには数分かかります。「読み込み中」のあいだも、ほかの資料は使われます。
+          資料の読み込みには数分かかります。「読み込み中」のあいだも、ほかの資料は使われます。
         </div>
+        <div class="empty" id="fileEmpty" style="display:none">この種類のファイルはこのフォルダにありません。</div>
       </div>
     </div>
+
   </div>
 
   <!-- ===== ファイル詳細 ===== -->
@@ -543,17 +613,95 @@ body {background:#e6e5e3;padding:0;color:var(--color-foreground);}
         <div class="row"><span class="k">形式</span><span class="v" id="drFmt"></span></div>
         <div class="row"><span class="k">作成日</span><span class="v" id="drMade"></span></div>
         <div class="row"><span class="k">最終編集</span><span class="v" id="drEdit"></span></div>
-        <div class="row"><span class="k">場所</span><span class="v">画像 / Instagram用</span></div>
+        <div class="row" id="drLoc"><span class="k">場所</span><span class="v">画像 / Instagram用</span></div>
+        <!-- 資料だけ出す行。素材のときは非表示 -->
+        <div class="row" id="drLdRow" style="display:none"><span class="k">AIの読み込み</span><span class="v" id="drLd"></span></div>
       </div>
-      <!-- ドライブ → 投稿作成フロー。素材を選んだ状態でフローに入る -->
-      <a class="dr-cta" href="./flow_image_material_wire.html#step=upload"><i class="ti ti-sparkles"></i>この素材で投稿を作る</a>
 
-      <div class="dr-used">
+      <!-- ▼ 素材（画像・動画・音声）のとき。ドライブ → 投稿作成フローへ -->
+      <div id="drMat">
+        <a class="dr-cta" href="./flow_image_material_wire.html#step=upload"><i class="ti ti-sparkles"></i>この素材で投稿を作る</a>
+      </div>
+
+      <!-- ▼ 資料・URL のとき。投稿には貼らないので、できることが別 -->
+      <div id="drDoc" style="display:none">
+        <div class="dr-note">この資料は、投稿文を作るときとAIレビューのときに<b>AIが参考にします</b>。投稿にそのまま貼られることはありません。</div>
+        <a class="dr-cta" href="./flow_image_material_wire.html#step=upload"><i class="ti ti-sparkles"></i>この資料をもとに投稿を作る</a>
+        <button class="dr-cta2" id="drReload"><i class="ti ti-refresh"></i>もう一度読み込む</button>
+      </div>
+
+      <div class="dr-used" id="drUsed">
         <div class="t">この素材を使った投稿</div>
         <div class="dr-post"><span class="sw" style="background:linear-gradient(135deg,#f7d9b0,#efc189)"></span><div class="tx"><div class="pt">夏の新メニュー トロピカルスムージー</div><div class="pd">Instagram・8月10日に投稿</div></div><i class="ti ti-arrow-right" style="color:var(--color-muted-foreground);font-size:15px"></i></div>
         <div class="dr-post"><span class="sw" style="background:linear-gradient(135deg,#b9dcc0,#93c8a0)"></span><div class="tx"><div class="pt">看板犬ポチの朝ルーティン</div><div class="pd">TikTok・8月3日に投稿</div></div><i class="ti ti-arrow-right" style="color:var(--color-muted-foreground);font-size:15px"></i></div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- ===== 新規フォルダ ===== -->
+<div class="dlgov" id="dlgFolder" onclick="bgClose(event,'dlgFolder')">
+  <div class="dlg">
+    <div class="h"><i class="ti ti-folder"></i>新しいフォルダを作る
+      <button class="x" onclick="closeDlg('dlgFolder')" aria-label="閉じる"><i class="ti ti-x"></i></button></div>
+    <div class="b">
+      <div class="fl">フォルダの名前</div>
+      <input class="in" id="dlgFolderNm" placeholder="例：秋の新メニュー" value="秋の新メニュー">
+      <div class="note">いまの場所（マイドライブ / 画像 / Instagram用）の中に作られます。</div>
+    </div>
+    <div class="f"><span class="sp">
+      <button class="btn-g" onclick="closeDlg('dlgFolder')">やめる</button>
+      <button class="btn-p" onclick="closeDlg('dlgFolder')"><i class="ti ti-check"></i>作る</button>
+    </span></div>
+  </div>
+</div>
+
+<!-- ===== アップロード =====
+     素材と資料を1つのドライブに混ぜたので、入れたものがどっち扱いになるかを入れる前に見せる（2026-08-21） -->
+<div class="dlgov" id="dlgUp" onclick="bgClose(event,'dlgUp')">
+  <div class="dlg">
+    <div class="h"><i class="ti ti-upload"></i>アップロード
+      <button class="x" onclick="closeDlg('dlgUp')" aria-label="閉じる"><i class="ti ti-x"></i></button></div>
+    <div class="b">
+      <div class="drop">
+        <i class="ti ti-upload"></i>
+        <div class="t">ここにドラッグ、または押してファイルを選ぶ</div>
+        <div class="d">画像（JPEG・PNG）/ 動画（MP4・MOV）/ 音声（MP3）<br>PDF / Office（PPTX・DOCX・XLSX）</div>
+      </div>
+      <div class="kindrow">
+        <div class="kindcard">
+          <div class="k"><i class="ti ti-photo"></i>画像・動画・音声</div>
+          <div class="v">素材になります。投稿にそのまま貼れます。</div>
+        </div>
+        <div class="kindcard">
+          <div class="k"><i class="ti ti-file-text"></i>PDF・Office</div>
+          <div class="v">資料になります。AIが読んで投稿文の参考にします。投稿には貼られません。</div>
+        </div>
+      </div>
+      <div class="note">どっちになるかは<b>ファイルの種類から自動で決まります</b>。選ばなくて大丈夫です。</div>
+    </div>
+    <div class="f"><span class="sp">
+      <button class="btn-g" onclick="closeDlg('dlgUp')">やめる</button>
+      <button class="btn-p" onclick="closeDlg('dlgUp')"><i class="ti ti-upload"></i>アップロードする</button>
+    </span></div>
+  </div>
+</div>
+
+<!-- ===== URLを追加 ===== -->
+<div class="dlgov" id="dlgUrl" onclick="bgClose(event,'dlgUrl')">
+  <div class="dlg">
+    <div class="h"><i class="ti ti-world"></i>URLを追加
+      <button class="x" onclick="closeDlg('dlgUrl')" aria-label="閉じる"><i class="ti ti-x"></i></button></div>
+    <div class="b">
+      <div class="fl">ページのURL</div>
+      <input class="in" id="dlgUrlIn" placeholder="https://…" value="https://inucafe-one.example.com/menu">
+      <div class="note">お店のサイトやメニューのページを入れておくと、AIが投稿文を作るときに読みます。<br>
+      追加したあと<b>読み込みに数分かかります</b>。読み込み中でも、ほかの資料は使われます。</div>
+    </div>
+    <div class="f"><span class="sp">
+      <button class="btn-g" onclick="closeDlg('dlgUrl')">やめる</button>
+      <button class="btn-p" onclick="closeDlg('dlgUrl')"><i class="ti ti-plus"></i>追加する</button>
+    </span></div>
   </div>
 </div>
 
@@ -566,18 +714,19 @@ function navToggle(el){
   el.classList.toggle('exp');
 }
 
-/* ===== 素材 / AI読み取り資料 のタブ ===== */
-function drvTab(which){
-  var mat = which === 'mat';
-  document.getElementById('paneMat').classList.toggle('on', mat);
-  document.getElementById('paneLrn').classList.toggle('on', !mat);
-  document.getElementById('tabMat').classList.toggle('on', mat);
-  document.getElementById('tabLrn').classList.toggle('on', !mat);
-  closeFile();
+/* ===== ダイアログ =====
+   背景クリックと Esc で閉じる。開いたら最初の入力にフォーカスする。 */
+function openDlg(id){
+  document.getElementById(id).classList.add('on');
+  var inp = document.querySelector('#' + id + ' .in');
+  if(inp) inp.focus(), inp.select();
 }
-
-// #learn 付きで開いたらAI読み取り資料タブから始める（画面一覧から直接呼べるように）
-if(location.hash === '#learn') drvTab('lrn');
+function closeDlg(id){ document.getElementById(id).classList.remove('on'); }
+function bgClose(e, id){ if(e.target.id === id) closeDlg(id); }
+document.addEventListener('keydown', function(e){
+  if(e.key !== 'Escape') return;
+  document.querySelectorAll('.dlgov.on').forEach(function(d){ d.classList.remove('on'); });
+});
 
 /* ===== ツリー ===== */
 function treeToggle(el){
@@ -607,16 +756,48 @@ function drvFilter(chip){
   document.getElementById('fileEmpty').style.display = shown ? 'none' : 'block';
 }
 
-/* ===== ファイル詳細 ===== */
+// #learn で来たら「資料・URL」で絞った状態から始める。
+// タブは廃止したが、設定画面や画面一覧からの既存リンクを生かすため残す（2026-08-21）。
+if(location.hash === '#learn'){
+  var lc = document.querySelector('.chips .chip[data-k="doc"]');
+  if(lc) drvFilter(lc);
+}
+
+/* ===== ファイル詳細 =====
+   置き場所は1つにしたので、素材と資料の違いはここのアクションで出す（2026-08-21）。
+   素材 → 「この素材で投稿を作る」＋使った投稿の逆引き。
+   資料 → AIの読み込み状態＋読み直し。投稿には貼られないので逆引きは出さない。 */
+var LD_LABEL = { ok:'読み込み済み', run:'読み込み中', ng:'読み込み失敗（ページを開けませんでした）' };
+
 function openFile(el){
   document.querySelectorAll('#fileGrid .file').forEach(function(f){ f.classList.remove('on'); });
   el.classList.add('on');
-  document.getElementById('drPrev').style.background = el.dataset.g;
+  var prev = document.getElementById('drPrev');
+  prev.style.background = el.dataset.g;
+  // 資料は中身のサムネが出せないので、種類のアイコンを置く。空の四角にしない
+  var kind = el.querySelector('.th .kind i');
+  prev.innerHTML = (el.dataset.k === 'doc' && kind)
+    ? '<i class="' + kind.className + '" style="font-size:52px;color:rgba(0,0,0,.34)"></i>' : '';
   document.getElementById('drNm').textContent  = el.dataset.nm;
   document.getElementById('drSz').textContent  = el.dataset.sz;
   document.getElementById('drFmt').textContent = el.dataset.fmt;
   document.getElementById('drMade').textContent = el.dataset.made;
   document.getElementById('drEdit').textContent = el.dataset.edit;
+
+  var isDoc = el.dataset.k === 'doc';
+  document.getElementById('drMat').style.display   = isDoc ? 'none' : '';
+  document.getElementById('drDoc').style.display   = isDoc ? '' : 'none';
+  document.getElementById('drUsed').style.display  = isDoc ? 'none' : '';
+  document.getElementById('drLdRow').style.display = isDoc ? '' : 'none';
+  if(isDoc){
+    var ld = el.dataset.ld || 'ok';
+    document.getElementById('drLd').textContent = LD_LABEL[ld] || ld;
+    // 失敗・読み込み中のときだけ読み直しを出す。済みに出しても押す理由がない
+    document.getElementById('drReload').style.display = (ld === 'ok') ? 'none' : '';
+    document.querySelector('#drLoc .v').textContent = '資料・リンク';
+  } else {
+    document.querySelector('#drLoc .v').textContent = '画像 / Instagram用';
+  }
   document.getElementById('drawer').classList.add('on');
 }
 function closeFile(){
