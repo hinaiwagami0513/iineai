@@ -939,7 +939,7 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
                  本予約=「予約ができました」/ 仮予約=「準備ができました」/ 未定=「投稿の準備ができました」 -->
             <div id="finTtl" style="font-size:var(--text-h1);font-weight:var(--font-weight-h1);margin-bottom:10px;">投稿の準備ができました！</div>
             <div id="finSub" style="font-size:var(--text-body);color:var(--color-muted-foreground);line-height:1.7;margin-bottom:24px;">いつでも予約・投稿できます。<br>おつかれさまでした。</div>
-            <div style="display:flex;gap:12px;justify-content:center;"><button class="btn btn-ghost" style="display:inline-flex;align-items:center;gap:6px;padding:12px 20px;border:1px solid var(--color-border);border-radius:var(--radius-md);background:var(--color-surface);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;color:var(--color-foreground);"><i class="ti ti-list"></i>一覧へ戻る</button><button class="btn btn-primary grad" id="finReserve" style="display:inline-flex;align-items:center;gap:6px;padding:12px 20px;border:none;border-radius:var(--radius-md);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;color:#fff;"><i class="ti ti-calendar-event"></i>投稿を予約する</button></div>
+            <div style="display:flex;gap:12px;justify-content:center;"><button class="btn btn-ghost" style="display:inline-flex;align-items:center;gap:6px;padding:12px 20px;border:1px solid var(--color-border);border-radius:var(--radius-md);background:var(--color-surface);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;color:var(--color-foreground);"><i class="ti ti-list"></i>一覧へ戻る</button><button class="btn btn-primary grad" id="finReserve" onclick="openKari()" style="display:inline-flex;align-items:center;gap:6px;padding:12px 20px;border:none;border-radius:var(--radius-md);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;color:#fff;"><i class="ti ti-calendar-event"></i>投稿を予約する</button></div>
           </div>
           <!-- Right: phone preview -->
           <div style="width:320px;flex:none;">
@@ -1542,7 +1542,9 @@ function applySelected(){var n=document.querySelectorAll('.rev-chk:checked').len
   });
   /* 完成画面の「投稿を予約する」ボタンに配線 */
   Array.prototype.forEach.call(document.querySelectorAll('button'),function(b){
-    if((b.textContent||'').trim()==='投稿を予約する')b.addEventListener('click',function(){openBk(b);});
+    /* 完成画面の「投稿を予約する」も、フロー下部と同じ予約ダイアログを開く（2026-08-21）。
+       旧 bk-* ピッカーは日時しか選べず、仮予約 / 本予約 の区別が付けられなかった。 */
+    if((b.textContent||'').trim()==='投稿を予約する')b.addEventListener('click',function(){ openKari(); });
   });
 })();
 
