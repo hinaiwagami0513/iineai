@@ -12,6 +12,9 @@ synergy-media/iine-ai/iineAI/
 # APIキー（平文）。中身は Gemini のキー
 .nano-banana-config.json
 **/.nano-banana-config.json
+
+# 作業ログの投稿先（Apps Script のURL + トークン）。URL を知れば誰でも書けるので出さない
+**/tools/.worklog-webhook
 .env
 .env.*
 !.env.example

@@ -12,8 +12,15 @@ Stack: Next.js + Tailwind CSS v4 + shadcn/ui + Tabler icons。`DESIGN.md` から
 DESIGN.md               デザインの唯一の源泉
 iine-ai-vault/          設計・仕様ナレッジ（INDEX.md が入口）
 iine_board/             ワイヤーHTML群
+tools/                  作業用スクリプト（collect-worklog.sh = 日次ログの素材集め）
 iine-ai-knowledge.md    旧ナレッジ（852行・vault化済み / 単体参照しない）
 ```
+
+## 日次の作業ログ
+
+その日やったことは `iine-ai-vault/raw/worklog-YYYY-MM.md` に**新しい日を上に**足す。取引先共有の原本。
+素材は `tools/collect-worklog.sh [YYYY-MM-DD]` でその日のコミット・差分・未コミット変更を出してから書く。
+**公開リポジトリなので報酬・請求・契約と社外秘の議題は書かない。**
 
 ## 知識の引き方
 
