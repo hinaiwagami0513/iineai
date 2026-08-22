@@ -23,7 +23,7 @@
      overflow は visible のまま。hidden にすると中央の＋の頭が切られる。 */
   .nav{display:flex;flex-direction:row;padding:0;overflow:visible;flex:1;gap:0;align-items:stretch;}
   /* ラベルは折り返さない。「カレンダー」「ドライブ」が2行になると60pxの帯から溢れる。 */
-  .ni{flex:1 1 0;min-width:0;flex-direction:column;gap:2px;padding:6px 2px;font-size:10px;align-items:center;justify-content:center;white-space:nowrap;}
+  .ni{flex:1 1 0;min-width:0;flex-direction:column;gap:2px;padding:6px 2px;font-size:14px;align-items:center;justify-content:center;white-space:nowrap;}
   .ni .ti{font-size:20px;}
   .ni .cv{display:none;}
   .foot{display:none;}

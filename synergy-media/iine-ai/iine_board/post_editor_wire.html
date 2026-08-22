@@ -62,23 +62,23 @@
   --color-success: #008a24; --color-success-vivid: #00ac2f;
   --color-success-subtle: #f3fcf6;
   --color-warning: #ad6201;
-  --color-warning-border: #fea735;
+  --color-warning-border: #ffe6c4;
   --color-warning-subtle: #fff9f1;
   --color-info: #0070f0;
   --color-info-subtle: #f1f7ff;
   --color-destructive: #e90c2a;
   --color-on-destructive: #ffffff;
-  --color-destructive-subtle: #fddfe3;
+  --color-destructive-subtle: #feeef1;
   --color-like: #ef3a58;
-  --color-like-subtle: #fddfe3;
+  --color-like-subtle: #feeef1;
   --color-accent-purple: #9724ba;
   --color-accent-purple-subtle: #f5e7f8;
   --color-sns-instagram: #b02a78;
   --color-sns-instagram-subtle: #fce7f3;
   --color-sns-x: #2a2826;
-  --color-sns-x-subtle: #f2efeb;
-  --color-sns-tiktok: #0e7490;
-  --color-sns-tiktok-subtle: #e0f7fa;
+  --color-sns-x-subtle: #fcf5ef;
+  --color-sns-tiktok: #854f0b;
+  --color-sns-tiktok-subtle: #fef3c7;
   --color-sns-youtube: #c4302b;
   --color-sns-youtube-subtle: #fcebeb;
   --color-editor-bg: #1e1a17;
@@ -104,8 +104,8 @@
   --text-body-lg: 1rem;
   --text-body: 0.875rem;
   --text-body-strong: 0.875rem;
-  --text-label: 0.75rem;
-  --text-meta: 0.625rem;
+  --text-label: 0.875rem;
+  --text-meta: 0.875rem;
   --font-weight-display: 900;
   --font-weight-h1: 900;
   --font-weight-h2: 700;
@@ -148,9 +148,11 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .ai-ex-hd{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--color-border);background:var(--color-card);}
 .ai-fox{width:30px;height:30px;object-fit:contain;background:var(--color-primary-subtle);border-radius:var(--radius-md);padding:2px;}
 .ai-fox-sm{width:28px;height:28px;object-fit:contain;background:var(--color-primary-subtle);border-radius:var(--radius-md);padding:2px;flex:none;}
-.ai-ex-close{margin-left:auto;width:28px;height:28px;border:1px solid var(--color-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--color-muted-foreground);font-size:13px;background:var(--color-card);}
+.ai-ex-close{margin-left:auto;width:28px;height:28px;border:1px solid var(--color-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--color-muted-foreground);font-size:14px;background:var(--color-card);}
 .ai-ex-close:hover{border-color:var(--color-primary);color:var(--color-primary);}
-.ai-ex-stream{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
+/* やりとりが伸びるとパネルごと縦に伸びて、押してほしい確認カードが画面の外に
+   出てしまう。高さを頭打ちにして、パネルの中だけでスクロールさせる */
+.ai-ex-stream{flex:1;min-height:0;max-height:46vh;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
 .ai-msg-row{display:flex;gap:8px;align-items:flex-start;}
 .ai-bub{background:transparent;border:none;padding:10px 13px;font-size:var(--text-label);line-height:1.7;max-width:90%;}
 .ai-me{align-self:flex-end;background:var(--color-primary-subtle);border:1px solid var(--color-border);border-radius:var(--radius-lg);border-top-right-radius:var(--radius-sm);padding:10px 13px;font-size:var(--text-label);line-height:1.6;max-width:85%;}
@@ -164,6 +166,49 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .ai-ex-foot button{width:38px;flex:none;border:none;border-radius:var(--radius-full);background:var(--color-primary);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;}
 .ai-typing{display:flex;gap:8px;align-items:flex-start;}
 .ai-typing .dot-pulse{padding:12px 16px;}
+/* --- AIアシストのやりとり（beautifului.dev のパターンを白＋オレンジに寄せたもの） --- */
+/* Thinking：考えている最中は手順が1つずつ増える。終わったら1行に畳んで、
+   押せば手順を読み返せる。dot-pulse だけだと「何をしていたか」が残らない。 */
+.ai-think{font-size:var(--text-meta);color:var(--color-muted-foreground);padding:2px 13px;}
+.ai-think-hd{display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-weight:var(--font-weight-body-strong);}
+.ai-think-hd .ti-sparkles{color:var(--color-primary);font-size:13px;}
+.ai-think-hd .ti-chevron-down{font-size:13px;transition:transform .15s;}
+.ai-think.open .ai-think-hd .ti-chevron-down{transform:rotate(180deg);}
+.ai-think-steps{display:none;margin:6px 0 2px;padding-left:9px;border-left:1.5px solid var(--color-border);}
+.ai-think.open .ai-think-steps,.ai-think.live .ai-think-steps{display:block;}
+.ai-think-step{display:flex;align-items:center;gap:6px;padding:3px 0;line-height:1.5;}
+.ai-think-step .ti{font-size:12px;color:var(--color-primary);flex:none;}
+.ai-think-step.pending{opacity:.45;}
+.ai-think-step.pending .ti{animation:aiSpin 1s linear infinite;}
+@keyframes aiSpin{to{transform:rotate(360deg);}}
+/* Streaming Text：返信は1文字ずつ。流れている間だけカーソルが点滅する */
+.ai-cursor{display:inline-block;width:2px;height:1em;background:var(--color-primary);vertical-align:-2px;margin-left:1px;animation:aiCaret 1s step-end infinite;}
+@keyframes aiCaret{50%{opacity:0;}}
+/* Approval Card：「『適用』と言ってください」で終わらせず、その場で押せるようにする */
+.ai-approve{background:var(--color-primary-subtle);border:1.5px solid var(--color-primary);border-radius:var(--radius-md);padding:12px 13px;margin:0 13px;}
+.ai-approve-q{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);line-height:1.6;margin-bottom:4px;}
+.ai-approve-note{font-size:var(--text-meta);color:var(--color-muted-foreground);line-height:1.6;margin-bottom:10px;}
+.ai-approve-act{display:flex;gap:7px;}
+.ai-approve-act button{flex:1;padding:8px;border-radius:var(--radius-sm);font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);cursor:pointer;}
+.ai-approve-act .ok{border:none;background:var(--color-primary);color:#fff;}
+.ai-approve-act .no{border:1px solid var(--color-border);background:var(--color-card);color:var(--color-muted-foreground);}
+.ai-approve.settled{background:var(--color-card);border-color:var(--color-border);}
+.ai-approve.settled .ai-approve-act{display:none;}
+.ai-approve-done{display:none;align-items:center;gap:5px;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-success);}
+.ai-approve.settled .ai-approve-done{display:inline-flex;}
+/* Follow-ups：返信のあとに次の一手を置く。最初のクイックチップと同じ見た目で揃える */
+.ai-follow{display:flex;flex-wrap:wrap;gap:6px;padding:0 13px;}
+/* Prompt Bar の / コマンド。入力欄の真上に重ねる */
+.ai-slash-wrap{position:relative;}
+.ai-slash{display:none;position:absolute;left:0;right:0;bottom:calc(100% + 6px);background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-md);box-shadow:0 8px 24px rgba(0,0,0,.10);overflow:hidden;z-index:30;}
+.ai-slash.open{display:block;}
+.ai-slash-label{font-size:var(--text-meta);color:var(--color-muted-foreground);padding:9px 13px 5px;}
+/* パネルの幅が260px前後しかないので、コマンドと説明は横並びにせず縦に積む。
+   横並びだと説明が折り返して行が崩れる */
+.ai-slash-item{display:block;padding:8px 13px;cursor:pointer;text-align:left;}
+.ai-slash-item:hover,.ai-slash-item.on{background:var(--color-primary-subtle);}
+.ai-slash-cmd{display:block;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-primary);}
+.ai-slash-desc{display:block;font-size:var(--text-meta);color:var(--color-muted-foreground);margin-top:1px;}
 .gen-indicator .dot-pulse{display:flex;gap:4px;}
 .gen-indicator .dot-pulse span{width:6px;height:6px;border-radius:50%;background:var(--color-primary);animation:pulse 1.2s infinite;}
 .gen-indicator .dot-pulse span:nth-child(2){animation-delay:.2s;}
@@ -228,7 +273,23 @@ body {background:var(--color-background);padding:0;margin:0;color:var(--color-fo
   table{display:block;overflow-x:auto;white-space:nowrap;}
   table td,table th{white-space:nowrap;}
 }
-</style></head><body>
+
+/* ===== AIレビュー（2026-08-21 調整）=====
+   ・改善は「問題」より大事な情報なので、見出しより一段大きく＋primary で出す。
+     問題文だけ太字・改善が小さいと、読む順が「何がダメか」で止まる。
+   ・チェックはOS標準のままだと角も大きさもこの画面だけ浮くので、トークンで作り直す。 */
+.rev-fix{font-size:var(--text-body-lg) !important;font-weight:var(--font-weight-body-strong);
+  color:var(--color-primary);line-height:1.7;margin-top:8px !important;}
+.rev-why{font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.8;}
+.rev-chk{appearance:none;-webkit-appearance:none;width:20px;height:20px;flex:none;
+  border:1.5px solid var(--color-border-strong);border-radius:var(--radius-sm);
+  background:var(--color-card);cursor:pointer;position:relative;margin:0;transition:background .12s,border-color .12s;}
+.rev-chk:checked{background:var(--color-primary);border-color:var(--color-primary);}
+.rev-chk:checked::after{content:"";position:absolute;left:6px;top:2px;width:5px;height:10px;
+  border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg);}
+.rev-chk:focus-visible{outline:2px solid var(--color-ring);outline-offset:2px;}
+</style>
+<link rel="stylesheet" href="./fox-alert.css"></head><body>
 <div class="page-header">
   <div class="hdr-left"><a href="flow_video_script_wire.html"><i class="ti ti-arrow-left"></i></a><span class="hdr-page"><i class="ti ti-video"></i>投稿を編集</span></div>
   <div class="hdr-right"><a class="helpbtn" href="https://hinaiwagami0513.github.io/iineai/help/manage/detail/" target="_blank" rel="noopener" title="このページのヘルプ（投稿詳細・編集）" aria-label="このページのヘルプ">?</a></div>
@@ -259,8 +320,8 @@ body {background:var(--color-background);padding:0;margin:0;color:var(--color-fo
             </div>
             <div class="ed-xpane" id="edPane1" style="flex:1;overflow-y:auto;padding:18px;">
               <div style="font-size:var(--text-body);font-weight:var(--font-weight-body-strong);margin-bottom:12px;">投稿文（キャプション）</div>
-              <div style="border:1.5px solid var(--color-border);border-radius:var(--radius-md);padding:16px;font-size:var(--text-body);line-height:1.8;min-height:140px;">駅徒歩5分の南向き1LDK、新着です。日当たり良好・即入居OK。気になる方はプロフィールからお問い合わせください。<br><br><span style="color:var(--color-primary);">#賃貸 #お部屋探し #一人暮らし #駅近</span></div>
-              <button style="margin-top:14px;display:inline-flex;align-items:center;gap:7px;padding:12px;border:none;background:linear-gradient(135deg,var(--color-primary),var(--color-primary-light));color:#fff;border-radius:var(--radius-md);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;"><i class="ti ti-refresh"></i>AIで投稿文を再生成</button>
+              <div id="capBox" style="position:relative;border:1.5px solid var(--color-border);border-radius:var(--radius-md);padding:16px;font-size:var(--text-body);line-height:1.8;min-height:140px;">駅徒歩5分の南向き1LDK、新着です。日当たり良好・即入居OK。気になる方はプロフィールからお問い合わせください。<br><br><span style="color:var(--color-primary);">#賃貸 #お部屋探し #一人暮らし #駅近</span></div>
+              <button id="capRegenBtn" onclick="regenCaption()" style="margin-top:14px;display:inline-flex;align-items:center;gap:7px;padding:12px;border:none;background:linear-gradient(135deg,var(--color-primary),var(--color-primary-light));color:#fff;border-radius:var(--radius-md);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;"><i class="ti ti-refresh"></i>AIで投稿文を再生成</button>
             </div>
             <div class="ed-xpane" id="edPane2" style="flex:1;overflow-y:auto;padding:18px;">
               <div style="font-size:var(--text-body);font-weight:var(--font-weight-body-strong);margin-bottom:8px;display:flex;align-items:center;gap:8px;">チェックしてほしい観点<span style="font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-destructive);background:var(--color-destructive-subtle);border-radius:var(--radius-full);padding:2px 10px;">必須</span></div>
@@ -275,7 +336,9 @@ body {background:var(--color-background);padding:0;margin:0;color:var(--color-fo
               </div>
 
               <!-- 総評（primary-subtle背景） -->
-              <div style="background:var(--color-primary-subtle);border-radius:var(--radius-md);padding:16px;margin-bottom:16px;font-size:var(--text-body);line-height:1.8;color:var(--color-foreground);">駅近・即入居の訴求が明確で、一人暮らし層に刺さる構成です。冒頭フックの最適化でさらにリーチを伸ばせます。</div>
+              <!-- レビューの総評はキツネが喋る（fox-alert）。色付きの箱だけだと
+                 「システムの定型文」に見え、AIが読んで言っていることが伝わらない。 -->
+              <div class="fox-alert ok" style="margin:0 0 16px;"><img src="./assets/iine-fox-happy.png" alt="" style="width:40px;height:40px;flex:none;object-fit:contain;"><div>駅近・即入居の訴求が明確で、一人暮らし層に刺さる構成です。冒頭フックの最適化でさらにリーチを伸ばせます。</div></div>
 
               <div style="display:flex;gap:8px;margin-bottom:16px;">
                 <button onclick="applyAll()" class="grad" style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border:none;border-radius:var(--radius-md);font-size:var(--text-label);font-weight:var(--font-weight-body-strong);cursor:pointer;color:#fff;"><i class="ti ti-sparkles"></i>反映可能なレビューを全て反映</button>
@@ -284,12 +347,12 @@ body {background:var(--color-background);padding:0;margin:0;color:var(--color-fo
 
               <!-- 重要度カード -->
               <label class="rev-item" style="border:1.5px solid var(--color-border);border-radius:var(--radius-md);padding:14px 16px;margin-bottom:10px;display:block;cursor:pointer;">
-                <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><input type="checkbox" class="rev-chk" checked style="width:18px;height:18px;accent-color:var(--color-primary);cursor:pointer;flex:none;"><span style="font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);background:var(--color-destructive-subtle);color:var(--color-destructive);border-radius:var(--radius-full);padding:3px 10px;">重要度 高</span><span style="font-size:var(--text-label);color:var(--color-muted-foreground);">構成</span><span style="margin-left:auto;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-primary);background:var(--color-primary-subtle);border-radius:var(--radius-full);padding:2px 9px;">自動反映可</span></div>
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><input type="checkbox" class="rev-chk" checked><span style="font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);background:var(--color-destructive-subtle);color:var(--color-destructive);border-radius:var(--radius-full);padding:3px 10px;">重要度 高</span><span style="font-size:var(--text-label);color:var(--color-muted-foreground);">構成</span><span style="margin-left:auto;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-primary);background:var(--color-primary-subtle);border-radius:var(--radius-full);padding:2px 9px;">自動反映可</span></div>
                 <div style="font-size:var(--text-body);font-weight:var(--font-weight-body-strong);margin-bottom:6px;">アクション喚起（CTA）が弱い。</div>
                 <div style="font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.7;">理由：「お問い合わせください」は受け身で拡散面で控えめ。<br>改善：「内見予約はプロフィールから」など直接的なCTAに。</div>
               </label>
               <label class="rev-item" style="border:1.5px solid var(--color-border);border-radius:var(--radius-md);padding:14px 16px;margin-bottom:10px;display:block;cursor:pointer;">
-                <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><input type="checkbox" class="rev-chk" checked style="width:18px;height:18px;accent-color:var(--color-primary);cursor:pointer;flex:none;"><span style="font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);background:var(--color-warning-subtle);color:var(--color-warning);border-radius:var(--radius-full);padding:3px 10px;">重要度 中</span><span style="font-size:var(--text-label);color:var(--color-muted-foreground);">ハッシュタグ</span><span style="margin-left:auto;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-primary);background:var(--color-primary-subtle);border-radius:var(--radius-full);padding:2px 9px;">自動反映可</span></div>
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><input type="checkbox" class="rev-chk" checked><span style="font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);background:var(--color-warning-subtle);color:var(--color-warning);border-radius:var(--radius-full);padding:3px 10px;">重要度 中</span><span style="font-size:var(--text-label);color:var(--color-muted-foreground);">ハッシュタグ</span><span style="margin-left:auto;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-primary);background:var(--color-primary-subtle);border-radius:var(--radius-full);padding:2px 9px;">自動反映可</span></div>
                 <div style="font-size:var(--text-body);font-weight:var(--font-weight-body-strong);margin-bottom:6px;">ハッシュタグが一般的すぎる。</div>
                 <div style="font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.7;">理由：競合過多でターゲットがぼやける。<br>改善：「#新宿1LDK」など特化タグへ。</div>
               </label>
@@ -314,10 +377,13 @@ body {background:var(--color-background);padding:0;margin:0;color:var(--color-fo
                   <span class="ai-qk" onclick="aiSend(this.textContent)">台本書き直して</span>
                 </div>
               </div>
-              <div style="background:#ffffff;border-top:1px solid var(--color-border);padding:8px 13px 11px;">
+              <div class="ai-slash-wrap" style="background:#ffffff;border-top:1px solid var(--color-border);padding:8px 13px 11px;">
+                <!-- / を打つとコマンド一覧が出る。よく使う指示は打ち切らなくても選べる -->
+                <div class="ai-slash" id="aiSlash"><div class="ai-slash-label">コマンド</div><div id="aiSlashList"></div></div>
+                
   <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:18px;overflow:hidden;">
     <div style="padding:12px 16px 4px;">
-      <input id="aiInput" placeholder="自分で入力してもOK" style="width:100%;border:none;background:transparent;padding:0;font-size:var(--text-body);outline:none;color:var(--color-foreground);" onkeydown="if(event.key==='Enter'){aiSend(this.value);this.value='';}">
+      <input id="aiInput" placeholder="自分で入力（/ でコマンド）" style="width:100%;border:none;background:transparent;padding:0;font-size:var(--text-body);outline:none;color:var(--color-foreground);" oninput="aiSlashSync(this.value)" onblur="setTimeout(closeAiSlash,120)" onkeydown="aiInputKey(event,this)">
     </div>
     <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 8px 8px;">
       <div class="chat-plus-wrap">
@@ -366,24 +432,241 @@ function toggleAI(){
     col.style.display='none';exp.style.display='flex';
   }
 }
+/* 投稿文の再生成。押すたびに別の書き出しの案が出る。案は一巡したら最初に戻る */
+var capVariants=[
+  {body:'【駅徒歩5分／南向き1LDK】新着のお部屋です。日当たり良好、即入居OK。気になる方はプロフィールのリンクからお問い合わせください。',tags:'#賃貸 #お部屋探し #一人暮らし #駅近'},
+  {body:'朝の光がまっすぐ入る南向き1LDK。駅から歩いて5分、今すぐ住めます。内見のご予約はプロフィールから受付中です。',tags:'#一人暮らし #南向き #内見予約 #新着物件'},
+  {body:'「駅近で、日当たりのいい部屋」を探している方へ。徒歩5分・南向き・即入居OKの1LDKが空きました。詳しくはプロフィールをご覧ください。',tags:'#お部屋探し #駅徒歩5分 #1LDK #即入居'}
+];
+var capIdx=0;
+function regenCaption(){
+  var btn=document.getElementById('capRegenBtn');
+  var box=document.getElementById('capBox');
+  var overlay=document.createElement('div');
+  overlay.className='regen-overlay';
+  overlay.innerHTML='<div class="dot-pulse"><span></span><span></span><span></span></div><div class="regen-msg">投稿文を再生成中…</div>';
+  box.appendChild(overlay);
+  /* disable button */
+  btn.style.opacity='.5';btn.style.pointerEvents='none';
+  btn.innerHTML='<div class="dot-pulse" style="display:inline-flex;gap:4px;"><span></span><span></span><span></span></div> 生成中…';
+  setTimeout(function(){
+    overlay.remove();
+    capIdx=(capIdx+1)%capVariants.length;
+    var v=capVariants[capIdx];
+    box.innerHTML=v.body+'<br><br><span style="color:var(--color-primary);">'+v.tags+'</span>';
+    /* restore button */
+    btn.style.opacity='1';btn.style.pointerEvents='';
+    btn.innerHTML='<i class="ti ti-refresh"></i>AIで投稿文を再生成';
+    if(typeof toast!=='undefined')toast.success('投稿文を作り直しました');
+  },1500);
+}
+/* AIアシストの返信。何を見て何をしたか（steps）→ 本文（text）→ 押せる確認（approve）
+   → 次の一手（follows）の順で出す。返信を一括でドンと出すと「勝手に変えられた」に
+   見えるので、手順と確認を挟む。 */
 var aiResponses={
-  'タイトルを大きく':'タイトルを大きくしました！シーン1のテロップサイズを150%に変更。他にも調整しますか？',
-  'テンポを上げて':'シーン2と3の間のトランジションを短くして、全体を22秒に圧縮しました。',
-  'BGMを変えたい':'おすすめBGMを3つ提案します：①明るいポップ ②落ち着いたアコースティック ③おしゃれなLofi。どれにしますか？',
-  'テロップの色を変更':'テロップの色をブランドカラーに合わせて #fe7235 に変更しました。プレビューを確認してください。',
-  'ナレーションを追加':'シーン1〜3にナレーションテキストを追加しました。音声生成は「動画を生成・編集」画面で行えます。'
+  'タイトルを大きく':{
+    steps:['シーン1のテロップを確認','9:16での見え方を計算','プレビューに反映'],
+    text:'シーン1のテロップを150%にしました。スマホで見たとき、指で隠れない位置に収まっています。',
+    follows:['他のシーンも大きく','元に戻す']
+  },
+  'テンポを上げて':{
+    steps:['4シーンの尺を測る','間の長いところを探す','トランジションを詰める'],
+    text:'シーン2と3のつなぎを詰めて、全体を24秒から22秒にしました。冒頭の1.5秒はフックなので残しています。',
+    follows:['もっと短く（15秒）','元の長さに戻す']
+  },
+  '台本書き直して':{
+    steps:['今の台本を読む','投稿文と訴求を突き合わせる','別の構成を3つ考える','いちばん強い案を選ぶ'],
+    text:'数字から入る構成に書き直しました。\n・シーン1: 「駅徒歩5分」を大きく出す\n・シーン2: 南向きリビングの日当たり\n・シーン3: 水回りの清潔感\n・シーン4: プロフィールへ誘導',
+    approve:{q:'この構成に差し替えますか？',note:'今の4シーンは履歴に残るので、あとから戻せます。',ok:'差し替える',no:'やめる',okMsg:'台本を差し替えました'},
+    follows:['もっと短く','別の案も見たい']
+  },
+  'BGMを変えたい':{
+    steps:['映像のテンポを測る','物件紹介で伸びた投稿のBGMを見る','3つに絞る'],
+    text:'この尺とテンポなら次の3つが合います。\n・明るいポップ（内見動機を作りたいとき）\n・落ち着いたアコースティック（生活感を出したいとき）\n・Lofi（若い層に寄せたいとき）',
+    approve:{q:'明るいポップを当てますか？',note:'あとから他の2つにも切り替えられます。',ok:'これにする',no:'あとで決める',okMsg:'BGMを差し替えました'},
+    follows:['もっと静かなのは？','ナレーションを追加']
+  },
+  'テロップの色を変更':{
+    steps:['今のテロップ色を読む','背景の明るさとの差を測る','ブランドカラーに寄せる'],
+    text:'テロップをブランドカラーの #fe7235 にしました。明るい壁の上でも読めるコントラストになっています。',
+    follows:['白抜きにして','元に戻す']
+  },
+  'ナレーションを追加':{
+    steps:['台本の読み上げ量を測る','各シーンの尺に収まるか見る','原稿を書く'],
+    text:'シーン1〜3にナレーション原稿を入れました。音声の生成は「動画を生成・編集」の画面でできます。',
+    follows:['もっとゆっくり読む原稿に','ナレーションを消す']
+  },
+  '投稿文を作り直して':{
+    steps:['今の投稿文を読む','台本の訴求と揃える','ハッシュタグを選び直す'],
+    text:'投稿文タブを開いて作り直しました。書き出しを情景から入る形に変えています。',
+    follows:['もっとカジュアルに','ハッシュタグだけ変えて'],
+    act:aiRegenCaption
+  },
+  'レビューして':{
+    steps:['台本と投稿文を読む','誇張表現をチェック','CTAの強さを見る'],
+    text:'AIレビュータブで結果を出しました。駅近・即入居の訴求は明確ですが、冒頭フックはもう少し強くできます。',
+    follows:['冒頭フックを直して','指摘を全部反映']
+  }
 };
+function aiEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function aiScroll(){var s=document.getElementById('aiStream');s.scrollTop=s.scrollHeight;}
+/* 投稿文タブを開いてキャプションを作り直す。タブの並びは画面ごとに違う（投稿文が
+   1枚目の画面もある）ので、位置ではなく見出しの文字で探す */
+function aiRegenCaption(){
+  var tabs=[].slice.call(document.querySelectorAll('.ed-xtab'));
+  for(var n=0;n<tabs.length;n++){
+    if(tabs[n].textContent.indexOf('投稿文')>-1){edTab(n,tabs[n]);break;}
+  }
+  if(typeof regenCaption==='function')regenCaption();
+}
+function toggleAiThink(el){el.closest('.ai-think').classList.toggle('open');}
 function aiSend(text){
   if(!text||!text.trim())return;
+  text=text.trim();
   var stream=document.getElementById('aiStream');
-  stream.insertAdjacentHTML('beforeend','<div class="ai-me">'+text+'</div>');
-  stream.scrollTop=stream.scrollHeight;
-  var qw=stream.querySelectorAll('.ai-quick-wrap');qw.forEach(function(q){q.remove();});
-  setTimeout(function(){
-    var resp=aiResponses[text]||'承知しました！「'+text+'」について対応しますね。台本を更新しました。';
-    stream.insertAdjacentHTML('beforeend','<div class="ai-msg-row"><div class="ai-bub">'+resp+'</div></div>');
-    stream.scrollTop=stream.scrollHeight;
-  },1200);
+  /* 前のターンの選択肢は消す。残すと「どれが今の話か」が分からなくなる */
+  stream.querySelectorAll('.ai-quick-wrap,.ai-follow').forEach(function(q){q.remove();});
+  stream.insertAdjacentHTML('beforeend','<div class="ai-me">'+aiEsc(text)+'</div>');
+  aiScroll();
+  var r=aiResponses[text]||{
+    steps:['指示を読む','今の台本と照らし合わせる','直すところを決める'],
+    text:'「'+text+'」で承知しました。台本を更新しています。',
+    follows:['プレビューで確認','元に戻す']
+  };
+  aiThink(stream,r);
+}
+/* Thinking：手順を1つずつ増やしていき、終わったら1行に畳む */
+function aiThink(stream,r){
+  var steps=r.steps||[];
+  var node=document.createElement('div');
+  node.className='ai-think live';
+  node.innerHTML='<span class="ai-think-hd"><i class="ti ti-sparkles"></i>考えています…</span><div class="ai-think-steps"></div>';
+  stream.appendChild(node);
+  aiScroll();
+  var list=node.querySelector('.ai-think-steps');
+  var t0=Date.now(),n=0;
+  (function next(){
+    if(n>0){
+      var prev=list.children[n-1];
+      prev.classList.remove('pending');
+      prev.querySelector('.ti').className='ti ti-check';
+    }
+    if(n>=steps.length){
+      var sec=Math.max(1,Math.round((Date.now()-t0)/1000));
+      node.classList.remove('live');
+      node.querySelector('.ai-think-hd').innerHTML=
+        '<i class="ti ti-sparkles"></i>'+sec+'秒考えました<i class="ti ti-chevron-down"></i>';
+      node.querySelector('.ai-think-hd').setAttribute('onclick','toggleAiThink(this)');
+      aiStreamText(stream,r);
+      return;
+    }
+    list.insertAdjacentHTML('beforeend','<div class="ai-think-step pending"><i class="ti ti-loader-2"></i>'+aiEsc(steps[n])+'</div>');
+    n++;aiScroll();
+    setTimeout(next,480);
+  })();
+}
+/* Streaming Text：1文字ずつ流す。流れている間だけカーソルを出す */
+function aiStreamText(stream,r){
+  var row=document.createElement('div');
+  row.className='ai-msg-row';
+  row.innerHTML='<div class="ai-bub"><span class="ai-txt"></span><span class="ai-cursor"></span></div>';
+  stream.appendChild(row);
+  var span=row.querySelector('.ai-txt'),full=r.text||'',i=0;
+  (function tick(){
+    if(i>=full.length){
+      row.querySelector('.ai-cursor').remove();
+      if(typeof r.act==='function')r.act();
+      if(r.approve)aiApprove(stream,r.approve);
+      if(r.follows&&r.follows.length)aiFollows(stream,r.follows);
+      aiScroll();
+      return;
+    }
+    i+=2;
+    span.innerHTML=aiEsc(full.slice(0,i)).replace(/\n/g,'<br>');
+    aiScroll();
+    setTimeout(tick,22);
+  })();
+}
+/* Approval Card：文章で「適用と言ってください」と頼まず、その場で押させる */
+function aiApprove(stream,a){
+  var node=document.createElement('div');
+  node.className='ai-approve';
+  node.innerHTML='<div class="ai-approve-q">'+aiEsc(a.q)+'</div>'
+    +(a.note?'<div class="ai-approve-note">'+aiEsc(a.note)+'</div>':'')
+    +'<div class="ai-approve-act"><button class="ok">'+aiEsc(a.ok)+'</button><button class="no">'+aiEsc(a.no)+'</button></div>'
+    +'<div class="ai-approve-done"><i class="ti ti-check"></i></div>';
+  stream.appendChild(node);
+  var done=node.querySelector('.ai-approve-done');
+  node.querySelector('.ok').onclick=function(){
+    node.classList.add('settled');
+    done.insertAdjacentHTML('beforeend',aiEsc(a.okMsg||'適用しました'));
+    if(typeof toast!=='undefined')toast.success(a.okMsg||'適用しました');
+  };
+  node.querySelector('.no').onclick=function(){
+    node.classList.add('settled');
+    done.style.color='var(--color-muted-foreground)';
+    done.querySelector('.ti').className='ti ti-x';
+    done.insertAdjacentHTML('beforeend','見送りました');
+  };
+  aiScroll();
+}
+/* Follow-ups：返信のあとに次の一手を置く。会話が1往復で行き止まりにならないように */
+function aiFollows(stream,list){
+  var node=document.createElement('div');
+  node.className='ai-follow';
+  node.innerHTML=list.map(function(f){
+    return '<span class="ai-qk" onclick="aiSend(this.textContent)">'+aiEsc(f)+'</span>';
+  }).join('');
+  stream.appendChild(node);
+}
+/* Prompt Bar の / コマンド。打ち切らずによく使う指示を選べる */
+var aiSlashCmds=[
+  {cmd:'/台本書き直して',desc:'構成を作り直す'},
+  {cmd:'/テンポを上げて',desc:'全体を短くする'},
+  {cmd:'/タイトルを大きく',desc:'テロップを拡大する'},
+  {cmd:'/BGMを変えたい',desc:'曲の候補を出す'},
+  {cmd:'/ナレーションを追加',desc:'読み上げ原稿を入れる'},
+  {cmd:'/投稿文を作り直して',desc:'キャプションを再生成する'},
+  {cmd:'/レビューして',desc:'AIレビューを実行する'}
+];
+var aiSlashSel=0;
+function closeAiSlash(){document.getElementById('aiSlash').classList.remove('open');}
+function aiSlashSync(v){
+  var box=document.getElementById('aiSlash');
+  if(v.charAt(0)!=='/'){closeAiSlash();return;}
+  var q=v.slice(1);
+  var hits=aiSlashCmds.filter(function(c){return c.cmd.indexOf(q,1)>-1;});
+  if(!hits.length){closeAiSlash();return;}
+  if(aiSlashSel>=hits.length)aiSlashSel=0;
+  document.getElementById('aiSlashList').innerHTML=hits.map(function(c,idx){
+    return '<div class="ai-slash-item'+(idx===aiSlashSel?' on':'')+'" onmousedown="aiSlashPick(\''+c.cmd+'\')">'
+      +'<span class="ai-slash-cmd">'+c.cmd+'</span><span class="ai-slash-desc">'+c.desc+'</span></div>';
+  }).join('');
+  box.classList.add('open');
+}
+function aiSlashPick(cmd){
+  var inp=document.getElementById('aiInput');
+  closeAiSlash();aiSlashSel=0;inp.value='';
+  aiSend(cmd.slice(1));
+}
+function aiInputKey(e,el){
+  var open=document.getElementById('aiSlash').classList.contains('open');
+  if(open){
+    var items=document.querySelectorAll('#aiSlashList .ai-slash-item');
+    if(e.key==='ArrowDown'||e.key==='ArrowUp'){
+      e.preventDefault();
+      aiSlashSel=(aiSlashSel+(e.key==='ArrowDown'?1:items.length-1))%items.length;
+      aiSlashSync(el.value);return;
+    }
+    if(e.key==='Escape'){e.preventDefault();closeAiSlash();return;}
+    if(e.key==='Enter'){
+      e.preventDefault();
+      var on=document.querySelector('#aiSlashList .ai-slash-item.on');
+      if(on)aiSlashPick(on.querySelector('.ai-slash-cmd').textContent);
+      return;
+    }
+  }
+  if(e.key==='Enter'){aiSend(el.value);el.value='';}
 }
 function edTab(n,el){
   document.querySelectorAll('.ed-xtab').forEach(function(t){t.style.color='var(--color-muted-foreground)';t.style.borderBottomColor='transparent';});

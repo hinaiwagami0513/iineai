@@ -73,23 +73,23 @@
   --color-success: #008a24; --color-success-vivid: #00ac2f;
   --color-success-subtle: #f3fcf6;
   --color-warning: #ad6201;
-  --color-warning-border: #fea735;
+  --color-warning-border: #ffe6c4;
   --color-warning-subtle: #fff9f1;
   --color-info: #0070f0;
   --color-info-subtle: #f1f7ff;
   --color-destructive: #e90c2a;
   --color-on-destructive: #ffffff;
-  --color-destructive-subtle: #fddfe3;
+  --color-destructive-subtle: #feeef1;
   --color-like: #ef3a58;
-  --color-like-subtle: #fddfe3;
+  --color-like-subtle: #feeef1;
   --color-accent-purple: #9724ba;
   --color-accent-purple-subtle: #f5e7f8;
   --color-sns-instagram: #b02a78;
   --color-sns-instagram-subtle: #fce7f3;
   --color-sns-x: #2a2826;
-  --color-sns-x-subtle: #f2efeb;
-  --color-sns-tiktok: #0e7490;
-  --color-sns-tiktok-subtle: #e0f7fa;
+  --color-sns-x-subtle: #fcf5ef;
+  --color-sns-tiktok: #854f0b;
+  --color-sns-tiktok-subtle: #fef3c7;
   --color-sns-youtube: #c4302b;
   --color-sns-youtube-subtle: #fcebeb;
   --color-editor-bg: #1e1a17;
@@ -115,8 +115,8 @@
   --text-body-lg: 1rem;
   --text-body: 0.875rem;
   --text-body-strong: 0.875rem;
-  --text-label: 0.75rem;
-  --text-meta: 0.625rem;
+  --text-label: 0.875rem;
+  --text-meta: 0.875rem;
   --font-weight-display: 900;
   --font-weight-h1: 900;
   --font-weight-h2: 700;
@@ -165,7 +165,7 @@ body {background:#0a0908;padding:0;color:var(--color-editor-foreground);}
 .tmpl-btn{display:flex;align-items:center;gap:6px;padding:6px 12px;border:1px solid var(--color-editor-border);border-radius:var(--radius-md);background:var(--color-editor-elevated);color:var(--color-editor-foreground);font-size:var(--text-label);font-weight:var(--font-weight-body-strong);cursor:pointer;white-space:nowrap;}
 .tmpl-btn .ti{font-size:14px;color:var(--color-editor-muted);}
 .tmpl-btn .tmpl-name{color:var(--color-primary);}
-.tmpl-btn .chevron{font-size:12px;color:var(--color-editor-muted);transition:transform .2s;}
+.tmpl-btn .chevron{font-size:14px;color:var(--color-editor-muted);transition:transform .2s;}
 .tmpl-sw.open .chevron{transform:rotate(180deg);}
 .tmpl-dd{position:absolute;top:calc(100% + 6px);left:0;width:260px;background:var(--color-editor-surface);border:1px solid var(--color-editor-border);border-radius:var(--radius-lg);box-shadow:0 8px 24px rgba(0,0,0,.4);z-index:20;display:none;overflow:hidden;}
 .tmpl-sw.open .tmpl-dd{display:block;}
@@ -188,11 +188,22 @@ body {background:#0a0908;padding:0;color:var(--color-editor-foreground);}
 .tools{border-right:1px solid var(--color-editor-border);padding:8px 0;background:var(--color-editor-surface);overflow-y:auto;width:72px;flex:none;display:flex;flex-direction:column;align-items:center;gap:4px;}
 .tool{width:56px;padding:8px 0;border:none;background:transparent;border-radius:var(--radius-md);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;color:var(--color-editor-foreground);}
 .tool .ti{font-size:22px;color:var(--color-editor-muted);}
-.tool .l{font-size:10px;font-weight:var(--font-weight-body-strong);color:var(--color-editor-muted);white-space:nowrap;}
+.tool .l{font-size:14px;font-weight:var(--font-weight-body-strong);color:var(--color-editor-muted);white-space:nowrap;}
 .tool svg{width:22px;height:22px;stroke:var(--color-editor-muted);}
 .tool.on{background:rgba(239,97,8,.14);}
 .tool.on .ti,.tool.on .l{color:var(--color-primary);}
 .tool.on svg{stroke:var(--color-primary);}
+/* ===== 調整バー（スライダー） =====
+   透明度が div の手組みだったので部品化する。大きさ・余白もこれで揃える。
+   input[type=range] を使わないのは、ダークUIでの見た目をブラウザ差なく揃えるため。 */
+.eb{margin-bottom:14px;}
+.eb-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px;}
+.eb-hd .eb-v{font-size:var(--text-label);color:var(--color-editor-muted);font-variant-numeric:tabular-nums;}
+.eb-track{height:4px;background:var(--color-editor-border);border-radius:2px;position:relative;cursor:pointer;}
+.eb-fill{height:100%;background:var(--color-primary);border-radius:2px;}
+.eb-knob{position:absolute;top:-4px;width:12px;height:12px;border-radius:50%;
+  background:var(--color-editor-foreground);border:2px solid var(--color-primary);
+  transform:translateX(-50%);pointer-events:none;}
 /* ===== レイヤー一覧（Photoshop / Illustrator 風のカード） ===== */
 .lycard{display:flex;align-items:center;gap:8px;padding:6px 8px;margin-bottom:6px;border:1px solid var(--color-editor-border);border-radius:var(--radius-md);background:var(--color-editor-elevated);cursor:grab;transition:border-color .15s,background .15s;}
 .lycard:hover{border-color:var(--color-editor-muted);}
@@ -244,7 +255,7 @@ body {background:#0a0908;padding:0;color:var(--color-editor-foreground);}
 .gen-attach-preview.has-items{display:flex;}
 .gen-attach-thumb{position:relative;width:64px;height:64px;border-radius:var(--radius-md);overflow:hidden;border:1.5px solid var(--color-editor-border);background:var(--color-editor-elevated);}
 .gen-attach-thumb img{width:100%;height:100%;object-fit:cover;}
-.gen-attach-thumb .gen-attach-remove{position:absolute;top:-1px;right:-1px;width:20px;height:20px;border-radius:var(--radius-full);background:var(--color-editor-surface);border:1px solid var(--color-editor-border);color:var(--color-editor-muted);font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s,color .2s;}
+.gen-attach-thumb .gen-attach-remove{position:absolute;top:-1px;right:-1px;width:20px;height:20px;border-radius:var(--radius-full);background:var(--color-editor-surface);border:1px solid var(--color-editor-border);color:var(--color-editor-muted);font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s,color .2s;}
 .gen-attach-thumb .gen-attach-remove:hover{background:var(--color-destructive);color:#fff;border-color:var(--color-destructive);}
 .tpl{font-size:var(--text-label);color:var(--color-primary);font-weight:var(--font-weight-body-strong);margin-bottom:10px;display:flex;align-items:center;gap:6px;cursor:pointer;}
 .thumbs{display:flex;gap:10px;margin-top:0;margin-bottom:14px;flex:none;}
@@ -274,7 +285,7 @@ body {background:#0a0908;padding:0;color:var(--color-editor-foreground);}
 /* 範囲選択（マーキー） */
 .marquee{position:absolute;display:none;border:1px solid var(--color-primary);background:rgba(239,97,8,.14);border-radius:2px;z-index:7;pointer-events:none;}
 .stage{user-select:none;}
-.objbar .obl{position:absolute;right:calc(100% + 6px);top:50%;transform:translateY(-50%);white-space:nowrap;font-size:10px;color:#fff;background:rgba(0,0,0,.75);padding:2px 6px;border-radius:4px;pointer-events:none;opacity:0;transition:opacity .15s;}
+.objbar .obl{position:absolute;right:calc(100% + 6px);top:50%;transform:translateY(-50%);white-space:nowrap;font-size:14px;color:#fff;background:rgba(0,0,0,.75);padding:2px 6px;border-radius:4px;pointer-events:none;opacity:0;transition:opacity .15s;}
 .objbar button:hover .obl{opacity:1;}
 .hist{font-size:var(--text-label);color:var(--color-editor-muted);margin-top:12px;}
 /* --- 画像生成アニメーション --- */
@@ -326,7 +337,7 @@ body {background:#0a0908;padding:0;color:var(--color-editor-foreground);}
 .shapebtn{padding:6px 4px 8px;}
 .fmtbtn svg{width:22px;height:22px;flex:none;}
 .shapebtn svg{width:100%;height:32px;display:block;overflow:visible;}
-.shapebtn text{font-size:11px;font-weight:var(--font-weight-body-strong);fill:currentColor;}
+.shapebtn text{font-size:14px;font-weight:var(--font-weight-body-strong);fill:currentColor;}
 /* 円は弧が短く文字が詰まるので小さめに */
 .shapebtn text.tsp-sm{font-size:9px;}
 .fmtbtn span,.shapebtn span{font-size:var(--text-meta);color:var(--color-editor-muted);line-height:1;white-space:nowrap;}
@@ -335,10 +346,10 @@ body {background:#0a0908;padding:0;color:var(--color-editor-foreground);}
 .fmtbtn.on span,.shapebtn.on span{color:var(--color-primary);}
 /* 左パネル内の大タブ／小タブ（動画エディタと同じ2段構成） */
 .ptabs{display:flex;gap:0;margin-bottom:14px;border-bottom:1px solid var(--color-editor-border);}
-.ptab{font-size:13px;font-weight:500;color:var(--color-editor-muted);cursor:pointer;padding:8px 16px;border-bottom:2px solid transparent;margin-bottom:-1px;}
+.ptab{font-size:14px;font-weight:500;color:var(--color-editor-muted);cursor:pointer;padding:8px 16px;border-bottom:2px solid transparent;margin-bottom:-1px;}
 .ptab.on{font-weight:var(--font-weight-body-strong);color:var(--color-primary);border-bottom-color:var(--color-primary);}
 .psubs{display:flex;gap:0;margin-bottom:14px;background:var(--color-editor-elevated);border-radius:var(--radius-md);padding:3px;border:1px solid var(--color-editor-border);}
-.psub{flex:1;text-align:center;padding:7px 0;font-size:11px;font-weight:500;border-radius:var(--radius-sm);cursor:pointer;color:var(--color-editor-muted);background:transparent;}
+.psub{flex:1;text-align:center;padding:7px 0;font-size:14px;font-weight:500;border-radius:var(--radius-sm);cursor:pointer;color:var(--color-editor-muted);background:transparent;}
 .psub.on{font-weight:var(--font-weight-body-strong);color:var(--color-editor-foreground);background:var(--color-editor-surface);}
 .rtabs{display:flex;border-bottom:1px solid var(--color-editor-border);}
 .rt{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:13px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-editor-muted);border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;}
@@ -353,7 +364,7 @@ body {background:#0a0908;padding:0;color:var(--color-editor-foreground);}
 .finput::placeholder{color:var(--color-editor-muted);}
 .fsel{width:100%;background:var(--color-editor-elevated);border:1px solid var(--color-editor-border);border-radius:var(--radius-md);padding:10px 12px;font-size:var(--text-body);color:var(--color-editor-foreground);display:flex;align-items:center;justify-content:space-between;}
 /* フォント一覧：項目名をそのフォント自体で表示する */
-.fontpv{padding:8px 12px;cursor:pointer;font-size:13px;color:var(--color-editor-foreground);}
+.fontpv{padding:8px 12px;cursor:pointer;font-size:14px;color:var(--color-editor-foreground);}
 .fontpv:hover{background:var(--color-editor-elevated);}
 .fontpv.on{background:rgba(239,97,8,.08);color:var(--color-primary);}
 .fontpv.on:hover{background:rgba(239,97,8,.14);}
@@ -390,7 +401,7 @@ body {background:#0a0908;padding:0;color:var(--color-editor-foreground);}
 /* カテゴリは横スクロールのチップ。数が増えてもタブ幅を圧迫しない */
 .chiprow{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:4px;scrollbar-width:none;}
 .chiprow::-webkit-scrollbar{display:none;}
-.chip{flex:none;font-size:11px;font-weight:500;color:var(--color-editor-muted);background:var(--color-editor-elevated);border:1px solid var(--color-editor-border);border-radius:var(--radius-full);padding:5px 11px;cursor:pointer;white-space:nowrap;}
+.chip{flex:none;font-size:14px;font-weight:500;color:var(--color-editor-muted);background:var(--color-editor-elevated);border:1px solid var(--color-editor-border);border-radius:var(--radius-full);padding:5px 11px;cursor:pointer;white-space:nowrap;}
 .chip.on{color:#fff;background:var(--color-primary);border-color:var(--color-primary);font-weight:var(--font-weight-body-strong);}
 .stgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:10px;}
 .sttile{position:relative;aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);background:var(--color-editor-elevated);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;}
@@ -414,7 +425,7 @@ body {background:#0a0908;padding:0;color:var(--color-editor-foreground);}
 .styleref{display:none;align-items:center;gap:8px;background:rgba(239,97,8,.12);border:1px solid var(--color-primary);border-radius:var(--radius-md);padding:6px 8px;margin-bottom:8px;font-size:var(--text-meta);color:var(--color-editor-foreground);}
 .styleref.on{display:flex;}
 .styleref svg{width:22px;height:22px;flex:none;}
-.styleref button{margin-left:auto;background:none;border:none;color:var(--color-editor-muted);cursor:pointer;font-size:13px;line-height:1;padding:2px;}
+.styleref button{margin-left:auto;background:none;border:none;color:var(--color-editor-muted);cursor:pointer;font-size:14px;line-height:1;padding:2px;}
 /* ===== マイ素材（保存して使い回す） ===== */
 .mygrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;}
 .mycard{position:relative;aspect-ratio:1;border:1px solid var(--color-editor-border);border-radius:var(--radius-sm);background:var(--color-editor-elevated);display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;}
@@ -437,7 +448,7 @@ body {background:#0a0908;padding:0;color:var(--color-editor-foreground);}
 .mycard:hover .mystyle{opacity:1;}
 .mystyle:hover{background:var(--color-primary);}
 .myrow{display:flex;gap:6px;margin-top:10px;}
-.myrow button{flex:1;border:1px solid var(--color-editor-border);background:var(--color-editor-elevated);color:var(--color-editor-foreground);border-radius:var(--radius-md);padding:8px 4px;font-size:11px;cursor:pointer;}
+.myrow button{flex:1;border:1px solid var(--color-editor-border);background:var(--color-editor-elevated);color:var(--color-editor-foreground);border-radius:var(--radius-md);padding:8px 4px;font-size:14px;cursor:pointer;}
 .myrow button:hover{border-color:var(--color-primary);}
 /* ===== グラフのデータ入力 =====
    カンマ区切りの2本の入力だと、どの値がどのラベルか読み解く必要があった。
@@ -464,7 +475,7 @@ body {background:#0a0908;padding:0;color:var(--color-editor-foreground);}
    パネルの中に実物のかたちのグリッドを出して、そこへ直接打ち込ませる。
    行番号・列記号・選択の当たり方はスプレッドシートに寄せて、迷わず触れるようにする。 */
 .tblbar{display:flex;align-items:center;gap:4px;margin:8px 0 6px;}
-.tblbar button{width:26px;height:26px;flex:none;border:1px solid var(--color-editor-border);background:var(--color-editor-elevated);color:var(--color-editor-muted);border-radius:var(--radius-sm);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;font-size:11px;font-weight:700;}
+.tblbar button{width:26px;height:26px;flex:none;border:1px solid var(--color-editor-border);background:var(--color-editor-elevated);color:var(--color-editor-muted);border-radius:var(--radius-sm);cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;font-size:14px;font-weight:700;}
 .tblbar button:hover{border-color:var(--color-primary);color:var(--color-primary);}
 .tblbar button.on{background:var(--color-primary);border-color:var(--color-primary);color:#fff;}
 .tblbar button.danger:hover{border-color:var(--color-destructive);color:var(--color-destructive);}
@@ -476,7 +487,7 @@ body {background:#0a0908;padding:0;color:var(--color-editor-foreground);}
 .tblbar .swmenu span{width:22px;height:22px;border-radius:var(--radius-full);cursor:pointer;border:2px solid transparent;}
 .tblbar .swmenu span:hover{border-color:#fff;}
 .tblwrap{border:1px solid var(--color-editor-border);border-radius:var(--radius-md);overflow:auto;background:var(--color-editor-elevated);max-height:230px;}
-table.tbledit{border-collapse:separate;border-spacing:0;font-size:11px;}
+table.tbledit{border-collapse:separate;border-spacing:0;font-size:14px;}
 table.tbledit th,table.tbledit td{border-right:1px solid var(--color-editor-border);border-bottom:1px solid var(--color-editor-border);padding:0;}
 /* 行番号と列記号。ここを押すと行・列まるごと選べる（削除もここ起点） */
 .tbledit .tbhd{position:sticky;background:var(--color-editor-surface);color:var(--color-editor-muted);font-size:9px;font-weight:600;text-align:center;cursor:pointer;user-select:none;min-width:20px;height:19px;}
@@ -489,11 +500,11 @@ table.tbledit th,table.tbledit td{border-right:1px solid var(--color-editor-bord
 /* 罫線オフでも編集中は薄い目安線を残す（完全に消すとどこを打っているか分からなくなる） */
 table.tbledit.noborder td.cell{border-right-color:rgba(255,255,255,.05);border-bottom-color:rgba(255,255,255,.05);}
 .tblfoot{display:flex;gap:6px;margin-top:6px;}
-.tblfoot button{flex:1;background:transparent;border:1px dashed var(--color-editor-border);color:var(--color-editor-muted);border-radius:var(--radius-md);padding:8px 4px;font-size:11px;cursor:pointer;}
+.tblfoot button{flex:1;background:transparent;border:1px dashed var(--color-editor-border);color:var(--color-editor-muted);border-radius:var(--radius-md);padding:8px 4px;font-size:14px;cursor:pointer;}
 .tblfoot button:hover{border-color:var(--color-primary);color:var(--color-primary);}
 .tblhint{font-size:var(--text-meta);color:var(--color-editor-muted);font-weight:400;margin-left:6px;}
 .tblstyle{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;}
-.tblstyle .fmtbtn{padding:8px 4px;font-size:11px;}
+.tblstyle .fmtbtn{padding:8px 4px;font-size:14px;}
 /* ===== 調整スライダー（既存の見た目そのままに、掴んで動かせるようにした） ===== */
 .adjsl{margin-bottom:16px;}
 .adjsl-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
@@ -509,7 +520,7 @@ table.tbledit.noborder td.cell{border-right-color:rgba(255,255,255,.05);border-b
 .dupitem{display:flex;align-items:center;gap:9px;padding:9px 14px;font-size:var(--text-label);color:var(--color-editor-foreground);cursor:pointer;white-space:nowrap;}
 .dupitem:hover{background:var(--color-editor-elevated);}
 .dupitem.disabled{opacity:.35;pointer-events:none;}
-.dupitem .dupnum{width:18px;height:18px;flex:none;border-radius:4px;background:var(--color-editor-elevated);border:1px solid var(--color-editor-border);display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--color-editor-muted);}
+.dupitem .dupnum{width:18px;height:18px;flex:none;border-radius:4px;background:var(--color-editor-elevated);border:1px solid var(--color-editor-border);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--color-editor-muted);}
 .dupitem .dupnow{margin-left:auto;font-size:var(--text-meta);color:var(--color-editor-muted);}
 .duphead{padding:7px 14px 4px;font-size:var(--text-meta);color:var(--color-editor-muted);}
 .dupsep{height:1px;background:var(--color-editor-border);margin:5px 0;}
@@ -525,7 +536,7 @@ table.tbledit.noborder td.cell{border-right-color:rgba(255,255,255,.05);border-b
 .dupdlg-ft button.primary:disabled{opacity:.4;cursor:default;}
 .duppost{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--radius-md);cursor:pointer;}
 .duppost:hover{background:var(--color-editor-elevated);}
-.duppost .cb{width:18px;height:18px;flex:none;border:1.5px solid var(--color-editor-border);border-radius:4px;display:flex;align-items:center;justify-content:center;color:transparent;font-size:12px;}
+.duppost .cb{width:18px;height:18px;flex:none;border:1.5px solid var(--color-editor-border);border-radius:4px;display:flex;align-items:center;justify-content:center;color:transparent;font-size:14px;}
 .duppost.on .cb{background:var(--color-primary);border-color:var(--color-primary);color:#fff;}
 .duppost .pt{flex:1;min-width:0;font-size:var(--text-label);color:var(--color-editor-foreground);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .duppost .pd{font-size:var(--text-meta);color:var(--color-editor-muted);flex:none;}
@@ -709,8 +720,8 @@ table.tbledit.noborder td.cell{border-right-color:rgba(255,255,255,.05);border-b
           <div class="ph"><i class="ti ti-building-store"></i></div>
           <!-- キャンバス上のオブジェクト。クリックで選択 → 右上に操作バー -->
           <div class="stobj" style="left:16px;top:22px;font-size:15px;" onclick="selObj(this,event)">駅徒歩5分・南向き1LDK<div class="objbar" onclick="event.stopPropagation()"></div></div>
-          <div class="stobj" style="left:16px;top:52px;font-size:11px;color:#ffd9bd;" onclick="selObj(this,event)">1LDK / 35㎡ / 2階角部屋<div class="objbar" onclick="event.stopPropagation()"></div></div>
-          <div class="stobj" style="left:16px;bottom:18px;font-size:12px;background:var(--color-primary);border-radius:var(--radius-full);padding:5px 12px;" onclick="selObj(this,event)">プロフィールから内見予約<div class="objbar" onclick="event.stopPropagation()"></div></div>
+          <div class="stobj" style="left:16px;top:52px;font-size:14px;color:#ffd9bd;" onclick="selObj(this,event)">1LDK / 35㎡ / 2階角部屋<div class="objbar" onclick="event.stopPropagation()"></div></div>
+          <div class="stobj" style="left:16px;bottom:18px;font-size:14px;background:var(--color-primary);border-radius:var(--radius-full);padding:5px 12px;" onclick="selObj(this,event)">プロフィールから内見予約<div class="objbar" onclick="event.stopPropagation()"></div></div>
         </div>
         <div class="stage-gen-overlay" id="genOverlay"><div class="gen-ring"></div><div class="gen-label" id="genLabel">画像を生成中…</div><div class="gen-sublabel" id="genSublabel">1 / 1 枚目</div><div class="gen-progress"><div class="gen-progress-bar" id="genBar"></div></div><button class="gen-cancel-btn" onclick="cancelGenerate()">やめる</button></div></div>
       <div class="hist">編集履歴：まだ編集していません</div>
@@ -752,7 +763,7 @@ table.tbledit.noborder td.cell{border-right-color:rgba(255,255,255,.05);border-b
           <input class="finput" placeholder="例：駅徒歩5分・南向き">
           <div class="fl">フォント</div>
           <!-- 各項目はそのフォント自体で表示する（動画エディタと同じ） -->
-          <div class="fsel" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block'" style="cursor:pointer;"><span id="fontLabel" style="font-family:'Noto Sans JP',sans-serif;">ゴシック</span><i class="ti ti-chevron-down" style="font-size:13px;color:var(--color-editor-muted)"></i></div>
+          <div class="fsel" onclick="this.nextElementSibling.style.display=this.nextElementSibling.style.display==='block'?'none':'block'" style="cursor:pointer;"><span id="fontLabel" style="font-family:'Noto Sans JP',sans-serif;">ゴシック</span><i class="ti ti-chevron-down" style="font-size:14px;color:var(--color-editor-muted)"></i></div>
           <div class="fontdd" style="display:none;background:var(--color-editor-surface);border:1px solid var(--color-editor-border);border-radius:var(--radius-md);padding:4px 0;max-height:200px;overflow-y:auto;box-shadow:0 8px 24px rgba(0,0,0,.4);margin-bottom:8px;">
             <div class="fontpv on" onclick="pickFont(this)" style="font-family:'Noto Sans JP',sans-serif;">ゴシック</div>
             <div class="fontpv" onclick="pickFont(this)" style="font-family:'Noto Serif JP',serif;">明朝体</div>
@@ -766,7 +777,11 @@ table.tbledit.noborder td.cell{border-right-color:rgba(255,255,255,.05);border-b
             <div class="fontpv" onclick="pickFont(this)" style="font-family:'Hachi Maru Pop',cursive;">はちまるポップ</div>
           </div>
           <div class="fl">大きさ</div>
-          <div class="sizes"><div class="sz" onclick="pickSz(this)">S</div><div class="sz on" onclick="pickSz(this)">M</div><div class="sz" onclick="pickSz(this)">L</div><div class="sz" onclick="pickSz(this)">XL</div></div>
+          <!-- S/M/L/XL の4段だと中間が選べない。実機は無段階なのでバーにする -->
+          <div class="eb" id="ebSize" data-min="12" data-max="96" data-val="32" data-unit="px">
+            <div class="eb-hd"><span class="eb-v">32px</span></div>
+            <div class="eb-track"><div class="eb-fill"></div><div class="eb-knob"></div></div>
+          </div>
           </div>
 
           <!-- ===== 大タブ 1: スタイル ===== -->
@@ -774,6 +789,36 @@ table.tbledit.noborder td.cell{border-right-color:rgba(255,255,255,.05);border-b
           <div class="fl fl-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 18L10 6l5 12"/><path d="M6.8 14.5h6.4"/><rect x="3" y="20" width="18" height="2.5" rx="1" fill="currentColor" stroke="none"/></svg>文字色</div><div class="swatches" data-kind="color"><span class="sw swA on" data-c="#ef6108" onclick="pickSw(this)" style="color:#ef6108;">A</span><span class="sw swA" data-c="#f5f3f0" onclick="pickSw(this)" style="color:#f5f3f0;">A</span><span class="sw swA" data-c="#d94a4a" onclick="pickSw(this)" style="color:#d94a4a;">A</span><span class="sw swA" data-c="#2f6ad9" onclick="pickSw(this)" style="color:#2f6ad9;">A</span><span class="sw swA" data-c="#12960a" onclick="pickSw(this)" style="color:#12960a;">A</span><span class="sw swA" data-c="#e8b931" onclick="pickSw(this)" style="color:#e8b931;">A</span><span class="sw swA" data-c="#9724ba" onclick="pickSw(this)" style="color:#9724ba;">A</span><label class="sw swA custom" data-c="" title="好きな色を選ぶ">A<input type="color" value="#ef6108" oninput="pickCustom(this)" onclick="event.stopPropagation()"></label><span class="sw swA dropper" title="画面から色を吸い取る" onclick="pickDropper(this,event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 7l6 6"/><path d="M4 20l3.5-.5L18.5 8.5a2.1 2.1 0 0 0-3-3L4.5 16.5 4 20z"/></svg></span></div>
           <div class="fl fl-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="3" fill="currentColor" stroke="none" opacity=".3"/><path d="M6 16.5l4-9 4 9"/><path d="M7.4 13.8h5.2"/></svg>文字背景</div><div class="swatches" data-kind="bg"><span class="sw swA on none" data-c="" onclick="pickSw(this)" title="なし" style="color:var(--color-editor-muted);">A</span><span class="sw swA" data-c="#1e1a17" onclick="pickSw(this)" style="background:#1e1a17;color:#fff;">A</span><span class="sw swA" data-c="#f5f3f0" onclick="pickSw(this)" style="background:#f5f3f0;color:#1e1a17;">A</span><span class="sw swA" data-c="#ef6108" onclick="pickSw(this)" style="background:#ef6108;color:#fff;">A</span><span class="sw swA" data-c="#2f6ad9" onclick="pickSw(this)" style="background:#2f6ad9;color:#fff;">A</span><label class="sw swA custom" data-c="" title="好きな色を選ぶ">A<input type="color" value="#ef6108" oninput="pickCustom(this)" onclick="event.stopPropagation()"></label><span class="sw swA dropper" title="画面から色を吸い取る" onclick="pickDropper(this,event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 7l6 6"/><path d="M4 20l3.5-.5L18.5 8.5a2.1 2.1 0 0 0-3-3L4.5 16.5 4 20z"/></svg></span></div>
           <div class="fl fl-ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 18L10 6l5 12" stroke-dasharray="3 2"/><path d="M6.8 14.5h6.4" stroke-dasharray="3 2"/></svg>文字枠</div><div class="swatches" data-kind="stroke"><span class="sw swA on none" data-c="" onclick="pickSw(this)" title="なし" style="color:var(--color-editor-muted);">A</span><span class="sw swA" data-c="#f5f3f0" onclick="pickSw(this)" style="color:var(--color-editor-foreground);-webkit-text-stroke:1.5px #f5f3f0;">A</span><span class="sw swA" data-c="#1e1a17" onclick="pickSw(this)" style="color:var(--color-editor-foreground);-webkit-text-stroke:1.5px #1e1a17;">A</span><span class="sw swA" data-c="#ef6108" onclick="pickSw(this)" style="color:var(--color-editor-foreground);-webkit-text-stroke:1.5px #ef6108;">A</span><label class="sw swA custom" data-c="" title="好きな色を選ぶ">A<input type="color" value="#ef6108" oninput="pickCustom(this)" onclick="event.stopPropagation()"></label><span class="sw swA dropper" title="画面から色を吸い取る" onclick="pickDropper(this,event)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 7l6 6"/><path d="M4 20l3.5-.5L18.5 8.5a2.1 2.1 0 0 0-3-3L4.5 16.5 4 20z"/></svg></span></div>
+          <!-- 文字背景：帯を敷くかどうかと、その角の丸み -->
+          <div class="fl">文字背景</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-bottom:10px;">
+            <div class="fmtbtn on" onclick="pickTxtBg(this,'none')" title="背景なし">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4l16 16"/><rect x="3" y="6" width="18" height="12" rx="2"/></svg>
+              <span>なし</span>
+            </div>
+            <div class="fmtbtn" onclick="pickTxtBg(this,'fill')" title="背景あり">
+              <svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><rect x="3" y="6" width="18" height="12" rx="1"/></svg>
+              <span>ベタ</span>
+            </div>
+            <div class="fmtbtn" onclick="pickTxtBg(this,'line')" title="枠線のみ">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="18" height="12" rx="3"/></svg>
+              <span>枠線</span>
+            </div>
+          </div>
+          <!-- 角丸：四角(0) から 角丸 まで無段階。ボタンだと中間が選べない -->
+          <div class="eb" id="ebRadius" data-min="0" data-max="24" data-val="0" data-unit="px">
+            <div class="eb-hd"><span class="fl" style="margin:0;">背景の角丸</span><span class="eb-v">0px</span></div>
+            <div class="eb-track"><div class="eb-fill"></div><div class="eb-knob"></div></div>
+          </div>
+          <!-- 文字と背景の間。上下と左右で別に持たせる（実機の余白調整と同じ） -->
+          <div class="eb" id="ebPadY" data-min="0" data-max="32" data-val="8" data-unit="px">
+            <div class="eb-hd"><span class="fl" style="margin:0;">余白（上下）</span><span class="eb-v">8px</span></div>
+            <div class="eb-track"><div class="eb-fill"></div><div class="eb-knob"></div></div>
+          </div>
+          <div class="eb" id="ebPadX" data-min="0" data-max="32" data-val="12" data-unit="px">
+            <div class="eb-hd"><span class="fl" style="margin:0;">余白（左右）</span><span class="eb-v">12px</span></div>
+            <div class="eb-track"><div class="eb-fill"></div><div class="eb-knob"></div></div>
+          </div>
           <div class="fl">透明度</div>
           <div style="height:4px;background:var(--color-editor-border);border-radius:2px;margin-bottom:14px;position:relative;"><div style="width:100%;height:100%;background:var(--color-primary);border-radius:2px;"></div><div style="position:absolute;top:-4px;right:0;width:12px;height:12px;border-radius:50%;background:var(--color-editor-foreground);border:2px solid var(--color-primary);"></div></div>
           </div>
@@ -1214,7 +1259,46 @@ function pickTool(el, panelId) {
   }
 }
 /* 素材のドリルダウン（matSub/matBack）は大タブ・小タブに置き換えたため削除 */
-function pickSz(el){el.parentElement.querySelectorAll('.sz').forEach(s=>s.classList.remove('on'));el.classList.add('on');}
+/* ===== 調整バー =====
+   input[type=range] を使わず自前で描いているので、つまみの位置と値の反映もここで持つ。
+   クリックとドラッグの両方を拾う（細いバーはクリックで大まかに、ドラッグで詰める）。 */
+function ebSet(eb, ratio){
+  ratio = Math.max(0, Math.min(1, ratio));
+  var min = +eb.dataset.min, max = +eb.dataset.max;
+  var val = Math.round(min + (max - min) * ratio);
+  eb.dataset.val = val;
+  eb.querySelector('.eb-fill').style.width = (ratio*100) + '%';
+  eb.querySelector('.eb-knob').style.left  = (ratio*100) + '%';
+  eb.querySelector('.eb-v').textContent = val + (eb.dataset.unit || '');
+  return val;
+}
+function ebInit(){
+  document.querySelectorAll('.eb').forEach(function(eb){
+    var min=+eb.dataset.min, max=+eb.dataset.max, val=+eb.dataset.val;
+    ebSet(eb, (val-min)/(max-min));
+    var track=eb.querySelector('.eb-track');
+    var move=function(e){
+      var r=track.getBoundingClientRect();
+      var x=(e.touches?e.touches[0].clientX:e.clientX)-r.left;
+      ebSet(eb, x/r.width);
+    };
+    var up=function(){document.removeEventListener('mousemove',move);document.removeEventListener('mouseup',up);};
+    track.addEventListener('mousedown',function(e){move(e);document.addEventListener('mousemove',move);document.addEventListener('mouseup',up);});
+    track.addEventListener('touchmove',move,{passive:true});
+  });
+}
+document.addEventListener('DOMContentLoaded', ebInit);
+/* 文字背景の3択。角丸と余白のバーは「なし」のとき効かないので伏せる */
+function pickTxtBg(el, kind){
+  el.parentElement.querySelectorAll('.fmtbtn').forEach(function(b){b.classList.remove('on');});
+  el.classList.add('on');
+  var off = (kind === 'none');
+  ['ebRadius','ebPadY','ebPadX'].forEach(function(id){
+    var eb=document.getElementById(id); if(!eb) return;
+    eb.style.opacity = off ? '.4' : '1';
+    eb.style.pointerEvents = off ? 'none' : '';
+  });
+}
 /* ===== キャンバス上のオブジェクト選択と操作バー =====
    右クリックが使えないので、選択したオブジェクトの右上に出るこのバーが唯一の文脈メニューになる。
    Shift+クリックで複数選択でき、2つ以上でグループ化が有効になる。 */
@@ -1594,7 +1678,7 @@ function tblCellBg(col){
 /* 制作面に置く表。パネルで見えているものと同じ見た目にする */
 function tblHtml(){
   var bd=TBL.border?'1px solid rgba(0,0,0,.14)':'none';
-  var h='<table style="border-collapse:collapse;font-size:11px;background:#fff;color:#2a2826;border-radius:4px;overflow:hidden;">';
+  var h='<table style="border-collapse:collapse;font-size:14px;background:#fff;color:#2a2826;border-radius:4px;overflow:hidden;">';
   TBL.rows.forEach(function(row,r){
     h+='<tr>';
     row.forEach(function(v,c){

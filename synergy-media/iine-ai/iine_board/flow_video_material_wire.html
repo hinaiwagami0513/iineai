@@ -77,23 +77,23 @@
   --color-success: #008a24; --color-success-vivid: #00ac2f;
   --color-success-subtle: #f3fcf6;
   --color-warning: #ad6201;
-  --color-warning-border: #fea735;
+  --color-warning-border: #ffe6c4;
   --color-warning-subtle: #fff9f1;
   --color-info: #0070f0;
   --color-info-subtle: #f1f7ff;
   --color-destructive: #e90c2a;
   --color-on-destructive: #ffffff;
-  --color-destructive-subtle: #fddfe3;
+  --color-destructive-subtle: #feeef1;
   --color-like: #ef3a58;
-  --color-like-subtle: #fddfe3;
+  --color-like-subtle: #feeef1;
   --color-accent-purple: #9724ba;
   --color-accent-purple-subtle: #f5e7f8;
   --color-sns-instagram: #b02a78;
   --color-sns-instagram-subtle: #fce7f3;
   --color-sns-x: #2a2826;
-  --color-sns-x-subtle: #f2efeb;
-  --color-sns-tiktok: #0e7490;
-  --color-sns-tiktok-subtle: #e0f7fa;
+  --color-sns-x-subtle: #fcf5ef;
+  --color-sns-tiktok: #854f0b;
+  --color-sns-tiktok-subtle: #fef3c7;
   --color-sns-youtube: #c4302b;
   --color-sns-youtube-subtle: #fcebeb;
   --color-editor-bg: #1e1a17;
@@ -119,8 +119,8 @@
   --text-body-lg: 1rem;
   --text-body: 0.875rem;
   --text-body-strong: 0.875rem;
-  --text-label: 0.75rem;
-  --text-meta: 0.625rem;
+  --text-label: 0.875rem;
+  --text-meta: 0.875rem;
   --font-weight-display: 900;
   --font-weight-h1: 900;
   --font-weight-h2: 700;
@@ -166,14 +166,17 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .help-inline{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;margin-left:8px;
   border:1.5px solid var(--color-primary);border-radius:var(--radius-full);
   color:var(--color-primary);background:var(--color-card);
-  font-size:11px;font-weight:var(--font-weight-body-strong);line-height:1;
+  font-size:14px;font-weight:var(--font-weight-body-strong);line-height:1;
   text-decoration:none;vertical-align:middle;flex:none;
   transition:background .15s,color .15s;}
 .help-inline:hover{background:var(--color-primary);color:var(--color-on-primary);}
 
 .hdr-left{display:flex;align-items:center;gap:10px;}
 .hdr-right{margin-left:auto;display:flex;align-items:center;gap:8px;}
-.hdr-page{font-size:var(--text-h3);font-weight:var(--font-weight-h3);display:flex;align-items:center;gap:8px;}
+/* タイトルは押せる（最初の画面に戻る）。押せることが分かるよう hover で色を変える */
+.hdr-page{font-size:var(--text-h3);font-weight:var(--font-weight-h3);display:flex;align-items:center;gap:8px;cursor:pointer;border-radius:var(--radius-sm);padding:2px 6px;margin-left:-6px;transition:background .15s,color .15s;}
+.hdr-page:hover{background:var(--color-primary-subtle);color:var(--color-primary);}
+.hdr-page:focus-visible{outline:2px solid var(--color-primary);outline-offset:2px;}
 .hdr-page .ti{color:var(--color-muted-foreground);font-size:20px;}
 .hdr-page .ti{color:var(--color-muted-foreground);font-size:18px;}
 /* 上部ステップ */
@@ -200,13 +203,13 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .uptab{transition:background .15s,color .15s,box-shadow .15s;}.uptab.on{background:var(--color-card) !important;color:var(--color-foreground) !important;box-shadow:0 1px 2px rgb(0 0 0/.06) !important;}
 .drvfolder:hover{background:var(--color-surface);}
 .tg.tgon{background:var(--color-primary) !important;}.tg.tgon>div{left:20px !important;}
-.csel{position:relative;width:100%;}.csel-trigger{width:100%;display:flex;align-items:center;justify-content:space-between;padding:9px 12px;border:1px solid var(--color-border);border-radius:var(--radius-md);background:var(--color-input);font-size:var(--text-body);color:var(--color-foreground);cursor:pointer;box-sizing:border-box;}.csel-trigger:hover{border-color:var(--color-border-strong);}.csel-trigger .cv{font-size:13px;color:var(--color-muted-foreground);transition:transform .2s;}.csel.open .cv{transform:rotate(180deg);}
+.csel{position:relative;width:100%;}.csel-trigger{width:100%;display:flex;align-items:center;justify-content:space-between;padding:9px 12px;border:1px solid var(--color-border);border-radius:var(--radius-md);background:var(--color-input);font-size:var(--text-body);color:var(--color-foreground);cursor:pointer;box-sizing:border-box;}.csel-trigger:hover{border-color:var(--color-border-strong);}.csel-trigger .cv{font-size:14px;color:var(--color-muted-foreground);transition:transform .2s;}.csel.open .cv{transform:rotate(180deg);}
 .csel-drop{display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-md);box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:20;overflow:hidden;}.csel.open .csel-drop{display:block;}
 .csel-opt{padding:9px 12px;font-size:var(--text-body);color:var(--color-foreground);cursor:pointer;display:flex;align-items:center;gap:8px;}.csel-opt:hover{background:var(--color-surface);}.csel-opt.on{color:var(--color-primary);font-weight:var(--font-weight-body-strong);}.csel-opt.on::before{content:"\ea5e";font-family:"tabler-icons";font-size:14px;}
 .upfile:hover{box-shadow:0 2px 8px rgb(0 0 0/.08);}
 .actbtn{width:32px;height:32px;border:1px solid var(--color-border);background:var(--color-card);color:var(--color-muted-foreground);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer;transition:background .1s,color .1s;}
 .actbtn:hover{background:var(--color-surface);color:var(--color-foreground);}
-.upcard-x{position:absolute;top:-2px;right:-2px;width:24px;height:24px;border:1px solid var(--color-border);background:var(--color-card);color:var(--color-muted-foreground);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;cursor:pointer;opacity:0;transition:opacity .15s;}
+.upcard-x{position:absolute;top:-2px;right:-2px;width:24px;height:24px;border:1px solid var(--color-border);background:var(--color-card);color:var(--color-muted-foreground);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;opacity:0;transition:opacity .15s;}
 .upcard:hover .upcard-x{opacity:1;}.upcard-x:hover{background:var(--color-surface);color:var(--color-foreground);}
 /* SNS/方法カード */
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
@@ -220,8 +223,8 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .acname{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);} .acmeta{font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:1px;}
 .plat{margin-left:auto;display:flex;align-items:center;gap:5px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);border-radius:var(--radius-full);padding:3px 10px;}
 .method{text-align:center;padding:32px 20px;}
-.method .mi{font-size:48px;display:block;margin-bottom:16px;color:var(--color-muted-foreground);}
-.method.sel .mi{color:var(--color-primary);}
+.method .mi{width:64px;height:64px;box-sizing:border-box;border-radius:50%;background:var(--color-border);color:var(--color-muted-foreground);display:flex;align-items:center;justify-content:center;font-size:30px;line-height:1;margin:0 auto 16px;}.method svg.mi{display:block;padding:16px;}
+.method.sel .mi{background:var(--color-primary);color:#fff;}
 .method .ot{font-size:var(--text-h3);font-weight:var(--font-weight-h3);} .method .od{font-size:var(--text-body);color:var(--color-muted-foreground);margin-top:8px;line-height:1.6;}
 /* アコーディオン */
 .mcard{border:1.5px solid var(--color-border);border-radius:var(--radius-lg);background:var(--color-card);overflow:hidden;margin-bottom:11px;}
@@ -305,7 +308,7 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .tplmarker{align-self:center;display:flex;align-items:center;gap:7px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-primary);background:var(--color-primary-subtle);border-radius:var(--radius-full);padding:8px 15px;}
 .donemsg{align-self:center;display:flex;align-items:center;gap:7px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-success);background:var(--color-success-subtle);border-radius:var(--radius-full);padding:8px 15px;}
 #sugbox{border-top:1px solid var(--color-border);background:var(--color-card);padding:10px 13px 10px;display:flex;flex-wrap:wrap;gap:7px;}
-.suglabel{width:100%;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);display:flex;align-items:center;gap:5px;margin-bottom:2px;} .suglabel .ti{color:var(--color-primary);font-size:13px;}
+.suglabel{width:100%;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);display:flex;align-items:center;gap:5px;margin-bottom:2px;} .suglabel .ti{color:var(--color-primary);font-size:14px;}
 .sug{display:inline-flex;align-items:center;border:1.5px solid #ffd6c4;background:var(--color-primary-subtle);color:var(--color-primary);border-radius:var(--radius-full);padding:8px 13px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);cursor:pointer;}
 .sug:hover{background:var(--color-primary);color:#fff;border-color:var(--color-primary);}
 .chatcomposer{background:var(--color-card);border-top:1px solid var(--color-border);padding:10px 13px;}
@@ -335,7 +338,7 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .selrow .th{width:46px;height:46px;flex:none;border-radius:var(--radius-sm);background:var(--color-surface);display:flex;align-items:center;justify-content:center;color:var(--color-muted-foreground);font-size:20px;}
 .selrow .nm{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);display:flex;align-items:center;gap:7px;}
 .selrow .mt{font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:3px;line-height:1.5;}
-.selrow .chk{margin-left:auto;width:22px;height:22px;flex:none;border-radius:var(--radius-full);border:1.5px solid var(--color-border-strong);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;}
+.selrow .chk{margin-left:auto;width:22px;height:22px;flex:none;border-radius:var(--radius-full);border:1.5px solid var(--color-border-strong);display:flex;align-items:center;justify-content:center;color:#fff;font-size:14px;}
 .selrow.sel .chk{background:var(--color-primary);border-color:var(--color-primary);}
 .tag2{font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);border-radius:var(--radius-full);padding:2px 9px;background:var(--color-primary-subtle);color:var(--color-primary);}
 /* bridge / finish */
@@ -396,9 +399,11 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .ai-ex-hd{display:flex;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--color-border);background:var(--color-card);}
 .ai-fox{width:30px;height:30px;object-fit:contain;background:var(--color-primary-subtle);border-radius:var(--radius-md);padding:2px;}
 .ai-fox-sm{width:28px;height:28px;object-fit:contain;background:var(--color-primary-subtle);border-radius:var(--radius-md);padding:2px;flex:none;}
-.ai-ex-close{margin-left:auto;width:28px;height:28px;border:1px solid var(--color-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--color-muted-foreground);font-size:13px;background:var(--color-card);}
+.ai-ex-close{margin-left:auto;width:28px;height:28px;border:1px solid var(--color-border);border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--color-muted-foreground);font-size:14px;background:var(--color-card);}
 .ai-ex-close:hover{border-color:var(--color-primary);color:var(--color-primary);}
-.ai-ex-stream{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
+/* やりとりが伸びるとパネルごと縦に伸びて、押してほしい確認カードが画面の外に
+   出てしまう。高さを頭打ちにして、パネルの中だけでスクロールさせる */
+.ai-ex-stream{flex:1;min-height:0;max-height:46vh;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
 .ai-msg-row{display:flex;gap:8px;align-items:flex-start;}
 .ai-bub{background:transparent;border:none;padding:10px 13px;font-size:var(--text-label);line-height:1.7;max-width:90%;}
 .ai-me{align-self:flex-end;background:var(--color-primary-subtle);border:1px solid var(--color-border);border-radius:var(--radius-lg);border-top-right-radius:var(--radius-sm);padding:10px 13px;font-size:var(--text-label);line-height:1.6;max-width:85%;}
@@ -412,6 +417,49 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .ai-ex-foot button.send{width:34px;height:34px;flex:none;border:none;border-radius:var(--radius-full);background:var(--color-primary);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:15px;}
 .ai-typing{display:flex;gap:8px;align-items:flex-start;}
 .ai-typing .dot-pulse{padding:12px 16px;}
+/* --- AIアシストのやりとり（beautifului.dev のパターンを白＋オレンジに寄せたもの） --- */
+/* Thinking：考えている最中は手順が1つずつ増える。終わったら1行に畳んで、
+   押せば手順を読み返せる。dot-pulse だけだと「何をしていたか」が残らない。 */
+.ai-think{font-size:var(--text-meta);color:var(--color-muted-foreground);padding:2px 13px;}
+.ai-think-hd{display:inline-flex;align-items:center;gap:6px;cursor:pointer;font-weight:var(--font-weight-body-strong);}
+.ai-think-hd .ti-sparkles{color:var(--color-primary);font-size:13px;}
+.ai-think-hd .ti-chevron-down{font-size:13px;transition:transform .15s;}
+.ai-think.open .ai-think-hd .ti-chevron-down{transform:rotate(180deg);}
+.ai-think-steps{display:none;margin:6px 0 2px;padding-left:9px;border-left:1.5px solid var(--color-border);}
+.ai-think.open .ai-think-steps,.ai-think.live .ai-think-steps{display:block;}
+.ai-think-step{display:flex;align-items:center;gap:6px;padding:3px 0;line-height:1.5;}
+.ai-think-step .ti{font-size:12px;color:var(--color-primary);flex:none;}
+.ai-think-step.pending{opacity:.45;}
+.ai-think-step.pending .ti{animation:aiSpin 1s linear infinite;}
+@keyframes aiSpin{to{transform:rotate(360deg);}}
+/* Streaming Text：返信は1文字ずつ。流れている間だけカーソルが点滅する */
+.ai-cursor{display:inline-block;width:2px;height:1em;background:var(--color-primary);vertical-align:-2px;margin-left:1px;animation:aiCaret 1s step-end infinite;}
+@keyframes aiCaret{50%{opacity:0;}}
+/* Approval Card：「『適用』と言ってください」で終わらせず、その場で押せるようにする */
+.ai-approve{background:var(--color-primary-subtle);border:1.5px solid var(--color-primary);border-radius:var(--radius-md);padding:12px 13px;margin:0 13px;}
+.ai-approve-q{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);line-height:1.6;margin-bottom:4px;}
+.ai-approve-note{font-size:var(--text-meta);color:var(--color-muted-foreground);line-height:1.6;margin-bottom:10px;}
+.ai-approve-act{display:flex;gap:7px;}
+.ai-approve-act button{flex:1;padding:8px;border-radius:var(--radius-sm);font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);cursor:pointer;}
+.ai-approve-act .ok{border:none;background:var(--color-primary);color:#fff;}
+.ai-approve-act .no{border:1px solid var(--color-border);background:var(--color-card);color:var(--color-muted-foreground);}
+.ai-approve.settled{background:var(--color-card);border-color:var(--color-border);}
+.ai-approve.settled .ai-approve-act{display:none;}
+.ai-approve-done{display:none;align-items:center;gap:5px;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-success);}
+.ai-approve.settled .ai-approve-done{display:inline-flex;}
+/* Follow-ups：返信のあとに次の一手を置く。最初のクイックチップと同じ見た目で揃える */
+.ai-follow{display:flex;flex-wrap:wrap;gap:6px;padding:0 13px;}
+/* Prompt Bar の / コマンド。入力欄の真上に重ねる */
+.ai-slash-wrap{position:relative;}
+.ai-slash{display:none;position:absolute;left:0;right:0;bottom:calc(100% + 6px);background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-md);box-shadow:0 8px 24px rgba(0,0,0,.10);overflow:hidden;z-index:30;}
+.ai-slash.open{display:block;}
+.ai-slash-label{font-size:var(--text-meta);color:var(--color-muted-foreground);padding:9px 13px 5px;}
+/* パネルの幅が260px前後しかないので、コマンドと説明は横並びにせず縦に積む。
+   横並びだと説明が折り返して行が崩れる */
+.ai-slash-item{display:block;padding:8px 13px;cursor:pointer;text-align:left;}
+.ai-slash-item:hover,.ai-slash-item.on{background:var(--color-primary-subtle);}
+.ai-slash-cmd{display:block;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-primary);}
+.ai-slash-desc{display:block;font-size:var(--text-meta);color:var(--color-muted-foreground);margin-top:1px;}
 
 
 
@@ -431,7 +479,7 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
   .topbar .hdr-right{gap:6px;}
   .topbar .hdr-page{font-size:var(--text-body);}
   .stepbar{overflow-x:auto;flex-wrap:nowrap;padding:10px 16px;gap:4px;max-width:100%;justify-content:flex-start;}
-  .st .l{font-size:10px;}
+  .st .l{font-size:14px;}
   .stline{min-width:20px;}
   #subnav{overflow-x:auto;flex-wrap:nowrap;padding:8px 14px;justify-content:flex-start;gap:4px;}
   .main{flex:1;min-height:0;overflow-y:auto;}
@@ -443,7 +491,7 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
   .btn{padding:10px 16px;font-size:var(--text-label);}
   .booth{height:auto;min-height:420px;}
   #sugbox{flex-wrap:wrap;}
-  .sug{font-size:11px;padding:6px 10px;}
+  .sug{font-size:14px;padding:6px 10px;}
   .proposal-card-pg{padding:14px 16px;}
   .h1{font-size:var(--text-h2);}
   /* Upload drive-picker: folder + file grid stacks vertically */
@@ -498,7 +546,7 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .bk-done-note i{font-size:15px;}
 .bk-qbtn.rec{border-color:var(--color-primary);background:var(--color-primary-subtle);color:var(--color-primary);}
 .bk-qbtn.rec span{color:var(--color-primary);opacity:.75;}
-.bk-qbtn.rec i{font-size:13px;margin-right:4px;}
+.bk-qbtn.rec i{font-size:14px;margin-right:4px;}
 @media(max-width:600px){ .bk-pop{width:calc(100vw - 24px);padding:16px;} .bk-quick{grid-template-columns:1fr;} }
 
 /* ===== 仮予約 =====
@@ -514,19 +562,14 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .karibtn .kari{font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);
   background:var(--color-background);border-radius:var(--radius-full);padding:1px 7px;}
 /* ダイアログ。おすすめ日程をここに寄せて、カレンダーを探しに行かせない */
-/* 仮予約 / 本予約 の切替（2026-08-21 決定）。
-   同じダイアログで「押さえるだけ」と「これで出す」を選べるようにする。
-   ボタンを2つ並べると主要動作が2つになって迷うので、上で種別を選び
-   フッターは1つに保つ。ラベル・トースト・バッジは選択に連動させる。 */
-.karikind{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:16px;}
-.karikind button{border:1px solid var(--color-border-strong);border-radius:var(--radius-md);background:var(--color-card);
-  padding:12px 13px;text-align:left;font-family:inherit;cursor:pointer;}
-.karikind button:hover{border-color:var(--color-primary);}
-.karikind button.on{border-color:var(--color-primary);background:var(--color-primary-subtle);}
-.karikind .kt{display:flex;align-items:center;gap:6px;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);}
-.karikind .kt i{font-size:16px;color:var(--color-muted-foreground);}
-.karikind button.on .kt,.karikind button.on .kt i{color:var(--color-primary);}
-.karikind .kd{font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.6;margin-top:4px;}
+/* 仮予約 / 本予約 はフッターの2ボタンで選ばせる（2026-08-21 陽菜指定）。
+   上でいったん種別を選ばせる形はやめた。押すボタン＝起きることになるので迷いが1段減る。
+   2つ並ぶが、枠線（仮）と塗り（本）で強さを分けてオレンジの一意性は保つ。
+   ボタンが4つ入るのでダイアログ幅を 460 → 520 に広げる。 */
+.karibox{width:min(520px,100%);}
+.karibox .f{flex-wrap:wrap;}
+.btn-kari{background:var(--color-card);color:var(--color-primary);border:1.5px solid var(--color-primary);}
+.btn-kari:hover{background:var(--color-primary-subtle);}
 /* ===== 完了モーダル（2026-08-21）=====
    完成を別ページに置くと「まだ何か作業が残ってる」ように見えるので、
    編集画面の上にモーダルで出して、そのまま閉じて戻れるようにする。
@@ -552,7 +595,12 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
   font-family:inherit;font-size:var(--text-body);background:var(--color-input);color:var(--color-foreground);}
 .kariask{display:flex;align-items:flex-start;gap:9px;padding:12px 14px;border-radius:var(--radius-md);background:var(--color-surface);
   border:1px solid var(--color-border);font-size:var(--text-label);line-height:1.7;cursor:pointer;}
-.kariask input{margin-top:3px;accent-color:var(--color-primary);flex:none;}
+/* accent-color だけだとチェック自体の色はブラウザが決めてしまい、オレンジの地に
+   黒いチェックが乗って読みにくかった。見た目を自前で描いて白いチェックにする */
+.kariask input{margin-top:2px;flex:none;appearance:none;-webkit-appearance:none;width:16px;height:16px;border:1.5px solid var(--color-border);border-radius:4px;background:#fff;cursor:pointer;}
+.kariask input:checked{border-color:var(--color-primary);background:var(--color-primary) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23fff' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 13l4 4L19 7'/%3E%3C/svg%3E") center/11px 11px no-repeat;}
+.kariask input:hover{border-color:var(--color-primary);}
+.kariask input:focus-visible{outline:2px solid var(--color-primary);outline-offset:2px;}
 .karibox .f{display:flex;gap:10px;padding:14px 20px;border-top:1px solid var(--color-border);background:var(--color-surface);}
 .karibox .f .sp{margin-left:auto;display:flex;gap:10px;}
 /* 分析のおすすめ時間（この画面から1タップで使えるようにする） */
@@ -580,9 +628,25 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .st.done,.st.done .tx,.snn.done,.snn.done .tx{cursor:pointer;}
 .st.done:hover .tx,.snn.done:hover .tx{color:var(--color-primary);text-decoration:underline;}
 .st.done:hover .n{border-color:var(--color-primary);}
-</style></head><body>
+
+/* ===== AIレビュー（2026-08-21 調整）=====
+   ・改善は「問題」より大事な情報なので、見出しより一段大きく＋primary で出す。
+     問題文だけ太字・改善が小さいと、読む順が「何がダメか」で止まる。
+   ・チェックはOS標準のままだと角も大きさもこの画面だけ浮くので、トークンで作り直す。 */
+.rev-fix{font-size:var(--text-body-lg) !important;font-weight:var(--font-weight-body-strong);
+  color:var(--color-primary);line-height:1.7;margin-top:8px !important;}
+.rev-why{font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.8;}
+.rev-chk{appearance:none;-webkit-appearance:none;width:20px;height:20px;flex:none;
+  border:1.5px solid var(--color-border-strong);border-radius:var(--radius-sm);
+  background:var(--color-card);cursor:pointer;position:relative;margin:0;transition:background .12s,border-color .12s;}
+.rev-chk:checked{background:var(--color-primary);border-color:var(--color-primary);}
+.rev-chk:checked::after{content:"";position:absolute;left:6px;top:2px;width:5px;height:10px;
+  border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg);}
+.rev-chk:focus-visible{outline:2px solid var(--color-ring);outline-offset:2px;}
+</style>
+<link rel="stylesheet" href="./fox-alert.css"></head><body>
 <div class="app">
-  <div class="topbar"><div class="hdr-left"><span class="hdr-page"><i class="ti ti-template"></i>投稿作成</span><span class="tag" id="flowtag" style="display:none"></span></div><div class="hdr-right"><a class="helpbtn" href="https://hinaiwagami0513.github.io/iineai/help/create/video/" target="_blank" rel="noopener" title="このページのヘルプ（投稿作成 > 動画を作成）" aria-label="このページのヘルプ">?</a><button class="close"><i class="ti ti-list"></i></button></div></div>
+  <div class="topbar"><div class="hdr-left"><span class="hdr-page" onclick="goFlowStart()" role="button" tabindex="0" title="最初の画面に戻る" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goFlowStart();}"><i class="ti ti-template"></i>投稿作成</span><span class="tag" id="flowtag" style="display:none"></span></div><div class="hdr-right"><a class="helpbtn" href="https://hinaiwagami0513.github.io/iineai/help/create/video/" target="_blank" rel="noopener" title="このページのヘルプ（投稿作成 > 動画を作成）" aria-label="このページのヘルプ">?</a><button class="close"><i class="ti ti-list"></i></button></div></div>
   <div style="border-bottom:1px solid var(--color-border);background:var(--color-card);"><div class="stepbar" id="stepbar"></div></div>
   <div class="main">
     <div id="subnav"></div>
@@ -615,12 +679,12 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
         <div class="g2" style="margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:640px;margin:16px auto 0;">
           <div class="opt method" onclick="pickCard(this,'opt')" style="padding:32px 20px;text-align:center;">
             <span class="ochk"><i class="ti ti-check"></i></span>
-            <i class="ti ti-video mi" style="font-size:36px;display:block;margin-bottom:12px;"></i>
+            <svg class="mi" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="3" width="16" height="3.5" rx="1.75"/><path d="M5.5 6.5v11"/><path d="M18.5 6.5v11"/><rect x="4" y="17.5" width="16" height="3.5" rx="1.75"/><path d="M9 10h6"/><path d="M9 13.5h6"/></svg>
             <div class="ot" style="font-size:var(--text-h3);margin-bottom:6px;">台本から</div>
           </div>
           <div class="opt method sel" onclick="pickCard(this,'opt')" style="padding:32px 20px;text-align:center;">
             <span class="ochk"><i class="ti ti-check"></i></span>
-            <i class="ti ti-upload mi" style="font-size:36px;display:block;margin-bottom:12px;"></i>
+            <i class="ti ti-upload mi"></i>
             <div class="ot" style="font-size:var(--text-h3);margin-bottom:6px;">素材から</div>
           </div>
         </div>
@@ -693,7 +757,7 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
                   <div style="aspect-ratio:1;background:linear-gradient(135deg,#8bc34a 0%,#4caf50 50%,#a5d6a7 100%);border-radius:var(--radius-md);margin-bottom:8px;"></div>
                   <div style="font-size:var(--text-label);font-weight:var(--font-weight-body-strong);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">柴犬.jpg</div>
                   <div style="font-size:var(--text-meta);color:var(--color-muted-foreground);margin-top:2px;">JPG・820 KB</div>
-                  <span class="drvchk" style="position:absolute;top:16px;right:16px;width:24px;height:24px;border-radius:50%;background:var(--color-primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;"><i class="ti ti-check"></i></span>
+                  <span class="drvchk" style="position:absolute;top:16px;right:16px;width:24px;height:24px;border-radius:50%;background:var(--color-primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;"><i class="ti ti-check"></i></span>
                 </div>
                 <div class="drvfile" onclick="pickDrvFile(this)" style="border:1px solid var(--color-border);border-radius:var(--radius-lg);cursor:pointer;position:relative;background:var(--color-card);box-shadow:0 1px 2px rgb(0 0 0/.06);padding:10px 10px 12px;">
                   <div style="aspect-ratio:1;background:linear-gradient(160deg,#ff9800 0%,#e65100 40%,#bf360c 100%);border-radius:var(--radius-md);margin-bottom:8px;"></div>
@@ -838,8 +902,8 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
             <div style="display:flex;border-bottom:1px solid var(--color-border);"><span class="ed-xtab on" onclick="edTab(0,this)" style="padding:13px 20px;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);color:var(--color-primary);border-bottom:2px solid var(--color-primary);margin-bottom:-1px;cursor:pointer;">投稿文</span><span class="ed-xtab" onclick="edTab(1,this)" style="padding:13px 20px;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;">AIレビュー</span></div>
             <div class="ed-xpane on" id="edPane0" style="flex:1;overflow-y:auto;padding:18px;">
               <div style="font-size:var(--text-body);font-weight:var(--font-weight-body-strong);margin-bottom:12px;">投稿文（キャプション）</div>
-              <div style="border:1.5px solid var(--color-border);border-radius:var(--radius-md);padding:16px;font-size:var(--text-body);line-height:1.8;min-height:140px;">駅徒歩5分の南向き1LDK、新着です。日当たり良好・即入居OK。気になる方はプロフィールからお問い合わせください。<br><br><span style="color:var(--color-primary);">#賃貸 #お部屋探し #一人暮らし #駅近</span></div>
-              <button style="margin-top:14px;display:inline-flex;align-items:center;gap:7px;padding:12px;border:none;background:linear-gradient(135deg,var(--color-primary),var(--color-primary-light));color:#fff;border-radius:var(--radius-md);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;"><i class="ti ti-refresh"></i>AIで投稿文を再生成</button>
+              <div id="capBox" style="position:relative;border:1.5px solid var(--color-border);border-radius:var(--radius-md);padding:16px;font-size:var(--text-body);line-height:1.8;min-height:140px;">駅徒歩5分の南向き1LDK、新着です。日当たり良好・即入居OK。気になる方はプロフィールからお問い合わせください。<br><br><span style="color:var(--color-primary);">#賃貸 #お部屋探し #一人暮らし #駅近</span></div>
+              <button id="capRegenBtn" onclick="regenCaption()" style="margin-top:14px;display:inline-flex;align-items:center;gap:7px;padding:12px;border:none;background:linear-gradient(135deg,var(--color-primary),var(--color-primary-light));color:#fff;border-radius:var(--radius-md);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;"><i class="ti ti-refresh"></i>AIで投稿文を再生成</button>
             </div>
             <div class="ed-xpane" id="edPane1" style="flex:1;overflow-y:auto;padding:18px;">
               <div style="font-size:var(--text-body);font-weight:var(--font-weight-body-strong);margin-bottom:8px;display:flex;align-items:center;gap:8px;">チェックしてほしい観点<span style="font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-destructive);background:var(--color-destructive-subtle);border-radius:var(--radius-full);padding:2px 10px;">必須</span></div>
@@ -851,19 +915,21 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
                 <span onclick="pickRevHistory(this)" class="rev-hist on" style="font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-primary);background:var(--color-primary-subtle);border:1.5px solid var(--color-primary);border-radius:var(--radius-full);padding:4px 12px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;">7/6 10:23<span style="font-size:8px;font-weight:var(--font-weight-body-strong);background:var(--color-primary);color:#fff;border-radius:var(--radius-full);padding:1px 6px;">最新</span></span>
                 <span onclick="pickRevHistory(this)" class="rev-hist" style="font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);border:1px solid var(--color-border);border-radius:var(--radius-full);padding:4px 12px;cursor:pointer;">7/5 18:40</span>
               </div>
-              <div style="background:var(--color-primary-subtle);border-radius:var(--radius-md);padding:16px;margin-bottom:16px;font-size:var(--text-body);line-height:1.8;color:var(--color-foreground);">駅近・即入居の訴求が明確で、一人暮らし層に刺さる構成です。冒頭フックの最適化でさらにリーチを伸ばせます。</div>
+              <!-- レビューの総評はキツネが喋る（fox-alert）。色付きの箱だけだと
+                 「システムの定型文」に見え、AIが読んで言っていることが伝わらない。 -->
+              <div class="fox-alert ok" style="margin:0 0 16px;"><img src="./assets/iine-fox-happy.png" alt="" style="width:40px;height:40px;flex:none;object-fit:contain;"><div>駅近・即入居の訴求が明確で、一人暮らし層に刺さる構成です。冒頭フックの最適化でさらにリーチを伸ばせます。</div></div>
               <div style="display:flex;gap:8px;margin-bottom:16px;">
                 <button onclick="applyAll()" class="grad" style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border:none;border-radius:var(--radius-md);font-size:var(--text-label);font-weight:var(--font-weight-body-strong);cursor:pointer;color:#fff;"><i class="ti ti-sparkles"></i>反映可能なレビューを全て反映</button>
                 <button onclick="applySelected()" style="display:inline-flex;align-items:center;gap:6px;padding:10px 18px;border:1px solid var(--color-border);border-radius:var(--radius-md);background:var(--color-card);font-size:var(--text-label);font-weight:var(--font-weight-body-strong);cursor:pointer;color:var(--color-foreground);"><i class="ti ti-check"></i>選択したレビューを反映</button>
               </div>
               <label class="rev-item" style="border:1.5px solid var(--color-border);border-radius:var(--radius-md);padding:14px 16px;margin-bottom:10px;display:block;cursor:pointer;">
-                <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><input type="checkbox" class="rev-chk" checked style="width:18px;height:18px;accent-color:var(--color-primary);cursor:pointer;flex:none;"><span style="font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);background:var(--color-destructive-subtle);color:var(--color-destructive);border-radius:var(--radius-full);padding:3px 10px;">重要度 高</span><span style="font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);background:var(--color-surface);color:var(--color-muted-foreground);border:1px solid var(--color-border);border-radius:var(--radius-full);padding:3px 10px;">構成</span><span style="margin-left:auto;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-primary);background:var(--color-primary-subtle);border-radius:var(--radius-full);padding:2px 9px;">自動反映可</span></div>
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><input type="checkbox" class="rev-chk" checked><span style="font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);background:var(--color-destructive-subtle);color:var(--color-destructive);border-radius:var(--radius-full);padding:3px 10px;">重要度 高</span><span style="font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);background:var(--color-surface);color:var(--color-muted-foreground);border:1px solid var(--color-border);border-radius:var(--radius-full);padding:3px 10px;">構成</span><span style="margin-left:auto;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-primary);background:var(--color-primary-subtle);border-radius:var(--radius-full);padding:2px 9px;">自動反映可</span></div>
                 <div style="font-size:var(--text-body);font-weight:var(--font-weight-body-strong);margin-bottom:6px;">アクション喚起（CTA）が弱い。</div>
                 <div style="font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.7;">理由：「お問い合わせください」は受け身で拡散面で控えめ。</div>
                 <div style="font-size:var(--text-label);line-height:1.7;margin-top:4px;"><span style="font-weight:var(--font-weight-body-strong);color:var(--color-foreground);">改善：</span>「内見予約はプロフィールから」など直接的なCTAに。</div>
               </label>
               <label class="rev-item" style="border:1.5px solid var(--color-border);border-radius:var(--radius-md);padding:14px 16px;margin-bottom:10px;display:block;cursor:pointer;">
-                <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><input type="checkbox" class="rev-chk" checked style="width:18px;height:18px;accent-color:var(--color-primary);cursor:pointer;flex:none;"><span style="font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);background:var(--color-warning-subtle);color:var(--color-warning);border-radius:var(--radius-full);padding:3px 10px;">重要度 中</span><span style="font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);background:var(--color-surface);color:var(--color-muted-foreground);border:1px solid var(--color-border);border-radius:var(--radius-full);padding:3px 10px;">ハッシュタグ</span><span style="margin-left:auto;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-primary);background:var(--color-primary-subtle);border-radius:var(--radius-full);padding:2px 9px;">自動反映可</span></div>
+                <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;"><input type="checkbox" class="rev-chk" checked><span style="font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);background:var(--color-warning-subtle);color:var(--color-warning);border-radius:var(--radius-full);padding:3px 10px;">重要度 中</span><span style="font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);background:var(--color-surface);color:var(--color-muted-foreground);border:1px solid var(--color-border);border-radius:var(--radius-full);padding:3px 10px;">ハッシュタグ</span><span style="margin-left:auto;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-primary);background:var(--color-primary-subtle);border-radius:var(--radius-full);padding:2px 9px;">自動反映可</span></div>
                 <div style="font-size:var(--text-body);font-weight:var(--font-weight-body-strong);margin-bottom:6px;">ハッシュタグが一般的すぎる。</div>
                 <div style="font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.7;">理由：競合過多でターゲットがぼやける。</div>
                 <div style="font-size:var(--text-label);line-height:1.7;margin-top:4px;"><span style="font-weight:var(--font-weight-body-strong);color:var(--color-foreground);">改善：</span>「#新宿1LDK」など特化タグへ。</div>
@@ -887,10 +953,13 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
                   <span class="ai-qk" onclick="aiSend(this.textContent)">投稿文を改善して</span>
                 </div>
               </div>
-              <div style="background:#ffffff;border-top:1px solid var(--color-border);padding:8px 13px 11px;">
+              <div class="ai-slash-wrap" style="background:#ffffff;border-top:1px solid var(--color-border);padding:8px 13px 11px;">
+                <!-- / を打つとコマンド一覧が出る。よく使う指示は打ち切らなくても選べる -->
+                <div class="ai-slash" id="aiSlash"><div class="ai-slash-label">コマンド</div><div id="aiSlashList"></div></div>
+                
                 <div style="background:var(--color-surface);border:1px solid var(--color-border);border-radius:18px;overflow:hidden;">
                   <div style="padding:12px 16px 4px;">
-                    <input id="aiInput" placeholder="自分で入力してもOK" onkeydown="if(event.key==='Enter'){aiSend(this.value);this.value='';}" style="width:100%;border:none;background:transparent;padding:0;font-size:var(--text-body);outline:none;color:var(--color-foreground);">
+                    <input id="aiInput" placeholder="自分で入力（/ でコマンド）" oninput="aiSlashSync(this.value)" onblur="setTimeout(closeAiSlash,120)" onkeydown="aiInputKey(event,this)" style="width:100%;border:none;background:transparent;padding:0;font-size:var(--text-body);outline:none;color:var(--color-foreground);">
                   </div>
                   <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 8px 8px;">
                     <div class="chat-plus-wrap">
@@ -951,7 +1020,7 @@ function pickDrvFile(el){
   var was=el.classList.contains('sel');
   if(was){el.classList.remove('sel');el.style.borderColor='var(--color-border)';el.style.borderWidth='1px';el.style.background='var(--color-card)';var ck=el.querySelector('.drvchk');if(ck)ck.remove();}
   else{el.classList.add('sel');el.style.borderColor='var(--color-primary)';el.style.borderWidth='2px';el.style.background='var(--color-primary-subtle)';
-    if(!el.querySelector('.drvchk')){var s=document.createElement('span');s.className='drvchk';s.style.cssText='position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:50%;background:var(--color-primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;';s.innerHTML='<i class="ti ti-check"></i>';el.appendChild(s);}
+    if(!el.querySelector('.drvchk')){var s=document.createElement('span');s.className='drvchk';s.style.cssText='position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:50%;background:var(--color-primary);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;';s.innerHTML='<i class="ti ti-check"></i>';el.appendChild(s);}
   }
   var cnt=document.querySelectorAll('.drvfile.sel').length;
   var label=document.getElementById('drvSelCount');
@@ -1016,6 +1085,16 @@ function show(){
   else{tag.style.display="";tag.textContent="動画（素材）";}
   renderStep();renderSub();
   var cv=document.querySelector('.canvas');if(cv)cv.scrollTop=0;
+}
+/* ヘッダーのタイトルを押したら、そのフローの最初の画面に戻る。
+   承認フロー（#approval-*）は編集画面を固定で見せるための状態なので対象外。 */
+function goFlowStart(){
+  if(/^#approval/.test(location.hash)) return;
+  if(typeof SCR === 'undefined' || typeof show !== 'function') return;
+  if(i === 0) return;
+  i = 0;
+  show();
+  if(typeof toast !== 'undefined') toast('最初の画面に戻りました');
 }
 function nav(d){i=Math.max(0,Math.min(SCR.length-1,i+d));show();}
 function jump(n){i=n;show();}
@@ -1122,25 +1201,222 @@ function toggleAI(){
     col.style.display='none';exp.style.display='flex';
   }
 }
+/* 投稿文の再生成。押すたびに別の書き出しの案が出る。案は一巡したら最初に戻る */
+var capVariants=[
+  {body:'【駅徒歩5分／南向き1LDK】新着のお部屋です。日当たり良好、即入居OK。気になる方はプロフィールのリンクからお問い合わせください。',tags:'#賃貸 #お部屋探し #一人暮らし #駅近'},
+  {body:'朝の光がまっすぐ入る南向き1LDK。駅から歩いて5分、今すぐ住めます。内見のご予約はプロフィールから受付中です。',tags:'#一人暮らし #南向き #内見予約 #新着物件'},
+  {body:'「駅近で、日当たりのいい部屋」を探している方へ。徒歩5分・南向き・即入居OKの1LDKが空きました。詳しくはプロフィールをご覧ください。',tags:'#お部屋探し #駅徒歩5分 #1LDK #即入居'}
+];
+var capIdx=0;
+function regenCaption(){
+  var btn=document.getElementById('capRegenBtn');
+  var box=document.getElementById('capBox');
+  var overlay=document.createElement('div');
+  overlay.className='regen-overlay';
+  overlay.innerHTML='<div class="dot-pulse"><span></span><span></span><span></span></div><div class="regen-msg">投稿文を再生成中…</div>';
+  box.appendChild(overlay);
+  /* disable button */
+  btn.style.opacity='.5';btn.style.pointerEvents='none';
+  btn.innerHTML='<div class="dot-pulse" style="display:inline-flex;gap:4px;"><span></span><span></span><span></span></div> 生成中…';
+  setTimeout(function(){
+    overlay.remove();
+    capIdx=(capIdx+1)%capVariants.length;
+    var v=capVariants[capIdx];
+    box.innerHTML=v.body+'<br><br><span style="color:var(--color-primary);">'+v.tags+'</span>';
+    /* restore button */
+    btn.style.opacity='1';btn.style.pointerEvents='';
+    btn.innerHTML='<i class="ti ti-refresh"></i>AIで投稿文を再生成';
+    if(typeof toast!=='undefined')toast.success('投稿文を作り直しました');
+  },1500);
+}
+/* AIアシストの返信。何を見て何をしたか（steps）→ 本文（text）→ 押せる確認（approve）
+   → 次の一手（follows）の順で出す。返信を一括でドンと出すと「勝手に変えられた」に
+   見えるので、手順と確認を挟む。 */
 var aiResponses={
-  'タイトルを大きく':'タイトルを大きくしました！シーン1のテロップサイズを150%に変更。他にも調整しますか？',
-  'テンポを上げて':'シーン2と3の間のトランジションを短くして、全体を28秒に圧縮しました。',
-  '台本書き直して':'了解！台本を書き直しています…\n\n新しい台本案：\n・シーン1: インパクトのある数字から開始\n・シーン2: 室内の日当たりを見せる\n・シーン3: 水回りの清潔感\n・シーン4: CTA\n\nこれでよければ「適用」と言ってください。'
+  'タイトルを大きく':{
+    steps:['シーン1のテロップを確認','9:16での見え方を計算','プレビューに反映'],
+    text:'シーン1のテロップを150%にしました。スマホで見たとき、指で隠れない位置に収まっています。',
+    follows:['他のシーンも大きく','元に戻す']
+  },
+  'テンポを上げて':{
+    steps:['各シーンの尺を測る','間の長いところを探す','トランジションを詰める'],
+    text:'シーン2と3のつなぎを詰めて、全体を28秒から25秒にしました。冒頭の1.5秒はフックなので残しています。',
+    follows:['もっと短く（15秒）','元の長さに戻す']
+  },
+  '投稿文を改善して':{
+    steps:['今の投稿文を読む','素材の見せ場と突き合わせる','書き出しとCTAを直す'],
+    text:'投稿文タブを開いて書き直しました。書き出しを情景から入る形に変えて、CTAをプロフィール誘導に寄せています。',
+    follows:['もっとカジュアルに','ハッシュタグだけ変えて'],
+    act:aiRegenCaption
+  },
+  '投稿文を作り直して':{
+    steps:['今の投稿文を読む','素材の見せ場と突き合わせる','ハッシュタグを選び直す'],
+    text:'投稿文タブを開いて作り直しました。書き出しを情景から入る形に変えています。',
+    follows:['もっとカジュアルに','ハッシュタグだけ変えて'],
+    act:aiRegenCaption
+  },
+  'レビューして':{
+    steps:['素材と投稿文を読む','誇張表現をチェック','CTAの強さを見る'],
+    text:'AIレビュータブで結果を出しました。素材の並びは自然ですが、冒頭フックはもう少し強くできます。',
+    follows:['冒頭フックを直して','指摘を全部反映']
+  }
 };
+function aiEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function aiScroll(){var s=document.getElementById('aiStream');s.scrollTop=s.scrollHeight;}
+/* 投稿文タブを開いてキャプションを作り直す。タブの並びは画面ごとに違う（投稿文が
+   1枚目の画面もある）ので、位置ではなく見出しの文字で探す */
+function aiRegenCaption(){
+  var tabs=[].slice.call(document.querySelectorAll('.ed-xtab'));
+  for(var n=0;n<tabs.length;n++){
+    if(tabs[n].textContent.indexOf('投稿文')>-1){edTab(n,tabs[n]);break;}
+  }
+  if(typeof regenCaption==='function')regenCaption();
+}
+function toggleAiThink(el){el.closest('.ai-think').classList.toggle('open');}
 function aiSend(text){
   if(!text||!text.trim())return;
+  text=text.trim();
   var stream=document.getElementById('aiStream');
-  stream.insertAdjacentHTML('beforeend','<div class="ai-me">'+text+'</div>');
-  stream.scrollTop=stream.scrollHeight;
-  stream.insertAdjacentHTML('beforeend','<div class="ai-typing" id="aiTyping"><div class="ai-bub"><div class="dot-pulse"><span></span><span></span><span></span></div>');
-  stream.scrollTop=stream.scrollHeight;
-  var qw=stream.querySelectorAll('.ai-quick-wrap');qw.forEach(function(q){q.remove();});
-  setTimeout(function(){
-    var typing=document.getElementById('aiTyping');if(typing)typing.remove();
-    var resp=aiResponses[text]||'承知しました！「'+text+'」について対応しますね。台本を更新しました。';
-    stream.insertAdjacentHTML('beforeend','<div class="ai-msg-row"><div class="ai-bub">'+resp+'</div></div>');
-    stream.scrollTop=stream.scrollHeight;
-  },1200);
+  /* 前のターンの選択肢は消す。残すと「どれが今の話か」が分からなくなる */
+  stream.querySelectorAll('.ai-quick-wrap,.ai-follow').forEach(function(q){q.remove();});
+  stream.insertAdjacentHTML('beforeend','<div class="ai-me">'+aiEsc(text)+'</div>');
+  aiScroll();
+  var r=aiResponses[text]||{
+    steps:['指示を読む','今の台本と照らし合わせる','直すところを決める'],
+    text:'「'+text+'」で承知しました。台本を更新しています。',
+    follows:['プレビューで確認','元に戻す']
+  };
+  aiThink(stream,r);
+}
+/* Thinking：手順を1つずつ増やしていき、終わったら1行に畳む */
+function aiThink(stream,r){
+  var steps=r.steps||[];
+  var node=document.createElement('div');
+  node.className='ai-think live';
+  node.innerHTML='<span class="ai-think-hd"><i class="ti ti-sparkles"></i>考えています…</span><div class="ai-think-steps"></div>';
+  stream.appendChild(node);
+  aiScroll();
+  var list=node.querySelector('.ai-think-steps');
+  var t0=Date.now(),n=0;
+  (function next(){
+    if(n>0){
+      var prev=list.children[n-1];
+      prev.classList.remove('pending');
+      prev.querySelector('.ti').className='ti ti-check';
+    }
+    if(n>=steps.length){
+      var sec=Math.max(1,Math.round((Date.now()-t0)/1000));
+      node.classList.remove('live');
+      node.querySelector('.ai-think-hd').innerHTML=
+        '<i class="ti ti-sparkles"></i>'+sec+'秒考えました<i class="ti ti-chevron-down"></i>';
+      node.querySelector('.ai-think-hd').setAttribute('onclick','toggleAiThink(this)');
+      aiStreamText(stream,r);
+      return;
+    }
+    list.insertAdjacentHTML('beforeend','<div class="ai-think-step pending"><i class="ti ti-loader-2"></i>'+aiEsc(steps[n])+'</div>');
+    n++;aiScroll();
+    setTimeout(next,480);
+  })();
+}
+/* Streaming Text：1文字ずつ流す。流れている間だけカーソルを出す */
+function aiStreamText(stream,r){
+  var row=document.createElement('div');
+  row.className='ai-msg-row';
+  row.innerHTML='<div class="ai-bub"><span class="ai-txt"></span><span class="ai-cursor"></span></div>';
+  stream.appendChild(row);
+  var span=row.querySelector('.ai-txt'),full=r.text||'',i=0;
+  (function tick(){
+    if(i>=full.length){
+      row.querySelector('.ai-cursor').remove();
+      if(typeof r.act==='function')r.act();
+      if(r.approve)aiApprove(stream,r.approve);
+      if(r.follows&&r.follows.length)aiFollows(stream,r.follows);
+      aiScroll();
+      return;
+    }
+    i+=2;
+    span.innerHTML=aiEsc(full.slice(0,i)).replace(/\n/g,'<br>');
+    aiScroll();
+    setTimeout(tick,22);
+  })();
+}
+/* Approval Card：文章で「適用と言ってください」と頼まず、その場で押させる */
+function aiApprove(stream,a){
+  var node=document.createElement('div');
+  node.className='ai-approve';
+  node.innerHTML='<div class="ai-approve-q">'+aiEsc(a.q)+'</div>'
+    +(a.note?'<div class="ai-approve-note">'+aiEsc(a.note)+'</div>':'')
+    +'<div class="ai-approve-act"><button class="ok">'+aiEsc(a.ok)+'</button><button class="no">'+aiEsc(a.no)+'</button></div>'
+    +'<div class="ai-approve-done"><i class="ti ti-check"></i></div>';
+  stream.appendChild(node);
+  var done=node.querySelector('.ai-approve-done');
+  node.querySelector('.ok').onclick=function(){
+    node.classList.add('settled');
+    done.insertAdjacentHTML('beforeend',aiEsc(a.okMsg||'適用しました'));
+    if(typeof toast!=='undefined')toast.success(a.okMsg||'適用しました');
+  };
+  node.querySelector('.no').onclick=function(){
+    node.classList.add('settled');
+    done.style.color='var(--color-muted-foreground)';
+    done.querySelector('.ti').className='ti ti-x';
+    done.insertAdjacentHTML('beforeend','見送りました');
+  };
+  aiScroll();
+}
+/* Follow-ups：返信のあとに次の一手を置く。会話が1往復で行き止まりにならないように */
+function aiFollows(stream,list){
+  var node=document.createElement('div');
+  node.className='ai-follow';
+  node.innerHTML=list.map(function(f){
+    return '<span class="ai-qk" onclick="aiSend(this.textContent)">'+aiEsc(f)+'</span>';
+  }).join('');
+  stream.appendChild(node);
+}
+/* Prompt Bar の / コマンド。打ち切らずによく使う指示を選べる */
+var aiSlashCmds=[
+  {cmd:'/投稿文を作り直して',desc:'キャプションを再生成する'},
+  {cmd:'/テンポを上げて',desc:'全体を短くする'},
+  {cmd:'/タイトルを大きく',desc:'テロップを拡大する'},
+  {cmd:'/レビューして',desc:'AIレビューを実行する'}
+];
+var aiSlashSel=0;
+function closeAiSlash(){document.getElementById('aiSlash').classList.remove('open');}
+function aiSlashSync(v){
+  var box=document.getElementById('aiSlash');
+  if(v.charAt(0)!=='/'){closeAiSlash();return;}
+  var q=v.slice(1);
+  var hits=aiSlashCmds.filter(function(c){return c.cmd.indexOf(q,1)>-1;});
+  if(!hits.length){closeAiSlash();return;}
+  if(aiSlashSel>=hits.length)aiSlashSel=0;
+  document.getElementById('aiSlashList').innerHTML=hits.map(function(c,idx){
+    return '<div class="ai-slash-item'+(idx===aiSlashSel?' on':'')+'" onmousedown="aiSlashPick(\''+c.cmd+'\')">'
+      +'<span class="ai-slash-cmd">'+c.cmd+'</span><span class="ai-slash-desc">'+c.desc+'</span></div>';
+  }).join('');
+  box.classList.add('open');
+}
+function aiSlashPick(cmd){
+  var inp=document.getElementById('aiInput');
+  closeAiSlash();aiSlashSel=0;inp.value='';
+  aiSend(cmd.slice(1));
+}
+function aiInputKey(e,el){
+  var open=document.getElementById('aiSlash').classList.contains('open');
+  if(open){
+    var items=document.querySelectorAll('#aiSlashList .ai-slash-item');
+    if(e.key==='ArrowDown'||e.key==='ArrowUp'){
+      e.preventDefault();
+      aiSlashSel=(aiSlashSel+(e.key==='ArrowDown'?1:items.length-1))%items.length;
+      aiSlashSync(el.value);return;
+    }
+    if(e.key==='Escape'){e.preventDefault();closeAiSlash();return;}
+    if(e.key==='Enter'){
+      e.preventDefault();
+      var on=document.querySelector('#aiSlashList .ai-slash-item.on');
+      if(on)aiSlashPick(on.querySelector('.ai-slash-cmd').textContent);
+      return;
+    }
+  }
+  if(e.key==='Enter'){aiSend(el.value);el.value='';}
 }
 /* ===== Review ===== */
 function runReview(){
@@ -1365,20 +1641,9 @@ document.getElementById('doneOv').addEventListener('click', function(e){ if(e.ta
 </div>
 <div class="kariov" id="kariOv" role="dialog" aria-modal="true" aria-label="仮予約">
   <div class="karibox">
-    <div class="h"><i class="ti ti-calendar-event" style="color:var(--color-primary)"></i><span id="kariTtl">仮予約</span>
+    <div class="h"><i class="ti ti-calendar-event" style="color:var(--color-primary)"></i>予約する
       <button class="x" onclick="closeKari()" aria-label="閉じる"><i class="ti ti-x"></i></button></div>
     <div class="b">
-      <!-- どちらで押さえるかを先に選ばせる（2026-08-21） -->
-      <div class="karikind" id="kariKind">
-        <button class="on" data-k="kari" onclick="pickKariKind(this)">
-          <div class="kt"><i class="ti ti-calendar-event"></i>仮予約</div>
-          <div class="kd">日付だけ押さえます。あとから変えられます。</div>
-        </button>
-        <button data-k="hon" onclick="pickKariKind(this)">
-          <div class="kt"><i class="ti ti-check"></i>本予約</div>
-          <div class="kd">この日時で投稿します。</div>
-        </button>
-      </div>
       <div class="bcrec" style="margin:0 0 16px;">
         <i class="ti ti-sparkles"></i>
         <span class="bcrec-t">おすすめ日程</span>
@@ -1394,14 +1659,17 @@ document.getElementById('doneOv').addEventListener('click', function(e){ if(e.ta
       </div>
       <label class="kariask">
         <input type="checkbox" id="kariAsk" checked>
-        <span>あわせて<b>確認をお願いする</b>。<span id="kariAskNote">仮予約でも確認依頼は出せます（日付はあとから変えられます）。</span></span>
+        <span>あわせて<b>確認をお願いする</b>。どちらで押さえても確認依頼は出せます（日付はあとから変えられます）。</span>
       </label>
     </div>
     <div class="f">
       <button class="btn btn-ghost" onclick="clearKari()">未定に戻す</button>
       <span class="sp">
         <button class="btn btn-ghost" onclick="closeKari()">やめる</button>
-        <button class="btn btn-primary" onclick="saveKari()"><i class="ti ti-check"></i><span id="kariBtnLbl">仮予約する</span></button>
+        <!-- 種別は上で選ばせず、そのままボタンにする（2026-08-21 陽菜指定）。
+             仮予約は枠線・本予約は塗りにして、押した先で何が起きるかを一手で選べるようにする。 -->
+        <button class="btn btn-kari" onclick="saveKari('kari')"><i class="ti ti-calendar-event"></i>仮予約する</button>
+        <button class="btn btn-primary" onclick="saveKari('hon')"><i class="ti ti-check"></i>本予約する</button>
       </span>
     </div>
   </div>
@@ -1421,17 +1689,8 @@ function kariUseRec(el,d,t){
 /* 仮予約 / 本予約 の切替（2026-08-21 決定）。
    完了メッセージも状態で書き分ける ── 本予約=「予約ができました」/ 仮予約=「準備ができました」。 */
 var KARI_KIND = 'kari';
-function pickKariKind(el){
-  document.querySelectorAll('#kariKind button').forEach(function(b){ b.classList.toggle('on', b === el); });
-  KARI_KIND = el.dataset.k;
-  var hon = KARI_KIND === 'hon';
-  document.getElementById('kariTtl').textContent    = hon ? '本予約' : '仮予約';
-  document.getElementById('kariBtnLbl').textContent = hon ? '本予約する' : '仮予約する';
-  document.getElementById('kariAskNote').textContent = hon
-    ? '確認がとれてから投稿されます。'
-    : '仮予約でも確認依頼は出せます（日付はあとから変えられます）。';
-}
-function saveKari(){
+function saveKari(kind){
+  KARI_KIND = (kind === 'hon') ? 'hon' : 'kari';
   var d = document.getElementById('kariDate').value, t = document.getElementById('kariTime').value;
   if(!d || !t){ toast.error('日付と時刻を選んでください'); return; }
   var W = ['日','月','火','水','木','金','土'];

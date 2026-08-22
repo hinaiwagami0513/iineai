@@ -86,23 +86,23 @@ body {font-family:Inter, 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif;b
   --color-success: #008a24; --color-success-vivid: #00ac2f;
   --color-success-subtle: #f3fcf6;
   --color-warning: #ad6201;
-  --color-warning-border: #fea735;
+  --color-warning-border: #ffe6c4;
   --color-warning-subtle: #fff9f1;
   --color-info: #0070f0;
   --color-info-subtle: #f1f7ff;
   --color-destructive: #e90c2a;
   --color-on-destructive: #ffffff;
-  --color-destructive-subtle: #fddfe3;
+  --color-destructive-subtle: #feeef1;
   --color-like: #ef3a58;
-  --color-like-subtle: #fddfe3;
+  --color-like-subtle: #feeef1;
   --color-accent-purple: #9724ba;
   --color-accent-purple-subtle: #f5e7f8;
   --color-sns-instagram: #b02a78;
   --color-sns-instagram-subtle: #fce7f3;
   --color-sns-x: #2a2826;
-  --color-sns-x-subtle: #f2efeb;
-  --color-sns-tiktok: #0e7490;
-  --color-sns-tiktok-subtle: #e0f7fa;
+  --color-sns-x-subtle: #fcf5ef;
+  --color-sns-tiktok: #854f0b;
+  --color-sns-tiktok-subtle: #fef3c7;
   --color-sns-youtube: #c4302b;
   --color-sns-youtube-subtle: #fcebeb;
 
@@ -111,8 +111,8 @@ body {font-family:Inter, 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif;b
   --text-h3: 1rem;
   --text-body: 0.875rem;
   --text-body-strong: 0.875rem;
-  --text-label: 0.75rem;
-  --text-meta: 0.625rem;
+  --text-label: 0.875rem;
+  --text-meta: 0.875rem;
 
   --font-weight-display: 900;
   --font-weight-h1: 900;
@@ -206,7 +206,8 @@ body {font-family:Inter, 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif;b
 
 /* ===== TAB NAV ===== */
 /* tab nav (underline) */
-.tab-nav{display:flex;gap:0;padding:0 32px;border-bottom:1px solid var(--color-border);background:var(--color-card);overflow-x:auto;}
+/* 背景は敷かない。ページ背景の上に白帯が乗るとタブが別のカードに見える */
+.tab-nav{display:flex;gap:0;padding:0 32px;border-bottom:1px solid var(--color-border);overflow-x:auto;}
 .tab-nav::-webkit-scrollbar{display:none;}
 .tab-nav a{padding:12px 16px;font-size:var(--text-body);font-weight:var(--font-weight-label);color:var(--color-muted-foreground);text-decoration:none;border-bottom:2px solid transparent;cursor:pointer;transition:color .15s,border-color .15s;white-space:nowrap;}
 .tab-nav a:hover{color:var(--color-foreground);}
@@ -314,6 +315,59 @@ body {font-family:Inter, 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif;b
 .hdbtn{position:relative;width:38px;height:38px;flex:none;border:1px solid var(--color-border-strong,#ddd0c4);background:var(--color-card,#fff);color:var(--color-foreground,#2a2826);border-radius:var(--radius-full,9999px);display:flex;align-items:center;justify-content:center;font-size:19px;cursor:pointer;padding:0;text-decoration:none;}
 .hdbtn:hover{border-color:var(--color-primary,#fe7235);color:var(--color-primary,#fe7235);}
 .hdbadge{position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;padding:0 5px;border-radius:var(--radius-full,9999px);background:var(--color-primary,#fe7235);color:#fff;font-size:var(--text-meta,.625rem);font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid var(--color-card,#fff);}
+
+/* ===== 分析ページのシェル組み直し =====
+   ヘッダー（.topbar）が全幅で最上部に置かれ、サイドバーの上に乗っていた。
+   他のページ（shell_header_sidebar / post_list / drive / calendar）と同じ
+   「サイドバーの右にヘッダー」の形に揃える。
+   markup は触らず、中間のラッパー（.app-inner / .main-row）を display:contents で
+   透過させて、.app のグリッドに topbar / サイドバー / content を直接並べている。
+   サイドバーのクラス名はページによって .sidebar と .sb の2種類がある。 */
+.app{
+  display:grid;
+  grid-template-columns:235px minmax(0,1fr);
+  grid-template-rows:auto minmax(0,1fr);
+  background:var(--color-background);
+  padding:10px;
+  gap:10px;
+  /* 正シェルと同じ。app が画面を埋めて、中身は .content の中でスクロールさせる */
+  height:100vh;
+  overflow:hidden;
+}
+.app-inner,.main-row{display:contents;}
+.sidebar,.main-row > .sb{grid-column:1;grid-row:1 / span 2;}
+.topbar{grid-column:2;grid-row:1;}
+.content{grid-column:2;grid-row:2;min-height:0;overflow-y:auto;}
+/* 生成りの地に浮いた3枚のカードとして置く（他ページと同じ扱い） */
+.sidebar,.main-row > .sb{border-right:none;border-radius:var(--radius-xl);overflow-y:auto;}
+.topbar{border-bottom:none;border-radius:var(--radius-xl);background:var(--color-card);
+  box-shadow:var(--shadow-card);padding:0 22px;}
+.content{border-radius:var(--radius-xl);background:var(--color-card);
+  box-shadow:var(--shadow-card);}
+/* ===== サイドバーの文字を白に =====
+   オレンジ地に白なので、hover / 選択中は面の濃さだけで見分けさせる
+   （10% / 22%）。縁は付けない。他ページの .sb と同じ値に合わせている。 */
+.sidebar{background:linear-gradient(180deg,#fe7235 0%,#e85513 55%,#d54101 100%);}
+.sidebar .sb-cta{background:#fff;color:#d54101;}
+.sidebar .sb-cta:hover{filter:brightness(.96);}
+.sidebar .sb-btn{color:rgba(255,255,255,.88);text-decoration:none;}
+.sidebar .sb-btn .ti{color:rgba(255,255,255,.88);}
+.sidebar .sb-btn:hover{background:rgba(255,255,255,.10);color:#fff;}
+.sidebar .sb-btn:hover .ti{color:#fff;}
+.sidebar .sb-btn.active,.sidebar .sb-btn.on{background:rgba(255,255,255,.22);color:#fff;}
+.sidebar .sb-btn.active .ti,.sidebar .sb-btn.on .ti{color:#fff;}
+.sidebar .sb-btn .sb-cv{color:rgba(255,255,255,.7);}
+.sidebar .sb-div{background:rgba(255,255,255,.22);}
+.sidebar .sb-sub a{color:rgba(255,255,255,.8);text-decoration:none;}
+.sidebar .sb-sub a:hover{background:rgba(255,255,255,.10);color:#fff;}
+.sidebar .sb-acct{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.30);}
+.sidebar .sb-acct div{color:#fff;}
+.sidebar .sb-acct .avatar{background:#fff;color:#d54101;}
+/* .sb 系（analysis_posts）はオレンジ化済み。下線だけ外す */
+.main-row > .sb a{text-decoration:none;}
+/* .content を高さ固定のグリッド項目にしたぶん、縦並びの子に flex-shrink が効く。
+   タブ帯は縮ませない（analysis_posts で 23px → 1px に潰れていた） */
+.content > .tab-nav{flex:none;}
 </style>
 <!-- SP対応（上部バー型）。インラインCSSの後に置く（@media は詳細度を上げないので後勝ちにする） -->
 <link rel="stylesheet" href="./topbar-sp.css">

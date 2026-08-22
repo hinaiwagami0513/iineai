@@ -82,26 +82,26 @@
   --color-ring: #fe7235;
   --color-success: #008a24; --color-success-vivid: #00ac2f;
   --color-success-subtle: #f3fcf6;
-  --color-success-border: #a3d9a0;
+  --color-success-border: #cff4dc;
   --color-warning: #ad6201;
-  --color-warning-border: #fea735;
+  --color-warning-border: #ffe6c4;
   --color-warning-subtle: #fff9f1;
   --color-info: #0070f0;
   --color-info-subtle: #f1f7ff;
   --color-destructive: #e90c2a;
   --color-on-destructive: #ffffff;
-  --color-destructive-subtle: #fddfe3;
+  --color-destructive-subtle: #feeef1;
   --color-destructive-border: #fca5a5;
   --color-like: #ef3a58;
-  --color-like-subtle: #fddfe3;
+  --color-like-subtle: #feeef1;
   --color-accent-purple: #9724ba;
   --color-accent-purple-subtle: #f5e7f8;
   --color-sns-instagram: #b02a78;
   --color-sns-instagram-subtle: #fce7f3;
   --color-sns-x: #2a2826;
-  --color-sns-x-subtle: #f2efeb;
-  --color-sns-tiktok: #0e7490;
-  --color-sns-tiktok-subtle: #e0f7fa;
+  --color-sns-x-subtle: #fcf5ef;
+  --color-sns-tiktok: #854f0b;
+  --color-sns-tiktok-subtle: #fef3c7;
   --color-sns-youtube: #c4302b;
   --color-sns-youtube-subtle: #fcebeb;
 
@@ -111,8 +111,8 @@
   --text-h3: 1rem;
   --text-body: 0.875rem;
   --text-body-strong: 0.875rem;
-  --text-label: 0.75rem;
-  --text-meta: 0.625rem;
+  --text-label: 0.875rem;
+  --text-meta: 0.875rem;
 
   --font-weight-display: 900;
   --font-weight-h1: 900;
@@ -438,6 +438,28 @@ body {
   border-color: var(--color-primary);
 }
 
+/* カスタム期間の日付入力。既定は隠しておき、カスタム期間を選んだときだけ出す */
+.period-custom {
+  display: none;
+  align-items: center;
+  gap: 6px;
+}
+.period-custom.on { display: flex; }
+.period-custom input[type="date"] {
+  padding: 6px 9px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-card);
+  font-family: inherit;
+  font-size: var(--text-label);
+  color: var(--color-foreground);
+}
+.period-custom input[type="date"]:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+.period-tilde { font-size: var(--text-label); color: var(--color-muted-foreground); }
+
 .period-spacer { flex: 1; }
 
 .period-label {
@@ -603,7 +625,7 @@ body {
   font-size: var(--text-label);
   font-weight: var(--font-weight-body-strong);
 }
-.mc-badge .ti { font-size: 12px; }
+.mc-badge .ti { font-size:14px; }
 .mc-badge.up { background: var(--color-success-subtle); color: var(--color-success); }
 .mc-badge.down { background: var(--color-destructive-subtle); color: var(--color-destructive); }
 .mc-badge.neutral { background: var(--color-background); color: var(--color-muted-foreground); }
@@ -905,6 +927,59 @@ body {
 .hdbtn{position:relative;width:38px;height:38px;flex:none;border:1px solid var(--color-border-strong,#ddd0c4);background:var(--color-card,#fff);color:var(--color-foreground,#2a2826);border-radius:var(--radius-full,9999px);display:flex;align-items:center;justify-content:center;font-size:19px;cursor:pointer;padding:0;text-decoration:none;}
 .hdbtn:hover{border-color:var(--color-primary,#fe7235);color:var(--color-primary,#fe7235);}
 .hdbadge{position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;padding:0 5px;border-radius:var(--radius-full,9999px);background:var(--color-primary,#fe7235);color:#fff;font-size:var(--text-meta,.625rem);font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid var(--color-card,#fff);}
+
+/* ===== 分析ページのシェル組み直し =====
+   ヘッダー（.topbar）が全幅で最上部に置かれ、サイドバーの上に乗っていた。
+   他のページ（shell_header_sidebar / post_list / drive / calendar）と同じ
+   「サイドバーの右にヘッダー」の形に揃える。
+   markup は触らず、中間のラッパー（.app-inner / .main-row）を display:contents で
+   透過させて、.app のグリッドに topbar / サイドバー / content を直接並べている。
+   サイドバーのクラス名はページによって .sidebar と .sb の2種類がある。 */
+.app{
+  display:grid;
+  grid-template-columns:235px minmax(0,1fr);
+  grid-template-rows:auto minmax(0,1fr);
+  background:var(--color-background);
+  padding:10px;
+  gap:10px;
+  /* 正シェルと同じ。app が画面を埋めて、中身は .content の中でスクロールさせる */
+  height:100vh;
+  overflow:hidden;
+}
+.app-inner,.main-row{display:contents;}
+.sidebar,.main-row > .sb{grid-column:1;grid-row:1 / span 2;}
+.topbar{grid-column:2;grid-row:1;}
+.content{grid-column:2;grid-row:2;min-height:0;overflow-y:auto;}
+/* 生成りの地に浮いた3枚のカードとして置く（他ページと同じ扱い） */
+.sidebar,.main-row > .sb{border-right:none;border-radius:var(--radius-xl);overflow-y:auto;}
+.topbar{border-bottom:none;border-radius:var(--radius-xl);background:var(--color-card);
+  box-shadow:var(--shadow-card);padding:0 22px;}
+.content{border-radius:var(--radius-xl);background:var(--color-card);
+  box-shadow:var(--shadow-card);}
+/* ===== サイドバーの文字を白に =====
+   オレンジ地に白なので、hover / 選択中は面の濃さだけで見分けさせる
+   （10% / 22%）。縁は付けない。他ページの .sb と同じ値に合わせている。 */
+.sidebar{background:linear-gradient(180deg,#fe7235 0%,#e85513 55%,#d54101 100%);}
+.sidebar .sb-cta{background:#fff;color:#d54101;}
+.sidebar .sb-cta:hover{filter:brightness(.96);}
+.sidebar .sb-btn{color:rgba(255,255,255,.88);text-decoration:none;}
+.sidebar .sb-btn .ti{color:rgba(255,255,255,.88);}
+.sidebar .sb-btn:hover{background:rgba(255,255,255,.10);color:#fff;}
+.sidebar .sb-btn:hover .ti{color:#fff;}
+.sidebar .sb-btn.active,.sidebar .sb-btn.on{background:rgba(255,255,255,.22);color:#fff;}
+.sidebar .sb-btn.active .ti,.sidebar .sb-btn.on .ti{color:#fff;}
+.sidebar .sb-btn .sb-cv{color:rgba(255,255,255,.7);}
+.sidebar .sb-div{background:rgba(255,255,255,.22);}
+.sidebar .sb-sub a{color:rgba(255,255,255,.8);text-decoration:none;}
+.sidebar .sb-sub a:hover{background:rgba(255,255,255,.10);color:#fff;}
+.sidebar .sb-acct{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.30);}
+.sidebar .sb-acct div{color:#fff;}
+.sidebar .sb-acct .avatar{background:#fff;color:#d54101;}
+/* .sb 系（analysis_posts）はオレンジ化済み。下線だけ外す */
+.main-row > .sb a{text-decoration:none;}
+/* .content を高さ固定のグリッド項目にしたぶん、縦並びの子に flex-shrink が効く。
+   タブ帯は縮ませない（analysis_posts で 23px → 1px に潰れていた） */
+.content > .tab-nav{flex:none;}
 </style>
 <!-- SP対応（上部バー型）。インラインCSSの後に置く（@media は詳細度を上げないので後勝ちにする） -->
 <link rel="stylesheet" href="./topbar-sp.css">
@@ -1029,13 +1104,20 @@ body {
       <!-- Period toggle row -->
       <div class="period-row">
         <div class="period-pills">
-          <div class="period-pill active">導入効果</div>
-          <div class="period-pill">カスタム期間</div>
+          <div class="period-pill active" onclick="pickPeriod(this,'preset')">導入効果</div>
+          <div class="period-pill" onclick="pickPeriod(this,'custom')">カスタム期間</div>
+        </div>
+        <!-- カスタム期間を選んだときだけ出す。比べる相手（導入前の1ヶ月）は動かさず、
+             「いつと比べるか」だけを選ばせる -->
+        <div class="period-custom" id="periodCustom">
+          <input type="date" id="periodFrom" value="2026-07-01" onchange="applyPeriod()">
+          <span class="period-tilde">〜</span>
+          <input type="date" id="periodTo" value="2026-07-31" onchange="applyPeriod()">
         </div>
         <div class="period-spacer"></div>
         <div class="period-label">
           いいねAI導入前の1ヶ月 VS
-          <span class="period-badge">直近1ヶ月</span>
+          <span class="period-badge" id="periodBadge">直近1ヶ月</span>
         </div>
         <div class="export-btn">
           <i class="ti ti-download"></i>
@@ -1189,6 +1271,36 @@ function sbNavToggle(el){
   if(!sub || !sub.classList.contains('sb-sub')) return;
   sub.classList.toggle('open');
   el.classList.toggle('exp');
+}
+
+/* ===== 期間の切替 =====
+   「導入効果」と「カスタム期間」が押しても何も起きない飾りだった。
+   比べる相手（いいねAI導入前の1ヶ月）は動かさず、「いつと比べるか」だけを選ばせる。 */
+function pickPeriod(el, mode){
+  document.querySelectorAll('.period-pill').forEach(function(p){ p.classList.remove('active'); });
+  el.classList.add('active');
+  var box = document.getElementById('periodCustom');
+  box.classList.toggle('on', mode === 'custom');
+  if(mode === 'custom'){ applyPeriod(); }
+  else {
+    document.getElementById('periodBadge').textContent = '直近1ヶ月';
+    if(typeof toast !== 'undefined') toast('直近1ヶ月と比べています');
+  }
+}
+/* 選んだ期間をバッジに出す。日付は M/D で短く出す（帯が1行に収まらなくなるため） */
+function applyPeriod(){
+  var f = document.getElementById('periodFrom').value;
+  var t = document.getElementById('periodTo').value;
+  var badge = document.getElementById('periodBadge');
+  if(!f || !t){ badge.textContent = '期間を選んでください'; return; }
+  if(f > t){
+    /* 逆に入れたら黙って直さず、選び直させる。勝手に入れ替えると何が起きたか分からない */
+    badge.textContent = '開始が終了より後です';
+    if(typeof toast !== 'undefined') toast.error('開始日を終了日より前にしてください');
+    return;
+  }
+  var md = function(s){ var p = s.split('-'); return (+p[1]) + '/' + (+p[2]); };
+  badge.textContent = md(f) + '〜' + md(t);
 }
 </script>
 </body>

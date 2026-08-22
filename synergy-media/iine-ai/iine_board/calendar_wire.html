@@ -57,20 +57,20 @@
   --color-success: #008a24; --color-success-vivid: #00ac2f;
   --color-success-subtle: #f3fcf6;
   --color-warning: #ad6201;
-  --color-warning-border: #fea735;
+  --color-warning-border: #ffe6c4;
   --color-warning-subtle: #fff9f1;
   --color-info: #0070f0;
   --color-info-subtle: #f1f7ff;
   --color-destructive: #e90c2a;
-  --color-destructive-subtle: #fddfe3;
+  --color-destructive-subtle: #feeef1;
   --color-accent-purple: #9724ba;
   --color-accent-purple-subtle: #f5e7f8;
   --color-sns-instagram: #b02a78;
   --color-sns-instagram-subtle: #fce7f3;
   --color-sns-x: #2a2826;
-  --color-sns-x-subtle: #f2efeb;
-  --color-sns-tiktok: #0e7490;
-  --color-sns-tiktok-subtle: #e0f7fa;
+  --color-sns-x-subtle: #fcf5ef;
+  --color-sns-tiktok: #854f0b;
+  --color-sns-tiktok-subtle: #fef3c7;
   --color-sns-youtube: #c4302b;
   --color-sns-youtube-subtle: #fcebeb;
   --font-body: Inter, "Noto Sans JP";
@@ -79,8 +79,8 @@
   --text-h3: 1rem;
   --text-body-lg: 1rem;
   --text-body: 0.875rem;
-  --text-label: 0.75rem;
-  --text-meta: 0.625rem;
+  --text-label: 0.875rem;
+  --text-meta: 0.875rem;
   --font-weight-h1: 700;
   --font-weight-h2: 700;
   --font-weight-h3: 700;
@@ -218,7 +218,7 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .d.sun .dn{color:var(--color-destructive);} .d.sat .dn{color:var(--color-info);}
 .d.today .dn{background:var(--color-primary);color:#fff;border-radius:var(--radius-full);width:24px;height:24px;line-height:24px;margin:0 auto 4px;padding:0;}
 /* 空いている日にはホバーで＋を出す。押した日で予約する導線 */
-.d .add{position:absolute;top:5px;right:5px;width:20px;height:20px;border:none;background:var(--color-primary-subtle);color:var(--color-primary);border-radius:var(--radius-sm);font-size:13px;cursor:pointer;display:none;align-items:center;justify-content:center;}
+.d .add{position:absolute;top:5px;right:5px;width:20px;height:20px;border:none;background:var(--color-primary-subtle);color:var(--color-primary);border-radius:var(--radius-sm);font-size:14px;cursor:pointer;display:none;align-items:center;justify-content:center;}
 .d:hover .add{display:flex;}
 /* 予定は掴んで動かせる。掴めることは、指の形（grab）で伝える */
 .ev{display:flex;min-width:0;align-items:center;gap:4px;border-radius:var(--radius-sm);padding:3px 6px;margin-bottom:3px;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);line-height:1.5;cursor:grab;}

@@ -44,19 +44,20 @@ colors:
   destructive: "#e90c2a"     # 削除・危険
   on-destructive: "#ffffff"
   destructive-subtle: "#feeef1" # エラー背景
+  destructive-border: "#ffd0d8" # エラー面と対で使う枠。他の border と輝度0.71/彩度差0.18で揃えた
   like: "#ef3a58"            # いいね・好調エンゲージメント
   like-subtle: "#feeef1"
   # --- IG アクセント紫 ---
   accent-purple: "#9724ba"
   accent-purple-subtle: "#f5e7f8"
   # --- Chart（データ可視化専用。shadcn Chart の --chart-N に対応） ---
-  # secondary(#0077ff) を軸にした濃紺→シアンの単一色相ランプ（2026-08-21にオレンジから変更）。
+  # primary(#fe7235) を軸にしたオレンジの単一色相ランプ（陽菜指定で 8/22 にオレンジへ再確定）。
   # 1つの量の内訳を「多い順＝濃い順」で見せる。系列ごとに違う色相を割り当てない。
-  chart-1: "#0058c4"          # 最大の系列
-  chart-2: "#0077ff"          # = secondary
-  chart-3: "#00a0ff"
-  chart-4: "#00c3ff"          # = secondary-light
-  chart-5: "#8fe4ff"          # 最小の系列
+  chart-1: "#fe7235"    # = primary。最大の系列
+  chart-2: "#fea735"    # = primary-light
+  chart-3: "#ffc276"    # primary-light と primary-border の輝度中間
+  chart-4: "#ffd6c4"    # = primary-border
+  chart-5: "#fff5f1"    # = primary-subtle。最小の系列
   # --- SNS ブランド（バッジ専用。色は必ず Tabler アイコンとセットで使う） ---
   sns-instagram: "#b02a78"
   sns-instagram-subtle: "#fce7f3"
@@ -386,6 +387,19 @@ components:
 
 ## Typography
 
+### 文字サイズの下限（2026-08-21 決定）
+
+**14px より小さい文字を置かない。** バッジ・チップ・履歴・補助ラベルまで含めて例外なし。
+ターゲットは40〜50代の未経験者（[[target-first]]）で、10〜12px は「読めるが読まない」サイズになる。
+
+- `--text-meta` **10px → 14px**、`--text-label` **12px → 14px** に引き上げた（旧値には戻さない）。
+- **14px で使うときは太字**（`--font-weight-body-strong`）にする。下限のサイズは字面が弱くなるので、
+  重さで補う。本文（`--text-body` も14px）は通常ウェイトのままでよい ── 下限で使う
+  **ラベル・バッジ類**が対象。
+- 直書きの `font-size:10px`〜`13px` も禁止。既存分は 14px に寄せ済み（449箇所）。
+- 引き上げでバッジが大きくなるぶん、`padding` を詰めて高さを吸収する。文字を小さく戻さない。
+
+
 フォントは **`Inter` + `Noto Sans JP` の2段**（フォールバック: Hiragino Sans, Meiryo, sans-serif）。
 2026-08-21 に `Noto Sans JP` 単独からこの組に変更した。
 
@@ -412,7 +426,8 @@ font-family: var(--font-body), 'Hiragino Sans', 'Meiryo', sans-serif;
 - サイズスケールは実測ベースの偶数刻み: display 36 / h1 30 / h2 20 / h3・body-lg 16 / body 14 / label 12 / meta 10。
   中間サイズ（13/15/18/22/28 等）や 8px を手打ちしない。
 - 階層は主にウェイトと余白で作る（サイズ段は少なめに保つ）。
-- `meta`(10px) は実装で最多使用だが小さい。密なメタ情報以外には使わず、可読性が要る箇所は `label`(12px) 以上に。
+- `meta` / `label` はどちらも **14px**（2026-08-21 に下限を引き上げ。旧 10px / 12px は使わない）。
+  サイズで差が付かないぶん、`meta` は太字・`label` は通常ウェイトで区別する。
 
 ## Writing（UIの文言）
 
@@ -516,7 +531,7 @@ shadcn/ui のコンポーネントを土台にし、上のトークンでテー�
   - **マスク** = `rgba(0,0,0,.45)`。クリックで閉じる。**Esc でも閉じる**。開いたら取り消し側にフォーカスを置く。
   - **タイトル** = `h3`(16px)/`weight 700`。`destructive` のときは頭に警告アイコン（色 + 形のセット。色だけで表さない）。
   - **説明** = `body`(14px) / `muted-foreground`。1〜2行に収める。
-  - **points**（任意）= 「何が起きるか」の箇条書き。`surface` 面 + `border` + `rounded.md` + `label`(12px)。
+  - **points**（任意）= 「何が起きるか」の箇条書き。`surface` 面 + `border` + `rounded.md` + `label`(14px)。
     ⚠️ これが無いと各画面が独自の詳細ブロックを作り始める（`.cfbox` 再発明の原因だった）。
   - **ボタン** = 右寄せ2つ。高さ44・`rounded.md`・`body-strong`。取り消しは ghost（`border` 枠）。
     実行は `destructive` なら赤塗り、そうでなければ **`primary`（オレンジ）**。ほぼ黒のCTAは使わない。
@@ -536,6 +551,20 @@ shadcn/ui のコンポーネントを土台にし、上のトークンでテー�
   「編集できる」を示唆。クリックでその場が input に切り替わり、`primary` 枠 + `primary-subtle` 背景（input-focus と同じ）。
   Enter or blur で確定。**モーダルや別画面に飛ばさない**＝ステップ最小のインライン編集が標準。
 - **card**: 白面 + `border` + `rounded.lg` + card 影。
+- **アイコン**: すべて Tabler。**Tabler に無い形を自作しない。**
+  ただしワイヤーHTMLに埋め込んでいるのは Tabler の**サブセット**フォントなので、Tabler には在るのに
+  グリフが入っていない字がある（`ti-script`＝台本の巻物、`ti-user`＝人 など）。
+  その場合は **Tabler 本体と同じ描き味のインライン SVG で入れる**（24グリッド・`stroke-width:2`・round cap・
+  `stroke="currentColor"` で親の `color` に追従）。フォント側を差し替えない（巨大な base64 の打ち替えになる）。
+  同じ字を3個以上並べるときは `<symbol>` + `<use>` にする（10個ぶん SVG を書くと読めなくなる）。
+- **選択カードのアイコン（`.method .mi`）**: **64px の丸ベタ + アイコン 32px**（`padding:16px`）。
+  - **選択中** = `primary(#fe7235)` 塗り + **白アイコン**。白は 2.7:1 だが 32px は大字側なので
+    §コントラスト注意の「想定内の1件」と同じ扱い。`primary-deep(#d54101)` には落とさない（重くなる）。
+  - **未選択** = `border(#efe7df)` 塗り + `muted-foreground(#757575)` アイコン（3.75:1）。
+    **未選択をグレーのベタ塗り + 白アイコンにしない**（`muted-foreground` 地は濃すぎて未選択が主役になる）。
+  丸サイズはカードの大小に関わらず 64px で統一（ファイル間で径を変えない）。
+  アイコンの `font-size` / `margin` はインライン style で上書きしない（丸チップが崩れる）。
+  参考実装: `flow_video_script_wire.html`。
 - **badge（状態）**: `success/warning/info/like` の subtle 背景 + solid 文字。形は full。
 - **badge（SNS）**: 媒体色 subtle 背景 + 媒体色文字 + **Tabler ブランドアイコン必須**（絵文字は使わない）。
 - **alert（キツネアラート）**: 据え置きの通知・注意・結果は緑/黄/赤の3変種だけ。§Alert（キツネアラート）参照。
@@ -608,7 +637,7 @@ shadcn/ui のコンポーネントを土台にし、上のトークンでテー�
 - 吹き出しの**外**に出していいのは、キツネと右端のボタン（`.sp`）と閉じるボタン（`.x`）だけ。
   本文・ラベルは必ず吹き出しの中に置く。
 
-**英字ラベル（`.lb`）は次の6語だけ。** 何の話なのかを一目で示す `meta`(10px) の一言。
+**英字ラベル（`.lb`）は次の6語だけ。** 何の話なのかを一目で示す `meta`(14px 太字) の一言。
 しっぽは吹き出し本体が持つので、**ラベルはしっぽなしの無地ピル**にとどめる（吹き出しの中に
 もう1つ吹き出しを作らない）。
 

@@ -49,23 +49,23 @@
   --color-success: #008a24; --color-success-vivid: #00ac2f;
   --color-success-subtle: #f3fcf6;
   --color-warning: #ad6201;
-  --color-warning-border: #fea735;
+  --color-warning-border: #ffe6c4;
   --color-warning-subtle: #fff9f1;
   --color-info: #0070f0;
   --color-info-subtle: #f1f7ff;
   --color-destructive: #e90c2a;
   --color-on-destructive: #ffffff;
-  --color-destructive-subtle: #fddfe3;
+  --color-destructive-subtle: #feeef1;
   --color-like: #ef3a58;
-  --color-like-subtle: #fddfe3;
+  --color-like-subtle: #feeef1;
   --color-accent-purple: #9724ba;
   --color-accent-purple-subtle: #f5e7f8;
   --color-sns-instagram: #b02a78;
   --color-sns-instagram-subtle: #fce7f3;
   --color-sns-x: #2a2826;
-  --color-sns-x-subtle: #f2efeb;
-  --color-sns-tiktok: #0e7490;
-  --color-sns-tiktok-subtle: #e0f7fa;
+  --color-sns-x-subtle: #fcf5ef;
+  --color-sns-tiktok: #854f0b;
+  --color-sns-tiktok-subtle: #fef3c7;
   --color-sns-youtube: #c4302b;
   --color-sns-youtube-subtle: #fcebeb;
   --color-editor-bg: #1e1a17;
@@ -91,8 +91,8 @@
   --text-body-lg: 1rem;
   --text-body: 0.875rem;
   --text-body-strong: 0.875rem;
-  --text-label: 0.75rem;
-  --text-meta: 0.625rem;
+  --text-label: 0.875rem;
+  --text-meta: 0.875rem;
   --font-weight-display: 900;
   --font-weight-h1: 900;
   --font-weight-h2: 700;
@@ -230,6 +230,18 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 @media(max-width:600px){
   .stepbar{overflow-x:auto;flex-wrap:nowrap;padding:10px 16px;gap:4px;max-width:100%;justify-content:flex-start;}
 }
+/* 生成中オーバーレイ。他の wire と同じ見た目にそろえている */
+@keyframes pulse{0%,80%,100%{opacity:.3;transform:scale(.8);}40%{opacity:1;transform:scale(1);}}
+.regen-overlay{position:absolute;inset:0;background:rgba(255,255,255,.85);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;z-index:2;border-radius:var(--radius-lg);}
+.regen-overlay .dot-pulse{display:flex;gap:4px;}
+.regen-overlay .dot-pulse span{width:8px;height:8px;border-radius:50%;background:var(--color-primary);animation:pulse 1.2s infinite;}
+.regen-overlay .dot-pulse span:nth-child(2){animation-delay:.2s;}
+.regen-overlay .dot-pulse span:nth-child(3){animation-delay:.4s;}
+.regen-overlay .regen-msg{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);color:var(--color-foreground);}
+.dot-pulse{display:inline-flex;gap:4px;}
+.dot-pulse span{width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulse 1.2s infinite;}
+.dot-pulse span:nth-child(2){animation-delay:.2s;}
+.dot-pulse span:nth-child(3){animation-delay:.4s;}
 </style>
 <!-- SP対応（上部バー型）。インラインCSSの後に置く（@media は詳細度を上げないので後勝ちにする） -->
 <link rel="stylesheet" href="./topbar-sp.css">
@@ -293,14 +305,14 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
           <!-- 投稿文 -->
           <div id="tab-caption" style="display:none">
             <div class="fl">投稿文（キャプション）</div>
-            <textarea class="captext">駅徒歩5分の南向き1LDK、新着です。日当たり良好・即入居OK。気になる方はプロフィールからお問い合わせください。
+            <div class="capwrap" style="position:relative;"><textarea id="capText" class="captext">駅徒歩5分の南向き1LDK、新着です。日当たり良好・即入居OK。気になる方はプロフィールからお問い合わせください。
 
-#賃貸 #お部屋探し #一人暮らし #駅近</textarea>
-            <button class="regenbtn"><i class="ti ti-refresh"></i>AIで投稿文を再生成</button>
+#賃貸 #お部屋探し #一人暮らし #駅近</textarea></div>
+            <button id="capRegenBtn" class="regenbtn" onclick="regenCaption()"><i class="ti ti-refresh"></i>AIで投稿文を再生成</button>
           </div>
           <!-- AIレビュー -->
           <div id="tab-review" style="display:none">
-            <div class="revrun"><button class="revrunbtn grad"><i class="ti ti-wand"></i>AIレビューを実行</button><span class="revchip"><i class="ti ti-clock" style="font-size:11px"></i> 最終 3分前</span></div>
+            <div class="revrun"><button class="revrunbtn grad"><i class="ti ti-wand"></i>AIレビューを実行</button><span class="revchip"><i class="ti ti-clock" style="font-size:14px"></i> 最終 3分前</span></div>
             <div class="revcard high"><div class="rt">1枚目に情報を詰めすぎ<span class="badge">要改善</span></div><div class="rd">保存はされやすいが、パッと見の訴求が弱まる。キャッチは1つに絞るのがおすすめ。</div></div>
             <div class="revcard mid"><div class="rt">ハッシュタグを追加できる<span class="badge">提案</span></div><div class="rd">#南向き #ペット可 を足すと検索流入が伸びやすい。</div></div>
             <div class="revcard low"><div class="rt">CTAは明確でGood<span class="badge">良い点</span></div><div class="rd">「プロフから問い合わせ」の導線がはっきりしている。</div></div>
@@ -346,6 +358,36 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
   </div>
 </div>
 <script>
+/* 投稿文の再生成。ボタンに onclick が無く、押しても何も起きなかった。
+   ここは textarea なので innerHTML ではなく value を書き換える。
+   押すたびに別の書き出しの案が出て、一巡したら最初に戻る */
+var capVariants=[
+  '駅徒歩5分の南向き1LDK、新着です。日当たり良好・即入居OK。気になる方はプロフィールからお問い合わせください。\n\n#賃貸 #お部屋探し #一人暮らし #駅近',
+  '朝の光がまっすぐ入る南向き1LDK。駅から歩いて5分、今すぐ住めます。内見のご予約はプロフィールから受付中です。\n\n#一人暮らし #南向き #内見予約 #新着物件',
+  '「駅近で、日当たりのいい部屋」を探している方へ。徒歩5分・南向き・即入居OKの1LDKが空きました。詳しくはプロフィールをご覧ください。\n\n#お部屋探し #駅徒歩5分 #1LDK #即入居'
+];
+var capIdx=0;
+function regenCaption(){
+  var btn=document.getElementById('capRegenBtn');
+  var ta=document.getElementById('capText');
+  var wrap=ta.parentElement;
+  var overlay=document.createElement('div');
+  overlay.className='regen-overlay';
+  overlay.innerHTML='<div class="dot-pulse"><span></span><span></span><span></span></div><div class="regen-msg">投稿文を再生成中…</div>';
+  wrap.appendChild(overlay);
+  ta.readOnly=true;
+  btn.style.opacity='.5';btn.style.pointerEvents='none';
+  btn.innerHTML='<div class="dot-pulse" style="display:inline-flex;gap:4px;"><span></span><span></span><span></span></div> 生成中…';
+  setTimeout(function(){
+    overlay.remove();
+    ta.readOnly=false;
+    capIdx=(capIdx+1)%capVariants.length;
+    ta.value=capVariants[capIdx];
+    btn.style.opacity='1';btn.style.pointerEvents='';
+    btn.innerHTML='<i class="ti ti-refresh"></i>AIで投稿文を再生成';
+    if(typeof toast!=='undefined')toast.success('投稿文を作り直しました');
+  },1500);
+}
 // 台本タイプで項目が丸ごと変わる（★最重要仕様）
 var SCRIPTS={
   photo:{count:'5項目',items:[

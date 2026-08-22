@@ -78,23 +78,23 @@
   --color-success: #008a24; --color-success-vivid: #00ac2f;
   --color-success-subtle: #f3fcf6;
   --color-warning: #ad6201;
-  --color-warning-border: #fea735;
+  --color-warning-border: #ffe6c4;
   --color-warning-subtle: #fff9f1;
   --color-info: #0070f0;
   --color-info-subtle: #f1f7ff;
   --color-destructive: #e90c2a;
   --color-on-destructive: #ffffff;
-  --color-destructive-subtle: #fddfe3;
+  --color-destructive-subtle: #feeef1;
   --color-like: #ef3a58;
-  --color-like-subtle: #fddfe3;
+  --color-like-subtle: #feeef1;
   --color-accent-purple: #9724ba;
   --color-accent-purple-subtle: #f5e7f8;
   --color-sns-instagram: #b02a78;
   --color-sns-instagram-subtle: #fce7f3;
   --color-sns-x: #2a2826;
-  --color-sns-x-subtle: #f2efeb;
-  --color-sns-tiktok: #0e7490;
-  --color-sns-tiktok-subtle: #e0f7fa;
+  --color-sns-x-subtle: #fcf5ef;
+  --color-sns-tiktok: #854f0b;
+  --color-sns-tiktok-subtle: #fef3c7;
   --color-sns-youtube: #c4302b;
   --color-sns-youtube-subtle: #fcebeb;
 
@@ -104,8 +104,8 @@
   --text-h3: 1rem;
   --text-body: 0.875rem;
   --text-body-strong: 0.875rem;
-  --text-label: 0.75rem;
-  --text-meta: 0.625rem;
+  --text-label: 0.875rem;
+  --text-meta: 0.875rem;
 
   --font-weight-display: 900;
   --font-weight-h1: 900;
@@ -150,7 +150,7 @@ body { font-family: Inter, 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif
 /* ── Sidebar ── */
 .sb { width: 235px; flex: none; background: var(--color-surface); border-right: 1px solid var(--color-border); display: flex; flex-direction: column; overflow-y: auto; }
 .sb-logo { padding: 16px; font-size: var(--text-h3); font-weight: var(--font-weight-h3); color: var(--color-primary); display: flex; align-items: center; gap: 8px; }
-.sb-logo .logo-box { width: 28px; height: 28px; border-radius: var(--radius-sm); background: var(--color-primary); display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; font-weight: 700; flex: none; }
+.sb-logo .logo-box { width: 28px; height: 28px; border-radius: var(--radius-sm); background: var(--color-primary); display: flex; align-items: center; justify-content: center; color: #fff; font-size:14px; font-weight: 700; flex: none; }
 .sb-cta { padding: 10px 12px 6px; }
 .sb-cta-btn { width: 100%; height: 38px; border-radius: var(--radius-md); background: var(--color-primary); color: var(--color-on-primary); border: none; cursor: pointer; font-size: var(--text-body); font-weight: var(--font-weight-body-strong); display: flex; align-items: center; justify-content: center; gap: 6px; transition: background .15s; }
 .sb-cta-btn:hover { background: var(--color-primary-hover); }
@@ -170,7 +170,7 @@ body { font-family: Inter, 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif
 .nis:hover { background: var(--color-primary-subtle); color: var(--color-primary); }
 .nis.on { background: var(--color-primary-subtle); color: var(--color-primary); font-weight: var(--font-weight-body-strong); }
 .sb-account { margin-top: auto; padding: 12px; border-top: 1px solid var(--color-border); display: flex; align-items: center; gap: 10px; }
-.sb-account .av { width: 32px; height: 32px; border-radius: var(--radius-full); background: linear-gradient(135deg, #f5e7f8, #d9b3ea); flex: none; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: var(--color-accent-purple); }
+.sb-account .av { width: 32px; height: 32px; border-radius: var(--radius-full); background: linear-gradient(135deg, #f5e7f8, #d9b3ea); flex: none; display: flex; align-items: center; justify-content: center; font-size:14px; font-weight: 700; color: var(--color-accent-purple); }
 .sb-account .nm { font-size: var(--text-label); font-weight: var(--font-weight-body-strong); line-height: 1.3; }
 .sb-account .role { font-size: var(--text-meta); color: var(--color-muted-foreground); }
 .sb-account .more { margin-left: auto; color: var(--color-muted-foreground); font-size: 16px; cursor: pointer; }
@@ -335,8 +335,16 @@ body { font-family: Inter, 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif
 .sheet-inner { padding: 20px; display: flex; flex-direction: column; gap: 16px; flex: 1; overflow-y: auto; overflow-x: hidden; }
 
 /* ── Sheet-specific metrics (avoid card CSS conflicts) ── */
-.sheet-metrics { display: flex !important; gap: 0; background: var(--color-background); border-radius: var(--radius-md); overflow: visible; }
-.sheet-metrics .spm { flex: 1; text-align: center; padding: 12px 4px; border-right: 1px solid var(--color-border); }
+/* 指標が7つになり1列55pxではラベルが4行に折り返すため、4列2行に組み替える。
+       文字を14px未満に落とすのは禁止（§Typography 下限）なので枠の方を広げる。
+       gap を1pxにして親の色を透かすとセル間の区切り線になる */
+    .sheet-metrics { display: grid !important; grid-template-columns: repeat(4, 1fr); gap: 1px;
+      background: var(--color-border); border-radius: var(--radius-md); overflow: hidden;
+      /* .sheet-inner が縦フレックス。指定しないと flex-shrink で高さ0まで潰れる */
+      flex: none; }
+.sheet-metrics .spm { background: var(--color-background); text-align: center; padding: 12px 6px; }
+    /* 7指標だと最後の行が1つ余る。空セルを置いて枠の色が透けないようにする */
+    .sheet-metrics .spm.empty { background: var(--color-background); }
 .sheet-metrics .spm:last-child { border-right: none; }
 .sheet-metrics .spm-val { font-size: 20px; font-weight: var(--font-weight-h1); line-height: 1.2; }
 .sheet-metrics .spm-val.hi { color: var(--color-primary); }
@@ -345,18 +353,51 @@ body { font-family: Inter, 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif
 .sheet-metrics .spm-ic { display: block; font-size: 16px; line-height: 1; color: var(--color-muted-foreground); margin-bottom: 5px; }
 
 /* ── 生の5指標から計算した数値。総合評価(🦊)の下に置く ── */
-.sheet-submetrics { display: flex; gap: 8px; }
-.ssm {
-  flex: 1;
-  min-width: 0;
+/* 3列のタイルに縦積みしていたが、1枚 128px しかないのでラベルが折り返し、
+   判定と目安を足すと4行になって「一目で」読めなくなった。
+   1指標＝1行の横並びにして、数値が縦に揃うようにする。 */
+.sheet-submetrics {
+  display: flex;
+  flex-direction: column;
+  /* .sheet-inner が縦フレックスなので、指定しないと flex-shrink が効いて
+     129px → 2px に潰れる */
+  flex: none;
   background: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
-  padding: 10px 6px;
-  text-align: center;
+  overflow: hidden;
 }
-.ssm-lbl { display: block; font-size: var(--text-label); color: var(--color-muted-foreground); line-height: 1.4; }
-.ssm-val { display: block; font-size: var(--text-h3); font-weight: 700; color: var(--color-foreground); margin-top: 3px; }
+.ssm {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-top: 1px solid var(--color-border);
+}
+.ssm:first-child { border-top: none; }
+.ssm-lbl { flex: 1; min-width: 0; font-size: var(--text-label); color: var(--color-muted-foreground); line-height: 1.4; }
+/* 数値は右揃え＋等幅数字で縦に揃える。判定は色でも出すので、読まなくても差が分かる */
+.ssm-val {
+  flex: none; min-width: 58px; text-align: right;
+  font-size: var(--text-body-lg); font-weight: 700; line-height: 1.3;
+  font-variant-numeric: tabular-nums; color: var(--color-foreground);
+}
+.ssm.good .ssm-val { color: var(--color-success); }
+.ssm.low  .ssm-val { color: var(--color-warning); }
+/* 数値だけでは良いのか悪いのか判断できなかったので、判定と目安を添える。
+   判定の色は AI分析（好調 / まずまず / 提案）と同じ体系に合わせている。 */
+.ssm-judge {
+  flex: none; min-width: 62px;
+  display: inline-flex; align-items: center; justify-content: center; gap: 2px;
+  padding: 1px 7px; border-radius: var(--radius-full);
+  font-size: var(--text-meta); font-weight: 700; line-height: 1.6;
+}
+.ssm-judge .ti { font-size: 12px; }
+.ssm-judge.good { background: var(--color-success-subtle); color: var(--color-success); }
+.ssm-judge.mid  { background: var(--color-info-subtle);    color: var(--color-info); }
+.ssm-judge.low  { background: var(--color-warning-subtle); color: var(--color-warning); }
+/* 目安は判定の根拠。読まなくても済むよう、いちばん小さく右端に置く */
+.ssm-bench { flex: none; min-width: 74px; text-align: right; font-size: var(--text-meta); color: var(--color-muted-foreground); line-height: 1.4; }
 
 /* Sheet header */
 .sheet-hd-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -431,7 +472,7 @@ body { font-family: Inter, 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif
 
 /* Type badge — purple pill, 14px */
 .post-badge { display: inline-flex; align-items: center; gap: 5px; padding: 4px 12px; border-radius: var(--radius-full); font-size: var(--text-label); font-weight: var(--font-weight-label); background: var(--color-accent-purple); color: #fff; white-space: nowrap; align-self: flex-start; }
-.post-badge .ti { font-size: 13px; }
+.post-badge .ti { font-size:14px; }
 
 /* Date — inline with badge */
 .post-date { font-size: var(--text-body); color: var(--color-muted-foreground); line-height: 1.4; }
@@ -474,7 +515,7 @@ body { font-family: Inter, 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif
   .rank-num.r1 { width: 40px; height: 40px; font-size: 18px; }
   .post-metrics { flex-wrap: wrap; }
   .pm { min-width: 0; }
-  .best-ribbon { right: 12px; font-size: 12px; padding: 3px 10px 5px; }
+  .best-ribbon { right: 12px; font-size:14px; padding: 3px 10px 5px; }
   .load-more-wrap { padding: 8px 16px 20px; }
   .update-ts { padding: 0 16px 20px; }
 }
@@ -543,6 +584,59 @@ body { font-family: Inter, 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif
 .sb .upg .ub:hover{filter:brightness(.94);}
 .create{background:#fff !important;color:#d54101 !important;}
 .create:hover{background:#fff !important;filter:brightness(.96);}
+
+/* ===== 分析ページのシェル組み直し =====
+   ヘッダー（.topbar）が全幅で最上部に置かれ、サイドバーの上に乗っていた。
+   他のページ（shell_header_sidebar / post_list / drive / calendar）と同じ
+   「サイドバーの右にヘッダー」の形に揃える。
+   markup は触らず、中間のラッパー（.app-inner / .main-row）を display:contents で
+   透過させて、.app のグリッドに topbar / サイドバー / content を直接並べている。
+   サイドバーのクラス名はページによって .sidebar と .sb の2種類がある。 */
+.app{
+  display:grid;
+  grid-template-columns:235px minmax(0,1fr);
+  grid-template-rows:auto minmax(0,1fr);
+  background:var(--color-background);
+  padding:10px;
+  gap:10px;
+  /* 正シェルと同じ。app が画面を埋めて、中身は .content の中でスクロールさせる */
+  height:100vh;
+  overflow:hidden;
+}
+.app-inner,.main-row{display:contents;}
+.sidebar,.main-row > .sb{grid-column:1;grid-row:1 / span 2;}
+.topbar{grid-column:2;grid-row:1;}
+.content{grid-column:2;grid-row:2;min-height:0;overflow-y:auto;}
+/* 生成りの地に浮いた3枚のカードとして置く（他ページと同じ扱い） */
+.sidebar,.main-row > .sb{border-right:none;border-radius:var(--radius-xl);overflow-y:auto;}
+.topbar{border-bottom:none;border-radius:var(--radius-xl);background:var(--color-card);
+  box-shadow:var(--shadow-card);padding:0 22px;}
+.content{border-radius:var(--radius-xl);background:var(--color-card);
+  box-shadow:var(--shadow-card);}
+/* ===== サイドバーの文字を白に =====
+   オレンジ地に白なので、hover / 選択中は面の濃さだけで見分けさせる
+   （10% / 22%）。縁は付けない。他ページの .sb と同じ値に合わせている。 */
+.sidebar{background:linear-gradient(180deg,#fe7235 0%,#e85513 55%,#d54101 100%);}
+.sidebar .sb-cta{background:#fff;color:#d54101;}
+.sidebar .sb-cta:hover{filter:brightness(.96);}
+.sidebar .sb-btn{color:rgba(255,255,255,.88);text-decoration:none;}
+.sidebar .sb-btn .ti{color:rgba(255,255,255,.88);}
+.sidebar .sb-btn:hover{background:rgba(255,255,255,.10);color:#fff;}
+.sidebar .sb-btn:hover .ti{color:#fff;}
+.sidebar .sb-btn.active,.sidebar .sb-btn.on{background:rgba(255,255,255,.22);color:#fff;}
+.sidebar .sb-btn.active .ti,.sidebar .sb-btn.on .ti{color:#fff;}
+.sidebar .sb-btn .sb-cv{color:rgba(255,255,255,.7);}
+.sidebar .sb-div{background:rgba(255,255,255,.22);}
+.sidebar .sb-sub a{color:rgba(255,255,255,.8);text-decoration:none;}
+.sidebar .sb-sub a:hover{background:rgba(255,255,255,.10);color:#fff;}
+.sidebar .sb-acct{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.30);}
+.sidebar .sb-acct div{color:#fff;}
+.sidebar .sb-acct .avatar{background:#fff;color:#d54101;}
+/* .sb 系（analysis_posts）はオレンジ化済み。下線だけ外す */
+.main-row > .sb a{text-decoration:none;}
+/* .content を高さ固定のグリッド項目にしたぶん、縦並びの子に flex-shrink が効く。
+   タブ帯は縮ませない（analysis_posts で 23px → 1px に潰れていた） */
+.content > .tab-nav{flex:none;}
 </style>
 </head>
 <body>
@@ -695,6 +789,27 @@ body { font-family: Inter, 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif
             <div class="ms-card-icon"><i class="ti ti-message-circle"></i></div>
             <div class="ms-card-val">3<span class="ms-card-unit">件</span></div>
             <div class="ms-card-lbl">コメント合計</div>
+          </div>
+          <!-- 本番の投稿データにある指標。総合評価以外の数値もここに並べる -->
+          <div class="ms-card">
+            <div class="ms-card-icon"><i class="ti ti-users"></i></div>
+            <div class="ms-card-val">237<span class="ms-card-unit">件</span></div>
+            <div class="ms-card-lbl">リーチしたアカウント数</div>
+          </div>
+          <div class="ms-card">
+            <div class="ms-card-icon"><i class="ti ti-external-link"></i></div>
+            <div class="ms-card-val">4<span class="ms-card-unit">回</span></div>
+            <div class="ms-card-lbl">シェア数</div>
+          </div>
+          <div class="ms-card">
+            <div class="ms-card-icon"><i class="ti ti-messages"></i></div>
+            <div class="ms-card-val">25<span class="ms-card-unit">回</span></div>
+            <div class="ms-card-lbl">インタラクション</div>
+          </div>
+          <div class="ms-card">
+            <div class="ms-card-icon"><i class="ti ti-chart-line"></i></div>
+            <div class="ms-card-val">9.7<span class="ms-card-unit">%</span></div>
+            <div class="ms-card-lbl">プロフィール率</div>
           </div>
         </div>
       </div>
@@ -918,7 +1033,7 @@ var posts = {
       { style: 'background:linear-gradient(135deg,#ffedd5 0%,#c2410c 100%)', icon: 'ti-photo' }
     ],
     caption: '看板犬ロンと過ごす午後のひととき。テラス席でまったりコーヒータイム。\n\nうちの看板犬ロン（ゴールデンレトリバー・5歳）は人懐っこくてお客さまに大人気。今日もテラス席でお昼寝しながらお客さまをお出迎えしていました。\n\n犬カフェRioでは、看板犬とふれあいながらゆっくりコーヒーを楽しめます。\n\n#犬カフェ #ゴールデンレトリバー #犬カフェRio #テラス席 #看板犬',
-    reach: 127, impressions: 203, likes: 8, comments: 2, saves: 5, reachPct: 100,
+    reach: 127, impressions: 203, likes: 8, comments: 2, saves: 5, reachPct: 100, shares: 3, profileVisits: 14,
     fox: 'happy', insight: '犬の写真はリーチが一番伸びます。この路線を続けましょう！',
     analysis: [
       { label: '好調', color: 'success', text: 'リーチが今月平均の5倍' },
@@ -932,7 +1047,7 @@ var posts = {
       { style: 'background:linear-gradient(135deg,#e8d8f4 0%,#c8a0e0 50%,#a868c8 100%)', icon: 'ti-player-play-filled' }
     ],
     caption: '懐かしい！昭和のテレビから聞こえてきた、あの音♪\n\nテレビ放送の開始・終了時に流れたカラーバーのテストパターン、今見ると何だかエモいですよね。\n\nこの動画では昭和のテレビ文化を振り返りながら、今と昔の放送技術の違いを紹介しています。\n\n#昭和レトロ #テレビ #懐かしい #カラーバー',
-    reach: 52, impressions: 80, likes: 2, comments: 1, saves: 0, reachPct: 41,
+    reach: 52, impressions: 80, likes: 2, comments: 1, saves: 0, reachPct: 41, shares: 1, profileVisits: 5,
     fox: null, insight: null,
     analysis: [
       { label: 'まずまず', color: 'info', text: 'リーチは平均的。動画の長さが適切' },
@@ -947,7 +1062,7 @@ var posts = {
       { style: 'background:linear-gradient(135deg,#81c784 0%,#2e7d32 100%)', icon: 'ti-photo' }
     ],
     caption: 'グランピング×犬カフェの新メニュー！ 手ぶらBBQセットが登場しました。\n\n食材・器具・セッティングすべて込みで、手ぶらで来てOK。ワンちゃん連れでも安心のスペースを用意しています。\n\nご予約はプロフィールのリンクから。\n\n#グランピング #犬カフェRio #BBQ #手ぶらBBQ #犬連れ',
-    reach: 35, impressions: 55, likes: 1, comments: 0, saves: 1, reachPct: 28,
+    reach: 35, impressions: 55, likes: 1, comments: 0, saves: 1, reachPct: 28, shares: 0, profileVisits: 3,
     fox: null, insight: null,
     analysis: [
       { label: '普通', color: 'info', text: 'リーチは平均的。写真のクオリティは良い' },
@@ -961,7 +1076,7 @@ var posts = {
       { style: 'background:linear-gradient(135deg,#90caf9 0%,#1e88e5 100%)', icon: 'ti-photo' }
     ],
     caption: '今日のお客さまワンちゃん特集！\n\nチワワのモカちゃん、初来店でしたがすぐに看板犬ロンと仲良しになりました。小さい体で元気いっぱい走り回る姿がかわいすぎました。\n\nまた遊びに来てね！\n\n#犬カフェ #チワワ #犬カフェRio #お客さまワンちゃん',
-    reach: 22, impressions: 38, likes: 1, comments: 0, saves: 0, reachPct: 17,
+    reach: 22, impressions: 38, likes: 1, comments: 0, saves: 0, reachPct: 17, shares: 0, profileVisits: 1,
     fox: null, insight: null,
     analysis: [
       { label: '低調', color: 'warning', text: 'リーチが平均以下。写真枚数が少ない' },
@@ -974,7 +1089,7 @@ var posts = {
       { style: 'background:var(--color-background)', icon: 'ti-photo' }
     ],
     caption: 'お知らせ：7月の営業時間が変わります。\n\n月〜金 10:00-18:00\n土日祝 9:00-19:00\n\nになります。ご来店お待ちしております。',
-    reach: 1, impressions: 3, likes: 0, comments: 0, saves: 0, reachPct: 1,
+    reach: 1, impressions: 3, likes: 0, comments: 0, saves: 0, reachPct: 1, shares: 0, profileVisits: 0,
     fox: 'sad', insight: '写真なしの投稿はほぼ見てもらえません。写真を付けてみましょう',
     analysis: [
       { label: '要改善', color: 'destructive', text: 'リーチがほぼゼロ。写真がないことが原因' },
@@ -1011,11 +1126,28 @@ function openSheet(id) {
     var reactRate = (p.likes + p.comments + p.saves) / p.reach * 100;
     var saveRate  = p.saves / p.reach * 100;
     var perPerson = p.impressions / p.reach;
+    /* プロフィール率＝この投稿を見た人のうち、プロフィールまで見に来た割合。
+       本番の投稿データにある指標。フォロー前の入口なので単体で追う価値がある */
+    var profRate  = (p.profileVisits || 0) / p.reach * 100;
+    /* 数値だけ出しても良し悪しが分からないので、目安と判定を添える。
+       いずれもリーチ（この投稿を見た人の数）に対する割合。 */
+    var judge = function(val, good, mid){
+      if(val >= good) return {cls:'good', ic:'ti-arrow-up-right',   tx:'好調'};
+      if(val >= mid)  return {cls:'mid',  ic:'ti-minus',            tx:'ふつう'};
+      return                 {cls:'low',  ic:'ti-arrow-down-right', tx:'のびしろ'};
+    };
+    var ssm = function(label, val, unit, j, bench){
+      return '<div class="ssm ' + j.cls + '"><span class="ssm-lbl">' + label + '</span>' +
+             '<span class="ssm-val">' + val + unit + '</span>' +
+             '<span class="ssm-judge ' + j.cls + '"><i class="ti ' + j.ic + '"></i>' + j.tx + '</span>' +
+             '<span class="ssm-bench">' + bench + '</span></div>';
+    };
     subMetricsHtml = '<div class="sheet-submetrics">' +
-      '<div class="ssm"><span class="ssm-lbl">エンゲージメント率</span><span class="ssm-val">' + reactRate.toFixed(1) + '%</span></div>' +
-      '<div class="ssm"><span class="ssm-lbl">保存率</span><span class="ssm-val">' + saveRate.toFixed(1) + '%</span></div>' +
-      '<div class="ssm"><span class="ssm-lbl">1人あたり表示</span><span class="ssm-val">' + perPerson.toFixed(1) + '回</span></div>' +
-    '</div>';
+      ssm('エンゲージメント率', reactRate.toFixed(1), '%',  judge(reactRate, 10, 5),    '目安 5%以上') +
+      ssm('保存率',             saveRate.toFixed(1),  '%',  judge(saveRate, 3, 1),      '目安 1%以上') +
+      ssm('1人あたり表示',      perPerson.toFixed(1), '回', judge(perPerson, 1.5, 1.1), '目安 1.1回以上') +
+      ssm('プロフィール率',      profRate.toFixed(1),  '%',  judge(profRate, 5, 2),      '目安 2%以上') +
+      '</div>';
   }
   // Build analysis HTML
   var analysisHtml = '';
@@ -1043,11 +1175,14 @@ function openSheet(id) {
       '<span class="sheet-date">' + p.date + '</span>' +
     '</div>' +
     '<div class="sheet-metrics">' +
-      spm('ti-users', p.reach, 'リーチ') +
+      spm('ti-users', p.reach, 'リーチしたアカウント数') +
       spm('ti-eye', p.impressions, '表示') +
       spm('ti-heart', p.likes, 'いいね') +
       spm('ti-message-circle', p.comments, 'コメント') +
       spm('ti-bookmark', p.saves, '保存') +
+      spm('ti-external-link', p.shares, 'シェア') +
+      spm('ti-messages', (p.likes + p.comments + p.saves + p.shares), 'インタラクション') +
+      '<div class="spm empty"></div>' +
     '</div>' +
     foxHtml +
     subMetricsHtml +

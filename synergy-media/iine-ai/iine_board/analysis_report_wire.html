@@ -54,6 +54,7 @@
   --color-primary-hover: #d54101;
   --color-primary-light: #fea735;
   --color-primary-subtle: #fff5f1;
+  --color-primary-border: #ffd6c4;
   --color-on-primary: #ffffff;
   --color-background: #fcf5ef;
   --color-surface: #fffdfb;
@@ -66,24 +67,26 @@
   --color-ring: #fe7235;
   --color-success: #008a24; --color-success-vivid: #00ac2f;
   --color-success-subtle: #f3fcf6;
+  --color-success-border: #cff4dc;
   --color-warning: #ad6201;
-  --color-warning-border: #fea735;
+  --color-warning-border: #ffe6c4;
   --color-warning-subtle: #fff9f1;
   --color-info: #0070f0;
   --color-info-subtle: #f1f7ff;
   --color-destructive: #e90c2a;
   --color-on-destructive: #ffffff;
-  --color-destructive-subtle: #fddfe3;
+  --color-destructive-subtle: #feeef1;
+  --color-destructive-border: #ffd0d8;
   --color-like: #ef3a58;
-  --color-like-subtle: #fddfe3;
+  --color-like-subtle: #feeef1;
   --color-accent-purple: #9724ba;
   --color-accent-purple-subtle: #f5e7f8;
   --color-sns-instagram: #b02a78;
   --color-sns-instagram-subtle: #fce7f3;
   --color-sns-x: #2a2826;
-  --color-sns-x-subtle: #f2efeb;
-  --color-sns-tiktok: #0e7490;
-  --color-sns-tiktok-subtle: #e0f7fa;
+  --color-sns-x-subtle: #fcf5ef;
+  --color-sns-tiktok: #854f0b;
+  --color-sns-tiktok-subtle: #fef3c7;
   --color-sns-youtube: #c4302b;
   --color-sns-youtube-subtle: #fcebeb;
 
@@ -94,8 +97,8 @@
   --text-body-lg: 1rem;
   --text-body: 0.875rem;
   --text-body-strong: 0.875rem;
-  --text-label: 0.75rem;
-  --text-meta: 0.625rem;
+  --text-label: 0.875rem;
+  --text-meta: 0.875rem;
 
   --font-weight-display: 900;
   --font-weight-h1: 900;
@@ -115,6 +118,13 @@
   --color-secondary: #0077ff;
   --color-secondary-light: #00c3ff;
   --color-secondary-subtle: #f1f7ff;
+  --color-secondary-border: #c4e0ff;
+  /* グラフ専用。1つの量の内訳を「多い順＝濃い順」で見せる単一色相ランプ */
+  --color-chart-1: #fe7235;
+  --color-chart-2: #fea735;
+  --color-chart-3: #ffc276;
+  --color-chart-4: #ffd6c4;
+  --color-chart-5: #fff5f1;
   --color-secondary-deep: #0070f0;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -196,7 +206,8 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
 .acct-dd-item .dd-check{font-size:16px;color:var(--color-primary);}
 
 /* === tab nav (underline) === */
-.tab-nav{display:flex;gap:0;padding:0 32px;border-bottom:1px solid var(--color-border);background:var(--color-card);}
+/* 背景は敷かない。ページ背景の上に白帯が乗るとタブが別のカードに見える */
+.tab-nav{display:flex;gap:0;padding:0 32px;border-bottom:1px solid var(--color-border);}
 .tab-nav a{padding:12px 16px;font-size:var(--text-body);font-weight:var(--font-weight-label);color:var(--color-muted-foreground);text-decoration:none;border-bottom:2px solid transparent;cursor:pointer;transition:color .15s,border-color .15s;white-space:nowrap;}
 .tab-nav a:hover{color:var(--color-foreground);}
 .tab-nav a.active{color:var(--color-foreground);font-weight:700;border-bottom-color:var(--color-primary);}
@@ -231,16 +242,16 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
 
 /* === slide card === */
 .slide{min-width:320px;max-width:320px;scroll-snap-align:start;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-xl);padding:28px 24px;display:flex;flex-direction:column;gap:16px;position:relative;flex-shrink:0;}
-.slide.t-score{background:linear-gradient(180deg,var(--color-primary-subtle) 0%,var(--color-card) 40%);}
-.slide.t-up{background:linear-gradient(180deg,var(--color-success-subtle) 0%,var(--color-card) 40%);}
-.slide.t-down{background:linear-gradient(180deg,var(--color-destructive-subtle) 0%,var(--color-card) 40%);}
-.slide.t-info{background:linear-gradient(180deg,hsl(208,100%,97%) 0%,var(--color-card) 40%);}
-.slide.t-star{background:linear-gradient(180deg,var(--color-warning-subtle) 0%,var(--color-card) 40%);}
+.slide.t-score{border-color:var(--color-primary-border);}
+.slide.t-up{border-color:var(--color-success-border);}
+.slide.t-down{border-color:var(--color-destructive-border);}
+.slide.t-info{border-color:var(--color-secondary-border);}
+.slide.t-star{border-color:var(--color-warning-border);}
 .slide-num{position:absolute;top:16px;right:16px;font-size:var(--text-meta);color:var(--color-muted-foreground);font-weight:500;}
 
 /* slide header */
 .sl-hd{display:flex;align-items:center;gap:10px;}
-.sl-icon{width:44px;height:44px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:22px;}
+.sl-icon{width:56px;height:56px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;font-size:28px;flex:none;}
 .sl-icon.up{background:var(--color-success-subtle);color:var(--color-success);}
 .sl-icon.down{background:var(--color-destructive-subtle);color:var(--color-destructive);}
 .sl-icon.neutral{background:var(--color-primary-subtle);color:var(--color-primary);}
@@ -248,6 +259,84 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
 .sl-icon.star{background:var(--color-warning-subtle);color:var(--color-warning);}
 
 .sl-label{font-size:var(--text-body);font-weight:700;line-height:1.3;}
+/* 指標名の下に置く一言。カードの役割（なぜこの指標が出ているか）を説明する */
+.sl-note{text-align:center;font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:2px;}
+/* 内訳を1本の帯で見せる。件数（何パターンか）より構成比の方が読み手に効くため、
+   数字ではなく面積で持たせる。色は chart ランプ＝多い順に濃い */
+/* 内訳は円グラフ。構成比は「全体に対する取り分」なので円の方が直感的に読める。
+   conic-gradient で描くので画像もライブラリも不要。中央を抜いてドーナツにする */
+/* 円は横に凡例を置くと小さくなるので、円を主役にして凡例は下に積む */
+.sl-donut-wrap{display:flex;flex-direction:column;align-items:center;gap:14px;margin:12px 0 4px;}
+.sl-donut{width:100%;max-width:196px;aspect-ratio:1;flex:none;border-radius:50%;position:relative;}
+.sl-donut::after{content:"";position:absolute;inset:24%;background:var(--color-card);border-radius:50%;}
+.sl-donut-cap{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;z-index:1;line-height:1.15;}
+.sl-donut-cap .t{font-size:var(--text-h1);font-weight:900;color:var(--color-chart-1);}
+.sl-donut-cap .s{font-size:var(--text-label);color:var(--color-muted-foreground);}
+/* 凡例は円の下。3列まで横に並べ、入らなければ折り返す */
+.sl-donut-wrap .sl-mix-legend{width:100%;}
+.sl-mix{margin:12px 0 4px;}
+.sl-mix-bar{display:flex;height:14px;border-radius:var(--radius-full);overflow:hidden;background:var(--color-border);}
+.sl-mix-bar span{display:block;height:100%;}
+.sl-mix-legend{display:flex;flex-direction:column;gap:6px;margin-top:10px;font-size:var(--text-body);}
+.sl-mix-legend .row{display:flex;align-items:center;gap:8px;}
+.sl-mix-legend .dot{width:10px;height:10px;border-radius:50%;flex:none;}
+.sl-mix-legend .nm{flex:1;text-align:left;}
+.sl-mix-legend .pc{font-weight:700;}
+.c1{background:var(--color-chart-1);}
+.c2{background:var(--color-chart-2);}
+.c3{background:var(--color-chart-3);}
+.c4{background:var(--color-chart-4);}
+/* 「N件中いくつ」を10個のドットで示す。割合だけだと量が掴めない */
+.sl-dots{display:flex;justify-content:center;gap:5px;margin:12px 0 6px;}
+.sl-dots span{width:16px;height:16px;border-radius:50%;flex:none;}
+.sl-dots span.on-down{background:var(--color-destructive);}
+.sl-dots span.off{background:var(--color-border);}
+/* 「何が問題か」を主役にする箱。数字は裏付けなので下に小さく置く。
+   数字を特大にすると、読み手が先に量を見て意味を後回しにしてしまう */
+.sl-verdict{text-align:center;margin:6px 0 2px;}
+.sl-verdict .v-main{font-size:var(--text-h2);font-weight:900;line-height:1.4;color:var(--color-destructive);}
+.sl-verdict .v-sub{font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:6px;}
+/* 100点満点のスコアを10段で見せる。点数だけだと「72点が良いのか」が判断できない */
+.sl-gauge{display:flex;gap:4px;justify-content:center;margin:10px 0 2px;}
+.sl-gauge span{flex:1;max-width:24px;height:10px;border-radius:var(--radius-full);background:var(--color-border);}
+.sl-gauge span.on{background:var(--color-primary);}
+.sl-gauge span.half{background:linear-gradient(90deg,var(--color-primary) 50%,var(--color-border) 50%);}
+/* 前後の量を横棒で並べる。落差の大きさは数字よりバーの長さで伝わる */
+.sl-hbars{display:flex;flex-direction:column;gap:8px;margin:12px 0 4px;}
+.sl-hbar{display:flex;align-items:center;gap:8px;font-size:var(--text-label);}
+.sl-hbar .nm{width:52px;flex:none;color:var(--color-muted-foreground);text-align:left;}
+.sl-hbar .track{display:block;flex:1;height:12px;background:var(--color-border);border-radius:var(--radius-full);overflow:hidden;}
+.sl-hbar .fill{display:block;height:100%;border-radius:var(--radius-full);min-width:6px;}
+/* track（border）に対して border-strong だとコントラスト1.24で溶けるため muted を使う。
+   min-width は「ほぼ0」を可視化するため（387→4 は線形だと幅2pxで消える） */
+.sl-hbar .fill.before{background:var(--color-muted-foreground);}
+.sl-hbar .fill.down{background:var(--color-destructive);}
+.sl-hbar .fill.up{background:var(--color-success-vivid);}
+.sl-hbar .fill.pri{background:var(--color-primary);}
+.sl-hbar .v{width:56px;flex:none;text-align:right;font-weight:700;}
+/* 週ごとに投稿があったかを並べる。「3週間空いた」を面で見せる */
+.sl-weeks{display:flex;gap:5px;justify-content:center;margin:12px 0 4px;}
+.sl-weeks span{width:22px;height:22px;border-radius:var(--radius-sm);background:var(--color-success-subtle);
+  border:1px solid var(--color-success-border);}
+.sl-weeks span.gap{background:var(--color-destructive-subtle);border-color:var(--color-destructive-border);}
+.sl-weeks-cap{display:flex;justify-content:center;gap:14px;font-size:var(--text-label);
+  color:var(--color-muted-foreground);margin-top:6px;}
+/* 曜日ごとの反応。どの曜日が高いかを1行で見せる */
+.sl-week7{display:flex;gap:4px;align-items:flex-end;justify-content:center;height:64px;margin:10px 0 2px;}
+.sl-week7 .d{display:flex;flex-direction:column;align-items:center;gap:4px;flex:1;max-width:34px;}
+.sl-week7 .bar{width:100%;background:var(--color-primary-border);border-radius:var(--radius-sm) var(--radius-sm) 0 0;}
+.sl-week7 .d.best .bar{background:var(--color-primary);}
+.sl-week7 .lb{font-size:var(--text-meta);color:var(--color-muted-foreground);}
+.sl-week7 .d.best .lb{color:var(--color-primary);font-weight:700;}
+/* 人数をアイコンで見せるゲージ。max10個で、増えたぶんだけ色を付ける。
+   数字だけだと「+4人」の大小が掴めないため。10を超えたら末尾に +N を出す */
+.sl-people{display:flex;justify-content:center;align-items:flex-end;gap:3px;margin:12px 0 4px;}
+.sl-people svg.pu{width:26px;height:26px;display:block;flex:none;}
+.sl-people .base{color:var(--color-border-strong);}
+.sl-people .gain{color:var(--color-success-vivid);}
+.sl-people .empty{color:var(--color-border);}
+.sl-people .more{font-size:var(--text-label);font-weight:700;color:var(--color-muted-foreground);margin-left:2px;}
 
 /* big number */
 .sl-big{text-align:center;padding:8px 0;}
@@ -271,7 +360,7 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
 .sl-compare-row .bar.after-primary{background:var(--color-primary);}
 .sl-compare-row .val{width:40px;text-align:right;font-weight:700;}
 /* 前後比較はバーを出さず、いつの数字かをラベルで言い切る（「前」「後」だと期間が分からない） */
-.sl-compare.nobar .sl-compare-row{justify-content:space-between;gap:12px;padding:8px 12px;background:var(--color-surface);border-radius:var(--radius-sm);font-size:var(--text-body);}
+.sl-compare.nobar .sl-compare-row{justify-content:space-between;gap:12px;padding:8px 12px;background:var(--color-background);border-radius:var(--radius-sm);font-size:var(--text-body);}
 .sl-compare.nobar .lbl{width:auto;}
 .sl-compare.nobar .val{width:auto;font-size:var(--text-body-lg);}
 .sl-compare.nobar .sl-compare-row.now .lbl{color:var(--color-foreground);font-weight:700;}
@@ -317,6 +406,22 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
 .sl-post-stats .st.like{color:var(--color-like);}
 .sl-post-stats .st.comment{color:var(--color-info);}
 .sl-post-stats .st.reach{color:var(--color-success);}
+/* ベスト投稿は1位を大きく出して、2位は下に小さく添える。
+   同じ大きさで2つ並べると、どちらが1位なのか読み取れなかった。 */
+.sl-post.rank1{flex-direction:column;align-items:stretch;gap:9px;}
+.sl-post.rank1 .sl-post-thumb{width:100%;height:118px;position:relative;font-size:28px;}
+.sl-post.rank1 .sl-post-info .title{font-size:var(--text-body-lg);}
+.sl-post.rank1 .sl-post-stats{font-size:var(--text-body);}
+.sl-rank{position:absolute;top:7px;left:7px;background:var(--color-primary);color:#fff;
+  font-size:var(--text-meta);font-weight:700;border-radius:var(--radius-full);padding:2px 9px;
+  display:inline-flex;align-items:center;line-height:1.5;}
+.sl-post.rank2{gap:9px;}
+.sl-post.rank2 .sl-post-thumb{width:44px;height:44px;font-size:16px;flex:none;}
+.sl-post.rank2 .sl-post-info{gap:2px;}
+.sl-post.rank2 .sl-post-info .title{font-size:var(--text-label);}
+.sl-post.rank2 .sl-post-info .meta,.sl-post.rank2 .sl-post-stats{font-size:var(--text-meta);}
+.sl-rank2{flex:none;align-self:center;font-size:var(--text-meta);font-weight:700;
+  color:var(--color-muted-foreground);}
 
 /* carousel nav */
 .carousel-nav{display:flex;align-items:center;justify-content:center;gap:6px;padding:4px 0 0;}
@@ -457,7 +562,7 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
   .metric-card{padding:10px;}
   .metric-card .mc-value{font-size:var(--text-h2);}
   .metric-card .mc-label{font-size:var(--text-meta);gap:3px;}
-  .metric-card .mc-label .ti{font-size:12px;}
+  .metric-card .mc-label .ti{font-size:14px;}
   .metric-card .mc-change{font-size:var(--text-meta);}
   /* chart bars */
   .chart-bars{height:60px;}
@@ -477,9 +582,64 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
 .hdbtn{position:relative;width:38px;height:38px;flex:none;border:1px solid var(--color-border-strong,#ddd0c4);background:var(--color-card,#fff);color:var(--color-foreground,#2a2826);border-radius:var(--radius-full,9999px);display:flex;align-items:center;justify-content:center;font-size:19px;cursor:pointer;padding:0;text-decoration:none;}
 .hdbtn:hover{border-color:var(--color-primary,#fe7235);color:var(--color-primary,#fe7235);}
 .hdbadge{position:absolute;top:-4px;right:-4px;min-width:19px;height:19px;padding:0 5px;border-radius:var(--radius-full,9999px);background:var(--color-primary,#fe7235);color:#fff;font-size:var(--text-meta,.625rem);font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid var(--color-card,#fff);}
+
+/* ===== 分析ページのシェル組み直し =====
+   ヘッダー（.topbar）が全幅で最上部に置かれ、サイドバーの上に乗っていた。
+   他のページ（shell_header_sidebar / post_list / drive / calendar）と同じ
+   「サイドバーの右にヘッダー」の形に揃える。
+   markup は触らず、中間のラッパー（.app-inner / .main-row）を display:contents で
+   透過させて、.app のグリッドに topbar / サイドバー / content を直接並べている。
+   サイドバーのクラス名はページによって .sidebar と .sb の2種類がある。 */
+.app{
+  display:grid;
+  grid-template-columns:235px minmax(0,1fr);
+  grid-template-rows:auto minmax(0,1fr);
+  background:var(--color-background);
+  padding:10px;
+  gap:10px;
+  /* 正シェルと同じ。app が画面を埋めて、中身は .content の中でスクロールさせる */
+  height:100vh;
+  overflow:hidden;
+}
+.app-inner,.main-row{display:contents;}
+.sidebar,.main-row > .sb{grid-column:1;grid-row:1 / span 2;}
+.topbar{grid-column:2;grid-row:1;}
+.content{grid-column:2;grid-row:2;min-height:0;overflow-y:auto;}
+/* 生成りの地に浮いた3枚のカードとして置く（他ページと同じ扱い） */
+.sidebar,.main-row > .sb{border-right:none;border-radius:var(--radius-xl);overflow-y:auto;}
+.topbar{border-bottom:none;border-radius:var(--radius-xl);background:var(--color-card);
+  box-shadow:var(--shadow-card);padding:0 22px;}
+.content{border-radius:var(--radius-xl);background:var(--color-card);
+  box-shadow:var(--shadow-card);}
+/* ===== サイドバーの文字を白に =====
+   オレンジ地に白なので、hover / 選択中は面の濃さだけで見分けさせる
+   （10% / 22%）。縁は付けない。他ページの .sb と同じ値に合わせている。 */
+.sidebar{background:linear-gradient(180deg,#fe7235 0%,#e85513 55%,#d54101 100%);}
+.sidebar .sb-cta{background:#fff;color:#d54101;}
+.sidebar .sb-cta:hover{filter:brightness(.96);}
+.sidebar .sb-btn{color:rgba(255,255,255,.88);text-decoration:none;}
+.sidebar .sb-btn .ti{color:rgba(255,255,255,.88);}
+.sidebar .sb-btn:hover{background:rgba(255,255,255,.10);color:#fff;}
+.sidebar .sb-btn:hover .ti{color:#fff;}
+.sidebar .sb-btn.active,.sidebar .sb-btn.on{background:rgba(255,255,255,.22);color:#fff;}
+.sidebar .sb-btn.active .ti,.sidebar .sb-btn.on .ti{color:#fff;}
+.sidebar .sb-btn .sb-cv{color:rgba(255,255,255,.7);}
+.sidebar .sb-div{background:rgba(255,255,255,.22);}
+.sidebar .sb-sub a{color:rgba(255,255,255,.8);text-decoration:none;}
+.sidebar .sb-sub a:hover{background:rgba(255,255,255,.10);color:#fff;}
+.sidebar .sb-acct{background:rgba(255,255,255,.16);border-color:rgba(255,255,255,.30);}
+.sidebar .sb-acct div{color:#fff;}
+.sidebar .sb-acct .avatar{background:#fff;color:#d54101;}
+/* .sb 系（analysis_posts）はオレンジ化済み。下線だけ外す */
+.main-row > .sb a{text-decoration:none;}
+/* .content を高さ固定のグリッド項目にしたぶん、縦並びの子に flex-shrink が効く。
+   タブ帯は縮ませない（analysis_posts で 23px → 1px に潰れていた） */
+.content > .tab-nav{flex:none;}
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><symbol id="ico-user" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="7.5" r="4.5"/><path d="M3.5 21v-1.2c0-3.3 3.8-5.3 8.5-5.3s8.5 2 8.5 5.3V21z"/></symbol></svg>
+
 <div class="app">
   <!-- ===== topbar (投稿作成フロー準拠) ===== -->
   <div class="topbar">
@@ -621,10 +781,11 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
                 <div class="num primary" style="font-size:4rem;">72<span class="unit" style="font-size:var(--text-h1);">点</span></div>
                 <div class="sub">100点中（先月比 +8点）</div>
               </div>
+              <div class="sl-gauge" aria-label="100点中72点"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span></span><span></span><span></span></div>
               <div class="sl-badge-row">
-                <div class="sl-badge up"><i class="ti ti-arrow-up" style="font-size:12px;"></i> フォロワー +200%</div>
-                <div class="sl-badge up"><i class="ti ti-arrow-up" style="font-size:12px;"></i> 投稿数 +2件</div>
-                <div class="sl-badge down"><i class="ti ti-arrow-down" style="font-size:12px;"></i> リーチ -99% <span class="help-tip">?<span class="help-text">リーチ = 投稿を見た人の数</span></span></div>
+                <div class="sl-badge up"><i class="ti ti-arrow-up" style="font-size:14px;"></i> フォロワー +200%</div>
+                <div class="sl-badge up"><i class="ti ti-arrow-up" style="font-size:14px;"></i> 投稿数 +2件</div>
+                <div class="sl-badge down"><i class="ti ti-arrow-down" style="font-size:14px;"></i> リーチ -99% <span class="help-tip">?<span class="help-text">リーチ = 投稿を見た人の数</span></span></div>
               </div>
               <hr class="sl-divider">
               <div style="display:flex;align-items:center;gap:10px;justify-content:center;">
@@ -638,11 +799,14 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
               <div class="slide-num">2 / 5</div>
               <div class="sl-hd">
                 <div class="sl-icon up"><i class="ti ti-arrow-up"></i></div>
-                <div class="sl-label">一番伸びた！</div>
+                <div class="sl-label">フォロワー数</div>
               </div>
-              <div style="text-align:center;font-size:var(--text-body);color:var(--color-muted-foreground);margin-top:4px;">フォロワー数</div>
+              <div class="sl-note">今月いちばん伸びた</div>
               <div class="sl-big">
                 <div class="num up">+4<span class="unit">人</span></div>
+              </div>
+              <div class="sl-people" aria-label="1ヶ月前の2人に4人増えて今月6人">
+                <svg class="pu gain"><use href="#ico-user"/></svg><svg class="pu gain"><use href="#ico-user"/></svg><svg class="pu gain"><use href="#ico-user"/></svg><svg class="pu gain"><use href="#ico-user"/></svg><svg class="pu base"><use href="#ico-user"/></svg><svg class="pu base"><use href="#ico-user"/></svg><svg class="pu empty"><use href="#ico-user"/></svg><svg class="pu empty"><use href="#ico-user"/></svg><svg class="pu empty"><use href="#ico-user"/></svg><svg class="pu empty"><use href="#ico-user"/></svg>
               </div>
               <div class="sl-compare nobar">
                 <div class="sl-compare-row">
@@ -670,14 +834,16 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
               <div class="sl-big">
                 <div class="num down">-383<span class="unit">回</span></div>
               </div>
-              <div class="sl-compare nobar">
-                <div class="sl-compare-row">
-                  <span class="lbl">1ヶ月前</span>
-                  <span class="val">387回</span>
+              <div class="sl-hbars">
+                <div class="sl-hbar">
+                  <span class="nm">1ヶ月前</span>
+                  <span class="track"><span class="fill before" style="width:100%"></span></span>
+                  <span class="v">387回</span>
                 </div>
-                <div class="sl-compare-row now">
-                  <span class="lbl">今月</span>
-                  <span class="val down">4回</span>
+                <div class="sl-hbar">
+                  <span class="nm">今月</span>
+                  <span class="track"><span class="fill down" style="width:1%"></span></span>
+                  <span class="v" style="color:var(--color-destructive)">4回</span>
                 </div>
               </div>
               <hr class="sl-divider">
@@ -694,8 +860,8 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
                 <div class="sl-icon star"><i class="ti ti-star"></i></div>
                 <div class="sl-label">ベスト投稿</div>
               </div>
-              <div class="sl-post">
-                <div class="sl-post-thumb"><i class="ti ti-photo"></i></div>
+              <div class="sl-post rank1">
+                <div class="sl-post-thumb"><i class="ti ti-photo"></i><span class="sl-rank">1位</span></div>
                 <div class="sl-post-info">
                   <div class="title">犬カフェRioの子犬ふれあい体験</div>
                   <div class="meta">6/1 14:00 リール動画</div>
@@ -707,7 +873,8 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
                 </div>
               </div>
               <hr class="sl-divider">
-              <div class="sl-post">
+              <div class="sl-post rank2">
+                <span class="sl-rank2">2位</span>
                 <div class="sl-post-thumb"><i class="ti ti-photo"></i></div>
                 <div class="sl-post-info">
                   <div class="title">本日のキャスト紹介</div>
@@ -764,14 +931,16 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
                 <div class="sl-icon neutral"><i class="ti ti-sparkles"></i></div>
                 <div class="sl-label">企画の傾向</div>
               </div>
-              <div class="sl-big">
-                <div class="num primary" style="font-size:3.5rem;">3<span class="unit">パターン</span></div>
-                <div class="sub">直近1ヶ月の投稿企画タイプ</div>
-              </div>
-              <div class="sl-badge-row">
-                <div class="sl-badge primary">子犬紹介 50%</div>
-                <div class="sl-badge neutral">グランピング 30%</div>
-                <div class="sl-badge neutral">お知らせ 20%</div>
+              <div class="sl-note">直近1ヶ月の投稿企画タイプ（3パターン）</div>
+              <div class="sl-donut-wrap">
+                <div class="sl-donut" style="background:conic-gradient(var(--color-chart-1) 0 50%,var(--color-chart-2) 50% 80%,var(--color-chart-3) 80% 100%)" aria-label="子犬紹介50% グランピング30% お知らせ20%">
+                  <div class="sl-donut-cap"><span class="t">50%</span><span class="s">子犬紹介</span></div>
+                </div>
+                <div class="sl-mix-legend">
+                  <div class="row"><span class="dot c1"></span><span class="nm">子犬紹介</span><span class="pc">50%</span></div>
+                  <div class="row"><span class="dot c2"></span><span class="nm">グランピング</span><span class="pc">30%</span></div>
+                  <div class="row"><span class="dot c3"></span><span class="nm">お知らせ</span><span class="pc">20%</span></div>
+                </div>
               </div>
               <hr class="sl-divider">
               <div style="display:flex;align-items:center;gap:10px;justify-content:center;">
@@ -790,6 +959,18 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
               <div class="sl-big">
                 <div class="num up">1,777<span class="unit">リーチ</span></div>
                 <div class="sub">リール動画 / 6月1日投稿</div>
+              </div>
+              <div class="sl-hbars">
+                <div class="sl-hbar">
+                  <span class="nm">この投稿</span>
+                  <span class="track"><span class="fill up" style="width:100%"></span></span>
+                  <span class="v">1,777</span>
+                </div>
+                <div class="sl-hbar">
+                  <span class="nm">平均</span>
+                  <span class="track"><span class="fill before" style="width:12%"></span></span>
+                  <span class="v">214</span>
+                </div>
               </div>
               <hr class="sl-divider">
               <div style="font-size:var(--text-body);text-align:center;line-height:1.6;color:var(--color-foreground);">冒頭3秒の<strong>子犬アップ</strong>が<br>完了率を引き上げた</div>
@@ -830,6 +1011,7 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
                 <div class="num primary" style="font-size:4rem;">58<span class="unit" style="font-size:var(--text-h1);">点</span></div>
                 <div class="sub">100点中</div>
               </div>
+              <div class="sl-gauge" aria-label="100点中58点"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="half"></span><span></span><span></span><span></span><span></span></div>
               <div class="sl-badge-row">
                 <div class="sl-badge down">CTA なし 80%</div>
                 <div class="sl-badge down">文字数 少なすぎ</div>
@@ -840,12 +1022,18 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
               <div class="slide-num">2 / 3</div>
               <div class="sl-hd">
                 <div class="sl-icon down"><i class="ti ti-help-circle"></i></div>
-                <div class="sl-label">ここが弱い！</div>
+                <div class="sl-label">CTAが入っていない</div>
               </div>
-              <div style="text-align:center;font-size:var(--text-body);color:var(--color-muted-foreground);margin-top:4px;">行動を促す一言（CTA）</div>
-              <div class="sl-big">
-                <div class="num down">80<span class="unit">%</span></div>
-                <div class="sub">の投稿にCTAがない</div>
+              <div class="sl-note">CTA＝「保存してね」のような行動を促す一言</div>
+              <div class="sl-dots" aria-label="10投稿のうち8つにCTAがない">
+                <span class="on-down"></span><span class="on-down"></span><span class="on-down"></span>
+                <span class="on-down"></span><span class="on-down"></span><span class="on-down"></span>
+                <span class="on-down"></span><span class="on-down"></span>
+                <span class="off"></span><span class="off"></span>
+              </div>
+              <div class="sl-verdict">
+                <div class="v-main">ほとんどの投稿に<br>CTAが入っていない</div>
+                <div class="v-sub">10投稿中 8つ（80%）</div>
               </div>
               <hr class="sl-divider">
               <div style="display:flex;align-items:center;gap:10px;justify-content:center;">
@@ -885,15 +1073,23 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
                 <div class="sl-icon neutral"><i class="ti ti-photo"></i></div>
                 <div class="sl-label">コンテンツ形式</div>
               </div>
-              <div class="sl-big">
-                <div class="num down" style="font-size:2.5rem;">テキスト40%</div>
-                <div class="sub">テキスト投稿が多すぎ！</div>
+              <div class="sl-note">直近1ヶ月の投稿フォーマット</div>
+              <div class="sl-mix">
+                <div class="sl-mix-bar" aria-label="テキスト40% カルーセル25% リール20% 画像15%">
+                  <span class="c1" style="width:40%"></span>
+                  <span class="c2" style="width:25%"></span>
+                  <span class="c3" style="width:20%"></span>
+                  <span class="c4" style="width:15%"></span>
+                </div>
+                <div class="sl-mix-legend">
+                  <div class="row"><span class="dot c1"></span><span class="nm">テキスト</span><span class="pc">40%</span></div>
+                  <div class="row"><span class="dot c2"></span><span class="nm">カルーセル</span><span class="pc">25%</span></div>
+                  <div class="row"><span class="dot c3"></span><span class="nm">リール</span><span class="pc">20%</span></div>
+                  <div class="row"><span class="dot c4"></span><span class="nm">画像</span><span class="pc">15%</span></div>
+                </div>
               </div>
-              <div class="sl-badge-row">
-                <div class="sl-badge down">テキスト 40%</div>
-                <div class="sl-badge up">リール 20%</div>
-                <div class="sl-badge neutral">カルーセル 25%</div>
-                <div class="sl-badge neutral">画像 15%</div>
+              <div class="sl-badge-row" style="margin-top:8px;">
+                <div class="sl-badge down">テキストが多すぎ</div>
               </div>
             </div>
 
@@ -958,6 +1154,15 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
                 <div class="num primary" style="font-size:3rem;">火曜 14時</div>
                 <div class="sub">この時間帯がダントツで伸びた</div>
               </div>
+              <div class="sl-week7" aria-label="曜日ごとの平均リーチ。火曜が最も高い">
+                <div class="d"><div class="bar" style="height:22%"></div><span class="lb">月</span></div>
+                <div class="d best"><div class="bar" style="height:100%"></div><span class="lb">火</span></div>
+                <div class="d"><div class="bar" style="height:31%"></div><span class="lb">水</span></div>
+                <div class="d"><div class="bar" style="height:18%"></div><span class="lb">木</span></div>
+                <div class="d"><div class="bar" style="height:44%"></div><span class="lb">金</span></div>
+                <div class="d"><div class="bar" style="height:27%"></div><span class="lb">土</span></div>
+                <div class="d"><div class="bar" style="height:15%"></div><span class="lb">日</span></div>
+              </div>
               <div class="sl-badge-row">
                 <div class="sl-badge up">リーチ 1,777</div>
               </div>
@@ -977,6 +1182,13 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
               <div class="sl-big">
                 <div class="num down">3<span class="unit">週間</span></div>
                 <div class="sub">6/1以降、投稿がほぼ停止</div>
+              </div>
+              <div class="sl-weeks" aria-label="直近8週のうち3週が投稿なし">
+                <span></span><span></span><span></span><span></span><span></span>
+                <span class="gap"></span><span class="gap"></span><span class="gap"></span>
+              </div>
+              <div class="sl-weeks-cap">
+                <span>■ 投稿あり</span><span>■ 投稿なし</span>
               </div>
               <hr class="sl-divider">
               <div style="font-size:var(--text-body);text-align:center;line-height:1.6;color:var(--color-foreground);">空白期間が長いと<br><strong>フォロワー離れ</strong>の原因に</div>
@@ -1037,49 +1249,49 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
                 <div class="metric-card">
                   <div class="mc-label"><i class="ti ti-users"></i> フォロワー数</div>
                   <div class="mc-value" style="color:var(--color-foreground);">6<span style="font-size:var(--text-body);font-weight:500;">人</span></div>
-                  <div class="mc-change up"><i class="ti ti-arrow-up" style="font-size:12px;"></i> +200%</div>
+                  <div class="mc-change up"><i class="ti ti-arrow-up" style="font-size:14px;"></i> +200%</div>
                   <div class="mc-bar"><div class="mc-bar-fill" style="width:100%;background:var(--color-success);"></div></div>
                 </div>
                 <!-- 投稿数 -->
                 <div class="metric-card">
                   <div class="mc-label"><i class="ti ti-pencil"></i> 投稿数</div>
                   <div class="mc-value">2<span style="font-size:var(--text-body);font-weight:500;">件</span></div>
-                  <div class="mc-change up"><i class="ti ti-arrow-up" style="font-size:12px;"></i> +2件</div>
+                  <div class="mc-change up"><i class="ti ti-arrow-up" style="font-size:14px;"></i> +2件</div>
                   <div class="mc-bar"><div class="mc-bar-fill" style="width:100%;background:var(--color-success);"></div></div>
                 </div>
                 <!-- インプレッション -->
                 <div class="metric-card">
                   <div class="mc-label"><i class="ti ti-eye"></i> インプレッション <span class="help-tip">?<span class="help-text">投稿が表示された回数</span></span></div>
                   <div class="mc-value">4<span style="font-size:var(--text-body);font-weight:500;">回</span></div>
-                  <div class="mc-change down"><i class="ti ti-arrow-down" style="font-size:12px;"></i> -99%</div>
+                  <div class="mc-change down"><i class="ti ti-arrow-down" style="font-size:14px;"></i> -99%</div>
                   <div class="mc-bar"><div class="mc-bar-fill" style="width:1%;background:var(--color-destructive);"></div></div>
                 </div>
                 <!-- 平均いいね -->
                 <div class="metric-card">
                   <div class="mc-label"><i class="ti ti-heart"></i> 平均いいね数</div>
                   <div class="mc-value">0</div>
-                  <div class="mc-change down"><i class="ti ti-arrow-down" style="font-size:12px;"></i> -100%</div>
+                  <div class="mc-change down"><i class="ti ti-arrow-down" style="font-size:14px;"></i> -100%</div>
                   <div class="mc-bar"><div class="mc-bar-fill" style="width:0%;background:var(--color-destructive);"></div></div>
                 </div>
                 <!-- コメント -->
                 <div class="metric-card">
                   <div class="mc-label"><i class="ti ti-messages"></i> コメント数</div>
                   <div class="mc-value">0<span style="font-size:var(--text-body);font-weight:500;">件</span></div>
-                  <div class="mc-change down"><i class="ti ti-arrow-down" style="font-size:12px;"></i> -100%</div>
+                  <div class="mc-change down"><i class="ti ti-arrow-down" style="font-size:14px;"></i> -100%</div>
                   <div class="mc-bar"><div class="mc-bar-fill" style="width:0%;background:var(--color-destructive);"></div></div>
                 </div>
                 <!-- エンゲージメント率 -->
                 <div class="metric-card">
                   <div class="mc-label"><i class="ti ti-chart-line"></i> エンゲージメント率 <span class="help-tip">?<span class="help-text">いいね・コメント・保存など反応した人の割合</span></span></div>
                   <div class="mc-value">0.0<span style="font-size:var(--text-body);font-weight:500;">%</span></div>
-                  <div class="mc-change down"><i class="ti ti-arrow-down" style="font-size:12px;"></i> -8.3%</div>
+                  <div class="mc-change down"><i class="ti ti-arrow-down" style="font-size:14px;"></i> -8.3%</div>
                   <div class="mc-bar"><div class="mc-bar-fill" style="width:0%;background:var(--color-destructive);"></div></div>
                 </div>
                 <!-- HP誘導数 -->
                 <div class="metric-card">
                   <div class="mc-label"><i class="ti ti-arrow-up-right"></i> HP誘導数 <span class="help-tip">?<span class="help-text">投稿やプロフィールからホームページに来た人の数</span></span></div>
                   <div class="mc-value">0<span style="font-size:var(--text-body);font-weight:500;">件</span></div>
-                  <div class="mc-change flat"><i class="ti ti-minus" style="font-size:12px;"></i> --</div>
+                  <div class="mc-change flat"><i class="ti ti-minus" style="font-size:14px;"></i> --</div>
                   <div class="mc-bar"><div class="mc-bar-fill" style="width:0%;background:var(--color-border-strong);"></div></div>
                 </div>
               </div>
@@ -1090,7 +1302,7 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
         <!-- ACC 2: 投稿頻度の推移 -->
         <div class="acc" onclick="this.classList.toggle('open')">
           <div class="acc-hd">
-            <div class="acc-icon" style="background:var(--color-warning-subtle);color:var(--color-warning);"><i class="ti ti-calendar"></i></div>
+            <div class="acc-icon" style="background:var(--color-primary-subtle);color:var(--color-primary);"><i class="ti ti-calendar"></i></div>
             <div class="acc-title">投稿頻度の推移</div>
             <div class="acc-preview">直近6ヶ月</div>
             <span class="acc-toggle"><span class="toggle-label"></span><i class="ti ti-chevron-down"></i></span>
@@ -1113,7 +1325,7 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
         <!-- ACC 3: フォロワー推移 -->
         <div class="acc" onclick="this.classList.toggle('open')">
           <div class="acc-hd">
-            <div class="acc-icon" style="background:var(--color-success-subtle);color:var(--color-success);"><i class="ti ti-chart-line"></i></div>
+            <div class="acc-icon" style="background:var(--color-primary-subtle);color:var(--color-primary);"><i class="ti ti-chart-line"></i></div>
             <div class="acc-title">フォロワー推移</div>
             <div class="acc-preview">過去30日</div>
             <span class="acc-toggle"><span class="toggle-label"></span><i class="ti ti-chevron-down"></i></span>
@@ -1125,7 +1337,7 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
                   <div style="font-size:var(--text-h2);font-weight:900;">6<span style="font-size:var(--text-body);font-weight:500;">人</span></div>
                   <div style="font-size:var(--text-meta);color:var(--color-muted-foreground);">2026/7/13時点</div>
                 </div>
-                <div class="sl-badge up"><i class="ti ti-arrow-up" style="font-size:12px;"></i> +29.38%</div>
+                <div class="sl-badge up"><i class="ti ti-arrow-up" style="font-size:14px;"></i> +29.38%</div>
               </div>
               <div class="chart-placeholder">
                 <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
@@ -1140,7 +1352,7 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
         <!-- ACC 4: 投稿レポート一覧 -->
         <div class="acc" onclick="this.classList.toggle('open')">
           <div class="acc-hd">
-            <div class="acc-icon" style="background:var(--color-info-subtle);color:var(--color-info);"><i class="ti ti-list-details"></i></div>
+            <div class="acc-icon" style="background:var(--color-primary-subtle);color:var(--color-primary);"><i class="ti ti-list-details"></i></div>
             <div class="acc-title">投稿レポート一覧</div>
             <div class="acc-preview">23件</div>
             <span class="acc-toggle"><span class="toggle-label"></span><i class="ti ti-chevron-down"></i></span>
@@ -1204,7 +1416,7 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
                 </tbody>
               </table>
               <div style="text-align:center;padding:4px 0;">
-                <a href="#" style="font-size:var(--text-label);color:var(--color-primary);text-decoration:none;font-weight:700;">すべての投稿を見る <i class="ti ti-arrow-right" style="font-size:12px;"></i></a>
+                <a href="#" style="font-size:var(--text-label);color:var(--color-primary);text-decoration:none;font-weight:700;">すべての投稿を見る <i class="ti ti-arrow-right" style="font-size:14px;"></i></a>
               </div>
             </div>
           </div>
@@ -1213,7 +1425,7 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
         <!-- ACC 5: 改善案の詳細（テキスト版） -->
         <div class="acc" onclick="this.classList.toggle('open')">
           <div class="acc-hd">
-            <div class="acc-icon" style="background:var(--color-accent-purple-subtle);color:var(--color-accent-purple);"><i class="ti ti-file-text"></i></div>
+            <div class="acc-icon" style="background:var(--color-primary-subtle);color:var(--color-primary);"><i class="ti ti-file-text"></i></div>
             <div class="acc-title">改善案の詳細（テキスト版）</div>
             <div class="acc-preview">AI生成</div>
             <span class="acc-toggle"><span class="toggle-label"></span><i class="ti ti-chevron-down"></i></span>

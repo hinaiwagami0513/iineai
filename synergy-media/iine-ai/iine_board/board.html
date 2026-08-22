@@ -57,23 +57,23 @@
   --color-success: #008a24; --color-success-vivid: #00ac2f;
   --color-success-subtle: #f3fcf6;
   --color-warning: #ad6201;
-  --color-warning-border: #fea735;
+  --color-warning-border: #ffe6c4;
   --color-warning-subtle: #fff9f1;
   --color-info: #0070f0;
   --color-info-subtle: #f1f7ff;
   --color-destructive: #e90c2a;
   --color-on-destructive: #ffffff;
-  --color-destructive-subtle: #fddfe3;
+  --color-destructive-subtle: #feeef1;
   --color-like: #ef3a58;
-  --color-like-subtle: #fddfe3;
+  --color-like-subtle: #feeef1;
   --color-accent-purple: #9724ba;
   --color-accent-purple-subtle: #f5e7f8;
   --color-sns-instagram: #b02a78;
   --color-sns-instagram-subtle: #fce7f3;
   --color-sns-x: #2a2826;
-  --color-sns-x-subtle: #f2efeb;
-  --color-sns-tiktok: #0e7490;
-  --color-sns-tiktok-subtle: #e0f7fa;
+  --color-sns-x-subtle: #fcf5ef;
+  --color-sns-tiktok: #854f0b;
+  --color-sns-tiktok-subtle: #fef3c7;
   --color-sns-youtube: #c4302b;
   --color-sns-youtube-subtle: #fcebeb;
   --color-editor-bg: #1e1a17;
@@ -99,8 +99,8 @@
   --text-body-lg: 1rem;
   --text-body: 0.875rem;
   --text-body-strong: 0.875rem;
-  --text-label: 0.75rem;
-  --text-meta: 0.625rem;
+  --text-label: 0.875rem;
+  --text-meta: 0.875rem;
   --font-weight-display: 900;
   --font-weight-h1: 900;
   --font-weight-h2: 700;
@@ -138,7 +138,7 @@ body{background:#eceae7;color:var(--color-foreground);padding-bottom:60px;}
   font-size:var(--text-label);font-weight:var(--font-weight-body-strong);}
 .jump-open:hover{border-color:var(--color-primary);color:var(--color-primary);background:var(--color-primary-subtle);}
 .jump-open i{font-size:15px;}
-.jump-kbd{font-size:10px;font-weight:700;color:var(--color-muted-foreground);background:var(--color-background);
+.jump-kbd{font-size:14px;font-weight:700;color:var(--color-muted-foreground);background:var(--color-background);
   border:1px solid var(--color-border);border-radius:var(--radius-sm);padding:2px 5px;}
 .logo{height:24px;} .board-t{font-size:var(--text-h3);font-weight:var(--font-weight-body-strong);}
 .cnt{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:#fff;background:var(--color-primary);border-radius:var(--radius-full);padding:4px 12px;}
@@ -167,7 +167,7 @@ body{background:#eceae7;color:var(--color-foreground);padding-bottom:60px;}
 .thumb:hover{box-shadow:0 8px 24px rgba(0,0,0,.14);border-color:var(--color-primary);transform:translateY(-2px);}
 .thumb iframe{position:absolute;top:0;left:0;border:0;transform-origin:top left;pointer-events:none;background:#fff;}
 .open-badge{position:absolute;top:8px;right:8px;z-index:2;display:flex;align-items:center;gap:4px;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:#fff;background:rgba(42,40,38,.72);border-radius:var(--radius-full);padding:4px 10px;opacity:0;transition:opacity .15s;}
-.thumb:hover .open-badge{opacity:1;} .open-badge .ti{font-size:12px;}
+.thumb:hover .open-badge{opacity:1;} .open-badge .ti{font-size:14px;}
 .lb-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(42,40,38,.6);z-index:9999;display:flex;align-items:center;justify-content:center;animation:lbIn .2s;}
 @keyframes lbIn{from{opacity:0;}to{opacity:1;}}
 .lb-box{background:var(--color-card);border-radius:var(--radius-xl);box-shadow:0 8px 40px rgba(0,0,0,.22);width:90vw;max-width:1400px;height:85vh;display:flex;flex-direction:column;overflow:hidden;}
@@ -358,7 +358,9 @@ body{background:#eceae7;color:var(--color-foreground);padding-bottom:60px;}
     <div class="flabel"><span class="ftitle">投稿を編集</span><span class="fnote">3ペイン・台本/投稿文/AIレビュー・AIアシスト</span></div>
     <div class="thumb" data-w="1200" data-href="./flow_video_script_wire.html#step=editor" data-title="投稿を編集（動画）" onclick="openLB(this)">
       <span class="open-badge">クリックで新しいタブ</span>
-      <iframe src="./post_editor_wire.html" scrolling="no" tabindex="-1" data-w="1200"></iframe>
+      <!-- クリック先と同じものを描く。別ファイルを描いていたため、修正が反映されて
+           いないように見えていた（2026-08-21） -->
+      <iframe src="./flow_video_script_wire.html#step=editor" scrolling="no" tabindex="-1" data-w="1200"></iframe>
     </div>
   </div><div class="frame">
     <div class="flabel"><span class="ftitle">確認依頼</span><span class="fnote">送信ボタンで承認者へ依頼</span></div>
@@ -414,6 +416,9 @@ body{background:#eceae7;color:var(--color-foreground);padding-bottom:60px;}
   </div><div class="frame">
     <div class="flabel"><span class="ftitle">承認者確認中</span><span class="fnote">編集可+承認ボタン</span></div>
     <div class="thumb" data-w="1200" data-href="./post_editor_image_wire.html#approval-review" data-title="承認者確認中（画像）" onclick="openLB(this)"><span class="open-badge">クリックで新しいタブ</span><iframe src="./post_editor_image_wire.html#approval-review" scrolling="no" tabindex="-1" data-w="1200"></iframe></div>
+  </div><div class="frame">
+    <div class="flabel"><span class="ftitle">承認済み</span><span class="fnote">承認バナー+投稿日を決める</span></div>
+    <div class="thumb" data-w="1200" data-href="./post_editor_image_wire.html#approval-approved" data-title="承認済み（画像）" onclick="openLB(this)"><span class="open-badge">クリックで新しいタブ</span><iframe src="./post_editor_image_wire.html#approval-approved" scrolling="no" tabindex="-1" data-w="1200"></iframe></div>
   </div><div class="frame">
     <div class="flabel"><span class="ftitle">画像エディタ</span><span class="fnote">暖色ダーク・純黒ステージ・右ペインタブ</span></div>
     <div class="thumb" data-w="1280" data-href="./image_editor_dark_wire.html" data-title="画像エディタ" onclick="openLB(this)">
@@ -488,6 +493,17 @@ document.addEventListener('keydown',function(e){
   document.getElementById('cntFrames').textContent = frames + ' frames';
   document.getElementById('cntAll').textContent = frames;
   document.getElementById('cntDone').textContent = frames - todo;
+  /* セクションごとの「8/8」も数え直す。ここは手書きのままで、画面を足すたびに
+     ずれていた（画像フローに承認済みを足した時点で 8/8 のままだった） */
+  document.querySelectorAll('.sec-h').forEach(function(h){
+    var num = h.querySelector('.sec-num');
+    var list = h.nextElementSibling;
+    while(list && !list.classList.contains('frames')) list = list.nextElementSibling;
+    if(!num || !list) return;
+    var all  = list.querySelectorAll('.frame').length;
+    var done = all - list.querySelectorAll('.thumb.empty').length;
+    num.textContent = done + '/' + all;
+  });
 })();
 </script>
 </body></html>

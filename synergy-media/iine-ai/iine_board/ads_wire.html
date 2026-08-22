@@ -66,22 +66,22 @@
   --color-success: #008a24; --color-success-vivid: #00ac2f;
   --color-success-subtle: #f3fcf6;
   --color-warning: #ad6201;
-  --color-warning-border: #fea735;
+  --color-warning-border: #ffe6c4;
   --color-warning-subtle: #fff9f1;
   --color-info: #0070f0;
   --color-info-subtle: #f1f7ff;
   --color-destructive: #e90c2a;
-  --color-destructive-subtle: #fddfe3;
+  --color-destructive-subtle: #feeef1;
   --color-accent-purple: #9724ba;
   --color-accent-purple-subtle: #f5e7f8;
   --color-like: #ef3a58;
-  --color-like-subtle: #fddfe3;
+  --color-like-subtle: #feeef1;
   --color-sns-instagram: #b02a78;
   --color-sns-instagram-subtle: #fce7f3;
   --color-sns-x: #2a2826;
-  --color-sns-x-subtle: #f2efeb;
-  --color-sns-tiktok: #0e7490;
-  --color-sns-tiktok-subtle: #e0f7fa;
+  --color-sns-x-subtle: #fcf5ef;
+  --color-sns-tiktok: #854f0b;
+  --color-sns-tiktok-subtle: #fef3c7;
   --color-sns-youtube: #c4302b;
   --color-sns-youtube-subtle: #fcebeb;
   --font-body: Inter, "Noto Sans JP";
@@ -90,8 +90,8 @@
   --text-h3: 1rem;
   --text-body-lg: 1rem;
   --text-body: 0.875rem;
-  --text-label: 0.75rem;
-  --text-meta: 0.625rem;
+  --text-label: 0.875rem;
+  --text-meta: 0.875rem;
   --font-weight-h1: 700;
   --font-weight-h2: 700;
   --font-weight-h3: 700;
@@ -160,7 +160,8 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 /* ===== 3つのサービスの切替 =====
    広告作成・発注相談・出張撮影は「プロに頼む」仲間なので、同じ場所で行き来できるようにする。
    この画面は広告作成が現在地なので、そこだけ span で出して押せないようにしている。 */
-.svc{flex:none;display:flex;gap:0;padding:0 26px;border-bottom:1px solid var(--color-border);background:var(--color-card);}
+/* 背景は敷かない。ページ背景の上に白帯が乗るとタブが別のカードに見える */
+.svc{flex:none;display:flex;gap:0;padding:0 26px;border-bottom:1px solid var(--color-border);}
 .svc a,.svc button,.svc span{display:flex;align-items:center;gap:8px;padding:13px 20px;font-family:inherit;font-size:var(--text-body-lg);font-weight:var(--font-weight-label);color:var(--color-muted-foreground);background:none;border:none;border-bottom:3px solid transparent;margin-bottom:-1px;cursor:pointer;text-decoration:none;}
 .svc a:hover,.svc button:hover{color:var(--color-foreground);}
 .svc .on{color:var(--color-primary);border-bottom-color:var(--color-primary);font-weight:var(--font-weight-body-strong);cursor:default;}
@@ -282,7 +283,7 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .gen .d{font-size:var(--text-body);color:var(--color-muted-foreground);line-height:1.9;margin-bottom:20px;}
 .gsteps{display:flex;flex-direction:column;gap:2px;margin-bottom:20px;}
 .gstep{display:flex;align-items:center;gap:12px;padding:11px 0;font-size:var(--text-body);color:var(--color-muted-foreground);}
-.gstep .m{width:24px;height:24px;flex:none;border-radius:var(--radius-full);border:2px solid var(--color-border);display:flex;align-items:center;justify-content:center;font-size:13px;}
+.gstep .m{width:24px;height:24px;flex:none;border-radius:var(--radius-full);border:2px solid var(--color-border);display:flex;align-items:center;justify-content:center;font-size:14px;}
 .gstep.done{color:var(--color-foreground);}
 /* 完了マーカーのチェック。マークアップの <span class="m"> は空で、進行のJSも
    クラスを付け替えるだけなので、字形が入らず緑の丸だけになっていた。
