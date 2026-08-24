@@ -37,6 +37,12 @@
 .ti-brand-x:before{content:"\fc0f"}
 .ti-brand-tiktok:before{content:"\ec73"}
 .ti-brand-youtube:before{content:"\ec90"}
+/* 追加分。字形コードは tabler-icons-inline.css（同梱フォント）から取った。
+   copy と info-circle はフォントに glyph が無いので使えない（豆腐になる）。
+   chevron-left は「SNS設定にもどる」で使っているのに宣言が漏れていて出ていなかった。 */
+.ti-chevron-left:before{content:"\ea60"}
+.ti-photo:before{content:"\eb0a"}
+.ti-clipboard-list:before{content:"\ea6d"}
 
 :root {
   /* 新パレット（藍・水色）由来の追加トークン */
@@ -196,7 +202,7 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
    白カードではなくそのSNSの色を敷いて、どのSNSの数字を見ているかを面で示す。
    地・枠・アイコンは openSnsAcc() が --color-sns-* から流し込む。 */
 .acchd{display:flex;align-items:center;gap:14px;background:var(--color-card);border:1px solid var(--color-border);
-  border-radius:var(--radius-lg);padding:16px 20px;margin-bottom:18px;transition:background .2s,border-color .2s;}
+  border-radius:var(--radius-lg);padding:16px 20px;margin-bottom:18px;}
 /* ハンドルは本人のプロフィールへ出る導線。押せることを下線で示す（オレンジにはしない＝
    このページの主役ではないため。[[orange-only-interaction]] の例外にしない） */
 .acchd a.ac{text-decoration:none;border-bottom:1px solid currentColor;align-self:flex-start;}
@@ -209,13 +215,26 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .acchd .stat .k{display:block;font-size:var(--text-label);color:var(--color-muted-foreground);}
 .acchd .stat .v{display:block;font-size:var(--text-h3);font-weight:var(--font-weight-body-strong);margin-top:2px;}
 
-/* ===== 弁当レイアウト（2026-08-21）=====
-   アカウントの中は「言葉づかい・出し方・目標・見通し」の4枚。縦一列だと
-   いちばん見たい見通しのグラフが下に沈むので、大きさの違うカードを左右に並べる。
-   3列グリッドに 2/1 → 1/2 で組むと2行で収まり、余白も出ない。 */
-.bento{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;align-items:stretch;}
-.bento > .bx-1{grid-column:span 1;}
-.bento > .bx-2{grid-column:span 2;}
+/* ===== ルールの見出し帯 =====
+   投稿ルールはSNSごとに持てるが、実際はほとんどのSNSで同じ内容になる。
+   4項目を毎回入れ直させないため、「ほかのSNSから写す」をルールカードの手前に置く。
+   メニューは .sns 行と同じ .act + .rowmenu の仕組みを使う（rowMenu / closeRowMenus を共用）。
+   .rowmenu は position:absolute なので、包む .act 側に relative が必要。 */
+.rulebar{display:flex;align-items:center;gap:14px;margin-bottom:18px;}
+.rulebar .tx{flex:1;min-width:0;}
+.rulebar .t{font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);}
+.rulebar .d{font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:3px;line-height:1.7;}
+.rulebar .act{flex:none;position:relative;}
+
+/* ===== カードの並び =====
+   もとは3列に 2/1 で混ぜる弁当組みだったが、ルールが4項目増えて8枚になり、
+   幅が 727 と 355 の2種類・高さが4種類に散って読みにくくなった。
+   2列にして全カードを同じ幅で揃える。高さは行内で stretch されるので、
+   高さの近いカードを隣に置く並び順にしてある。
+   1fr は最小値が auto なので、中身の min-content が大きい列（グラフや長い見出し）に
+   押し広げられて左右で幅が変わる。minmax(0,1fr) にして厳密に等幅にする。 */
+.bento{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:stretch;}
+.bento > *{grid-column:span 1;min-width:0;}
 /* グリッドの gap で間隔をとるので、カード自身の下マージンは消す */
 .bento > .card,
 .bento > .pj{margin-bottom:0;display:flex;flex-direction:column;}
@@ -223,17 +242,38 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .bento > .card > .fc{flex:1;min-height:0;}
 /* 幅が狭くなるぶん、見出し行は折り返させる（説明文とボタンがぶつかるのを防ぐ） */
 .bento .card-h{flex-wrap:wrap;}
-/* 1列ぶんのカードは、見出し・説明・ボタンを縦に積む */
-.bento > .bx-1 .card-h{flex-direction:column;align-items:flex-start;gap:11px;}
-.bento > .bx-1 .card-h .sp{margin-left:0;}
 /* 高さが伸びたぶん下に空きができるので、数字を縦中央に置く */
 .bento .goal{flex:1;align-items:center;}
 
+/* ===== カードの見出しアイコン =====
+   8枚が同じ形で並ぶと、どれがどれだか見分けがつかない。左端に丸チップを置いて
+   目印にする。色はどのカードも primary で揃える（種類を色で分けると意味が増える）。
+   .pj-hd と .card-h はどちらも flex + gap なので、先頭に置くだけで並ぶ。 */
+/* .tx が flex:1 で伸びるとタイトルが上端に寄り、チップの中心と9pxずれる。
+   チップを持つ見出し（SNS設定のカード）だけ中央揃えにする。運用目的側は
+   見出しが2段なので従来の上揃えのまま。 */
+.pj-hd:has(.cic){align-items:center;}
+.cic{width:40px;height:40px;flex:none;border-radius:var(--radius-md);
+  background:var(--color-primary-subtle);color:var(--color-primary);
+  display:flex;align-items:center;justify-content:center;font-size:22px;}
+
+/* ===== 並びの中の見出しを揃える =====
+   同じグリッドに .pj と .card が混ざっていて、見出しが3点ずれていた。
+     .pj   … 16px / 左右18px / 罫線なし（5枚）
+     .card … 20px / 左右20px / 罫線あり（3枚）
+   数の多い .pj 側に .card 側を寄せる。本文の左右余白も18pxに合わせて、
+   列をまたいでも見出しと中身の開始位置が同じ縦線に乗るようにする。
+   .bento の中だけに効かせる（メンバー管理など他のペインの .card は触らない）。 */
+.bento .card-h{padding:15px 18px;border-bottom:none;gap:12px;}
+.bento .card-h .t{font-size:var(--text-body-lg);}
+.bento .row{padding:15px 18px;}
+.bento .fc{padding:12px 18px 17px;}
+.bento .goal{padding:18px 18px 0;}
+.bento .goal-bar{margin:14px 18px 20px;}
+
 @media(max-width:1100px){
-  /* 3列だと1枚が狭くなりすぎるので、1列に積む */
+  /* 2列だと1枚が狭くなりすぎるので、1列に積む */
   .bento{grid-template-columns:1fr;}
-  .bento > .bx-1,
-  .bento > .bx-2{grid-column:span 1;}
 }
 
 /* ===== 目標と見通し（2026-08-21 追加）=====
@@ -252,15 +292,19 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .goal-bar i{display:block;height:100%;border-radius:var(--radius-full);background:var(--color-primary);}
 
 /* 見通し。左にグラフ、右に数字タイル */
-.fc{display:flex;gap:20px;padding:18px 20px 20px;align-items:stretch;}
-.fc-chart{flex:1;min-width:0;}
+/* グラフとタイルは横並びだったが、カードが2列組みで541pxになり、グラフに残る幅が
+   263pxしかなくなった。12ヶ月ぶんの月ラベルは nowrap で約360px必要なので、
+   .bar-chart が枠から溢れてタイルの下に潜り込んでいた（月ラベルが読めない）。
+   縦に積んでグラフに幅を全部渡し、タイルは3列に寝かせる。カードの高さも下がる。 */
+.fc{display:flex;flex-direction:column;gap:16px;padding:18px 20px 20px;}
+.fc-chart{min-width:0;}
 .bar-chart{display:flex;align-items:flex-end;gap:8px;height:180px;}
 .bar-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;}
 .bar{width:100%;max-width:34px;border-radius:var(--radius-sm) var(--radius-sm) 0 0;background:var(--color-primary-light);}
 .bar.hi{background:var(--color-primary);}
 .bar-label{font-size:var(--text-meta);color:var(--color-muted-foreground);white-space:nowrap;margin-top:6px;}
 .bar-val{font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-primary);margin-bottom:4px;}
-.fc-tiles{width:216px;flex:none;display:flex;flex-direction:column;gap:10px;}
+.fc-tiles{flex:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;}
 .fc-tile{border:1px solid var(--color-border);border-radius:var(--radius-md);background:var(--color-surface);padding:13px 15px;}
 .fc-tile.key{background:var(--color-primary-subtle);border-color:var(--color-primary);}
 .fc-tile .k{display:flex;align-items:center;gap:6px;font-size:var(--text-label);color:var(--color-muted-foreground);}
@@ -290,11 +334,6 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .goalpick.on{border-color:var(--color-primary);background:var(--color-primary-subtle);}
 .goalpick.on .t{color:var(--color-primary);}
 
-@media(max-width:1100px){
-  .fc{flex-direction:column;}
-  .fc-tiles{width:auto;flex-direction:row;}
-  .fc-tile{flex:1;min-width:0;}
-}
 .inp,.ta,.sel{width:100%;border:1px solid var(--color-border-strong);border-radius:var(--radius-md);padding:11px 13px;font-family:inherit;font-size:var(--text-body);line-height:1.8;background:var(--color-input);color:var(--color-foreground);}
 .ta{resize:vertical;min-height:88px;}
 .inp:focus,.ta:focus,.sel:focus{outline:2px solid var(--color-ring);outline-offset:1px;border-color:var(--color-primary);}
@@ -857,10 +896,8 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 
       <!-- ①一覧。アカウントを押すと、そのSNSの中に入る（2026-08-21） -->
       <div class="snsview on" id="snsList">
-        <div class="lead">投稿を出すSNSを連携します。連携していないSNSには投稿できません。</div>
-
         <div class="card">
-          <div class="card-h"><div><div class="t">連携中のSNS</div><div class="d">3つ 連携しています。押すと、そのSNSの設定にうつります。</div></div></div>
+          <div class="card-h"><div><div class="t">連携中のSNS</div></div></div>
           <!-- 「再連携」は正常な行に常時置かない（毎回「切れているのか？」と読ませてしまう）。
                正常な行は ⋮ メニューに入れ、連携が切れた行だけ .state.ng + 行内ボタンで出す。
                → news_wire.html の「連携が切れているとSNS設定に再連携が出る」という説明と一致させる。 -->
@@ -932,15 +969,27 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
           <div class="stat"><span class="k">投稿した数</span><span class="v" id="accPosts">86</span></div>
         </div>
 
+        <!-- ルールはSNSごとに持てるが、実際はほとんど同じ内容になる。
+             1つ作ったら他へ写せる口をカードの手前に置く（同じことを4回入力させない） -->
+        <div class="rulebar">
+          <div class="tx">
+            <div class="t">投稿ルール</div>
+          </div>
+          <span class="act">
+            <button class="btn-o" aria-haspopup="true" aria-expanded="false" onclick="rowMenu(this)"><i class="ti ti-clipboard-list"></i>ほかのSNSから写す</button>
+            <div class="rowmenu" role="menu" id="ruleCopyMenu"></div>
+          </span>
+        </div>
+
         <!-- 弁当レイアウト。縦一列だと見通しのグラフまで遠いので、
              大きさの違うカードを左右に並べる（2026-08-21） -->
         <div class="bento">
 
-        <div class="pj bx-2" id="pj-tone">
+        <div class="pj" id="pj-tone">
           <div class="pj-hd">
+            <span class="cic"><i class="ti ti-message-dots"></i></span>
             <div class="tx">
               <div class="t">言葉づかい</div>
-              <span class="pj-use"><i class="ti ti-sparkles"></i>文の終わり方や、使う言葉を選ぶときに使います</span>
             </div>
             <span class="sp"><button class="btn-o" onclick="pjEdit('tone',true)"><i class="ti ti-pencil"></i>編集</button></span>
           </div>
@@ -981,19 +1030,157 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
           </div>
         </div>
 
-        <div class="card bx-1">
-          <div class="card-h"><div><div class="t"><span id="accNm2">Instagram</span> の出し方</div><div class="d">このSNSだけの決めごとです。</div></div></div>
+        <!-- 推奨ワード。禁止（使ってほしくない言葉）は言葉づかいカードの中にあるので、
+             こちらは「入れてほしい」側だけを持つ。同じ opt トグルで対にする -->
+        <div class="pj" id="pj-plus">
+          <div class="pj-hd">
+            <span class="cic"><i class="ti ti-sparkles"></i></span>
+            <div class="tx">
+              <div class="t">推奨ワード</div>
+            </div>
+            <span class="sp"><button class="btn-o" onclick="pjEdit('plus',true)"><i class="ti ti-pencil"></i>編集</button></span>
+          </div>
+          <div class="pj-bd">
+            <div class="pj-view">
+              <ul class="pj-ul">
+                <li>わんちゃん / 看板犬 / 手作り / テラス席</li>
+              </ul>
+              <span class="byai"><i class="ti ti-sparkles"></i>AIが資料から作りました</span>
+            </div>
+            <div class="pj-form">
+              <div class="field" style="margin-bottom:0">
+                <label class="lbl">入れてほしい言葉</label>
+                <div class="opts">
+                  <button class="opt on" onclick="optToggle(this)"><i class="ti ti-check"></i>わんちゃん</button>
+                  <button class="opt on" onclick="optToggle(this)"><i class="ti ti-check"></i>看板犬</button>
+                  <button class="opt on" onclick="optToggle(this)"><i class="ti ti-check"></i>手作り</button>
+                  <button class="opt on" onclick="optToggle(this)"><i class="ti ti-check"></i>テラス席</button>
+                </div>
+                <div class="addrow" style="padding:12px 0 0"><input class="inp" placeholder="入れてほしい言葉を書く"><button class="btn-o"><i class="ti ti-plus"></i>追加</button></div>
+              </div>
+              <div class="pj-foot">
+                <span class="sp">
+                  <button class="btn-g" onclick="pjEdit('plus',false)">キャンセル</button>
+                  <button class="btn-p" onclick="pjEdit('plus',false)"><i class="ti ti-check"></i>保存する</button>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 具体ルール。言葉づかいがトーンのプリセットで、こちらは個別の決めごと。
+             自由記述なので、書くほど効くわけではないことを例で示す -->
+        <div class="pj" id="pj-rule">
+          <div class="pj-hd">
+            <span class="cic"><i class="ti ti-list-check"></i></span>
+            <div class="tx">
+              <div class="t">具体ルール</div>
+            </div>
+            <span class="sp"><button class="btn-o" onclick="pjEdit('rule',true)"><i class="ti ti-pencil"></i>編集</button></span>
+          </div>
+          <div class="pj-bd">
+            <div class="pj-view">
+              <ul class="pj-ul">
+                <li>絵文字は1投稿に3つまで。犬の絵文字は必ず入れる</li>
+                <li>ハッシュタグは5つまで。#犬同伴OK は毎回入れる</li>
+                <li>価格を書くときは必ず「税込」を付ける</li>
+              </ul>
+            </div>
+            <div class="pj-form">
+              <div class="field" style="margin-bottom:0">
+                <label class="lbl">決めごと（1行に1つ）</label>
+                <textarea class="ta" placeholder="絵文字は1投稿に3つまで&#10;ハッシュタグは5つまで">絵文字は1投稿に3つまで。犬の絵文字は必ず入れる
+ハッシュタグは5つまで。#犬同伴OK は毎回入れる
+価格を書くときは必ず「税込」を付ける</textarea>
+              </div>
+              <div class="pj-foot">
+                <span class="sp">
+                  <button class="btn-g" onclick="pjEdit('rule',false)">キャンセル</button>
+                  <button class="btn-p" onclick="pjEdit('rule',false)"><i class="ti ti-check"></i>保存する</button>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 投稿言語 -->
+        <div class="pj" id="pj-lang">
+          <div class="pj-hd">
+            <span class="cic"><i class="ti ti-world"></i></span>
+            <div class="tx">
+              <div class="t">投稿言語</div>
+            </div>
+            <span class="sp"><button class="btn-o" onclick="pjEdit('lang',true)"><i class="ti ti-pencil"></i>編集</button></span>
+          </div>
+          <div class="pj-bd">
+            <div class="pj-view">
+              <ul class="pj-ul"><li>日本語</li></ul>
+            </div>
+            <div class="pj-form">
+              <div class="field" style="margin-bottom:0">
+                <label class="lbl" for="postLang">言語</label>
+                <select class="sel" id="postLang">
+                  <option selected>日本語</option>
+                  <option>英語</option>
+                  <option>日本語と英語の両方</option>
+                  <option>中国語（繁体字）</option>
+                  <option>韓国語</option>
+                </select>
+              </div>
+              <div class="pj-foot">
+                <span class="sp">
+                  <button class="btn-g" onclick="pjEdit('lang',false)">キャンセル</button>
+                  <button class="btn-p" onclick="pjEdit('lang',false)"><i class="ti ti-check"></i>保存する</button>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 撮影レベル。文章ではなく画像・動画の提案内容を変えるものなので、
+             他のルールと役割が違う。並べる場所は要検討 -->
+        <div class="pj" id="pj-shot">
+          <div class="pj-hd">
+            <span class="cic"><i class="ti ti-photo"></i></span>
+            <div class="tx">
+              <div class="t">撮影レベル</div>
+            </div>
+            <span class="sp"><button class="btn-o" onclick="pjEdit('shot',true)"><i class="ti ti-pencil"></i>編集</button></span>
+          </div>
+          <div class="pj-bd">
+            <div class="pj-view">
+              <ul class="pj-ul"><li><b>簡単</b>：スマホで撮って編集できる範囲で提案します</li></ul>
+            </div>
+            <div class="pj-form">
+              <div class="field" style="margin-bottom:0">
+                <label class="lbl">どちらで提案しますか</label>
+                <!-- 2択なので .picks の3列を2列に落とす -->
+                <div class="picks" style="grid-template-columns:repeat(2,1fr)">
+                  <button class="pick on" onclick="pickOne(this)"><div class="t">簡単</div><div class="e">スマホのカメラで撮影・編集できる範囲で提案します</div></button>
+                  <button class="pick" onclick="pickOne(this)"><div class="t">本格</div><div class="e">撮影機材や編集技術が必要な、作り込んだ案も出します</div></button>
+                </div>
+              </div>
+              <div class="pj-foot">
+                <span class="sp">
+                  <button class="btn-g" onclick="pjEdit('shot',false)">キャンセル</button>
+                  <button class="btn-p" onclick="pjEdit('shot',false)"><i class="ti ti-check"></i>保存する</button>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-h"><span class="cic"><i class="ti ti-clock"></i></span><div><div class="t"><span id="accNm2">Instagram</span> の出し方</div></div></div>
           <div class="row" id="rowFb">
             <div class="tx">
               <div class="t">Facebookページにも同時に出す</div>
-              <div class="d">Instagramに出した投稿を、Facebookページにも自動で出します。<a href="./news_wire.html" style="color:var(--color-primary);font-weight:var(--font-weight-body-strong);text-decoration:none;">やり方を見る</a></div>
             </div>
             <label class="sw"><input type="checkbox" checked><span></span></label>
           </div>
           <div class="row">
             <div class="tx">
               <div class="t">いつも出す時間</div>
-              <div class="d">日にちだけ決めたとき、この時間に出します。</div>
             </div>
             <select class="role" style="padding:9px 12px">
               <option>12:00</option><option selected>19:00</option><option>21:00</option>
@@ -1002,10 +1189,10 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
         </div>
 
         <!-- ===== 目標（2026-08-21 追加。旧アプリの「SNSアカウント > 設定 > 目標設定」）===== -->
-        <div class="card bx-1">
+        <div class="card">
           <div class="card-h">
+            <span class="cic"><i class="ti ti-star"></i></span>
             <div><div class="t">1週間に出す本数の目標</div>
-              <div class="d">決めておくと、カレンダーとホームの「今週の予定」が本数に合わせて組まれます。</div>
             </div>
             <span class="sp"><button class="btn-o" onclick="openDlg('dlgGoal')"><i class="ti ti-pencil"></i>目標を変える</button></span>
           </div>
@@ -1018,12 +1205,12 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
         </div>
 
         <!-- ===== 見通し ===== -->
-        <div class="card bx-2">
+        <div class="card">
           <div class="card-h">
+            <span class="cic"><i class="ti ti-chart-bar"></i></span>
             <div><div class="t">このまま続けたときの見通し</div>
-              <div class="d">いまの目標（週<b id="fcPerWeek">3</b>本）で出しつづけた場合の目安です。実際の数字とはずれます。</div>
             </div>
-            <span class="fc-asof">きょう（2026年8月21日）を基準にしています</span>
+            
           </div>
           <div class="fc">
             <div class="fc-chart">
@@ -1297,15 +1484,15 @@ function openSnsAcc(row){
   acEl.textContent = row.dataset.ac;
   acEl.href = PROFILE[k] || '#';
   acEl.title = row.dataset.sns + ' で ' + row.dataset.ac + ' を開く';
-  /* 見出しの面をそのSNSの色にする。枠も同系に寄せないと灰枠だけ浮く */
-  var hd = document.querySelector('.acchd');
-  hd.style.background  = 'var(--color-sns-' + k + '-subtle)';
-  hd.style.borderColor = 'color-mix(in srgb, var(--color-sns-' + k + ') 28%, transparent)';
-  acEl.style.color     = 'var(--color-sns-' + k + ')';
+  /* 面ごとSNSの色に塗ると、下に続く白いカードから浮いて見出しだけ主張する。
+     色はアイコンのチップだけに持たせて、面は他のカードと同じ白のままにする。
+     ハンドルの色も戻す（下線で押せることは示せているので色は不要）。 */
+  acEl.style.color = '';
   document.getElementById('accFol').textContent   = row.dataset.fol;
   document.getElementById('accPosts').textContent = row.dataset.posts;
   // Facebook同時投稿は Instagram だけの話。ほかのSNSでは出さない
   document.getElementById('rowFb').style.display = (row.dataset.sns === 'Instagram') ? '' : 'none';
+  buildRuleCopyMenu(row.dataset.sns);
   document.getElementById('snsList').classList.remove('on');
   document.getElementById('snsDetail').classList.add('on');
   document.querySelector('.content').scrollTop = 0;
@@ -1335,7 +1522,6 @@ function goalSave(){
   var n = parseInt(sel.dataset.n, 10);
   document.getElementById('goalTgt').innerHTML = n + '<small>本</small>';
   document.getElementById('goalLeft').textContent = n;   // 今週は0本なので残りは目標そのまま
-  document.getElementById('fcPerWeek').textContent = n;
   document.getElementById('fcTile').textContent = n + '本';
   closeDlg('dlgGoal');
   if(window.toast) toast.success('1週間に' + n + '本にしました');
@@ -1404,6 +1590,49 @@ function apvChange(){
 
 /* ===== SNS行の ⋮ メニュー =====
    開いているのは常に1つだけ。外側クリックと Esc で閉じる。 */
+/* ===== ルールをほかのSNSから写す =====
+   ルールはSNSごとに持てるが、実際はほとんど同じ内容になる。4項目を毎回入れ直すのが
+   本題ではないので、既にあるSNSから写せるようにする。
+   写せる先は一覧の「連携済み」の行から作る。行を増やしたらメニューも自動で増える。 */
+function buildRuleCopyMenu(currentSns){
+  var menu = document.getElementById('ruleCopyMenu');
+  menu.innerHTML = '';
+  document.querySelectorAll('#snsList .sns[data-sns]').forEach(function(r){
+    if(r.dataset.sns === currentSns) return;                       // 自分は出さない
+    if(!r.querySelector('.state.ok')) return;                      // 未連携・連携切れは写せない
+    var b = document.createElement('button');
+    b.setAttribute('role', 'menuitem');
+    b.innerHTML = '<i class="ti ' + r.dataset.icon + '"></i>' + r.dataset.sns + ' と同じにする';
+    b.onclick = function(){ copyRulesFrom(r.dataset.sns, currentSns); };
+    menu.appendChild(b);
+  });
+  if(!menu.children.length){
+    var d = document.createElement('button');
+    d.setAttribute('role', 'menuitem');
+    d.disabled = true;
+    d.innerHTML = '<i class="ti ti-help"></i>写せるSNSがありません';
+    menu.appendChild(d);
+  }
+}
+
+/* 上書きなので、何が変わるかを出してから実行する（黙って4項目差し替えない） */
+function copyRulesFrom(from, to){
+  closeRowMenus();
+  alertDialog({
+    title: from + ' と同じルールにしますか？',
+    description: from + ' のルールを ' + to + ' に写します。',
+    points: [
+      '言葉づかい・推奨ワード・具体ルール・投稿言語・撮影レベルを上書きします',
+      to + ' にいま入っている内容は消えます',
+      '「出し方」「本数の目標」「承認」は写しません（SNSごとに違うため）'
+    ],
+    cancelLabel: 'やめる',
+    actionLabel: '写す'
+  }, function(){
+    toast.success(from + ' のルールを写しました');
+  });
+}
+
 function rowMenu(btn){
   var m = btn.parentElement.querySelector('.rowmenu');
   var wasOpen = m.classList.contains('open');
@@ -1415,7 +1644,8 @@ function rowMenu(btn){
 }
 function closeRowMenus(){
   document.querySelectorAll('.rowmenu.open').forEach(function(m){ m.classList.remove('open'); });
-  document.querySelectorAll('.act .iconbtn[aria-expanded="true"]').forEach(function(b){ b.setAttribute('aria-expanded','false'); });
+  /* ルール帯の写すボタンは .iconbtn ではないので、.act 配下すべてを対象にする */
+  document.querySelectorAll('.act [aria-expanded="true"]').forEach(function(b){ b.setAttribute('aria-expanded','false'); });
 }
 document.addEventListener('click', function(e){ if(!e.target.closest('.act')) closeRowMenus(); });
 document.addEventListener('keydown', function(e){ if(e.key === 'Escape'){ closeRowMenus(); } });

@@ -174,6 +174,10 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .opts{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;}
 .opt>span:last-child{min-width:0;}
 .opt{border:1px solid var(--color-border-strong);border-radius:var(--radius-md);padding:14px 15px;cursor:pointer;background:var(--color-card);text-align:left;font-family:inherit;display:flex;gap:12px;align-items:flex-start;}
+/* 見出しだけの1行カードは上揃えだと文字がアイコンの中心より上にずれる（34pxのアイコンに
+   対して文字は1行ぶんしかないため）。価格行を持たないカード＝1行なので中央で揃える。
+   価格行があるカードは2行あるので上揃えのままでよい。 */
+.opt:not(:has(.p)){align-items:center;}
 .opt:hover{border-color:var(--color-primary);}
 .opt.on{border:2px solid var(--color-primary);background:var(--color-primary-subtle);padding:13px 14px;}
 .opt .ic{width:34px;height:34px;flex:none;border-radius:var(--radius-md);background:var(--color-surface);color:var(--color-primary);display:flex;align-items:center;justify-content:center;font-size:17px;}
@@ -348,19 +352,17 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
           <div>
             <span class="lb">POINT</span>
             <div class="t">つくるのが大変なところだけ、プロに任せられます</div>
-            <div class="d">投稿の制作や動画の編集を、いいねAIの制作チームにお願いできます。<br>
-            <b>相談だけならお金はかかりません。</b>内容を聞いてから、お見積りをお出しします。</div>
           </div>
         </div>
 
         <div class="flow">
-          <span class="fstep"><span class="n">1</span><span class="tx"><b>相談を送る</b><small>この画面</small></span></span>
+          <span class="fstep"><span class="n">1</span><span class="tx"><b>相談を送る</b></span></span>
           <span class="ar"><i class="ti ti-arrow-right"></i></span>
-          <span class="fstep"><span class="n">2</span><span class="tx"><b>見積りが届く</b><small>ふつう1〜2営業日</small></span></span>
+          <span class="fstep"><span class="n">2</span><span class="tx"><b>見積りが届く</b></span></span>
           <span class="ar"><i class="ti ti-arrow-right"></i></span>
-          <span class="fstep"><span class="n">3</span><span class="tx"><b>OKしたら制作開始</b><small>断ってもかまいません</small></span></span>
+          <span class="fstep"><span class="n">3</span><span class="tx"><b>OKしたら制作開始</b></span></span>
           <span class="ar"><i class="ti ti-arrow-right"></i></span>
-          <span class="fstep"><span class="n">4</span><span class="tx"><b>ドライブに納品</b><small>そのまま投稿できます</small></span></span>
+          <span class="fstep"><span class="n">4</span><span class="tx"><b>ドライブに納品</b></span></span>
         </div>
 
         <div class="card">
@@ -369,25 +371,21 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
             <button class="opt on" onclick="this.classList.toggle('on')">
               <span class="ic"><i class="ti ti-photo"></i></span>
               <span><span class="t">投稿をまるごと作る</span>
-              <span class="d">写真えらび・文章・ハッシュタグまで、出せる形にして納品します。</span>
               <span class="p">1本 5,000円〜</span></span>
             </button>
             <button class="opt" onclick="this.classList.toggle('on')">
               <span class="ic"><i class="ti ti-video"></i></span>
               <span><span class="t">動画を編集する</span>
-              <span class="d">撮った素材をお預かりして、テロップ・BGMまで付けます。</span>
               <span class="p">1本 12,000円〜</span></span>
             </button>
             <button class="opt" onclick="this.classList.toggle('on')">
               <span class="ic"><i class="ti ti-sparkles"></i></span>
               <span><span class="t">画像を作る（バナー・チラシ）</span>
-              <span class="d">キャンペーンの告知画像などを、デザイナーが作ります。</span>
               <span class="p">1点 8,000円〜</span></span>
             </button>
             <button class="opt" onclick="this.classList.toggle('on')">
               <span class="ic"><i class="ti ti-file-text"></i></span>
               <span><span class="t">台本だけ作る</span>
-              <span class="d">撮影は自分でする方向け。話す順番と言葉だけ用意します。</span>
               <span class="p">1本 3,000円〜</span></span>
             </button>
           </div>
@@ -471,19 +469,17 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
           <div>
             <span class="lb">POINT</span>
             <div class="t">カメラマンがお店に行って、撮ってきます</div>
-            <div class="d">スマホで撮るのがむずかしいもの（料理・外観・スタッフ）を、プロが撮影します。<br>
-            <b>撮った写真はそのままドライブに入ります。</b>相談だけならお金はかかりません。</div>
           </div>
         </div>
 
         <div class="flow">
-          <span class="fstep"><span class="n">1</span><span class="tx"><b>希望を送る</b><small>この画面</small></span></span>
+          <span class="fstep"><span class="n">1</span><span class="tx"><b>希望を送る</b></span></span>
           <span class="ar"><i class="ti ti-arrow-right"></i></span>
-          <span class="fstep"><span class="n">2</span><span class="tx"><b>日程を決める</b><small>チャットで調整</small></span></span>
+          <span class="fstep"><span class="n">2</span><span class="tx"><b>日程を決める</b></span></span>
           <span class="ar"><i class="ti ti-arrow-right"></i></span>
-          <span class="fstep"><span class="n">3</span><span class="tx"><b>撮影</b><small>2〜3時間が目安</small></span></span>
+          <span class="fstep"><span class="n">3</span><span class="tx"><b>撮影</b></span></span>
           <span class="ar"><i class="ti ti-arrow-right"></i></span>
-          <span class="fstep"><span class="n">4</span><span class="tx"><b>ドライブに納品</b><small>1週間ほど</small></span></span>
+          <span class="fstep"><span class="n">4</span><span class="tx"><b>ドライブに納品</b></span></span>
         </div>
 
         <div class="card">
@@ -491,19 +487,19 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
           <div class="opts">
             <button class="opt on" onclick="this.classList.toggle('on')">
               <span class="ic"><i class="ti ti-coffee"></i></span>
-              <span><span class="t">料理・商品</span><span class="d">メニュー写真として使えるように、明るく撮ります。</span></span>
+              <span><span class="t">料理・商品</span></span>
             </button>
             <button class="opt on" onclick="this.classList.toggle('on')">
               <span class="ic"><i class="ti ti-photo"></i></span>
-              <span><span class="t">お店の外観・内観</span><span class="d">はじめて来る人が迷わないように、入口も撮ります。</span></span>
+              <span><span class="t">お店の外観・内観</span></span>
             </button>
             <button class="opt" onclick="this.classList.toggle('on')">
               <span class="ic"><i class="ti ti-users"></i></span>
-              <span><span class="t">スタッフ・お客様</span><span class="d">写ってよい方だけ。許可の取り方もご案内します。</span></span>
+              <span><span class="t">スタッフ・お客様</span></span>
             </button>
             <button class="opt" onclick="this.classList.toggle('on')">
               <span class="ic"><i class="ti ti-video"></i></span>
-              <span><span class="t">動画も撮る</span><span class="d">リール用の短い動画も一緒に撮影します。</span></span>
+              <span><span class="t">動画も撮る</span></span>
             </button>
           </div>
         </div>
