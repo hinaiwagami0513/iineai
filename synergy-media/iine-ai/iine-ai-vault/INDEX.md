@@ -39,6 +39,7 @@
 - [[toast-orange-default]] — トーストは既定オレンジ、赤はエラーだけ。アイコンは✓統一。
 - [[chart-single-hue-ramp]] — グラフは chart-1..5 のオレンジ単一色相ランプ。端は丸める。orange-only の唯一の例外。
 - [[depth-and-rhythm]] — 影3段を使う・角丸は大小で分ける・セクション間32/内16・等幅グリッドを避ける。
+- [[no-in-card-help-text]] — カード内に説明文・使い方・見本を置かない。足りないのは説明ではなく名前（8/24決定）。
 
 プロダクト系（源泉=会議/worklog）:
 - [[flow-ui-decided]] — チャットvsフロー論争はフローUIで確定。

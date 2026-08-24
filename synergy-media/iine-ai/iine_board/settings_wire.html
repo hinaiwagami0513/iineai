@@ -697,10 +697,6 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
             <div class="bar"><i id="srcPgBar"></i></div>
           </div>
           <div class="src-body">
-          <div class="src-d">
-            お店やサービスのことが分かる<b>ホームページのURL</b>や<b>PDF</b>を入れてください。AIがそれを読んで、下の内容を作ります。<br>
-            ※ SNSのURLは、SNS側の決まりで中身を読み取れません。
-          </div>
           <div class="src-list">
             <div class="src-row">
               <span class="ic web"><i class="ti ti-world"></i></span>
@@ -746,14 +742,12 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
             <button class="pg-i done" onclick="pjGo('price')"><span class="mark"><i class="ti ti-check"></i></span>料金</button>
             <button class="pg-i todo" onclick="pjGo('target')"><span class="mark"></span>お客様<span class="yet">まだ書いていません</span></button>
           </div>
-          <div class="pg-d">あと「お客様」を書くと、だれに向けた投稿かをAIが決められます。押すとその項目へ飛びます。</div>
         </div>
 
         <div class="pj" id="pj-overview">
           <div class="pj-hd">
             <div class="tx">
               <div class="t">概要</div>
-              <span class="pj-use"><i class="ti ti-sparkles"></i>投稿文のはじめの一文をつくるときに使います</span>
             </div>
             <span class="sp"><button class="btn-o" onclick="pjEdit('overview',true)"><i class="ti ti-pencil"></i>編集</button></span>
           </div>
@@ -778,7 +772,6 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
           <div class="pj-hd">
             <div class="tx">
               <div class="t">主な特徴</div>
-              <span class="pj-use"><i class="ti ti-sparkles"></i>なにを推す投稿にするか決めるときに使います</span>
             </div>
             <span class="sp"><button class="btn-o" onclick="pjEdit('feature',true)"><i class="ti ti-pencil"></i>編集</button></span>
           </div>
@@ -813,7 +806,6 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
           <div class="pj-hd">
             <div class="tx">
               <div class="t">料金</div>
-              <span class="pj-use"><i class="ti ti-sparkles"></i>値段を書くとき、この数字をそのまま使います</span>
             </div>
             <span class="sp"><button class="btn-o" onclick="pjEdit('price',true)"><i class="ti ti-pencil"></i>編集</button></span>
           </div>
@@ -846,19 +838,12 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
           <div class="pj-hd">
             <div class="tx">
               <div class="t">お客様</div>
-              <span class="pj-use"><i class="ti ti-sparkles"></i>だれに向けた言い方にするか決めるときに使います</span>
             </div>
             <span class="sp"><button class="btn-p" onclick="pjEdit('target',true)"><i class="ti ti-pencil"></i>書く</button></span>
           </div>
           <div class="pj-bd">
             <div class="pj-view">
-              <div class="pj-none">まだ書いていません。ここが空だと、AIは「みんな向け」の当たりさわりのない文章になります。</div>
-              <div class="pj-eg">
-                <div class="k">書き方の例</div>
-                <div class="v">メイン：犬を飼っている20〜40代。休日に愛犬と出かける場所をさがしている人。<br>
-                サブ：犬は飼っていないけれど犬が好きな人。<br>
-                来られる範囲：東京都・神奈川県（電車で1時間くらい）</div>
-              </div>
+              <div class="pj-none">まだ書いていません</div>
               
             </div>
             <div class="pj-form">
@@ -1395,10 +1380,10 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
       <button class="x" onclick="closeDlg('dlgGoal')" aria-label="閉じる"><i class="ti ti-x"></i></button></div>
     <div class="b">
       <div class="goalpicks" id="goalPicks">
-        <button class="goalpick" data-n="1" onclick="goalPick(this)"><div class="t">週1本</div><div class="e">まずは慣れるところから</div></button>
-        <button class="goalpick on" data-n="3" onclick="goalPick(this)"><div class="t">週3本</div><div class="e">いちばん選ばれています</div></button>
-        <button class="goalpick" data-n="5" onclick="goalPick(this)"><div class="t">週5本</div><div class="e">平日に毎日1本</div></button>
-        <button class="goalpick" data-n="7" onclick="goalPick(this)"><div class="t">週7本</div><div class="e">毎日1本。素材が多い方むけ</div></button>
+        <button class="goalpick" data-n="1" onclick="goalPick(this)"><div class="t">週1本</div></button>
+        <button class="goalpick on" data-n="3" onclick="goalPick(this)"><div class="t">週3本</div></button>
+        <button class="goalpick" data-n="5" onclick="goalPick(this)"><div class="t">週5本</div></button>
+        <button class="goalpick" data-n="7" onclick="goalPick(this)"><div class="t">週7本</div></button>
       </div>
     </div>
     <div class="f"><span class="sp">
