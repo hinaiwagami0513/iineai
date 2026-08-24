@@ -63,8 +63,8 @@ colors:
   sns-instagram-subtle: "#fce7f3"
   sns-x: "#2a2826"
   sns-x-subtle: "#fcf5ef"
-  sns-tiktok: "#854f0b"
-  sns-tiktok-subtle: "#fef3c7"
+  sns-tiktok: "#0a6f66"        # ティール。旧値 #854f0b は warning(#ad6201) と近く警告に見えた（8/24修正）
+  sns-tiktok-subtle: "#e5fbf7" # 旧値 #fef3c7 も warning-border(#ffe6c4) と近かった
   sns-youtube: "#c4302b"
   sns-youtube-subtle: "#fcebeb"
   # --- エディタ（ダーク）テーマ：画像/動画エディタ専用。実測から確定 ---
