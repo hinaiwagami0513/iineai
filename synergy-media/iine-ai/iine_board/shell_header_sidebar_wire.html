@@ -792,8 +792,8 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
             <i class="ti ti-sparkles"></i>
             <span class="rec-tx">今日は <b>お盆の最終日</b>。夏休みの締めくくりにちなんだ投稿が伸びやすい日です。</span>
             <span class="rec-chips">
-              <button class="rec-chip">看板犬ポチの夏まとめ<i class="ti ti-arrow-right"></i></button>
-              <button class="rec-chip">夏休みありがとうポスト<i class="ti ti-arrow-right"></i></button>
+              <button class="rec-chip" onclick="startWithIdea(this)">看板犬ポチの夏まとめ<i class="ti ti-arrow-right"></i></button>
+              <button class="rec-chip" onclick="startWithIdea(this)">夏休みありがとうポスト<i class="ti ti-arrow-right"></i></button>
             </span>
           </div>
         </div>
@@ -1185,5 +1185,15 @@ todoCount();
   document.addEventListener('click', function(){ setOpen(false); });
   document.addEventListener('keydown', function(e){ if(e.key === 'Escape') setOpen(false); });
 })();
+
+/* おすすめの案を押したら、投稿作成フローをその案が入った状態で始める。
+   飛び先とフローの開始位置は「投稿を作る」と同じ（1画面目のSNS選びから）。
+   案は ?idea= で渡し、企画画面のチャット入力欄に入れておく。
+   アイコンの文字が混ざるので、テキストは firstChild から取る。 */
+function startWithIdea(btn){
+  var idea = (btn.firstChild && btn.firstChild.nodeValue || btn.textContent).trim();
+  location.href = './flow_video_script_wire.html?idea=' + encodeURIComponent(idea);
+}
 </script>
+<script src="./onboarding.js"></script>
 </body></html>

@@ -65,6 +65,7 @@
   --color-ring: #fe7235;
   --color-success: #008a24; --color-success-vivid: #00ac2f;
   --color-success-subtle: #f3fcf6;
+  --color-success-border: #cff4dc;
   --color-warning: #ad6201;
   --color-warning-border: #ffe6c4;
   --color-warning-subtle: #fff9f1;
@@ -72,6 +73,7 @@
   --color-info-subtle: #f1f7ff;
   --color-destructive: #e90c2a;
   --color-destructive-subtle: #feeef1;
+  --color-destructive-border: #ffd0d8;
   --color-on-destructive: #ffffff;
   --color-accent-purple: #9724ba;
   --color-accent-purple-subtle: #f5e7f8;
@@ -495,7 +497,7 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 /* 済みか未かは、丸の中身（チェック / 空）と、チップの塗りの両方で出す。
    小さなアイコンの色だけだと、並んだときに差が目に入らない。 */
 .pg-i .mark{width:22px;height:22px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:14px;}
-.pg-i.done{background:var(--color-success-subtle);border-color:#cff4dc;color:#008a24;}
+.pg-i.done{background:var(--color-success-subtle);border-color:var(--color-success-border);color:var(--color-success);}
 .pg-i.done .mark{background:var(--color-success);color:#fff;}
 /* まだのものは、丸を空のまま・枠を破線にして、色以外でも分かるようにする */
 .pg-i.todo{background:var(--color-warning-subtle);border:1px dashed var(--color-warning-border);color:var(--color-warning);}
@@ -507,6 +509,32 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .pj.flash{animation:pjflash 1s ease-out;border-color:var(--color-primary);}
 
 /* 項目カード */
+/* ===== 運用目的の面内タブ =====
+   「お店の事実」と「運用のコンセプト」を分ける。事実は資料から取れるもの、
+   コンセプトは人が決めるもの。混ぜると、事実を埋めただけで終われてしまう。
+   1枚に積むと 2233px（可視1100px）になり、コンセプトが下に沈んで気づかれない。
+   下線タブは request_wire の .svc と同じ形にする（面内タブの既存パターン）。 */
+.ptabs{display:flex;gap:0;border-bottom:1px solid var(--color-border);margin-bottom:18px;}
+.ptabs button{display:flex;align-items:center;gap:8px;padding:12px 18px;font-family:inherit;
+  font-size:var(--text-body-lg);font-weight:var(--font-weight-label);color:var(--color-muted-foreground);
+  background:none;border:none;border-bottom:3px solid transparent;margin-bottom:-1px;cursor:pointer;}
+.ptabs button:hover{color:var(--color-foreground);}
+.ptabs button.on{color:var(--color-primary);border-bottom-color:var(--color-primary);font-weight:var(--font-weight-body-strong);}
+/* タブに残り件数を出す。開かないと未入力に気づけないのを防ぐ。
+   必須の未入力なのでオレンジではなく destructive（§Do's: 必須・未入力は赤で一貫させる） */
+.ptabs .cnt{font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);
+  color:var(--color-destructive);background:var(--color-destructive-subtle);
+  border:1px solid var(--color-destructive-border);border-radius:var(--radius-full);padding:2px 8px;}
+.ptabs .cnt.done{color:var(--color-success);background:var(--color-success-subtle);border-color:var(--color-success-border);}
+.ppane{display:none;}
+.ppane.on{display:block;}
+/* 必須なのに空の項目。todo（黄＝任意の未入力）と区別する */
+.pg-i.must{background:var(--color-destructive-subtle);border:1px dashed var(--color-destructive-border);color:var(--color-destructive);}
+.pg-i.must .mark{background:transparent;border:2px dashed var(--color-destructive-border);}
+.pg-i.must .yet{font-size:var(--text-meta);font-weight:var(--font-weight-body);opacity:.85;}
+/* 必須で空のカードは枠を赤の破線にして、事実側の空欄と見分ける */
+.pj.must{border-style:dashed;border-color:var(--color-destructive-border);background:var(--color-surface);}
+
 .pj{background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);margin-bottom:14px;}
 .pj.empty{border-style:dashed;border-color:var(--color-border-strong);background:var(--color-surface);}
 .pj-hd{display:flex;align-items:flex-start;gap:12px;padding:15px 18px 0;}
@@ -681,6 +709,14 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
           <button class="x" aria-label="閉じる"><i class="ti ti-x"></i></button>
         </div>
 
+        <!-- 事実（資料から取れる）とコンセプト（人が決める）でタブを分ける。
+             1枚に積むと2倍以上スクロールして、下のコンセプトに気づかれない -->
+        <div class="ptabs">
+          <button class="on" id="ptFact" onclick="setPTab('fact')">お店の事実</button>
+          <button id="ptConcept" onclick="setPTab('concept')">運用のコンセプト<span class="cnt" id="cpTabCnt">残り4</span></button>
+        </div>
+
+        <div class="ppane on" id="ppFact">
         <!-- ① もとになる資料。ここから下の内容をAIが作る -->
         <div class="src closed" id="srcCard">
           <div class="src-hd" onclick="srcToggle()" role="button" tabindex="0"
@@ -859,6 +895,112 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
         </div>
 
         <!-- 「言葉づかい」は 2026-08-21 に SNS設定へ移動した（#paSns） -->
+
+        <!-- ===== 運用のコンセプト（2026-08-25 追加）=====
+             事実（上）だけではAIは説明文しか書けない。何のために・誰の何を・どこを推すかを
+             人が決めてはじめて切り口が出る。最初に必ず通す場所なので必須にする。 -->
+        </div><!-- /#ppFact -->
+
+        <div class="ppane" id="ppConcept">
+        <div class="pg">
+          <div class="pg-hd">
+            <span class="t">決めたこと</span>
+            <span class="n"><b id="cpNum">0</b>/ 4項目</span>
+          </div>
+          <div class="pg-items" id="cpItems">
+            <button class="pg-i must" onclick="pjGo('goal')"><span class="mark"></span>増やしたいもの<span class="yet">未入力</span></button>
+            <button class="pg-i must" onclick="pjGo('pain')"><span class="mark"></span>お客様の悩み<span class="yet">未入力</span></button>
+            <button class="pg-i must" onclick="pjGo('push')"><span class="mark"></span>いちばん推すこと<span class="yet">未入力</span></button>
+            <button class="pg-i must" onclick="pjGo('diff')"><span class="mark"></span>他店との違い<span class="yet">未入力</span></button>
+          </div>
+        </div>
+
+        <!-- 1. 増やしたいもの。ここは1つに絞らせる。複数選ぶと投稿の狙いがぶれる -->
+        <div class="pj must" id="pj-goal">
+          <div class="pj-hd">
+            <div class="tx"><div class="t">SNSで増やしたいもの</div></div>
+            <span class="sp"><button class="btn-p" onclick="pjEdit('goal',true)"><i class="ti ti-pencil"></i>決める</button></span>
+          </div>
+          <div class="pj-bd">
+            <div class="pj-view"><div class="pj-none">まだ決めていません</div></div>
+            <div class="pj-form">
+              <div class="picks" id="goalPicks4">
+                <button class="pick" onclick="pickOne(this)"><div class="t">来店</div></button>
+                <button class="pick" onclick="pickOne(this)"><div class="t">予約</div></button>
+                <button class="pick" onclick="pickOne(this)"><div class="t">認知</div></button>
+                <button class="pick" onclick="pickOne(this)"><div class="t">採用</div></button>
+              </div>
+              <div class="pj-foot">
+                <span class="sp">
+                  <button class="btn-g" onclick="pjEdit('goal',false)">キャンセル</button>
+                  <button class="btn-p" onclick="cpSave('goal')"><i class="ti ti-check"></i>保存する</button>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. 属性ではなく「なぜ来るのか」を書かせる。placeholder で示す -->
+        <div class="pj must" id="pj-pain">
+          <div class="pj-hd">
+            <div class="tx"><div class="t">お客様の悩み・したいこと</div></div>
+            <span class="sp"><button class="btn-p" onclick="pjEdit('pain',true)"><i class="ti ti-pencil"></i>書く</button></span>
+          </div>
+          <div class="pj-bd">
+            <div class="pj-view"><div class="pj-none">まだ書いていません</div></div>
+            <div class="pj-form">
+              <textarea class="ta" placeholder="例：愛犬を家に置いて出かけるのが気がかり。犬と入れる店を探すのに毎回疲れる"></textarea>
+              <div class="pj-foot">
+                <span class="sp">
+                  <button class="btn-g" onclick="pjEdit('pain',false)">キャンセル</button>
+                  <button class="btn-p" onclick="cpSave('pain')"><i class="ti ti-check"></i>保存する</button>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. 仕様のコピペを防ぐ。placeholder で仕様と客の得を並べて見せる -->
+        <div class="pj must" id="pj-push">
+          <div class="pj-hd">
+            <div class="tx"><div class="t">いちばん推すこと</div></div>
+            <span class="sp"><button class="btn-p" onclick="pjEdit('push',true)"><i class="ti ti-pencil"></i>書く</button></span>
+          </div>
+          <div class="pj-bd">
+            <div class="pj-view"><div class="pj-none">まだ書いていません</div></div>
+            <div class="pj-form">
+              <textarea class="ta" placeholder="✕ 中型犬までOK（仕様）&#10;○ 愛犬と離れずに、気兼ねなく長居できる（客の得）"></textarea>
+              <div class="pj-foot">
+                <span class="sp">
+                  <button class="btn-g" onclick="pjEdit('push',false)">キャンセル</button>
+                  <button class="btn-p" onclick="cpSave('push')"><i class="ti ti-check"></i>保存する</button>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. 当たり前と決め手を分けさせる。分けないとAIが同じ重みで並べる -->
+        <div class="pj must" id="pj-diff">
+          <div class="pj-hd">
+            <div class="tx"><div class="t">他店との決定的な違い</div></div>
+            <span class="sp"><button class="btn-p" onclick="pjEdit('diff',true)"><i class="ti ti-pencil"></i>書く</button></span>
+          </div>
+          <div class="pj-bd">
+            <div class="pj-view"><div class="pj-none">まだ書いていません</div></div>
+            <div class="pj-form">
+              <textarea class="ta" placeholder="決め手：中型犬までOK＋看板犬がいる（近隣3店は小型犬のみ）&#10;当たり前：駅から徒歩5分"></textarea>
+              <div class="pj-foot">
+                <span class="sp">
+                  <button class="btn-g" onclick="pjEdit('diff',false)">キャンセル</button>
+                  <button class="btn-p" onclick="cpSave('diff')"><i class="ti ti-check"></i>保存する</button>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        </div><!-- /#ppConcept -->
 
         <!-- ③ いまの情報でAIが書くとどうなるか -->
         <div class="pj-prev">
@@ -1394,6 +1536,7 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 </div>
 
 <script src="sonner.js"></script>
+<script src="./onboarding.js"></script>
 <script>
 // サイドバーの折りたたみ項目
 function navToggle(el){
@@ -1478,6 +1621,8 @@ function openSnsAcc(row){
   // Facebook同時投稿は Instagram だけの話。ほかのSNSでは出さない
   document.getElementById('rowFb').style.display = (row.dataset.sns === 'Instagram') ? '' : 'none';
   buildRuleCopyMenu(row.dataset.sns);
+  /* SNSの中まで入れたら「SNSをつなぐ」は覚えたと見なす（一覧を見ただけでは立てない） */
+  if(window.IineOnboarding) IineOnboarding.complete('sns');
   document.getElementById('snsList').classList.remove('on');
   document.getElementById('snsDetail').classList.add('on');
   document.querySelector('.content').scrollTop = 0;
@@ -1511,6 +1656,108 @@ function goalSave(){
   closeDlg('dlgGoal');
   if(window.toast) toast.success('1週間に' + n + '本にしました');
 }
+
+/* ===== 運用のコンセプト（必須4項目）=====
+   最初に必ず通す場所なので、埋まったかどうかを数えて上のバーに返す。
+   保存できたものは赤の破線から普通のカードに変わる。 */
+var CP_KEYS = ['goal','pain','push','diff'];
+
+/* 事実 / コンセプトのタブ切替。運用目的だけの面内タブなので、
+   左ナビの setTab（設定の4項目）とは別系統にする。 */
+function setPTab(which){
+  var fact = which === 'fact';
+  document.getElementById('ppFact').classList.toggle('on', fact);
+  document.getElementById('ppConcept').classList.toggle('on', !fact);
+  document.getElementById('ptFact').classList.toggle('on', fact);
+  document.getElementById('ptConcept').classList.toggle('on', !fact);
+  document.querySelector('.content').scrollTop = 0;
+}
+
+function cpSave(key){
+  var card = document.getElementById('pj-' + key);
+  var pick = card.querySelector('.pick.on');
+  var ta   = card.querySelector('.ta');
+  var val  = pick ? pick.textContent.trim() : (ta ? ta.value.trim() : '');
+  /* 必須なので空では閉じさせない。閉じてから「未入力」に戻ると気づけない */
+  if(!val){
+    if(window.toast) toast.warning(pick===null && !ta ? '選んでください' : '入力してください');
+    return;
+  }
+  /* 入れた内容をそのまま表示に回す。複数行は行ごとに出す */
+  var view = card.querySelector('.pj-view');
+  var lines = val.split('\n').filter(function(s){ return s.trim(); });
+  view.innerHTML = (lines.length > 1)
+    ? '<ul class="pj-ul">' + lines.map(function(s){ return '<li>' + cpEsc(s) + '</li>'; }).join('') + '</ul>'
+    : '<p class="pj-p">' + cpEsc(val) + '</p>';
+  card.classList.remove('must');
+  card.querySelector('.pj-hd .sp button').innerHTML = '<i class="ti ti-pencil"></i>編集';
+  pjEdit(key, false);
+  cpCount();
+  /* サイドバーの「はじめの設定」には、4項目のうち何個済んだかを返す。
+     項目ごとに済みを立てるとサイドバーが入力欄の一覧になるので、進捗だけ渡す */
+  cpReport();
+}
+
+/* 入力をそのままHTMLに入れるので、記号は落とす */
+function cpEsc(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+/* 埋まった数を数えて、バーとチップの見た目を合わせる */
+function cpCount(){
+  var done = 0;
+  var items = document.getElementById('cpItems');
+  CP_KEYS.forEach(function(k, idx){
+    var filled = !document.getElementById('pj-' + k).classList.contains('must');
+    if(filled) done++;
+    var chip = items.children[idx];
+    chip.classList.toggle('must', !filled);
+    chip.classList.toggle('done', filled);
+    var mark = chip.querySelector('.mark');
+    var yet  = chip.querySelector('.yet');
+    mark.innerHTML = filled ? '<i class="ti ti-check"></i>' : '';
+    if(yet) yet.textContent = filled ? '' : '未入力';
+  });
+  document.getElementById('cpNum').textContent = done;
+  /* タブにも残り数を出す。開かないと未入力に気づけない場所なので */
+  var left = CP_KEYS.length - done;
+  var badge = document.getElementById('cpTabCnt');
+  badge.textContent = left ? ('残り' + left) : '完了';
+  badge.classList.toggle('done', left === 0);
+  cpReport(done);
+}
+/* サイドバーへ「コンセプトの何個目まで済んだか」を返す。
+   引数が無いときは数え直す（読み込み直後もサイドバーと一致させる） */
+function cpReport(done){
+  if(!window.IineOnboarding) return;
+  if(typeof done!=='number'){
+    done = CP_KEYS.filter(function(k){
+      return !document.getElementById('pj-'+k).classList.contains('must');
+    }).length;
+  }
+  IineOnboarding.progress('concept', done);
+}
+/* 読み込み時にタブの数字を実態に合わせる（HTMLの書き置きと食い違わせない） */
+cpCount();
+
+/* サイドバーの「はじめの設定」から ?task=... で飛んでくる。
+   その項目のタブを開いてカードまで連れていく。読ませるのではなく、
+   目的のカードの前に立たせるところまでやる。 */
+(function(){
+  var task=new URLSearchParams(location.search).get('task');
+  if(!task) return;
+  if(task==='concept'){
+    setPTab('concept');
+    /* まだ空いている先頭の項目まで連れて行く。全部済みなら先頭を見せる */
+    var next = CP_KEYS.filter(function(k){
+      return document.getElementById('pj-'+k).classList.contains('must');
+    })[0] || CP_KEYS[0];
+    setTimeout(function(){ pjGo(next); },250);   // タブを出してから寄せる
+  }else if(CP_KEYS.indexOf(task)>=0){
+    setPTab('concept');
+    setTimeout(function(){ pjGo(task); },250);
+  }
+})();
 
 function pjGo(key){
   var el = document.getElementById('pj-' + key);

@@ -149,7 +149,7 @@
 }
 *{box-sizing:border-box;margin:0;padding:0;font-family:var(--font-body),'Hiragino Sans','Meiryo',sans-serif;-webkit-font-smoothing:antialiased;}
 body {background:#0a0908;padding:0;margin:0;color:var(--color-editor-foreground);overflow:hidden;}
-/* ヘッダーの枠つきボタン（プレビュー / AI画像）。書き出しだけが塗り＝主役 */
+/* ヘッダーの枠つきボタン（プレビュー）。書き出しだけが塗り＝主役 */
 .hdbtn-lbl{display:inline-flex;align-items:center;gap:6px;padding:8px 14px;font-size:var(--text-label);background:var(--color-editor-elevated);border:1px solid var(--color-editor-border);color:var(--color-editor-foreground);border-radius:var(--radius-md);cursor:pointer;font-weight:700;white-space:nowrap;font-family:inherit;transition:border-color .15s,color .15s;}
 .hdbtn-lbl:hover{border-color:var(--color-primary);color:var(--color-primary);}
 /* プレビュー：完成形を大きく見る。編集UIを全部どけて、出来上がりだけ見せる */
@@ -498,8 +498,9 @@ body.props-resizing{cursor:col-resize;user-select:none;}
     <div class="hr">
       <!-- 完成形の確認は「作る」より前の手数なので、書き出しの手前に置く（8/19: プレビュー機能の追加） -->
       <button class="hdbtn-lbl" onclick="openPreview()"><i class="ti ti-player-play" style="font-size:15px"></i> プレビュー</button>
-      <button class="hdbtn-lbl">AI画像</button>
-      <button class="export" style="white-space:nowrap;"><i class="ti ti-download" style="font-size:15px"></i> 書き出し</button>
+      <!-- 空いている区間をまとめて埋める入口。1枚ずつはタイムラインの + から -->
+      <button class="hdbtn-lbl" onclick="openBatchGen()"><i class="ti ti-photo" style="font-size:15px"></i> まとめて画像生成</button>
+      <button class="export" style="white-space:nowrap;" onclick="obVideoDone()"><i class="ti ti-download" style="font-size:15px"></i> 書き出し</button>
     </div>
   </div>
 
@@ -1452,12 +1453,14 @@ body.props-resizing{cursor:col-resize;user-select:none;}
       </div>
       <!-- ===== AI画像（一括） ===== -->
       <div id="r-imgbatch" class="rbody" style="display:none;">
-        <div class="fl">AI画像を一括生成</div>
-        <div class="fl">空きスロット（<span id="emptyCount">11</span>区間）</div>
+        <!-- 何をする画面かは個別（#imggen-target）と同じ形の帯で出す。
+             「スロット」「区間」は伝わらないので「か所」で言う -->
+        <div id="imgbatch-target" style="font-size:14px;color:var(--color-primary);background:rgba(239,97,8,.1);border:1px solid rgba(239,97,8,.25);border-radius:var(--radius-sm);padding:10px 12px;margin-bottom:14px;">画像が入っていない <b>11</b> か所に、まとめて画像を作ります</div>
+        <div class="fl" style="margin-top:0;">作る場所</div>
         <div id="batchList" style="max-height:180px;overflow-y:auto;margin-bottom:14px;"></div>
-        <div class="fl">共通の指示（任意）</div>
+        <div class="fl">全部に共通の指示（任意）</div>
         <textarea style="width:100%;min-height:60px;background:var(--color-editor-elevated);border:1px solid var(--color-editor-border);border-radius:var(--radius-md);padding:10px 12px;font-size:14px;color:var(--color-editor-foreground);resize:none;box-sizing:border-box;margin-bottom:14px;" placeholder="例：落ち着いたトーンで、人物は写さない"></textarea>
-        <button class="propbtn" style="background:linear-gradient(135deg,var(--color-primary),var(--color-primary-light));color:#fff;border:none;">全部おまかせで生成</button>
+        <button class="propbtn" id="batchGoBtn" onclick="genBatch()" style="background:linear-gradient(135deg,var(--color-primary),var(--color-primary-light));color:#fff;border:none;">11か所ぶんをまとめて作る</button>
       </div>
       <!-- ===== 旧r-prop互換 ===== -->
       <div id="r-prop" class="rbody" style="display:none;">
@@ -1774,9 +1777,8 @@ function openBatchGen(){
   document.getElementById('r-imggen').style.display='none';
   document.getElementById('r-imgbatch').style.display='block';
   /* 空スロットリストを生成 */
-  var slots=document.querySelectorAll('.clip.empty-img:not(.has)');
+  var slots=emptyImgSlots();
   var list=document.getElementById('batchList');
-  document.getElementById('emptyCount').textContent=slots.length;
   list.innerHTML='';
   slots.forEach(function(s,i){
     var d=document.createElement('div');
@@ -1787,6 +1789,33 @@ function openBatchGen(){
     d.innerHTML='<span style="color:var(--color-primary);font-size:14px;"><i class="ti ti-photo"></i></span>シーン'+(i+1)+'<span style="margin-left:auto;color:var(--color-editor-muted);">'+range+'</span>';
     list.appendChild(d);
   });
+  /* 帯とボタンの件数は毎回いまの空き数から作る。数字を書き置きにすると嘘になる。
+     帯は innerHTML ごと組み直す（textContent だけ差し替えると中の要素が消える） */
+  var target=document.getElementById('imgbatch-target');
+  var btn=document.getElementById('batchGoBtn');
+  if(slots.length){
+    target.innerHTML='画像が入っていない <b>'+slots.length+'</b> か所に、まとめて画像を作ります';
+    btn.disabled=false;
+    btn.textContent=slots.length+'か所ぶんをまとめて作る';
+  }else{
+    target.innerHTML='画像はもう全部の場所に入っています';
+    btn.disabled=true;
+    btn.textContent='作るところがありません';
+  }
+}
+/* 空いている画像スロット。数え方を1箇所に置いて、画面とトーストで食い違わせない */
+function emptyImgSlots(){
+  return document.querySelectorAll('.clip.empty-img:not(.has)');
+}
+/* 書き出しまで来たら、チュートリアルの「動画を作ってみる」を済みにする */
+function obVideoDone(){
+  if(window.IineOnboarding) IineOnboarding.complete('video');
+  if(window.toast) toast.info('書き出しを始めました');
+}
+function genBatch(){
+  var n=emptyImgSlots().length;
+  if(!n) return;
+  toast.info(n+'か所ぶんの画像を生成中…');
 }
 
 /* ===== 左レール切替 ===== */
@@ -2396,4 +2425,5 @@ function openPreview(){ document.getElementById('previewOv').classList.add('on')
 function closePreview(){ document.getElementById('previewOv').classList.remove('on'); }
 document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closePreview(); });
 </script>
+<script src="./onboarding.js"></script>
 </body></html>
