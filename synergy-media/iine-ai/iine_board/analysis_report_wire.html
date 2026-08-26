@@ -138,7 +138,6 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
 .hdr-page{font-size:var(--text-h3);font-weight:var(--font-weight-h3);display:flex;align-items:center;gap:8px;}
 .hdr-page .ti{color:var(--color-muted-foreground);font-size:18px;}
 .helpbtn{width:32px;height:32px;border:1.5px solid var(--color-primary);border-radius:var(--radius-full);background:var(--color-card);color:var(--color-primary);font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;display:flex;align-items:center;justify-content:center;text-decoration:none;}.helpbtn{transition:background .15s,color .15s,border-color .15s;}.helpbtn:hover{background:var(--color-primary);color:var(--color-on-primary);border-color:var(--color-primary);}
-.close-btn{width:36px;height:36px;border:1px solid var(--color-border);border-radius:var(--radius-sm);background:var(--color-card);color:var(--color-muted-foreground);font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 
 /* === main layout === */
 .main-row{flex:1;display:flex;min-height:0;}
@@ -444,6 +443,34 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
 .sub-tab.active{background:var(--color-primary);color:#fff;border-color:var(--color-primary);font-weight:700;}
 
 /* ========================================
+   出力タブ — レポートの保存・書き出し
+   ここだけスライドを持たない。横スクロールの carousel-track を
+   そのまま流用すると 320px のカードが横に並んで送らされるので、
+   同じ器のまま縦積みのグリッドに上書きする（JSの分岐を増やさない）。
+   ======================================== */
+.out-panel{display:flex;flex-direction:column;gap:16px;overflow:visible;
+  -webkit-mask-image:none;mask-image:none;padding:0 4px 4px;}
+.out-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;}
+/* カード全体が押せる。アイコンや文字だけを的にすると、押せる範囲が分かりにくい */
+.out-card{display:flex;flex-direction:column;align-items:flex-start;gap:8px;text-align:left;
+  padding:20px 18px;background:var(--color-card);border:1px solid var(--color-border);
+  border-radius:var(--radius-xl);cursor:pointer;font-family:inherit;transition:border-color .15s,box-shadow .15s;}
+.out-card:hover{border-color:var(--color-primary);box-shadow:0 2px 10px rgb(0 0 0 / .06);}
+.out-ic{width:44px;height:44px;border-radius:var(--radius-md);flex:none;display:flex;
+  align-items:center;justify-content:center;font-size:22px;
+  background:var(--color-primary-subtle);color:var(--color-primary);}
+.out-t{font-size:var(--text-body);font-weight:700;color:var(--color-foreground);}
+.out-d{font-size:var(--text-label);line-height:1.7;color:var(--color-muted-foreground);}
+/* 何が出てくるかの結果（形式と数）。押す前に分かるようにしておく */
+.out-meta{margin-top:auto;padding:2px 9px;border-radius:var(--radius-full);
+  font-size:var(--text-meta);font-weight:700;
+  background:var(--color-surface);color:var(--color-muted-foreground);}
+.out-note{display:flex;align-items:center;gap:10px;padding:14px 16px;
+  background:var(--color-primary-subtle);border-radius:var(--radius-lg);
+  font-size:var(--text-label);line-height:1.7;color:var(--color-foreground);}
+.out-note img{width:40px;height:40px;flex:none;object-fit:contain;}
+
+/* ========================================
    ACCORDION — 詳細データ（デフォ閉じ）
    ======================================== */
 .detail-section{padding:0 28px 24px;}
@@ -605,6 +632,16 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
 .sidebar,.main-row > .sb{grid-column:1;grid-row:1 / span 2;}
 .topbar{grid-column:2;grid-row:1;}
 .content{grid-column:2;grid-row:2;min-height:0;overflow-y:auto;}
+/* ===== SPではサイドバーの列ごと畳む =====
+   上の @media(max-width:768px) は .sidebar{display:none} までしかやっていない。
+   grid は display:none の要素を外しても「列そのもの」は消えないので、
+   235px のトラックが残ったまま本文が右の 1fr（実測125px）に押し込まれていた。
+   このシェル定義はメディアクエリより後ろにあるため、打ち消しもここに置く。
+   （SPの導線は shell-sp.css の下部ナビが持つので、左の列は要らない） */
+@media(max-width:768px){
+  .app{grid-template-columns:minmax(0,1fr);}
+  .topbar,.content{grid-column:1;}
+}
 /* 生成りの地に浮いた3枚のカードとして置く（他ページと同じ扱い） */
 .sidebar,.main-row > .sb{border-right:none;border-radius:var(--radius-xl);overflow-y:auto;}
 .topbar{border-bottom:none;border-radius:var(--radius-xl);background:var(--color-card);
@@ -651,7 +688,6 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
         <button class="hdbtn" title="ToDo" aria-label="ToDo"><i class="ti ti-list-check"></i><span class="hdbadge">5</span></button>
         <a class="hdbtn" href="./chat_wire.html" title="チャット（未読2件）" aria-label="チャット（未読2件）"><i class="ti ti-message-dots"></i><span class="hdbadge">2</span></a>
         <a class="helpbtn" href="https://hinaiwagami0513.github.io/iineai/help/analytics/ai-report/" target="_blank" rel="noopener" title="このページのヘルプ（分析 > AIレポート）" aria-label="このページのヘルプ">?</a>
-      <button class="close-btn"><i class="ti ti-list-details"></i></button>
     </div>
   </div>
 
@@ -756,11 +792,10 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
       <div class="slide-area">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
           <div class="sub-tabs">
-            <button class="sub-tab active">総合</button>
-            <button class="sub-tab">企画</button>
-            <button class="sub-tab">投稿文</button>
+            <button class="sub-tab active">改善点</button>
+            <button class="sub-tab">分析概要</button>
             <button class="sub-tab">コンテンツ</button>
-            <button class="sub-tab">投稿日時</button>
+            <button class="sub-tab">出力</button>
           </div>
           <div class="update-badge"><i class="ti ti-clock"></i> 更新: 2026/7/14 18:00</div>
         </div>
@@ -768,9 +803,126 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
         <!-- CAROUSEL -->
         <div class="carousel">
           <button class="carousel-arrows prev"><i class="ti ti-chevrons-left"></i></button>
-          <div class="carousel-track" id="track" data-tab="総合">
 
-            <!-- SLIDE 1: 総合スコア -->
+          <div class="carousel-track" data-tab="改善点">
+            <div class="slide t-info">
+              <div class="slide-num">5 / 5</div>
+              <div class="sl-hd">
+                <div class="sl-icon info"><i class="ti ti-clipboard-list"></i></div>
+                <div class="sl-label">来月やること</div>
+              </div>
+              <div class="sl-actions">
+                <div class="sl-action">
+                  <div class="bullet">1</div>
+                  <div>週1〜2件の<strong>リール動画</strong>を安定投稿する</div>
+                </div>
+                <div class="sl-action">
+                  <div class="bullet">2</div>
+                  <div>ハッシュタグ <span class="help-tip">?<span class="help-text">ハッシュタグ = #をつけたキーワード。検索で見つけてもらいやすくなる</span></span>を<strong>12〜15個</strong>に統一する</div>
+                </div>
+                <div class="sl-action">
+                  <div class="bullet">3</div>
+                  <div>投稿にCTA <span class="help-tip">?<span class="help-text">CTA = 「保存してね」「シェアしてね」などの行動を促す一言</span></span>を入れる（<strong>保存・シェア・来店</strong>）</div>
+                </div>
+              </div>
+              <hr class="sl-divider">
+              <div style="text-align:center;font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.5;">この改善案は台本に自動反映されます</div>
+              <div style="display:flex;align-items:center;gap:10px;justify-content:center;margin-top:auto;">
+                <img src="./assets/iine-fox-face.png" class="fox-mascot" alt="fox" style="width:40px;height:40px;">
+                <div style="font-size:var(--text-body);font-weight:700;line-height:1.5;">3つだけ<br>まずやってみよう！</div>
+              </div>
+            </div>
+
+            <div class="slide">
+              <div class="slide-num">3 / 3</div>
+              <div class="sl-hd">
+                <div class="sl-icon info"><i class="ti ti-sparkles"></i></div>
+                <div class="sl-label">企画の改善案</div>
+              </div>
+              <div class="sl-actions">
+                <div class="sl-action">
+                  <div class="bullet">1</div>
+                  <div><strong>子犬コンテンツ</strong>を全投稿の50%以上に</div>
+                </div>
+                <div class="sl-action">
+                  <div class="bullet">2</div>
+                  <div>「本日のキャスト」シリーズを<strong>週替わり</strong>で</div>
+                </div>
+                <div class="sl-action">
+                  <div class="bullet">3</div>
+                  <div>テキスト・お知らせ投稿は<strong>完全廃止</strong></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="slide">
+              <div class="slide-num">3 / 3</div>
+              <div class="sl-hd">
+                <div class="sl-icon info"><i class="ti ti-pencil"></i></div>
+                <div class="sl-label">投稿文の改善案</div>
+              </div>
+              <div class="sl-actions">
+                <div class="sl-action">
+                  <div class="bullet">1</div>
+                  <div>末尾に<strong>保存・シェア・来店</strong>のCTAを必ず入れる</div>
+                </div>
+                <div class="sl-action">
+                  <div class="bullet">2</div>
+                  <div>文字数を<strong>100〜150字</strong>に調整</div>
+                </div>
+                <div class="sl-action">
+                  <div class="bullet">3</div>
+                  <div>冒頭に<strong>数字や疑問</strong>で興味を引く</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="slide">
+              <div class="slide-num">3 / 3</div>
+              <div class="sl-hd">
+                <div class="sl-icon info"><i class="ti ti-photo"></i></div>
+                <div class="sl-label">コンテンツの改善案</div>
+              </div>
+              <div class="sl-actions">
+                <div class="sl-action">
+                  <div class="bullet">1</div>
+                  <div>全投稿を<strong>リール動画</strong>に統一する</div>
+                </div>
+                <div class="sl-action">
+                  <div class="bullet">2</div>
+                  <div>テキスト投稿は<strong>6月末で完全廃止</strong></div>
+                </div>
+                <div class="sl-action">
+                  <div class="bullet">3</div>
+                  <div>冒頭3秒に<strong>一番可愛い瞬間</strong>を配置</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="slide">
+              <div class="slide-num">3 / 3</div>
+              <div class="sl-hd">
+                <div class="sl-icon info"><i class="ti ti-clock"></i></div>
+                <div class="sl-label">投稿日時の改善案</div>
+              </div>
+              <div class="sl-actions">
+                <div class="sl-action">
+                  <div class="bullet">1</div>
+                  <div><strong>火曜・土曜</strong>に固定して週2投稿</div>
+                </div>
+                <div class="sl-action">
+                  <div class="bullet">2</div>
+                  <div>時間は<strong>14時</strong>に統一</div>
+                </div>
+                <div class="sl-action">
+                  <div class="bullet">3</div>
+                  <div>投稿カレンダーで<strong>予約投稿</strong>を活用</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="carousel-track" data-tab="分析概要" style="display:none;">
             <div class="slide t-score">
               <div class="slide-num">1 / 5</div>
               <div class="sl-hd">
@@ -794,7 +946,6 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
               </div>
             </div>
 
-            <!-- SLIDE 2: 一番伸びた -->
             <div class="slide t-up">
               <div class="slide-num">2 / 5</div>
               <div class="sl-hd">
@@ -823,7 +974,6 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
               </div>
             </div>
 
-            <!-- SLIDE 3: 課題 -->
             <div class="slide t-down">
               <div class="slide-num">3 / 5</div>
               <div class="sl-hd">
@@ -853,7 +1003,6 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
               </div>
             </div>
 
-            <!-- SLIDE 4: ベスト投稿 -->
             <div class="slide t-star">
               <div class="slide-num">4 / 5</div>
               <div class="sl-hd">
@@ -891,181 +1040,8 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
                 <div class="sl-badge primary" style="display:inline-flex;"><i class="ti ti-sparkles" style="font-size:14px;"></i> リール動画が一番伸びる！ <span class="help-tip">?<span class="help-text">リール = 最大90秒の縦型ショート動画。Instagramが優先的に表示してくれる</span></span></div>
               </div>
             </div>
-
-            <!-- SLIDE 5: やること -->
-            <div class="slide t-info">
-              <div class="slide-num">5 / 5</div>
-              <div class="sl-hd">
-                <div class="sl-icon info"><i class="ti ti-clipboard-list"></i></div>
-                <div class="sl-label">来月やること</div>
-              </div>
-              <div class="sl-actions">
-                <div class="sl-action">
-                  <div class="bullet">1</div>
-                  <div>週1〜2件の<strong>リール動画</strong>を安定投稿する</div>
-                </div>
-                <div class="sl-action">
-                  <div class="bullet">2</div>
-                  <div>ハッシュタグ <span class="help-tip">?<span class="help-text">ハッシュタグ = #をつけたキーワード。検索で見つけてもらいやすくなる</span></span>を<strong>12〜15個</strong>に統一する</div>
-                </div>
-                <div class="sl-action">
-                  <div class="bullet">3</div>
-                  <div>投稿にCTA <span class="help-tip">?<span class="help-text">CTA = 「保存してね」「シェアしてね」などの行動を促す一言</span></span>を入れる（<strong>保存・シェア・来店</strong>）</div>
-                </div>
-              </div>
-              <hr class="sl-divider">
-              <div style="text-align:center;font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.5;">この改善案は台本に自動反映されます</div>
-              <div style="display:flex;align-items:center;gap:10px;justify-content:center;margin-top:auto;">
-                <img src="./assets/iine-fox-face.png" class="fox-mascot" alt="fox" style="width:40px;height:40px;">
-                <div style="font-size:var(--text-body);font-weight:700;line-height:1.5;">3つだけ<br>まずやってみよう！</div>
-              </div>
-            </div>
-
           </div>
 
-          <!-- === TAB: 企画 === -->
-          <div class="carousel-track" data-tab="企画" style="display:none;">
-            <div class="slide">
-              <div class="slide-num">1 / 3</div>
-              <div class="sl-hd">
-                <div class="sl-icon neutral"><i class="ti ti-sparkles"></i></div>
-                <div class="sl-label">企画の傾向</div>
-              </div>
-              <div class="sl-note">直近1ヶ月の投稿企画タイプ（3パターン）</div>
-              <div class="sl-donut-wrap">
-                <div class="sl-donut" style="background:conic-gradient(var(--color-chart-1) 0 50%,var(--color-chart-2) 50% 80%,var(--color-chart-3) 80% 100%)" aria-label="子犬紹介50% グランピング30% お知らせ20%">
-                  <div class="sl-donut-cap"><span class="t">50%</span><span class="s">子犬紹介</span></div>
-                </div>
-                <div class="sl-mix-legend">
-                  <div class="row"><span class="dot c1"></span><span class="nm">子犬紹介</span><span class="pc">50%</span></div>
-                  <div class="row"><span class="dot c2"></span><span class="nm">グランピング</span><span class="pc">30%</span></div>
-                  <div class="row"><span class="dot c3"></span><span class="nm">お知らせ</span><span class="pc">20%</span></div>
-                </div>
-              </div>
-              <hr class="sl-divider">
-              <div style="display:flex;align-items:center;gap:10px;justify-content:center;">
-                <img src="./assets/iine-fox-face.png" class="fox-mascot" alt="fox">
-                <div style="font-size:var(--text-body);line-height:1.6;">子犬ネタが一番伸びてる！<br>もっと増やそう</div>
-              </div>
-            </div>
-
-            <div class="slide">
-              <div class="slide-num">2 / 3</div>
-              <div class="sl-hd">
-                <div class="sl-icon up"><i class="ti ti-star"></i></div>
-                <div class="sl-label">伸びた企画</div>
-              </div>
-              <div style="text-align:center;font-size:var(--text-body);color:var(--color-muted-foreground);margin-top:4px;">「犬カフェRio子犬ふれあい体験」</div>
-              <div class="sl-big">
-                <div class="num up">1,777<span class="unit">リーチ</span></div>
-                <div class="sub">リール動画 / 6月1日投稿</div>
-              </div>
-              <div class="sl-hbars">
-                <div class="sl-hbar">
-                  <span class="nm">この投稿</span>
-                  <span class="track"><span class="fill up" style="width:100%"></span></span>
-                  <span class="v">1,777</span>
-                </div>
-                <div class="sl-hbar">
-                  <span class="nm">平均</span>
-                  <span class="track"><span class="fill before" style="width:12%"></span></span>
-                  <span class="v">214</span>
-                </div>
-              </div>
-              <hr class="sl-divider">
-              <div style="font-size:var(--text-body);text-align:center;line-height:1.6;color:var(--color-foreground);">冒頭3秒の<strong>子犬アップ</strong>が<br>完了率を引き上げた</div>
-            </div>
-
-            <div class="slide">
-              <div class="slide-num">3 / 3</div>
-              <div class="sl-hd">
-                <div class="sl-icon info"><i class="ti ti-clipboard-list"></i></div>
-                <div class="sl-label">企画の改善案</div>
-              </div>
-              <div class="sl-actions">
-                <div class="sl-action">
-                  <div class="bullet">1</div>
-                  <div><strong>子犬コンテンツ</strong>を全投稿の50%以上に</div>
-                </div>
-                <div class="sl-action">
-                  <div class="bullet">2</div>
-                  <div>「本日のキャスト」シリーズを<strong>週替わり</strong>で</div>
-                </div>
-                <div class="sl-action">
-                  <div class="bullet">3</div>
-                  <div>テキスト・お知らせ投稿は<strong>完全廃止</strong></div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- === TAB: 投稿文 === -->
-          <div class="carousel-track" data-tab="投稿文" style="display:none;">
-            <div class="slide">
-              <div class="slide-num">1 / 3</div>
-              <div class="sl-hd">
-                <div class="sl-icon neutral"><i class="ti ti-pencil"></i></div>
-                <div class="sl-label">投稿文のスコア</div>
-              </div>
-              <div class="sl-big">
-                <div class="num primary" style="font-size:4rem;">58<span class="unit" style="font-size:var(--text-h1);">点</span></div>
-                <div class="sub">100点中</div>
-              </div>
-              <div class="sl-gauge" aria-label="100点中58点"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="half"></span><span></span><span></span><span></span><span></span></div>
-              <div class="sl-badge-row">
-                <div class="sl-badge down">CTA なし 80%</div>
-                <div class="sl-badge down">文字数 少なすぎ</div>
-              </div>
-            </div>
-
-            <div class="slide">
-              <div class="slide-num">2 / 3</div>
-              <div class="sl-hd">
-                <div class="sl-icon down"><i class="ti ti-help-circle"></i></div>
-                <div class="sl-label">CTAが入っていない</div>
-              </div>
-              <div class="sl-note">CTA＝「保存してね」のような行動を促す一言</div>
-              <div class="sl-dots" aria-label="10投稿のうち8つにCTAがない">
-                <span class="on-down"></span><span class="on-down"></span><span class="on-down"></span>
-                <span class="on-down"></span><span class="on-down"></span><span class="on-down"></span>
-                <span class="on-down"></span><span class="on-down"></span>
-                <span class="off"></span><span class="off"></span>
-              </div>
-              <div class="sl-verdict">
-                <div class="v-main">ほとんどの投稿に<br>CTAが入っていない</div>
-                <div class="v-sub">10投稿中 8つ（80%）</div>
-              </div>
-              <hr class="sl-divider">
-              <div style="display:flex;align-items:center;gap:10px;justify-content:center;">
-                <img src="./assets/iine-fox-face.png" class="fox-mascot" alt="fox" style="width:36px;height:36px;">
-                <div style="font-size:var(--text-body);line-height:1.5;">「保存してね」の一言で<br>保存率が2倍になるで！</div>
-              </div>
-            </div>
-
-            <div class="slide">
-              <div class="slide-num">3 / 3</div>
-              <div class="sl-hd">
-                <div class="sl-icon info"><i class="ti ti-clipboard-list"></i></div>
-                <div class="sl-label">投稿文の改善案</div>
-              </div>
-              <div class="sl-actions">
-                <div class="sl-action">
-                  <div class="bullet">1</div>
-                  <div>末尾に<strong>保存・シェア・来店</strong>のCTAを必ず入れる</div>
-                </div>
-                <div class="sl-action">
-                  <div class="bullet">2</div>
-                  <div>文字数を<strong>100〜150字</strong>に調整</div>
-                </div>
-                <div class="sl-action">
-                  <div class="bullet">3</div>
-                  <div>冒頭に<strong>数字や疑問</strong>で興味を引く</div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- === TAB: コンテンツ === -->
           <div class="carousel-track" data-tab="コンテンツ" style="display:none;">
             <div class="slide">
               <div class="slide-num">1 / 3</div>
@@ -1120,30 +1096,97 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
             </div>
 
             <div class="slide">
-              <div class="slide-num">3 / 3</div>
+              <div class="slide-num">1 / 3</div>
               <div class="sl-hd">
-                <div class="sl-icon info"><i class="ti ti-clipboard-list"></i></div>
-                <div class="sl-label">コンテンツの改善案</div>
+                <div class="sl-icon neutral"><i class="ti ti-sparkles"></i></div>
+                <div class="sl-label">企画の傾向</div>
               </div>
-              <div class="sl-actions">
-                <div class="sl-action">
-                  <div class="bullet">1</div>
-                  <div>全投稿を<strong>リール動画</strong>に統一する</div>
+              <div class="sl-note">直近1ヶ月の投稿企画タイプ（3パターン）</div>
+              <div class="sl-donut-wrap">
+                <div class="sl-donut" style="background:conic-gradient(var(--color-chart-1) 0 50%,var(--color-chart-2) 50% 80%,var(--color-chart-3) 80% 100%)" aria-label="子犬紹介50% グランピング30% お知らせ20%">
+                  <div class="sl-donut-cap"><span class="t">50%</span><span class="s">子犬紹介</span></div>
                 </div>
-                <div class="sl-action">
-                  <div class="bullet">2</div>
-                  <div>テキスト投稿は<strong>6月末で完全廃止</strong></div>
+                <div class="sl-mix-legend">
+                  <div class="row"><span class="dot c1"></span><span class="nm">子犬紹介</span><span class="pc">50%</span></div>
+                  <div class="row"><span class="dot c2"></span><span class="nm">グランピング</span><span class="pc">30%</span></div>
+                  <div class="row"><span class="dot c3"></span><span class="nm">お知らせ</span><span class="pc">20%</span></div>
                 </div>
-                <div class="sl-action">
-                  <div class="bullet">3</div>
-                  <div>冒頭3秒に<strong>一番可愛い瞬間</strong>を配置</div>
-                </div>
+              </div>
+              <hr class="sl-divider">
+              <div style="display:flex;align-items:center;gap:10px;justify-content:center;">
+                <img src="./assets/iine-fox-face.png" class="fox-mascot" alt="fox">
+                <div style="font-size:var(--text-body);line-height:1.6;">子犬ネタが一番伸びてる！<br>もっと増やそう</div>
               </div>
             </div>
-          </div>
 
-          <!-- === TAB: 投稿日時 === -->
-          <div class="carousel-track" data-tab="投稿日時" style="display:none;">
+            <div class="slide">
+              <div class="slide-num">2 / 3</div>
+              <div class="sl-hd">
+                <div class="sl-icon up"><i class="ti ti-star"></i></div>
+                <div class="sl-label">伸びた企画</div>
+              </div>
+              <div style="text-align:center;font-size:var(--text-body);color:var(--color-muted-foreground);margin-top:4px;">「犬カフェRio子犬ふれあい体験」</div>
+              <div class="sl-big">
+                <div class="num up">1,777<span class="unit">リーチ</span></div>
+                <div class="sub">リール動画 / 6月1日投稿</div>
+              </div>
+              <div class="sl-hbars">
+                <div class="sl-hbar">
+                  <span class="nm">この投稿</span>
+                  <span class="track"><span class="fill up" style="width:100%"></span></span>
+                  <span class="v">1,777</span>
+                </div>
+                <div class="sl-hbar">
+                  <span class="nm">平均</span>
+                  <span class="track"><span class="fill before" style="width:12%"></span></span>
+                  <span class="v">214</span>
+                </div>
+              </div>
+              <hr class="sl-divider">
+              <div style="font-size:var(--text-body);text-align:center;line-height:1.6;color:var(--color-foreground);">冒頭3秒の<strong>子犬アップ</strong>が<br>完了率を引き上げた</div>
+            </div>
+
+            <div class="slide">
+              <div class="slide-num">1 / 3</div>
+              <div class="sl-hd">
+                <div class="sl-icon neutral"><i class="ti ti-pencil"></i></div>
+                <div class="sl-label">投稿文のスコア</div>
+              </div>
+              <div class="sl-big">
+                <div class="num primary" style="font-size:4rem;">58<span class="unit" style="font-size:var(--text-h1);">点</span></div>
+                <div class="sub">100点中</div>
+              </div>
+              <div class="sl-gauge" aria-label="100点中58点"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span class="half"></span><span></span><span></span><span></span><span></span></div>
+              <div class="sl-badge-row">
+                <div class="sl-badge down">CTA なし 80%</div>
+                <div class="sl-badge down">文字数 少なすぎ</div>
+              </div>
+            </div>
+
+            <div class="slide">
+              <div class="slide-num">2 / 3</div>
+              <div class="sl-hd">
+                <div class="sl-icon down"><i class="ti ti-help-circle"></i></div>
+                <div class="sl-label">CTAが入っていない</div>
+              </div>
+              <div class="sl-note">CTA＝「保存してね」のような行動を促す一言</div>
+              <div class="sl-dots" aria-label="10投稿のうち8つにCTAがない">
+                <span class="on-down"></span><span class="on-down"></span><span class="on-down"></span>
+                <span class="on-down"></span><span class="on-down"></span><span class="on-down"></span>
+                <span class="on-down"></span><span class="on-down"></span>
+                <span class="off"></span><span class="off"></span>
+              </div>
+              <div class="sl-verdict">
+                <div class="v-main">ほとんどの投稿に<br>CTAが入っていない</div>
+                <div class="v-sub">10投稿中 8つ（80%）</div>
+              </div>
+              <hr class="sl-divider">
+              <div style="display:flex;align-items:center;gap:10px;justify-content:center;">
+                <img src="./assets/iine-fox-face.png" class="fox-mascot" alt="fox" style="width:36px;height:36px;">
+                <div style="font-size:var(--text-body);line-height:1.5;">「保存してね」の一言で<br>保存率が2倍になるで！</div>
+              </div>
+            </div>
+
             <div class="slide">
               <div class="slide-num">1 / 3</div>
               <div class="sl-hd">
@@ -1193,40 +1236,46 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
               <hr class="sl-divider">
               <div style="font-size:var(--text-body);text-align:center;line-height:1.6;color:var(--color-foreground);">空白期間が長いと<br><strong>フォロワー離れ</strong>の原因に</div>
             </div>
-
-            <div class="slide">
-              <div class="slide-num">3 / 3</div>
-              <div class="sl-hd">
-                <div class="sl-icon info"><i class="ti ti-clipboard-list"></i></div>
-                <div class="sl-label">投稿日時の改善案</div>
-              </div>
-              <div class="sl-actions">
-                <div class="sl-action">
-                  <div class="bullet">1</div>
-                  <div><strong>火曜・土曜</strong>に固定して週2投稿</div>
-                </div>
-                <div class="sl-action">
-                  <div class="bullet">2</div>
-                  <div>時間は<strong>14時</strong>に統一</div>
-                </div>
-                <div class="sl-action">
-                  <div class="bullet">3</div>
-                  <div>投稿カレンダーで<strong>予約投稿</strong>を活用</div>
-                </div>
-              </div>
-            </div>
           </div>
 
+          <!-- === TAB: 出力 === -->
+          <!-- ここだけスライドを持たない。保存の選択肢は横に送って読むものではなく
+               その場で1つ選ぶものなので、カルーセルに載せず並べて出す。
+               矢印とドットは activateTab が隠す。 -->
+          <div class="carousel-track out-panel" data-tab="出力" style="display:none;">
+            <div class="out-grid">
+              <button class="out-card">
+                <span class="out-ic"><i class="ti ti-photo"></i></span>
+                <span class="out-t">画像で保存</span>
+                <span class="out-d">スライドを1枚ずつPNGで書き出します。そのままSNSに出せます。</span>
+                <span class="out-meta">PNG / 17枚</span>
+              </button>
+              <button class="out-card">
+                <!-- 字形はこのファイルが宣言している .ti-* からしか選べない。
+                     ti-file-type-pdf / ti-clipboard-text は未宣言で、四角が出るだけだった -->
+                <span class="out-ic"><i class="ti ti-file-text"></i></span>
+                <span class="out-t">PDFでまとめる</span>
+                <span class="out-d">レポート全体を1つのPDFに。印刷や、社内で回すときはこちら。</span>
+                <span class="out-meta">PDF / 1ファイル</span>
+              </button>
+              <button class="out-card">
+                <span class="out-ic"><i class="ti ti-clipboard-list"></i></span>
+                <span class="out-t">テキストでコピー</span>
+                <span class="out-d">改善案を文章のままコピーします。メールやチャットに貼れます。</span>
+                <span class="out-meta">クリップボード</span>
+              </button>
+            </div>
+            <div class="out-note">
+              <img src="./assets/iine-fox-face.png" alt="">
+              <div>出したいのが<b>今月の改善案だけ</b>なら、テキストが一番早いで！</div>
+            </div>
+          </div>
           <button class="carousel-arrows next"><i class="ti ti-chevrons-right"></i></button>
         </div>
 
         <!-- dots -->
         <div class="carousel-nav" id="dots">
           <button class="carousel-dot active"></button>
-          <button class="carousel-dot"></button>
-          <button class="carousel-dot"></button>
-          <button class="carousel-dot"></button>
-          <button class="carousel-dot"></button>
         </div>
       </div>
 
@@ -1492,6 +1541,15 @@ function activateTab(tabName) {
   activeTrack = document.querySelector('.carousel-track[data-tab="' + tabName + '"]');
   slides = activeTrack.querySelectorAll('.slide');
   current = 0;
+
+  /* 「出力」はスライドを持たない。矢印とドットを出したままにすると、
+     押しても何も起きない飾りになる（送る先が無い）。まとめて隠す。 */
+  const noCarousel = slides.length === 0;
+  prevBtn.style.display = noCarousel ? 'none' : '';
+  nextBtn.style.display = noCarousel ? 'none' : '';
+  dotsWrap.style.display = noCarousel ? 'none' : '';
+  if (noCarousel) { dots = []; return; }
+
   buildDots(slides.length);
   activeTrack.scrollLeft = 0;
   setTimeout(() => updateScrollFade(activeTrack), 50);
@@ -1503,6 +1561,7 @@ function activateTab(tabName) {
 }
 
 function goTo(i) {
+  if (!slides || !slides.length) return;   // 出力タブでは送る先が無い
   if (i < 0) i = 0;
   if (i >= slides.length) i = slides.length - 1;
   current = i;
@@ -1553,6 +1612,7 @@ document.querySelectorAll('.sub-tab').forEach(function(tab) {
 });
 
 // init
-activateTab('総合');
+activateTab('改善点');
 </script>
+<script src="./tour.js"></script>
 </body></html>

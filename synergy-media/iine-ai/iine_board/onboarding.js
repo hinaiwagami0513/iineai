@@ -65,7 +65,11 @@
     }
     return st;
   }
+  /* 画面ボードからの確認表示（?ob=finish）のときは保存しない。
+     見ただけで本物の進捗が「完了」に変わってしまうため。 */
+  var PREVIEW = false;
   function save(st) {
+    if (PREVIEW) return;
     try { localStorage.setItem(KEY, JSON.stringify(st)); } catch (e) {}
   }
 
@@ -128,7 +132,14 @@
       '.ob-dlg .go{width:100%;padding:12px;border:none;background:var(--color-primary, #fe7235);color:#fff;border-radius:var(--radius-md);',
       '  font-family:inherit;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;}',
       '.ob-dlg .later{margin-top:9px;background:none;border:none;color:var(--color-muted-foreground, #757575);font-family:inherit;',
-      '  font-size:var(--text-label);cursor:pointer;text-decoration:underline;}'
+      '  font-size:var(--text-label);cursor:pointer;text-decoration:underline;}',
+      /* ---- SPでは一覧を出さない ----
+         SPのサイドバー（shell-sp.css）は高さ60pxの下部ナビに変わる。そこへこの箱が
+         居座ると、7項目で分け合っている幅を110px奪って「投稿」「カレンダー」の
+         ラベルが重なる（実測）。縦に積む場所がないので、SPでは箱ごと下げる。
+         最初の1枚のダイアログと画面ごとの案内（tour.js）はSPでも出るので、
+         入門者が何をすればいいか分からなくなることはない。 */
+      '@media(max-width:768px){.ob{display:none;}}'
     ].join('\n');
     var s = document.createElement('style');
     s.id = 'ob-css';
@@ -143,7 +154,9 @@
     var n = left();
     var pct = Math.round((TASKS.length - n) / TASKS.length * 100);
 
-    if (st.hidden) { host.innerHTML = ''; return; }
+    /* 中身を空にするだけだと .ob の枠・余白・背景が残って、
+       サイドバーに空の白い箱が居座る。要素ごと外す。 */
+    if (st.hidden) { host.remove(); return; }
 
     var rows = TASKS.map(function (x) {
       var d = isDone(x.k);
@@ -166,7 +179,7 @@
       '<span class="t">はじめの設定</span>' +
       '<span class="n">' + (n ? '残り' + n : '完了') + '</span></div>' +
       '<div class="ob-bar"><i style="width:' + pct + '%"></i></div>' +
-      (n === 0 ? '<div class="ob-fin">' + SVG_CHECK + 'ぜんぶ終わりました</div>' : '') +
+      (n === 0 ? '<div class="ob-fin">' + SVG_CHECK + 'すべて終了しました</div>' : '') +
       rows +
       (n === 0 ? '<button class="ob-close" onclick="IineOnboarding.hide()">閉じる</button>' : '');
   }
@@ -174,6 +187,8 @@
   /* サイドバーの一番下（アカウント切替の手前）に箱を作る。
      .nav の中に入れるとスクロールで流れて見えなくなるので、.foot の手前に置く。 */
   function mount() {
+    /* 終わって下げたあとは作らない。作ってから消すと一瞬だけ箱が見える */
+    if (st.hidden) return;
     if (document.getElementById('obBox')) return;
     var foot = document.querySelector('.sb .foot') || document.querySelector('.foot');
     if (!foot || !foot.parentElement) return;
@@ -213,9 +228,8 @@
     ovl.innerHTML =
       '<div class="ob-dlg" role="dialog" aria-modal="true" aria-label="完了">' +
       '<img src="./assets/iine-fox-celebrate.png" alt="">' +
-      '<div class="t">ぜんぶ終わりました！</div>' +
-      '<div class="d">これで、AIが<b>狙いのある投稿</b>を書けるようになりました。<br>' +
-      'あとは投稿を作って出すだけです。</div>' +
+      '<div class="t">すべてのチュートリアルタスクが<br>終了しました</div>' +
+      '<div class="d">AIが<b>狙いのある投稿</b>を書けるようになりました。</div>' +
       '<button class="go" onclick="IineOnboarding.closeFinish()">はじめる</button>' +
       '</div>';
     document.body.appendChild(ovl);
@@ -264,7 +278,25 @@
     reset: function () { localStorage.removeItem(KEY); location.reload(); }
   };
 
-  function init() { injectCss(); mount(); welcome(); }
+  /* ?ob=finish で終わりのダイアログだけ出す。画面ボードから確認するための入口。
+     4タスク消化しないと見られないと、確認のたびに全部やり直すことになる。
+     状態は書き換えない（celebrated を立てない）ので、何度開いても同じものが出る。 */
+  function preview() {
+    if (new URLSearchParams(location.search).get('ob') !== 'finish') return false;
+    PREVIEW = true;
+    st.done = TASKS.map(function (x) { return x.k; });   /* 一覧も完了の見た目にする */
+    st.celebrated = false;
+    render();
+    finish();
+    return true;
+  }
+
+  function init() {
+    injectCss();
+    mount();
+    if (preview()) return;   /* 確認用のときは初回案内を出さない */
+    welcome();
+  }
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {

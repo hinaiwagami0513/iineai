@@ -18,7 +18,10 @@
 
   /* ===== サイドバー → 下部固定ナビ ===== */
   .sb{width:100%;height:60px;flex-direction:row;position:fixed;bottom:0;left:0;right:0;z-index:100;border-right:none;border-top:1px solid var(--color-border);flex:none;}
-  .sbtop{display:none;}
+  /* ロゴ帯のクラス名は画面によって2種類ある（.sbtop と .sb-logo）。
+     .sbtop しか見ていなかったので、.sb-logo の画面（approval_list / analysis_posts）は
+     60pxの帯にロゴが残り、ナビ項目を右へ押して「投稿カレンダー分析」と潰れていた。 */
+  .sbtop,.sb-logo{display:none;}
   /* 横スクロールさせない。残り幅を項目で分け合う（flex:1 1 0 なので溢れない）。
      overflow は visible のまま。hidden にすると中央の＋の頭が切られる。 */
   .nav{display:flex;flex-direction:row;padding:0;overflow:visible;flex:1;gap:0;align-items:stretch;}

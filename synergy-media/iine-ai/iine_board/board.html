@@ -132,6 +132,12 @@
 body{background:#eceae7;color:var(--color-foreground);padding-bottom:60px;}
 .ti{line-height:1;}
 .top{position:sticky;top:0;z-index:10;background:var(--color-card);border-bottom:1px solid var(--color-border);display:flex;align-items:center;gap:14px;padding:14px 30px;}
+/* この画面は社内の画面一覧で、作りはPC前提（メディアクエリを持っていない）。
+   ただ上の帯だけは8項目が横一列で723px要り、スマホで開くとページ全体が
+   横スクロールして下のカードまで読めなくなる。折り返しだけ許して止める。 */
+@media(max-width:768px){
+  .top{flex-wrap:wrap;padding:10px 14px;gap:10px;}
+}
 /* ===== 画面ビューアへの導線 ===== */
 .jump-open{margin-left:auto;display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border-radius:var(--radius-full);
   border:1px solid var(--color-border);background:var(--color-surface);color:var(--color-foreground);text-decoration:none;
@@ -193,12 +199,21 @@ body{background:#eceae7;color:var(--color-foreground);padding-bottom:60px;}
   <div class="device-toggle"><span class="dt on" data-d="pc" onclick="setDevice('pc')"><i class="ti ti-device-laptop"></i>PC</span><span class="dt" data-d="sp" onclick="setDevice('sp')"><i class="ti ti-device-mobile"></i>SP</span></div>
 </div>
 <div class="wrap"><div class="sec">
-  <div class="sec-h"><span class="sec-ic"><i class="ti ti-layout-dashboard"></i></span><span class="sec-name">ホーム</span><span class="sec-num">1/1</span></div>
+  <div class="sec-h"><span class="sec-ic"><i class="ti ti-layout-dashboard"></i></span><span class="sec-name">ホーム</span><span class="sec-num">2/2</span></div>
   <div class="frames"><div class="frame">
-    <div class="flabel"><span class="ftitle">ホーム</span><span class="fnote">NEWS/ToDo/チャット・今週の予定・作業時間・生成トレイ</span></div>
+    <div class="flabel"><span class="ftitle">ホーム</span><span class="fnote">NEWS/ToDo/チャット・AI改善点・今週の予定・作業時間・生成トレイ</span></div>
     <div class="thumb" data-w="1300" data-href="./shell_header_sidebar_wire.html" data-title="ホーム" onclick="openLB(this)">
       <span class="open-badge">クリックで新しいタブ</span>
       <iframe src="./shell_header_sidebar_wire.html" scrolling="no" tabindex="-1" data-w="1300"></iframe>
+    </div>
+    </div><div class="frame">
+    <!-- ?ob=finish は onboarding.js の確認用の入口。4タスク消化しないと見られないと
+         確認のたびに全部やり直すことになるので、ここから直接開けるようにしている。
+         保存はしないので、これを見ても本物の進捗は変わらない -->
+    <div class="flabel"><span class="ftitle">はじめの設定・完了</span><span class="fnote">チュートリアルを終えたときのダイアログ</span></div>
+    <div class="thumb" data-w="1300" data-href="./shell_header_sidebar_wire.html?ob=finish" data-title="はじめの設定・完了" onclick="openLB(this)">
+      <span class="open-badge">クリックで新しいタブ</span>
+      <iframe src="./shell_header_sidebar_wire.html?ob=finish" scrolling="no" tabindex="-1" data-w="1300"></iframe>
     </div>
   </div></div>
 </div><div class="sec">

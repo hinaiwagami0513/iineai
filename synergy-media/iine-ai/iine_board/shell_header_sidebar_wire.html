@@ -505,6 +505,36 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .wk-lg-bar i{display:block;height:100%;border-radius:var(--radius-full);transition:filter .15s ease;}
 .wk-note{display:flex;align-items:center;gap:6px;font-size:var(--text-meta);color:var(--color-muted-foreground);margin-top:8px;padding-left:0;}
 .wk-note i{font-size:14px;}
+/* ===== AIレポートの改善点 =====
+   分析 > アカウントレポート > AIレポート > 改善点 の中身をホームに出す。
+   向こうは5枚のカルーセルだが、ホームに横スクロールは持ち込まない。
+   まとめの「来月やること」3つ（左・主）と、残り4カテゴリの見出し＋先頭1行（右・従）に畳む。
+   1.3fr / 1fr にしているのは主役が長文・従が1行要約だから（等幅で割らない = [[depth-and-rhythm]]）。 */
+.db-imp{display:grid;grid-template-columns:1.3fr 1fr;align-items:stretch;}
+.imp-main{padding:16px 18px;display:flex;flex-direction:column;gap:12px;min-width:0;}
+.imp-hd{display:flex;align-items:center;gap:9px;}
+.imp-hd .ic{width:28px;height:28px;flex:none;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:16px;background:var(--color-info-subtle);color:var(--color-info);}
+.imp-hd .tt{font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);}
+/* いつのレポートの話かは出す。無いと先月の助言を今月のものとして読んでしまう */
+.imp-hd .src{margin-left:auto;font-size:var(--text-meta);color:var(--color-muted-foreground);white-space:nowrap;}
+.imp-acts{display:flex;flex-direction:column;gap:8px;}
+/* AIレポート側の .sl-action と同じ形。同じ3行が2画面に出るので、丸数字の見た目は揃える */
+.imp-act{display:flex;align-items:flex-start;gap:8px;font-size:var(--text-body);line-height:1.5;}
+.imp-act .bullet{width:22px;height:22px;flex:none;border-radius:var(--radius-full);background:var(--color-primary);color:var(--color-on-primary);display:flex;align-items:center;justify-content:center;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);margin-top:1px;}
+.imp-act strong{font-weight:var(--font-weight-body-strong);}
+.imp-note{margin-top:auto;display:flex;align-items:center;gap:6px;font-size:var(--text-meta);color:var(--color-muted-foreground);}
+.imp-note i{font-size:14px;flex:none;}
+/* 右：残り4カテゴリ。名前だけだと何が書いてあるか分からないので先頭の1行を添える。
+   行ごとに AIレポートへ入る（当たり判定は行全体） */
+.imp-cats{border-left:1px solid var(--color-border);padding:8px;display:flex;flex-direction:column;gap:2px;min-width:0;}
+.imp-cat{display:flex;align-items:center;gap:10px;text-decoration:none;color:inherit;border-radius:var(--radius-sm);padding:7px 8px;min-width:0;}
+.imp-cat:hover{background:var(--color-surface);}
+.imp-cat .ic{width:26px;height:26px;flex:none;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:15px;background:var(--color-background);color:var(--color-muted-foreground);}
+.imp-cat .tx{flex:1;min-width:0;}
+.imp-cat .nm{display:block;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);}
+.imp-cat .bd{display:block;font-size:var(--text-meta);color:var(--color-muted-foreground);line-height:1.4;margin-top:1px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.imp-cat>i{font-size:15px;flex:none;color:var(--color-muted-foreground);}
+.imp-cat:hover>i{color:var(--color-primary);}
 /* ===== ホーム末尾：相談まどぐち ===== */
 /* 「やり方に迷ったら」と「プロに頼みたいときは」を1行に並べる帯。
    左は1つだけなので auto、右は3つを均等に伸ばすので 1fr。 */
@@ -527,6 +557,13 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
   .db-work{grid-template-columns:1fr;justify-items:center;gap:20px;}
   .db-work>div:last-child{width:100%;max-width:360px;} /* 凡例側を横いっぱいに。名前と数値を両端に寄せる */
   .wk-legend{width:100%;}
+}
+/* 改善点の2列が保つのはカードが640px以上あるとき。1100pxまでは右レーンが畳まれて
+   本文幅が828px残るので2列のまま。1000pxを切ると従の1行要約が数十pxに潰れて
+   「子 / 犬 / コ」の柱になるので、そこで縦積みに変え、区切りを縦線から横線へ移す。 */
+@media(max-width:1000px){
+  .db-imp{grid-template-columns:1fr;}
+  .imp-cats{border-left:none;border-top:1px solid var(--color-border);}
 }
 @media(max-width:760px){
   .db-hello{flex-wrap:wrap;} .db-cta{margin-left:0;width:100%;justify-content:center;}
@@ -833,6 +870,54 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
             <div class="top"><span class="ic act"><i class="ti ti-clock"></i></span><span class="nm">確認待ち</span></div>
             <div class="val">2<span class="u">件</span></div>
             <div class="cmp warn"><i class="ti ti-alert-circle"></i>あなたの確認待ちです</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AIレポートの改善点：数字を見たあとの「で、何をすればいいか」。
+           分析まで3階層潜らないと読めなかったので結論だけホームに上げる。
+           セクションのアイコンは行き先（分析）に合わせる。 -->
+      <div class="db-sec">
+        <div class="db-sec-h">
+          <span class="ic"><i class="ti ti-chart-bar"></i></span>
+          <span class="sec-tt">AIレポートの改善点</span>
+          <a class="more" href="./analysis_report_wire.html">AIレポートを見る<i class="ti ti-arrow-right"></i></a>
+        </div>
+        <div class="db-card db-imp">
+          <div class="imp-main">
+            <div class="imp-hd">
+              <span class="ic"><i class="ti ti-clipboard-list"></i></span>
+              <span class="tt">来月やること</span>
+              <span class="src">8月のレポート</span>
+            </div>
+            <div class="imp-acts">
+              <div class="imp-act"><span class="bullet">1</span><span>週1〜2件の<strong>リール動画</strong>を安定投稿する</span></div>
+              <div class="imp-act"><span class="bullet">2</span><span>ハッシュタグを<strong>12〜15個</strong>に統一する</span></div>
+              <div class="imp-act"><span class="bullet">3</span><span>投稿にCTAを入れる（<strong>保存・シェア・来店</strong>）</span></div>
+            </div>
+            <div class="imp-note"><i class="ti ti-sparkles"></i>この改善案は台本に自動反映されます</div>
+          </div>
+          <div class="imp-cats">
+            <a class="imp-cat" href="./analysis_report_wire.html">
+              <span class="ic"><i class="ti ti-sparkles"></i></span>
+              <span class="tx"><span class="nm">企画の改善案</span><span class="bd">子犬コンテンツを全投稿の50%以上に</span></span>
+              <i class="ti ti-arrow-right"></i>
+            </a>
+            <a class="imp-cat" href="./analysis_report_wire.html">
+              <span class="ic"><i class="ti ti-pencil"></i></span>
+              <span class="tx"><span class="nm">投稿文の改善案</span><span class="bd">末尾に保存・シェア・来店のCTAを必ず入れる</span></span>
+              <i class="ti ti-arrow-right"></i>
+            </a>
+            <a class="imp-cat" href="./analysis_report_wire.html">
+              <span class="ic"><i class="ti ti-photo"></i></span>
+              <span class="tx"><span class="nm">コンテンツの改善案</span><span class="bd">全投稿をリール動画に統一する</span></span>
+              <i class="ti ti-arrow-right"></i>
+            </a>
+            <a class="imp-cat" href="./analysis_report_wire.html">
+              <span class="ic"><i class="ti ti-clock"></i></span>
+              <span class="tx"><span class="nm">投稿日時の改善案</span><span class="bd">火曜・土曜に固定して週2投稿</span></span>
+              <i class="ti ti-arrow-right"></i>
+            </a>
           </div>
         </div>
       </div>
@@ -1196,4 +1281,5 @@ function startWithIdea(btn){
 }
 </script>
 <script src="./onboarding.js"></script>
+<script src="./tour.js"></script>
 </body></html>

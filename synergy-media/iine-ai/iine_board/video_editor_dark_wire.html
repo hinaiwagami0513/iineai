@@ -411,6 +411,14 @@ body.props-resizing{cursor:col-resize;user-select:none;}
   .title{font-size:var(--text-label);}
   .aiimg span{display:none;}
   .export{padding:8px 12px;font-size:var(--text-label);}
+  /* ヘッダー右の3つが横に402px要って、390pxの画面からはみ出していた。
+     「書き出し」はこの画面の目的なので文字を残し、プレビューと画像生成は
+     アイコンだけにする。押す場所は変わらないので操作は失われない。 */
+  .hr .hdbtn-lbl .lb{display:none;}
+  .hr .hdbtn-lbl{padding:8px 10px;gap:0;}
+  /* 長い作品名がボタンを押し出さないよう、余りを引き受けて省略する */
+  .title{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .hr{flex:none;}
   /* Mid columns → single column */
   .mid{
     display:flex !important;
@@ -497,9 +505,9 @@ body.props-resizing{cursor:col-resize;user-select:none;}
     <span class="title">短足ダックスあるある図鑑</span>
     <div class="hr">
       <!-- 完成形の確認は「作る」より前の手数なので、書き出しの手前に置く（8/19: プレビュー機能の追加） -->
-      <button class="hdbtn-lbl" onclick="openPreview()"><i class="ti ti-player-play" style="font-size:15px"></i> プレビュー</button>
+      <button class="hdbtn-lbl" onclick="openPreview()"><i class="ti ti-player-play" style="font-size:15px"></i><span class="lb">プレビュー</span></button>
       <!-- 空いている区間をまとめて埋める入口。1枚ずつはタイムラインの + から -->
-      <button class="hdbtn-lbl" onclick="openBatchGen()"><i class="ti ti-photo" style="font-size:15px"></i> まとめて画像生成</button>
+      <button class="hdbtn-lbl" onclick="openBatchGen()"><i class="ti ti-photo" style="font-size:15px"></i><span class="lb">まとめて画像生成</span></button>
       <button class="export" style="white-space:nowrap;" onclick="obVideoDone()"><i class="ti ti-download" style="font-size:15px"></i> 書き出し</button>
     </div>
   </div>
@@ -2426,4 +2434,5 @@ function closePreview(){ document.getElementById('previewOv').classList.remove('
 document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closePreview(); });
 </script>
 <script src="./onboarding.js"></script>
+<script src="./tour.js"></script>
 </body></html>
