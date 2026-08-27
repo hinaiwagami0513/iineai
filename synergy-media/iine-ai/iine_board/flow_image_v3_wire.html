@@ -1086,7 +1086,13 @@ function show(){
   var _sc = document.getElementById('sc_'+SCR[i]);
   var _canAuto = (typeof AUTO_NEXT!=='undefined') && AUTO_NEXT[SCR[i]] && _sc && _sc.querySelector('.opt');
   nx.style.display = _canAuto ? 'none' : '';
-  nx.innerHTML=(SCR[i]==='editor')?'予約する <i class="ti ti-calendar-event"></i>':(SCR[i]==='base'?(savedPlan?'次へ：企画内容を生成 <i class="ti ti-arrow-right"></i>':'次へ：企画案を生成 <i class="ti ti-arrow-right"></i>'):(SCR[i]==='proposal'?'次へ：企画内容を生成 <i class="ti ti-arrow-right"></i>':(SCR[i]==='plan'?'この企画内容で作成 <i class="ti ti-arrow-right"></i>':(SCR[i]==='editor'?'予約する <i class="ti ti-calendar-event"></i>':'次へ <i class="ti ti-arrow-right"></i>'))));
+  /* ラベルは「押したら次に出る画面」を書く。
+     このフローの SCR は sns/method/route/count/base/bulkcheck/editor で、
+     企画案・企画内容はどれも base のチャットの中で片づく。つまり base の次は
+     editor（1件）か bulkcheck（複数）しかない。「次へ：企画案を生成」だと
+     チャットの案内文（次へ：投稿を編集）と上のステップ3と食い違う。
+     複数件のときのラベルは、この下の BULK>1 の分岐が上書きする。 */
+  nx.innerHTML=(SCR[i]==='editor')?'予約する <i class="ti ti-calendar-event"></i>':(SCR[i]==='base'?'次へ：投稿を編集 <i class="ti ti-arrow-right"></i>':'次へ <i class="ti ti-arrow-right"></i>');
   /* disable next on base until a method is used */
   if(SCR[i]==='base'&&!baseReady){
     nx.classList.add('btn-disabled');
@@ -1794,7 +1800,28 @@ function applySelected(){var n=document.querySelectorAll('.rev-chk:checked').len
 </div>
 
 <script>
-)();
+/* ===== まとめて作る =====
+   件数1なら従来どおり（企画→編集→完成）。
+   2件以上は1件ずつ編集させず、生成した一覧をそのまま受け取る形にする。
+
+   ここは flow_video_script_wire から持ってきた block。宣言と IIFE の頭が
+   コピー漏れで落ちて `)();` だけが残り、この script が構文エラーで丸ごと
+   死んでいた（BULK と BULK_SAMPLES が未定義。#bulkSeg の配線も無し）。
+   nav() は BULK を素で読むので、企画を決めて「次へ」を押すと
+   ReferenceError で止まり、i だけ進んで画面が変わらない＝ボタンが
+   反応しないように見えていた。 */
+var BULK=1;
+(function(){
+  var seg=document.getElementById('bulkSeg'); if(!seg)return;
+  seg.addEventListener('click',function(e){
+    var b=e.target.closest('button'); if(!b)return;
+    seg.querySelectorAll('button').forEach(function(x){x.classList.remove('on');});
+    b.classList.add('on'); BULK=parseInt(b.dataset.n,10);
+    document.getElementById('bulkHint').textContent =
+      BULK===1 ? '1件だけ作ります' : BULK+'件を一度に作ります。1件ずつの編集はあとから';
+    if(typeof show==='function')show();
+  });
+})();
 
 var BULK_SAMPLES=[
   {t:'駅徒歩5分・南向き1LDK 新着物件', g:'linear-gradient(135deg,#fde1c4,#e8a063)',

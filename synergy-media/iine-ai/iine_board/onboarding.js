@@ -184,14 +184,24 @@
       (n === 0 ? '<button class="ob-close" onclick="IineOnboarding.hide()">閉じる</button>' : '');
   }
 
+  /* このチュートリアルを出していい画面か。サイドバーの .foot を唯一の目印にする。
+     `.foot` 単独への逃げ道は持たない。投稿フロー（flow_*_wire）にサイドバーは無く、
+     そこの `.foot` は画面下の「戻る／次へ」バーなので、逃げると横長の箱が投稿画面の
+     真下に居座って作業の邪魔になる。出す場所が無い画面では箱もダイアログも出さない
+     （完了の記録は complete() 側でやるので、読み込み自体は要る）。 */
+  function sidebarFoot() {
+    var foot = document.querySelector('.sb .foot');
+    return (foot && foot.parentElement) ? foot : null;
+  }
+
   /* サイドバーの一番下（アカウント切替の手前）に箱を作る。
      .nav の中に入れるとスクロールで流れて見えなくなるので、.foot の手前に置く。 */
   function mount() {
     /* 終わって下げたあとは作らない。作ってから消すと一瞬だけ箱が見える */
     if (st.hidden) return;
     if (document.getElementById('obBox')) return;
-    var foot = document.querySelector('.sb .foot') || document.querySelector('.foot');
-    if (!foot || !foot.parentElement) return;
+    var foot = sidebarFoot();
+    if (!foot) return;
     var box = document.createElement('div');
     box.id = 'obBox';
     box.className = 'ob';
@@ -202,6 +212,10 @@
   /* ---------- 最初の1枚 ---------- */
   function welcome() {
     if (st.welcomed || st.hidden || left() === 0) return;
+    /* 出す場所は箱と揃える。投稿フロー（サイドバーが無い画面）は作業中なので、
+       そこで被せると1枚目の選択の前に手が止まる。サイドバーがある画面まで待てば、
+       welcomed を立てないまま持ち越されるので案内が消えるわけではない。 */
+    if (!sidebarFoot()) return;
     var ovl = document.createElement('div');
     ovl.className = 'ob-ovl open';
     ovl.id = 'obOvl';
