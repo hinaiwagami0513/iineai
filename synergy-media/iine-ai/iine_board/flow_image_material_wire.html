@@ -485,13 +485,15 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
   .sug{font-size:14px;padding:6px 10px;}
   .proposal-card-pg{padding:14px 16px;}
   .h1{font-size:var(--text-h2);}
+  /* 素材の入口タブ（PCからアップロード / いいねドライブから選ぶ）は
+     padding 20px + body で2つが390pxに入らず「PCからアップ / ロード」と割れる。
+     余白と字を詰めて折り返さず1行に収める。 */
+  .uptab{padding:8px 12px !important;font-size:var(--text-label) !important;white-space:nowrap;}
   /* Upload drive-picker: folder + file grid stacks vertically */
   #sc_upload [style*="grid-template-columns:180px"]{display:flex !important;flex-direction:column !important;}
   /* Chat + info side-by-side stacks vertically */
   #sc_chat [style*="grid-template-columns:2fr"]{display:flex !important;flex-direction:column !important;}
-  /* Editor: main + ai-panel stacks vertically */
-  #sc_editor [style*="grid-template-columns:240px"]{display:flex !important;flex-direction:column !important;}
-  .ai-panel-open,.ai-panel-closed{width:100% !important;}
+  /* エディタ面のSP（3カラム縦積み・ヘッダー・タブ・表）は editor-sp.css に集約 */
   /* Finish screen: stack left/right vertically */
   .donebody>div{flex-direction:column !important;gap:24px !important;padding:24px 16px !important;}
   .donebody>div>div:last-child{width:100% !important;max-width:320px;margin:0 auto;}
@@ -638,7 +640,7 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
   border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg);}
 .rev-chk:focus-visible{outline:2px solid var(--color-ring);outline-offset:2px;}
 </style>
-<link rel="stylesheet" href="./fox-alert.css"></head><body>
+<link rel="stylesheet" href="./fox-alert.css"><link rel="stylesheet" href="./editor-sp.css"></head><body>
 <div class="app">
   <div class="topbar"><div class="hdr-left"><span class="hdr-page" onclick="goFlowStart()" role="button" tabindex="0" title="最初の画面に戻る" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();goFlowStart();}"><i class="ti ti-template"></i>投稿作成</span><span class="tag" id="flowtag" style="display:none"></span></div><div class="hdr-right"><a class="helpbtn" href="https://hinaiwagami0513.github.io/iineai/help/create/image/" target="_blank" rel="noopener" title="このページのヘルプ（投稿作成 > 画像を作成）" aria-label="このページのヘルプ">?</a><button class="close"><i class="ti ti-list"></i></button></div></div>
   <div style="border-bottom:1px solid var(--color-border);background:var(--color-card);"><div class="stepbar" id="stepbar"></div></div>
@@ -876,9 +878,9 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
       </div>
 
       <div class="screen" id="sc_editor">
-        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;"><i class="ti ti-photo" style="color:var(--color-muted-foreground);font-size:20px;"></i><span id="titleView" onclick="startTitleEdit()" style="cursor:pointer;padding:4px 8px;border-radius:var(--radius-sm);border:1px solid transparent;display:inline-flex;align-items:center;gap:6px;font-size:var(--text-h2);font-weight:var(--font-weight-h2);" onmouseenter="this.style.borderColor='var(--color-border)'" onmouseleave="this.style.borderColor='transparent'">駅徒歩5分・南向き1LDK 新着物件<i class="ti ti-edit" style="font-size:14px;color:var(--color-muted-foreground);"></i></span><input id="titleInput" style="display:none;padding:4px 8px;border:1.5px solid var(--color-primary);border-radius:var(--radius-sm);background:var(--color-primary-subtle);font-size:var(--text-h2);font-weight:var(--font-weight-h2);outline:none;min-width:320px;" value="駅徒歩5分・南向き1LDK 新着物件" onblur="endTitleEdit()" onkeydown="if(event.key==='Enter')endTitleEdit()"><!-- 仮予約：日付が未定でも先に押さえられる。ここで決めた日は「仮」で、あとから変えられる --><button class="karibtn empty" id="kariBtn" onclick="openKari()"><i class="ti ti-calendar-event"></i><span id="kariLbl">仮予約</span></button>
-          <span style="margin-left:auto;font-size:var(--text-label);color:var(--color-success);font-weight:var(--font-weight-body-strong);display:inline-flex;align-items:center;gap:3px;"><i class="ti ti-check"></i>自動保存ずみ</span></div>
-        <div style="display:grid;grid-template-columns:240px 1fr auto;gap:16px;min-height:420px;">
+        <div class="ed-head" style="display:flex;align-items:center;gap:10px;margin-bottom:16px;"><i class="ti ti-photo" style="color:var(--color-muted-foreground);font-size:20px;"></i><span id="titleView" onclick="startTitleEdit()" style="cursor:pointer;padding:4px 8px;border-radius:var(--radius-sm);border:1px solid transparent;display:inline-flex;align-items:center;gap:6px;font-size:var(--text-h2);font-weight:var(--font-weight-h2);" onmouseenter="this.style.borderColor='var(--color-border)'" onmouseleave="this.style.borderColor='transparent'">駅徒歩5分・南向き1LDK 新着物件<i class="ti ti-edit" style="font-size:14px;color:var(--color-muted-foreground);"></i></span><input id="titleInput" style="display:none;padding:4px 8px;border:1.5px solid var(--color-primary);border-radius:var(--radius-sm);background:var(--color-primary-subtle);font-size:var(--text-h2);font-weight:var(--font-weight-h2);outline:none;min-width:320px;" value="駅徒歩5分・南向き1LDK 新着物件" onblur="endTitleEdit()" onkeydown="if(event.key==='Enter')endTitleEdit()"><!-- 仮予約：日付が未定でも先に押さえられる。ここで決めた日は「仮」で、あとから変えられる --><button class="karibtn empty" id="kariBtn" onclick="openKari()"><i class="ti ti-calendar-event"></i><span id="kariLbl">仮予約</span></button>
+          <span class="ed-saved" style="margin-left:auto;font-size:var(--text-label);color:var(--color-success);font-weight:var(--font-weight-body-strong);display:inline-flex;align-items:center;gap:3px;"><i class="ti ti-check"></i>自動保存ずみ</span></div>
+        <div class="ed-cols" style="display:grid;grid-template-columns:240px 1fr auto;gap:16px;min-height:420px;">
           <!-- Left -->
           <div style="display:flex;flex-direction:column;">
             <div style="display:flex;gap:6px;margin-bottom:10px;overflow-x:auto;padding-bottom:4px;" id="imgThumbs">
@@ -895,7 +897,7 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
           </div>
           <!-- Center -->
           <div style="border:1px solid var(--color-border);border-radius:var(--radius-lg);overflow:hidden;display:flex;flex-direction:column;">
-            <div style="display:flex;border-bottom:1px solid var(--color-border);"><span class="ed-xtab on" onclick="edTab(1,this)" style="padding:13px 20px;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);color:var(--color-primary);border-bottom:2px solid var(--color-primary);margin-bottom:-1px;cursor:pointer;">投稿文</span><span class="ed-xtab" onclick="edTab(2,this)" style="padding:13px 20px;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;">AIレビュー</span></div>
+            <div class="ed-tabs" style="display:flex;border-bottom:1px solid var(--color-border);"><span class="ed-xtab on" onclick="edTab(1,this)" style="padding:13px 20px;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);color:var(--color-primary);border-bottom:2px solid var(--color-primary);margin-bottom:-1px;cursor:pointer;">投稿文</span><span class="ed-xtab" onclick="edTab(2,this)" style="padding:13px 20px;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer;">AIレビュー</span></div>
             <div class="ed-xpane" id="edPane0" style="display:none;" style="flex:1;overflow-y:auto;padding:18px;">
               <div style="background:var(--color-accent-purple-subtle);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:14px 16px;margin-bottom:16px;">
                 <div style="display:flex;align-items:center;justify-content:space-between;">

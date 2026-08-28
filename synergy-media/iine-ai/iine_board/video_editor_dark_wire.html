@@ -426,17 +426,27 @@ body.props-resizing{cursor:col-resize;user-select:none;}
     overflow:visible !important;
     min-height:0;
   }
+  /* ⚠️ SPで一番効く一行。デスクトップは左72pxのツールレール（.tools）と
+     その隣のプロパティ（.left-props）を position:absolute で浮かせているが、
+     幅だけ100%にして absolute を残すと、この2枚が .mid（ステージ）と .tl
+     （タイムライン）の上に重なって、プレビューもトラックも見えなくなる。
+     390pxでは黒い空白だけが出ていた。position から降ろして、DOMの順
+     （ツール → プロパティ → ステージ → AI → タイムライン）に縦へ積む。 */
+  .tools,.left-props{position:static !important;}
+  /* パネル幅を引っぱるためのグリップ。1カラムでは掴む先が無いのに
+     right:auto の計算で画面の外（x=397）に残っていた。 */
+  .props-resize,.resize-handle{display:none !important;}
   .left-props{
-    /* デスクトップでは左72pxのツールレールの隣に absolute で浮かせている。
-       SPではレールが無いので left:72 を消して全幅に伸ばす。
-       width:100% だけでは left:72 が残り、右72pxが app の overflow:hidden で切れる。 */
     left:0 !important;
     right:0 !important;
     width:auto !important;
     border-right:none !important;
     border-bottom:1px solid var(--color-editor-border);
-    max-height:300px;
-    overflow:hidden;
+    /* overflow:hidden だとパネルの下半分（変化ポイント・ズーム以降）が
+       読めないまま切れる。高さは抑えたうえで指で送れるようにする。 */
+    max-height:340px;
+    overflow-y:auto !important;
+    overflow-x:hidden;
   }
   /* Left tools → horizontal strip */
   .tools{
@@ -478,9 +488,15 @@ body.props-resizing{cursor:col-resize;user-select:none;}
   .tl{margin-left:0 !important;}
   .rbody{padding:12px;}
   /* Timeline: full width, reduced height */
-  .tl{height:180px !important;}
+  /* 180pxだとトラック表示が102pxになり、6本のうち2本しか見えない。
+     画面を食いすぎない範囲で3本ぶんは見せる（残りは縦スクロール）。 */
+  .tl{height:240px !important;}
   /* SPは高さが足りないので固定はやめて6本すべてスクロールさせる */
   .trkic.pin,.lane.pin{position:static !important;}
+  /* 目盛りは36秒をタイムラインの幅いっぱいに割る作りなので、390pxだと
+     2秒ごとの間隔が18pxになり「10s」以降（幅22px）が隣と重なって読めない。
+     1つ飛ばして4秒ごとにする。位置は JS が px で持っているので触らない。 */
+  .ruler .mk:nth-child(even){display:none;}
   .tlhd{padding:8px 12px;flex-wrap:wrap;gap:8px;}
   .tl-toolbar .tb-btn{width:28px;height:28px;}
   .tl-toolbar .tb-sep{height:14px;}

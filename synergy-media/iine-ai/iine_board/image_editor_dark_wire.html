@@ -570,10 +570,13 @@ table.tbledit.noborder td.cell{border-right-color:rgba(255,255,255,.05);border-b
   /* Header: compact */
   .hd{height:48px;padding:0 10px;gap:8px;}
   .iconbtn{width:30px;height:30px;font-size:14px;}
-  .title{font-size:var(--text-label);}
+  /* 長い作品名が右のボタンを押し出さないよう、余りを引き受けて省略する
+     （video_editor_dark と同じ判断） */
+  .title{font-size:var(--text-label);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
   .rbadge{display:none;}
   .saved{display:none;}
-  .save{padding:8px 12px;font-size:var(--text-label);}
+  /* 押す場所なのでラベルは折り返させない（「保存して / 投稿へ」になる） */
+  .save{padding:8px 12px;font-size:var(--text-label);white-space:nowrap;flex:none;}
   .cost{display:none;}
   /* Work area 3-column → single column */
   .work{
@@ -621,7 +624,10 @@ table.tbledit.noborder td.cell{border-right-color:rgba(255,255,255,.05);border-b
   .thumbs{flex-wrap:wrap;}
   /* Script panel: collapsed by default on SP */
   .script-panel{margin-top:10px;}
-  .script-toggle{padding:13px 16px;}
+  /* 「この画像の台本」+「1 / 4枚目」+「タップで開く」を1行に詰めると、
+     nowrap が無いぶん見出しだけが min-content まで縮んで
+     「この画像の台 / 本」に割れる。3つ合わせて325pxなので1行に収まる。 */
+  .script-toggle{padding:13px 16px;white-space:nowrap;}
   .script-toggle .ti-chevron-right{font-size:16px;}
   .script-toggle .script-hint{display:inline;font-size:var(--text-meta);color:var(--color-editor-muted);margin-left:auto;}
   .script-toggle.open .script-hint{display:none;}
