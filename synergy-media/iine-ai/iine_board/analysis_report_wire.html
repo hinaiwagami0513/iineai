@@ -44,6 +44,9 @@
 .ti-star:before{content:"\eb2e"}
 .ti-folder:before{content:"\eaad"}
 .ti-photo:before{content:"\eb0a"}
+/* 出力ボタンと出力ダイアログで使う。字形は他ワイヤーの宣言から写した */
+.ti-download:before{content:"\ea96"}
+.ti-x:before{content:"\eb55"}
 /* 表示されていなかった字形を追加（コードは @tabler/icons 公式）*/
 .ti-check:before{content:"\ea5e"}
 :root {
@@ -437,6 +440,16 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
 
 /* update badge */
 .update-badge{font-size:var(--text-meta);color:var(--color-muted-foreground);display:flex;align-items:center;gap:4px;}
+/* 更新日時と出力ボタン。タブの反対側にまとめる */
+.hd-right{display:flex;align-items:center;gap:14px;flex:none;}
+/* 出力は読むものではなく操作なので、タブのピルではなくボタンの形で出す。
+   塗りはオレンジにしない（主役は本文。押せる合図は枠とホバーで足りる） */
+.btn-out{display:inline-flex;align-items:center;gap:7px;padding:8px 15px;font-family:inherit;
+  font-size:var(--text-label);font-weight:var(--font-weight-body-strong);
+  color:var(--color-foreground);background:var(--color-card);
+  border:1px solid var(--color-border-strong);border-radius:var(--radius-md);cursor:pointer;}
+.btn-out:hover{border-color:var(--color-primary);color:var(--color-primary);}
+.btn-out .ti{font-size:16px;}
 
 /* tab sub-nav */
 .sub-tabs{display:flex;gap:6px;padding:0;}
@@ -451,6 +464,42 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
    ======================================== */
 .out-panel{display:flex;flex-direction:column;gap:16px;overflow:visible;
   -webkit-mask-image:none;mask-image:none;padding:0 4px 4px;}
+/* ===== 出力ダイアログ =====
+   面・マスク・ボタンの寸法は settings_wire の .dlgov/.dlg と同じ（画面ごとに作らない）。
+   選択肢は3つとも「選んだら実行」なので、フッターの実行ボタンは置かない。 */
+.dlgov{position:fixed;inset:0;background:rgba(42,40,38,.45);z-index:120;display:none;align-items:center;justify-content:center;padding:20px;}
+.dlgov.on{display:flex;}
+/* 高さは画面に収める。中身が伸びても本文だけスクロールさせ、見出しと閉じるは残す */
+.dlg{width:min(520px,100%);max-height:calc(100vh - 40px);display:flex;flex-direction:column;
+  background:var(--color-card);border-radius:var(--radius-lg);box-shadow:0 8px 24px rgb(0 0 0 / 0.12);overflow:hidden;}
+.dlg .h{flex:none;}
+.dlg .b{overflow-y:auto;}
+.dlg .h{display:flex;align-items:center;gap:9px;padding:16px 20px;border-bottom:1px solid var(--color-border);font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);}
+.dlg .h > i{font-size:20px;color:var(--color-primary);}
+.dlg .h .x{margin-left:auto;width:30px;height:30px;border:1px solid var(--color-border);background:none;border-radius:var(--radius-sm);cursor:pointer;color:var(--color-muted-foreground);font-size:15px;display:flex;align-items:center;justify-content:center;}
+.dlg .b{padding:18px 20px;}
+/* いま何が出るのか。押してから驚かせない */
+.out-scope{font-size:var(--text-label);color:var(--color-muted-foreground);margin-bottom:11px;}
+.out-scope b{color:var(--color-foreground);}
+/* ダイアログは幅520pxなので、カードを横3列に並べると1列160pxで説明文が縦に潰れる。
+   縦に3行積んで、アイコン / 説明 / 形式 を横に読ませる */
+.out-list{display:flex;flex-direction:column;gap:9px;}
+.out-row{display:flex;align-items:center;gap:13px;width:100%;text-align:left;font-family:inherit;
+  padding:13px 15px;background:var(--color-card);border:1px solid var(--color-border-strong);
+  border-radius:var(--radius-md);cursor:pointer;}
+.out-row:hover{border-color:var(--color-primary);background:var(--color-primary-subtle);}
+.out-row .tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;}
+.out-row .out-meta{flex:none;margin-top:0;}
+/* 狭い幅では形式（PNG / 1ファイル 等）を次の行へ落とす。
+   ⚠️ .tx に幅を持たせないと折り返しが起きない。min-width:0 の .tx が先に潰れて、
+   説明文が2〜3文字の柱になったまま形式が同じ行に残る（390pxで実測 tx=68px幅）。
+   アイコン(44) + gap(13) を引いた残り全部を .tx の基準幅にして、形式だけを次行へ送る。 */
+@media(max-width:520px){
+  .out-row{align-items:flex-start;flex-wrap:wrap;}
+  .out-row .tx{flex:1 1 calc(100% - 57px);}
+  .out-row .out-meta{margin-left:57px;}
+}
+
 .out-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;}
 /* カード全体が押せる。アイコンや文字だけを的にすると、押せる範囲が分かりにくい */
 .out-card{display:flex;flex-direction:column;align-items:flex-start;gap:8px;text-align:left;
@@ -854,13 +903,20 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
       <!-- ===== SLIDE AREA (メイン・常に表示) ===== -->
       <div class="slide-area">
         <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+          <!-- 「出力」はタブではなくボタン（2026-08-30 陽菜指摘
+               「出力っていうページが欲しいんじゃなくて、出力ボタンが欲しい。そのタブ切り替えごとに」）。
+               タブに混ぜると、改善点・分析概要・コンテンツと横並びの「読む中身」に見えるが、
+               出力は読むものではなく**どのタブを見ていても押せる操作**。
+               中身（PNG / PDF / テキストの選択）は押したあとのダイアログへ移した。 -->
           <div class="sub-tabs">
             <button class="sub-tab active">改善点</button>
             <button class="sub-tab">分析概要</button>
             <button class="sub-tab">コンテンツ</button>
-            <button class="sub-tab">出力</button>
           </div>
-          <div class="update-badge"><i class="ti ti-clock"></i> 更新: 2026/7/14 18:00</div>
+          <div class="hd-right">
+            <div class="update-badge"><i class="ti ti-clock"></i> 更新: 2026/7/14 18:00</div>
+            <button class="btn-out" onclick="openOut()"><i class="ti ti-download"></i>出力</button>
+          </div>
         </div>
 
         <!-- CAROUSEL -->
@@ -1301,38 +1357,6 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);font-family:Int
             </div>
           </div>
 
-          <!-- === TAB: 出力 === -->
-          <!-- ここだけスライドを持たない。保存の選択肢は横に送って読むものではなく
-               その場で1つ選ぶものなので、カルーセルに載せず並べて出す。
-               矢印とドットは activateTab が隠す。 -->
-          <div class="carousel-track out-panel" data-tab="出力" style="display:none;">
-            <div class="out-grid">
-              <button class="out-card">
-                <span class="out-ic"><i class="ti ti-photo"></i></span>
-                <span class="out-t">画像で保存</span>
-                <span class="out-d">スライドを1枚ずつPNGで書き出します。そのままSNSに出せます。</span>
-                <span class="out-meta">PNG / 17枚</span>
-              </button>
-              <button class="out-card">
-                <!-- 字形はこのファイルが宣言している .ti-* からしか選べない。
-                     ti-file-type-pdf / ti-clipboard-text は未宣言で、四角が出るだけだった -->
-                <span class="out-ic"><i class="ti ti-file-text"></i></span>
-                <span class="out-t">PDFでまとめる</span>
-                <span class="out-d">レポート全体を1つのPDFに。印刷や、社内で回すときはこちら。</span>
-                <span class="out-meta">PDF / 1ファイル</span>
-              </button>
-              <button class="out-card">
-                <span class="out-ic"><i class="ti ti-clipboard-list"></i></span>
-                <span class="out-t">テキストでコピー</span>
-                <span class="out-d">改善案を文章のままコピーします。メールやチャットに貼れます。</span>
-                <span class="out-meta">クリップボード</span>
-              </button>
-            </div>
-            <div class="out-note fox-say">
-              <img src="./assets/iine-fox-face.png" alt="">
-              <div>出したいのが<b>今月の改善案だけ</b>なら、テキストが一番早いで！</div>
-            </div>
-          </div>
           <button class="carousel-arrows next"><i class="ti ti-chevrons-right"></i></button>
         </div>
 
@@ -1674,9 +1698,77 @@ document.querySelectorAll('.sub-tab').forEach(function(tab) {
   });
 });
 
+/* ===== 出力ダイアログ =====
+   3つから1つ選ぶので alertDialog（sonner）は使えない（実行ボタンが1つしかない）。
+   settings_wire と同じ .dlgov / .dlg の形をそのまま持ってくる（画面ごとに作らない）。
+   閉じ方は ×／背景クリック／Esc の3系統。 */
+function openOut(){
+  /* どのタブを見ていても押せるが、出すものはタブによって変わる。
+     いま何が出るのかをダイアログの中で言い切る（押してから驚かせない）。 */
+  var tab = (document.querySelector('.sub-tab.active') || {}).textContent || '改善点';
+  var track = document.querySelector('.carousel-track[data-tab="' + tab + '"]');
+  var n = track ? track.querySelectorAll('.slide').length : 0;
+  document.getElementById('outTab').textContent = tab;
+  document.getElementById('outPng').textContent = 'PNG / ' + n + '枚';
+  document.getElementById('dlgOut').classList.add('on');
+}
+function closeOut(){ document.getElementById('dlgOut').classList.remove('on'); }
+function bgCloseOut(e){ if(e.target.id === 'dlgOut') closeOut(); }
+document.addEventListener('keydown', function(e){
+  if(e.key === 'Escape') closeOut();
+});
+function outPick(kind){
+  closeOut();
+  if(window.toast) toast.success(kind + 'で出しました');
+}
+
 // init
 activateTab('改善点');
 </script>
+
+<!-- ===== 出力ダイアログ ===== -->
+<div class="dlgov" id="dlgOut" onclick="bgCloseOut(event)">
+  <div class="dlg">
+    <div class="h"><i class="ti ti-download"></i>出力
+      <button class="x" onclick="closeOut()" aria-label="閉じる"><i class="ti ti-x"></i></button></div>
+    <div class="b">
+      <div class="out-scope"><b id="outTab">改善点</b> を出します</div>
+      <div class="out-list">
+        <button class="out-row" onclick="outPick('画像')">
+          <span class="out-ic"><i class="ti ti-photo"></i></span>
+          <span class="tx">
+            <span class="out-t">画像で保存</span>
+            <span class="out-d">スライドを1枚ずつPNGで書き出します。そのままSNSに出せます。</span>
+          </span>
+          <span class="out-meta" id="outPng">PNG / 5枚</span>
+        </button>
+        <button class="out-row" onclick="outPick('PDF')">
+          <!-- 字形はこのファイルが宣言している .ti-* からしか選べない。
+               ti-file-type-pdf / ti-clipboard-text は未宣言で、四角が出るだけだった -->
+          <span class="out-ic"><i class="ti ti-file-text"></i></span>
+          <span class="tx">
+            <span class="out-t">PDFでまとめる</span>
+            <span class="out-d">レポート全体を1つのPDFに。印刷や、社内で回すときはこちら。</span>
+          </span>
+          <span class="out-meta">PDF / 1ファイル</span>
+        </button>
+        <button class="out-row" onclick="outPick('テキスト')">
+          <span class="out-ic"><i class="ti ti-clipboard-list"></i></span>
+          <span class="tx">
+            <span class="out-t">テキストでコピー</span>
+            <span class="out-d">文章のままコピーします。メールやチャットに貼れます。</span>
+          </span>
+          <span class="out-meta">クリップボード</span>
+        </button>
+      </div>
+      <div class="out-note fox-say">
+        <img src="./assets/iine-fox-face.png" alt="">
+        <div>出したいのが<b>今月の改善案だけ</b>なら、テキストが一番早いで！</div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="./tour.js"></script>
 <script src="./fox-alert.js"></script>
 </body></html>
