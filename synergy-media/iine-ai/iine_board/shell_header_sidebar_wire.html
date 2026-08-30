@@ -323,18 +323,20 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 /* 見出しとカードの間。9pxだと見出しがカードの一部に見えて、
    セクションの区切りが読めなかった */
 .db-sec-h{display:flex;align-items:center;gap:9px;margin-bottom:14px;}
-.db-sec-h .ic{width:30px;height:30px;flex:none;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:17px;}
+.db-sec-h .ic{flex:none;display:inline-flex;align-items:center;font-size:20px;}
 /* 見出し・タイルのアイコンは既定でニュートラル。
    DESIGN.md「装飾・見出しアイコン・非対話の要素に色を使わない／迷ったらニュートラルに落とす」に従う。
    状態色（info/warning/success）を見出しの飾りに使うと、1画面で色数が増えて
-   「どこを見ればいいか」が消える。色は下の .act（自分が動く必要があるもの）だけに残す。 */
-.db-sec-h .ic,.db-mini .mh .ic{background:var(--color-background);color:var(--color-muted-foreground);}
+   「どこを見ればいいか」が消える。色は下の .act（自分が動く必要があるもの）だけに残す。
+   四角の面も同じ理由で外した。見出しアイコンは押せないので、チップの形をしていると
+   ボタンに見える。字だけ置いて、面はカード側に持たせる。 */
+.db-sec-h .ic,.db-mini .mh .ic{color:var(--color-muted-foreground);}
 /* 状況カードの色は [[post-list-page]] の状態色に合わせる。
    投稿した=success / 予約済み=primary（一覧の予約済みタブがオレンジ強調）/ 下書き=info（作成中）/ 確認待ち=warning。
    カード自体が押せるので、オレンジが1枚混じっても「押せる色」の意味は壊れない。 */
 /* （旧ベタ塗り版はここにあった。淡い面方式に置き換え） */
 /* 要対応。1画面でここだけが色を持つので、視線が最初にここへ行く */
-.db-sec-h .ic.act,.db-mini .mh .ic.act{background:var(--color-warning-subtle);color:var(--color-warning);}
+.db-sec-h .ic.act,.db-mini .mh .ic.act{color:var(--color-warning);}
 /* ベタ塗りの上では .act も他のチップと同じ白半透明。「要対応」は面の色が担う */
 .db-stat .ic.act{background:rgb(255 255 255 / .22);color:#fff;}
 /* ミニカードの .tt(16px) と同名で2サイズを兼ねていたので分けた（監査 F7） */
@@ -375,7 +377,7 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 /* min-height は横3枚の高さを揃えるためのものだった。縦積みでは中身の行数どおりに縮ませる */
 .db-mini{display:flex;flex-direction:column;border-radius:var(--radius-md);}
 .db-mini .mh{display:flex;align-items:center;gap:9px;padding:7px 13px;border-bottom:1px solid var(--color-border);}
-.db-mini .mh .ic{width:28px;height:28px;flex:none;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-size:16px;}
+.db-mini .mh .ic{flex:none;display:inline-flex;align-items:center;font-size:18px;}
 .db-mini .mh .tt{font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);}
 .db-mini .mh .cnt{font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:#fff;background:var(--color-muted-foreground);border-radius:var(--radius-full);padding:2px 8px;}
 .db-mini .mh .more{margin-left:auto;display:inline-flex;align-items:center;gap:3px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-primary);cursor:pointer;text-decoration:none;white-space:nowrap;background:none;border:none;font-family:inherit;padding:13px 6px;margin:-13px -6px -13px auto;}
@@ -435,7 +437,9 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 /* 1fr は minmax(auto,1fr) なので、中身が track より広いと列が押し広がる。
    実際「パフェのお知らせ」で日曜だけ 124.7px、他は 100.1px になっていた。
    minmax(0,1fr) にして7列を完全に等幅で固定し、はみ出すぶんはチップ側で省略する。 */
-.db-week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:20px;padding:16px;}
+/* 7枚並ぶので、間隔20pxだとカードが痩せて投稿名が「看板…」まで潰れていた。
+   8pxに詰めて、空いた72pxを名前の表示幅に回す。境界は枠線が担うので間隔は要らない。 */
+.db-week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:8px;padding:16px;}
 /* min-height は「予定なし」の日にも枠を見せるためのもの。最大2件（木）が入れば足りるので
    118 → 86。空の日の枠は残る＝1週間の形は崩れない。 */
 .db-day{border:1px solid var(--color-border);border-radius:var(--radius-md);padding:12px 10px;min-height:86px;display:flex;flex-direction:column;gap:5px;background:var(--color-surface);}
@@ -553,6 +557,24 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
   /* 右レーン(320px)を引くと左が400px台になり、状況4枚も週バー7列も潰れる。1列に戻す。
      縦に伸びるぶんスクロールは復活するが、横に潰れて読めないよりはいい */
   .db-grid{grid-template-columns:1fr;}
+  /* 1カラムに畳むと、右レーン(ToDo/チャット/NEWS)が .db-col の最後にある
+     「プロに頼みたいときは」の下に落ちる。自分が動く必要のあるもの（承認・未読・お知らせ）が、
+     外注の案内より下になるのはおかしいので、レーンを先に出す。
+     .db-bottom は .db-col の中にいて order だけでは動かせないので、
+     .db-col を display:contents で透明にして、中身を .db-grid 直下の並びに混ぜる。 */
+  /* ⚠️ align-items:stretch を明示する。元の .db-grid は grid 用に align-items:start を
+     持っていて、そのまま flex column にすると横方向が start 揃え＝中身の幅になる。
+     「今週の投稿予定」は7枚×104px＝810pxの帯を持つので、section ごと810pxに伸びて
+     390px幅でも472pxはみ出していた（ページは .content が切っていたので気付けなかった）。 */
+  .db-grid{display:flex;flex-direction:column;align-items:stretch;gap:28px;}
+  .db-col{display:contents;}
+  .db-rail{order:1;}
+  .db-bottom{order:2;}
+  /* 縦並びの各ブロックは親より細くなれるようにする。min-width:auto のままだと
+     中身の min-content が下限になり、横スクロールで見せている「今週の投稿予定」
+     （7枚×104px＝810px）が section ごと親を突き破って、overflow-x:auto が効かなくなる。
+     320px 幅で .db-sec が810pxまで伸びて542pxはみ出していた。 */
+  .db-grid>*{min-width:0;}
   .db-bottom{grid-template-columns:1fr;gap:12px;}
   .db-work{grid-template-columns:1fr;justify-items:center;gap:20px;}
   .db-work>div:last-child{width:100%;max-width:360px;} /* 凡例側を横いっぱいに。名前と数値を両端に寄せる */
@@ -567,7 +589,24 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 }
 @media(max-width:760px){
   .db-hello{flex-wrap:wrap;} .db-cta{margin-left:0;width:100%;justify-content:center;}
-  .db-week{grid-template-columns:repeat(2,1fr);}
+  /* 7日を2列に畳むと「月火／水木／金土／日」と並んで曜日の順が読めず、日曜だけが半端に残る。
+     しかも 1fr=minmax(auto,1fr) なので中身の多い日に引っ張られて列幅も揃わない（166/137px）。
+     週は横一列のまま、はみ出す分を横スクロールで見せる
+     （shell-sp.css の「横スクロールで見せたい行は個別に戻す」と同じ考え方）。
+     .db-week の padding:16px が「今日」バッジ（カード上端から-9px）の逃げ場になるので、
+     overflow-x:auto にしてもバッジは切れない。
+     開いた時点で今日を帯の中に入れる処理はページ末尾のスクリプトにある。
+
+     ⚠️ .db-week は class="db-card db-week"。430px以下では shell-sp.css の
+     `.content .db-card{flex-wrap:wrap}`（0,2,0）が後から効いて折り返してしまうので、
+     .db-card.db-week（0,3,0）で名指しして勝つ。 */
+  .content .db-card.db-week{display:flex;flex-wrap:nowrap;overflow-x:auto;gap:8px;}
+  /* min-width:0 が要る。flex アイテムの既定 min-width:auto は中身の min-content まで
+     しか縮まないので、投稿チップの長い日（「看板犬ポチ」「パフェのお知らせ」）だけが
+     flex-basis:104px を超えて 123〜167px に膨らみ、曜日ごとに幅がバラバラになっていた。
+     0 にすれば flex-basis が効いて全部同じ幅。はみ出す文字は .db-post .nm の
+     text-overflow:ellipsis が受ける。 */
+  .content .db-card.db-week .db-day{flex:0 0 104px;min-width:0;}
   /* .db-bt .db-fbtn{flex:none} に負けるので、同じ詳細度で上書きする */
   .db-bt .db-fbtn{flex:1;justify-content:center;}
   .db-bt{flex-wrap:wrap;}
@@ -615,6 +654,24 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
   .db-hello .hi{font-size:var(--text-h3);font-weight:var(--font-weight-h3);line-height:1.3;margin-bottom:3px;}
   .db-cta{flex-basis:100%;margin-left:0;width:auto;justify-content:center;padding:13px 20px;}
 
+  /* 横に並べるのはキツネと「こんにちは、◯◯さん」だけ。その下の提案文は全幅で使う。
+     提案文は .hello-tx の中にあるので、flex のままだとキツネ(56)+gap(12)=68px ぶん
+     右にずれた位置から始まり、左に誰も居ない余白が残る。
+
+     負のマージンで68px引き戻す手もあるが、それだと横は直っても縦が回り込まず、
+     提案文の1行目がキツネに重なる。キツネを float にして、提案文に clear をかける。
+     こうすると「挨拶はキツネの横／提案文はキツネの下から全幅」が、
+     キツネの大きさに依存する数値を1つも持たずに決まる。 */
+  .db-hello{display:block;}
+  .db-hello .fox{float:left;margin-right:12px;}
+  .db-hello .rec{clear:left;}
+  /* .db-hello が block になったので flex-basis:100% は効かない。
+     block レベルの flex にして幅いっぱいに伸ばす。clear はキツネの右へ回り込ませないため。
+     ⚠️ block 化で flex の gap:12px も効かなくなり、最後のおすすめチップと
+     この0px密着していた。おすすめ案から作るのと、まっさらから作るのは別の行為なので、
+     チップ同士(9px)より広い16px（DESIGN.md のセクション内の間隔）を空けて切り離す。 */
+  .db-cta{clear:both;display:flex;width:auto;margin-top:16px;}
+
   /* 提案文はアイコン(17px)+gap(9px)を除いた残り幅を取る。
      flex:1 1 0 だとチップが同じ行に入って本文が細い柱になり、
      flex-basis:100% だとアイコンが単独行に落ちる。差し引いた幅がその中間。 */
@@ -624,8 +681,56 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
   /* 案のチップは2つで358pxに入らず1行ずつ使っていた。字下げを外し余白を詰めて1行に寄せる */
   .db-hello .rec-chip{margin-left:0;padding:5px 10px;}
 
-  .db-week{grid-template-columns:repeat(2,1fr);}
-  .db-stats{grid-template-columns:repeat(2,1fr);}
+  /* 週の帯（横スクロール化）は 760px 側にまとめた。ここでは触らない。 */
+
+  /* shell-sp.css の .db-stats{1fr !important} に潰されて4枚が縦一列になり、
+     状況だけで520px スクロールしていた。2列に戻す（!important 同士なので詳細度で勝つ）。 */
+  .content .db-stats{grid-template-columns:repeat(2,1fr) !important;}
+  /* 2列だと増減文（「先週より 3件 増えました」）が2行になる。align-items:center のままだと
+     アイコンだけが2行の中央＝2行目の高さに落ちて、文から切り離されて見える。頭に揃える。 */
+  .db-stat{padding:14px 12px;}
+  .db-stat .cmp{align-items:flex-start;line-height:1.5;}
+  .db-stat .cmp i{margin-top:2px;}
+
+  /* 見出しと右の導線が両方折り返して「AIレポートの改善／点」「AIレポートを見／る」に
+     割れていた。行ごと折り返させて、見出しと導線にそれぞれ1行を渡す。
+     入る幅のセクション（今の状況など）は1行のまま変わらない。 */
+  .db-sec-h{flex-wrap:wrap;row-gap:4px;}
+  .db-sec-h .sec-tt,.db-sec-h .more{white-space:nowrap;}
+
+  /* 「プロに頼みたいときは」の行は、ラベルと広告作成が同じ行に残り、発注相談と出張撮影だけが
+     次の行に落ちて、ラベルがどのボタンに掛かるのか読めなくなっていた。
+     ラベルに1行渡して、3つのボタンをその下に揃える。3つを1行に収めるため余白と字も詰める。
+     ラベルを独立行にするのは3つ並ぶ2つ目のブロックだけ。1つ目（キツネ＋やり方に迷ったら＋
+     使い方を見る）まで巻き込むと、キツネ・ラベル・ボタンで3行使ってしまう。 */
+  .db-bt+.db-bt .lb{flex-basis:100%;}
+  .db-bt .db-fbtn{padding:10px 8px;font-size:var(--text-label);gap:5px;}
+  .db-bt .db-fbtn i{font-size:16px;}
+
+  /* 作業時間のドーナツは、PCで凡例と横に並べるための 206px 固定だった。
+     SPでは凡例が下に落ちて幅が丸ごと空くのに、グラフだけ206pxのまま残り、
+     カード内側306pxに対して左右に100px近い余白ができていた。幅いっぱいに広げる。
+     縦横比は svg の viewBox（296:224）と同じにして、円が歪まないようにする。 */
+  /* ToDoの行は nowrap で218px要求していて、320px幅（カード内242px）に入らず
+     カードを7px押し広げていた。省略記号にすると「（2件）」が消えるので折り返す。 */
+  .db-td .t{white-space:normal;}
+  /* 縦積みのカードは中身より細くなれるようにする。
+     Chrome は flex-direction:column でも min-width:auto を効かせるので、
+     中の nowrap（チャットの本文）の min-content がそのままカード幅の下限になり、
+     320px幅でチャットだけ299pxに膨らんで31pxはみ出していた。
+     0 にすれば .bd の text-overflow:ellipsis が本来の仕事をする。 */
+  .db-mini,.db-mini .mh,.db-mini .mb,.db-mini .mb>*{min-width:0;}
+  /* min-width:0 だけでは足りなかった。.mh/.mb は縦flexの cross 方向に stretch されるはずが
+     中身の min-content（299px）のまま残り、268pxのカードから31pxはみ出していた。
+     幅を明示して親に閉じ込める。こうすると .bd の text-overflow:ellipsis が効き始める。 */
+  .db-mini .mh,.db-mini .mb{width:100%;box-sizing:border-box;}
+
+  .db-work .wk-chart{width:100%;height:auto;aspect-ratio:296/224;justify-self:stretch;}
+  /* 中央の「合計 3時間10分」はSVGの外のHTMLなので、上の拡大に付いてこない。
+     ドーナツの穴だけ広がって文字が取り残されるので、1段上げて釣り合わせる。
+     ⚠️ h3 は body-lg と同じ 1rem なので上げたことにならない。実際に1段上は h2(1.25rem)。 */
+  .db-work .wk-center .vl{font-size:var(--text-h2);}
+
   .h1{font-size:var(--text-h3);margin-bottom:12px;}
 }
 
@@ -674,9 +779,11 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 /* ===== サイドバーの文字を白に =====
    地の #fe7235 に白は 2.74 で、15px の本文には足りない。
    文字を白にすると決めた以上、地の側を下げてコントラストを作る。
-   ベタで暗くすると濁るので、上を鮮やかなまま残す縦グラデーションにして
-   「明るいオレンジ」の印象を保ちながら 4.5 を満たす。 */
-.sb{background:linear-gradient(180deg,#fe7235 0%,#e85513 55%,#d54101 100%);}
+   以前は縦グラデーション（#fe7235→#e85513→#d54101）で「上は鮮やかなまま」を
+   残していたが、SPではサイドバーが高さ60pxの帯になるため、180度の階調が
+   その中に圧縮されて帯状のムラに見え、古く見える原因になっていた（2026-08-28）。
+   ベタの primary-deep(#d54101) に統一。白文字で 4.58 なので本文でも AA を満たす。 */
+.sb{background:var(--color-primary-deep);}
 .sb .logo{filter:brightness(0) invert(1);opacity:.96;}
 .sb .ni{color:rgba(255,255,255,.88);}
 .sb .ni .ti{color:rgba(255,255,255,.88);}
@@ -1144,6 +1251,31 @@ function trayToggle(el){
   el.setAttribute('aria-label', min ? '生成トレイを開く' : '生成トレイを畳む');
 }
 
+/* SPではトレイを下ナビの上に固定して追従させている（shell-sp.css）。
+   開いたままだと255px＝画面の1/3を占め続けるので、最初は畳んでおく。
+   件数は見出しのバッジに出るので、畳んでも「何本動いているか」は見失わない。
+   一度でも自分で開いた/畳んだ後は触らない（isTrayTouched）。 */
+(function(){
+  var t = document.querySelector('.tray');
+  if(!t) return;
+  var btn = t.querySelector('.min');
+  var touched = false;
+  if(btn) btn.addEventListener('click', function(){ touched = true; });
+  function sync(){
+    if(touched) return;
+    var sp = matchMedia('(max-width:430px)').matches;
+    t.classList.toggle('is-min', sp);
+    if(btn){
+      btn.classList.toggle('ti-minus', !sp);
+      btn.classList.toggle('ti-plus', sp);
+      btn.title = sp ? '開く' : '畳む';
+      btn.setAttribute('aria-label', sp ? '生成トレイを開く' : '生成トレイを畳む');
+    }
+  }
+  sync();
+  addEventListener('resize', sync);
+})();
+
 // サイドバーの折りたたみ項目（設定）。直後の .nisub を開閉する。
 function navToggle(el){
   var sub = el.nextElementSibling;
@@ -1279,6 +1411,24 @@ function startWithIdea(btn){
   var idea = (btn.firstChild && btn.firstChild.nodeValue || btn.textContent).trim();
   location.href = './flow_video_script_wire.html?idea=' + encodeURIComponent(idea);
 }
+
+/* SPの「今週の投稿予定」は7日を横スクロールの帯で見せる（PCは7列のまま）。
+   月曜始まりなので、何もしないと今日が帯の右外に隠れる。開いた時点で今日を見せる。
+   scrollIntoView はページ全体も動かすので使わず、帯の中だけを動かす。 */
+(function(){
+  var wk = document.querySelector('.db-week');
+  var today = wk && wk.querySelector('.db-day.today');
+  if(!wk || !today) return;
+  /* offsetLeft は .db-week ではなく positioned な祖先(.app)からの距離なので使えない。
+     見えている矩形どうしの差で「あと何px右へ送れば今日が右端に入るか」を出す。 */
+  function show(){
+    if(wk.scrollWidth <= wk.clientWidth) return;   /* PC幅では何もしない */
+    var d = today.getBoundingClientRect().right - wk.getBoundingClientRect().right + 16;
+    if(d > 0) wk.scrollLeft += d;
+  }
+  show();
+  addEventListener('resize', show);
+})();
 </script>
 <script src="./onboarding.js"></script>
 <script src="./tour.js"></script>

@@ -522,9 +522,13 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .ptabs button.on{color:var(--color-primary);border-bottom-color:var(--color-primary);font-weight:var(--font-weight-body-strong);}
 /* タブに残り件数を出す。開かないと未入力に気づけないのを防ぐ。
    必須の未入力なのでオレンジではなく destructive（§Do's: 必須・未入力は赤で一貫させる） */
+/* 淡い面（destructive-subtle #feeef1）＋枠線だと、地とほぼ同じ明るさでバッジに見えなかった。
+   ベタ塗り＋白抜きにして数字を面で立たせる（2026-08-28。投稿一覧・承認フローと同じ扱い）。
+   色の意味は変えない。ここは「あと4項目埋めてください」の督促なので destructive のまま。
+   白文字で 4.61 あり、14px でも AA を満たす。 */
 .ptabs .cnt{font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);
-  color:var(--color-destructive);background:var(--color-destructive-subtle);
-  border:1px solid var(--color-destructive-border);border-radius:var(--radius-full);padding:2px 8px;}
+  color:#fff;background:var(--color-destructive);border:none;
+  border-radius:var(--radius-full);padding:2px 9px;}
 .ptabs .cnt.done{color:var(--color-success);background:var(--color-success-subtle);border-color:var(--color-success-border);}
 .ppane{display:none;}
 .ppane.on{display:block;}
@@ -582,6 +586,26 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .btn-g:hover{border-color:var(--color-foreground);color:var(--color-foreground);}
 
 @media(max-width:1100px){ .picks,.rolehelp{grid-template-columns:1fr;} }
+
+/* SP: 2つのタブで 116px +「運用のコンセプト＋残り4」227px = 343px 要り、
+   338px（320pxでは268px）に入らず右へ溢れていた。
+   字を16px→14px（DESIGN.md の下限）に落とし、左右の余白を詰めて幅を稼ぐ。
+   それでも足りない狭い端末では、ラベルだけ2行に折り返させて溢れを止める
+   （バッジは折り返さない＝数字が単独で落ちない）。 */
+@media(max-width:430px){
+  .ptabs button{flex:1;justify-content:center;padding:12px 8px;gap:6px;
+    font-size:var(--text-body);white-space:normal;text-align:center;}
+  .ptabs .cnt{flex:none;white-space:nowrap;}
+}
+/* 320pxではさらに数px足りない。余白を詰め、各行が親より細くなれるようにする
+   （min-width:auto のままだと中身の min-content が下限になって縮まない）。 */
+@media(max-width:343px){
+  .ptabs button{padding:12px 4px;}
+  .hd .r{min-width:0;}
+  .hd .r>*{min-width:0;}
+  .pg-items>*{min-width:0;}
+  .pg-items .pg-i{padding-left:8px;padding-right:8px;}
+}
 /* SP: アイコン42 + バッジ92 + 操作118 を1行に並べるとSNS名が40pxまで潰れる。
    1行目をアイコン+名前で埋め、バッジと操作は2行目の右に落とす。 */
 @media(max-width:430px){
@@ -609,9 +633,11 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 /* ===== サイドバーの文字を白に =====
    地の #fe7235 に白は 2.74 で、15px の本文には足りない。
    文字を白にすると決めた以上、地の側を下げてコントラストを作る。
-   ベタで暗くすると濁るので、上を鮮やかなまま残す縦グラデーションにして
-   「明るいオレンジ」の印象を保ちながら 4.5 を満たす。 */
-.sb{background:linear-gradient(180deg,#fe7235 0%,#e85513 55%,#d54101 100%);}
+   以前は縦グラデーション（#fe7235→#e85513→#d54101）で「上は鮮やかなまま」を
+   残していたが、SPではサイドバーが高さ60pxの帯になるため、180度の階調が
+   その中に圧縮されて帯状のムラに見え、古く見える原因になっていた（2026-08-28）。
+   ベタの primary-deep(#d54101) に統一。白文字で 4.58 なので本文でも AA を満たす。 */
+.sb{background:var(--color-primary-deep);}
 .sb .logo{filter:brightness(0) invert(1);opacity:.96;}
 .sb .ni{color:rgba(255,255,255,.88);}
 .sb .ni .ti{color:rgba(255,255,255,.88);}
@@ -706,7 +732,6 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
             <div class="d">だから、書けば書くほどよいわけではありません。<b>いつ見ても変わらないこと</b>だけを書いてください。<br>
             セール期間のように<b>変わることは書かない</b>のがコツです（古い情報のまま投稿されてしまいます）。</div>
           </div>
-          <button class="x" aria-label="閉じる"><i class="ti ti-x"></i></button>
         </div>
 
         <!-- 事実（資料から取れる）とコンセプト（人が決める）でタブを分ける。
@@ -1926,4 +1951,5 @@ function snsCount(){
 }
 </script>
 <script src="./tour.js"></script>
+<script src="./fox-alert.js"></script>
 </body></html>

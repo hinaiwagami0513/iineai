@@ -20,8 +20,14 @@ AI投稿作成（企画→台本→投稿文+画像）/ AI動画作成 / 複数�
 綺麗に撮るだけではショート動画にならないため。関東圏外の費用対効果が論点で未確定。
 出典: [[raw/mtg-2026-08-19-iwagami]]
 
+## ⛔ ブランド未確定（8/28）
+**サービス名「いいねAI」とメインカラーが変わる可能性**が佐藤から伝えられた。確定は来週〜9月中旬。
+確定までキャラクター・ロゴ・サービスサイトは作り込まない。本体UIの色はトークン差し替えで通るので止めない。
+詳細と線引きは [[brand-rename-pending]]。
+
 ## キャラ・コピーの声
 - 🦊きつねマスコット＝AIアシスタント兼案内役（画像アセット表示、絵文字は廃止）。
+  ⚠️ 現行の狐は**仮**（お腹に「いいねAI」の文字入り）。名前変更で作り直しになる（[[brand-rename-pending]]）。
 - 機能の主語を「AI」にしない。「AIが企画します」でなく「企画を作る」＝**結果を語る**。
 - マスコットのヒントは一度消したら再表示しない。
 
@@ -33,7 +39,7 @@ Next.js / Tailwind CSS v4 / [[shadcn-ui]] / [[tabler-icons]]。トークンは [
 ※旧「React+インラインスタイル/Tailwind禁止」は失効 → [[superseded]]。
 
 ## 主要画面
-[[creation-flow]] / [[post-list-page]] / [[video-flow]] / [[script-gen-page]] / [[iine-drive]] / [[template-feature]] / [[editing-surfaces]] / [[settings-page]]
+[[creation-flow]] / [[post-list-page]] / [[video-flow]] / [[script-gen-page]] / [[iine-drive]] / [[template-feature]] / [[editing-surfaces]] / [[settings-page]] / [[onboarding]]
 
 ## サービスサイト
 [[service-website]]（8/19: LP的な現行構成をやめ、標準的なサービスホームページを作り直す）

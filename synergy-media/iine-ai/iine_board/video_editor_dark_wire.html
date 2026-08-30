@@ -461,10 +461,14 @@ body.props-resizing{cursor:col-resize;user-select:none;}
     flex-direction:row !important;
     gap:2px !important;
   }
+  /* ⚠️ width:56px を固定すると、70px要る「フィルター」「プレビュー」等のラベルが
+     箱から出て隣のツールのラベルと重なる（2026-08-28）。
+     56pxは下限として残し、幅は中身に合わせる。行は .tools が横スクロールする。 */
   .tool{
-    width:56px !important;
+    min-width:56px !important;
+    width:auto !important;
     height:auto !important;
-    padding:8px 0 !important;
+    padding:8px !important;
     flex-shrink:0;
   }
   /* Center stage: full width, appropriate height */
@@ -512,6 +516,23 @@ body.props-resizing{cursor:col-resize;user-select:none;}
 }
 
 
+
+/* ===== エディタのSP（2026-08-28） =====
+   .tools は overflow-x:auto なのに .tool が既定の flex-shrink で56pxまで潰され、
+   「フィルター」「プレビュー」など70px要るラベルが箱からはみ出して
+   隣のツールのラベルと重なっていた。各ツールは潰さず、行ごと横スクロールさせる。 */
+@media (max-width:430px){
+  .tools{overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none;}
+  .tools::-webkit-scrollbar{display:none;}
+  .tools .tool{flex:none;}
+}
+
+/* 320pxでヘッダーが [戻る/元に戻す/やり直す][タイトル][プレビュー・まとめて画像生成・書き出す]
+   で304pxの枠を15px超える。右のボタン群は文字を持つので、狭い端末では
+   タイトルを削って場所を作る（タイトルは編集中の投稿名で、操作より優先度が低い）。 */
+@media (max-width:343px){
+  .hd .title{display:none;}
+}
 </style></head><body>
 <div class="app">
   <div class="hd">

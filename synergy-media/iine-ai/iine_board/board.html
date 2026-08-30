@@ -132,6 +132,11 @@
 body{background:#eceae7;color:var(--color-foreground);padding-bottom:60px;}
 .ti{line-height:1;}
 .top{position:sticky;top:0;z-index:10;background:var(--color-card);border-bottom:1px solid var(--color-border);display:flex;align-items:center;gap:14px;padding:14px 30px;}
+/* 帯の項目は既定で縮まない。既定の flex-shrink:1 のままだと、幅が足りないときに
+   全項目が一斉に縮んで「画面ボー／ド」「完成 43 ／ 43」「画面ビュー／ア」と割れる。
+   縮んでよいのは説明文だけなので、そこだけ伸縮させて、入らなければ…で切る。 */
+.top>*{flex:none;}
+.top .hint{flex:1 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 /* この画面は社内の画面一覧で、作りはPC前提（メディアクエリを持っていない）。
    ただ上の帯だけは8項目が横一列で723px要り、スマホで開くとページ全体が
    横スクロールして下のカードまで読めなくなる。折り返しだけ許して止める。 */
@@ -157,6 +162,30 @@ body{background:#eceae7;color:var(--color-foreground);padding-bottom:60px;}
 .dt{display:flex;align-items:center;justify-content:center;gap:5px;height:28px;padding:0 10px;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);border-radius:var(--radius-sm);cursor:pointer;white-space:nowrap;}
 .dt .ti{font-size:15px;}
 .dt.on{background:var(--color-primary);color:#fff;}
+
+/* ===== チュートリアルの出し直し =====
+   案内の状態は localStorage の iine.tour.v1 に入る。
+   ・seen  … 見た画面（画面ごと）
+   ・off   … 「今後この案内を出さない」で立つ全画面共通のフラグ
+   どちらも画面上から戻す手段が無く、一度消すと二度と出せなかった。
+   ボードは全ワイヤーと同じオリジンなので、ここから消せば全画面にまとめて効く。 */
+/* 帯は8項目で既にいっぱいなので、ボタン自体は「チュートリアル」＋短いチップまでに抑える。
+   長い説明（何画面が既読か等）は title に持たせて、帯を折り返させない。 */
+.tut-btn{display:inline-flex;align-items:center;gap:7px;margin-left:6px;padding:8px 12px;border-radius:var(--radius-full);
+  border:1px solid var(--color-border);background:var(--color-surface);color:var(--color-foreground);flex:none;
+  font-family:inherit;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);cursor:pointer;white-space:nowrap;}
+.tut-chip{font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);border-radius:var(--radius-full);
+  padding:1px 7px;background:var(--color-background);color:var(--color-muted-foreground);}
+.tut-btn.is-off .tut-chip{background:var(--color-primary);color:#fff;}
+.tut-btn.is-done .tut-chip{background:var(--color-success);color:#fff;}
+.tut-btn i{font-size:15px;}
+.tut-btn:hover{border-color:var(--color-primary);color:var(--color-primary);background:var(--color-primary-subtle);}
+/* 消されている状態＝押せば直る、なのでオレンジで「押す先」だと分かるようにする。
+   何も消えていないときは黙らせる（押しても何も変わらないので目立たせない）。 */
+.tut-btn.is-off{border-color:var(--color-primary);color:var(--color-primary);background:var(--color-primary-subtle);}
+.tut-btn.is-done{border-color:var(--color-success);color:var(--color-success);background:var(--color-success-subtle);}
+.tut-btn:disabled{cursor:default;color:var(--color-muted-foreground);}
+.tut-btn:disabled:hover{border-color:var(--color-border);background:var(--color-surface);color:var(--color-muted-foreground);}
 .lb-body.sp-mode{display:flex;align-items:center;justify-content:center;background:var(--color-surface);}
 .lb-body.sp-mode iframe{width:390px;height:100%;max-height:844px;border:0;border-radius:var(--radius-lg);box-shadow:0 4px 24px rgba(0,0,0,.18);}
 .wrap{padding:26px 30px;}
@@ -197,6 +226,7 @@ body{background:#eceae7;color:var(--color-foreground);padding-bottom:60px;}
   <a class="jump-open" href="./screen_viewer_wire.html"><i class="ti ti-layout-grid"></i>画面ビューア<span class="jump-kbd">⌘K</span></a>
   <div class="sizes"><span class="sz" data-s="S">S</span><span class="sz on" data-s="M">M</span><span class="sz" data-s="L">L</span></div>
   <div class="device-toggle"><span class="dt on" data-d="pc" onclick="setDevice('pc')"><i class="ti ti-device-laptop"></i>PC</span><span class="dt" data-d="sp" onclick="setDevice('sp')"><i class="ti ti-device-mobile"></i>SP</span></div>
+  <button class="tut-btn" id="tutBtn" onclick="tutReset()"><i class="ti ti-school"></i><span id="tutLbl">チュートリアル</span><span class="tut-chip" id="tutChip">—</span></button>
 </div>
 <div class="wrap"><div class="sec">
   <div class="sec-h"><span class="sec-ic"><i class="ti ti-layout-dashboard"></i></span><span class="sec-name">ホーム</span><span class="sec-num">2/2</span></div>
@@ -250,10 +280,13 @@ body{background:#eceae7;color:var(--color-foreground);padding-bottom:60px;}
       <div class="thumb" data-w="1280" data-href="./post_list_wire.html#posted" data-title="投稿一覧 - 投稿済み" onclick="openLB(this)"><span class="open-badge">クリックで新しいタブ</span><iframe src="./post_list_wire.html#posted" scrolling="no" tabindex="-1" data-w="1280"></iframe></div>
     </div></div>
 </div><div class="sec">
-  <div class="sec-h"><span class="sec-ic"><i class="ti ti-checks"></i></span><span class="sec-name">承認フロー</span><span class="sec-num">2/2</span></div>
+  <div class="sec-h"><span class="sec-ic"><i class="ti ti-checks"></i></span><span class="sec-name">承認フロー</span><span class="sec-num">3/3</span></div>
   <div class="frames"><div class="frame">
-      <div class="flabel"><span class="ftitle">投稿一覧（ロール別）</span><span class="fnote">作成者/承認者でsheet内容が変化</span></div>
-      <div class="thumb" data-w="1280" data-href="./approval_list_wire.html" data-title="承認フロー - 投稿一覧ロール別" onclick="openLB(this)"><span class="open-badge">クリックで新しいタブ</span><iframe src="./approval_list_wire.html" scrolling="no" tabindex="-1" data-w="1280"></iframe></div>
+      <div class="flabel"><span class="ftitle">投稿一覧（作成者）</span><span class="fnote">作成者が見る画面。確認をお願いする側</span></div>
+      <div class="thumb" data-w="1280" data-href="./approval_list_wire.html" data-title="承認フロー - 投稿一覧（作成者）" onclick="openLB(this)"><span class="open-badge">クリックで新しいタブ</span><iframe src="./approval_list_wire.html" scrolling="no" tabindex="-1" data-w="1280"></iframe></div>
+    </div><div class="frame">
+      <div class="flabel"><span class="ftitle">投稿一覧（承認者）</span><span class="fnote">承認者が見る画面。承認する側</span></div>
+      <div class="thumb" data-w="1280" data-href="./approval_list_wire.html?view=approver" data-title="承認フロー - 投稿一覧（承認者）" onclick="openLB(this)"><span class="open-badge">クリックで新しいタブ</span><iframe src="./approval_list_wire.html?view=approver" scrolling="no" tabindex="-1" data-w="1280"></iframe></div>
     </div><div class="frame">
       <div class="flabel"><span class="ftitle">投稿一覧 - 下書き（一人運用）</span><span class="fnote">承認者なし・下書きから直接[予約を確定する]</span></div>
       <div class="thumb" data-w="1280" data-href="./post_list_wire.html#draft-solo" data-title="投稿一覧 - 下書き（一人運用・承認者なし）" onclick="openLB(this)"><span class="open-badge">クリックで新しいタブ</span><iframe src="./post_list_wire.html#draft-solo" scrolling="no" tabindex="-1" data-w="1280"></iframe></div>
@@ -474,6 +507,46 @@ function setDevice(d){
   document.querySelectorAll('.dt').forEach(function(x){x.classList.remove('on');});
   document.querySelector('.dt[data-d="'+d+'"]').classList.add('on');
 }
+
+/* ===== チュートリアルの出し直し =====
+   tour.js の状態（iine.tour.v1）をボードから消す。ボードとワイヤーは同じオリジンなので
+   ここで消せば、次に開いた画面から全部もう一度出る。
+   ボタンは今の状態をそのまま出す。何件が消えているのか分からないまま押させない。 */
+var TOUR_KEY='iine.tour.v1';
+function tutState(){
+  var v=null;
+  try{ v=JSON.parse(localStorage.getItem(TOUR_KEY)); }catch(e){}
+  if(!v||typeof v!=='object') return {seen:0,off:false};
+  return { seen:Array.isArray(v.seen)?v.seen.length:0, off:!!v.off };
+}
+function tutRender(){
+  var b=document.getElementById('tutBtn'), l=document.getElementById('tutLbl'), c=document.getElementById('tutChip');
+  if(!b||!l||!c) return;
+  var s=tutState();
+  b.classList.remove('is-off','is-done');
+  b.disabled=false; l.textContent='チュートリアル';
+  if(s.off){
+    /* 「今後この案内を出さない」が押された状態。全画面で出ない */
+    b.classList.add('is-off'); c.textContent='停止中';
+    b.title='「今後この案内を出さない」が押されています。押すと全画面で出るようになります。';
+  }else if(s.seen>0){
+    b.classList.add('is-off'); c.textContent='既読'+s.seen;
+    b.title=s.seen+'画面が「見た」になっています。押すと全画面でもう一度出ます。';
+  }else{
+    b.disabled=true; c.textContent='出ます';
+    b.title='消えている案内はありません。画面を開けばそのまま出ます。';
+  }
+}
+function tutReset(){
+  try{ localStorage.removeItem(TOUR_KEY); }catch(e){}
+  var b=document.getElementById('tutBtn'), l=document.getElementById('tutLbl'), c=document.getElementById('tutChip');
+  b.classList.remove('is-off'); b.classList.add('is-done');
+  l.textContent='チュートリアル'; c.textContent='戻しました';
+  setTimeout(tutRender,1800);
+}
+/* 別タブでワイヤーを見て戻ってきたときに、件数を今の値に直す */
+document.addEventListener('visibilitychange',function(){ if(!document.hidden) tutRender(); });
+tutRender();
 /* サムネのクリックは新しいタブで開く。
    以前はライトボックス（.lb-overlay）で重ねていたが、あの枠はブラウザ幅より狭く、
    中のワイヤーがその幅で描かれるので実寸で確認できなかった（状況カードの文が折り返る、

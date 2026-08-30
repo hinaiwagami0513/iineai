@@ -542,20 +542,36 @@
     reset: function () { localStorage.removeItem(KEY); location.reload(); }
   };
 
+  /* ?tour=reset で「見た」と「今後出さない」を両方消して、その場でもう一度出す。
+     最終ステップの「今後この案内を出さない」は off を立てるが、これは全ページ共通の
+     フラグなので、一度押すとどの画面でも二度と出なくなる。戻すUIが画面上に無く、
+     コンソールで IineTour.on() / reset() を叩くしかなかった。確認用の入口を用意する。
+     （onboarding.js の ?ob=finish と同じ考え方） */
+  function resetByUrl() {
+    if (new URLSearchParams(location.search).get('tour') !== 'reset') return;
+    try { localStorage.removeItem(KEY); } catch (e) {}
+    st.seen = [];
+    st.off = false;
+  }
+
   function init() {
+    resetByUrl();
     if (st.off) return;
     var key = pageKey();
     var steps = TOURS[key];
     if (!steps || !steps.length) return;
     if (st.seen.indexOf(key) >= 0) return;
 
-    /* 「見た」は始めた時点で記録する。終わりで記録すると、
-       押した先が別の画面へ飛ぶ手順（大半がそう）で永久に記録されず、
-       同じ画面へ戻るたびに最初からやり直しになる。 */
-    st.seen.push(key);
-    save(st);
-
     whenClear(function () {
+      /* 「見た」は “始めた時点” で記録する。終わりで記録すると、押した先が別の画面へ飛ぶ手順
+         （大半がそう）で永久に記録されず、同じ画面へ戻るたびに最初からやり直しになる。
+
+         ⚠️ ここは init() の直下に置いてはいけない。init() は whenClear より前に走るので、
+         オンボーディングのモーダル（#obOvl）を閉じずにページを離れると、
+         案内が一度も出ていないのに「見た」だけが残り、二度と出なくなる。
+         記録するのは、実際に出せると決まってから。 */
+      st.seen.push(key);
+      save(st);
       /* 描画が落ち着いてから測る。読み込み直後は高さが確定しておらず、
          穴が実物からずれた位置に開く */
       setTimeout(function () { start(steps); }, 400);

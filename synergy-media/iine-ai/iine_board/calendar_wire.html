@@ -173,7 +173,12 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .work{flex:1;min-height:0;display:flex;}
 .tray{width:224px;flex:none;border-left:1px solid var(--color-border);background:var(--color-surface);display:flex;flex-direction:column;}
 .tray.hide{display:none;}
-.tray-h{padding:14px 14px 12px;border-bottom:1px solid var(--color-border);flex:none;}
+.tray-h{padding:14px 14px 12px;border-bottom:1px solid var(--color-border);flex:none;display:flex;align-items:center;gap:8px;}
+/* 閉じるはSP専用（PCは右の列として常設なので閉じる概念がない） */
+.tray-x{display:none;margin-left:auto;width:36px;height:36px;flex:none;border:1px solid var(--color-border);
+  background:transparent;border-radius:var(--radius-sm);cursor:pointer;color:var(--color-muted-foreground);
+  font-size:18px;align-items:center;justify-content:center;}
+.tray-x:hover{background:var(--color-background);color:var(--color-foreground);}
 .tray-h .t{display:flex;align-items:center;gap:8px;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);}
 .tray-h .cnt{font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:var(--color-on-primary);background:var(--color-primary);border-radius:var(--radius-full);padding:2px 8px;}
 .tray-b{flex:1;overflow-y:auto;padding:12px;}
@@ -294,6 +299,29 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .pop-h .x{margin-left:auto;width:28px;height:28px;border:none;background:transparent;color:var(--color-muted-foreground);border-radius:var(--radius-sm);font-size:16px;cursor:pointer;}
 .pop-h .x:hover{background:var(--color-border);}
 .pop-b{padding:15px 16px 16px;}
+
+/* ===== 日付パネルの「この日の予定」 =====
+   カレンダーから既存投稿へ行く唯一の導線。行そのものをリンクにして、
+   当たり判定を44px以上取る（40〜50代未経験者向け＝vault: target-first）。 */
+.dp-list{display:flex;flex-direction:column;gap:6px;margin-bottom:4px;}
+.dp-row{display:flex;align-items:center;gap:9px;min-height:48px;padding:8px 12px;
+  border:1px solid var(--color-border);border-radius:var(--radius-md);background:var(--color-surface);
+  text-decoration:none;color:var(--color-foreground);}
+.dp-row:hover{border-color:var(--color-primary);background:var(--color-primary-subtle);}
+/* 行頭のアイコンはSNSごとの色。DESIGN.md「SNSの色は必ずアイコンとセット」に沿う */
+.dp-row .dp-ic{flex:none;display:inline-flex;font-size:17px;}
+.dp-row.ig .dp-ic{color:var(--color-sns-instagram);}
+.dp-row.x  .dp-ic{color:var(--color-sns-x);}
+.dp-row.tt .dp-ic{color:var(--color-sns-tiktok);}
+.dp-row.yt .dp-ic{color:var(--color-sns-youtube);}
+.dp-row.wait .dp-ic{color:var(--color-warning);}
+.dp-row .dp-ic i{display:inline-block;}
+.dp-tm{flex:none;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);
+  font-variant-numeric:tabular-nums;}
+.dp-nm{flex:1;min-width:0;font-size:var(--text-label);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.dp-go{flex:none;font-size:16px;color:var(--color-muted-foreground);}
+/* 「既にある予定」と「新しく入れる」の境目。ここから下は作る操作 */
+.dp-sep{height:1px;background:var(--color-border);margin:14px 0;}
 .pop-lb{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);margin-bottom:7px;}
 .pop-times{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:6px;}
 .tchip{border:1px solid var(--color-border-strong);background:var(--color-card);border-radius:var(--radius-full);padding:7px 13px;font-family:inherit;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);cursor:pointer;color:var(--color-foreground);}
@@ -325,15 +353,61 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
   /* カレンダー本体(.cal)と右の未定トレイ(.tray 366px固定)を横に並べているため、
      390pxではカレンダーが24pxまで潰れ、7曜日グリッドの各列が3.4pxになる。縦に積む。 */
   .work{flex-direction:column;}
-  .work .tray{width:auto !important;flex:none;border-left:none;border-top:1px solid var(--color-border);}
+  /* 未確定トレイは、PCではカレンダーの右に常設される列。
+     SPで縦に積むと、カレンダーの遥か下（y=842＝画面外）に置かれる。
+     そのため「未確定3」を押しても、既に表示状態のものを隠すだけになり、
+     画面上は何も起きないように見えていた（2026-08-28 修正）。
+     日付パネルと同じく全画面で開く（DESIGN.md「SP = 全画面遷移」）。
+     既定は閉じた状態にして、ボタンで開く。閉じるは .tray-x。 */
+  .work .tray{position:fixed;left:0;right:0;top:0;bottom:0;width:auto !important;flex:none;
+    border:none;z-index:200;background:var(--color-card);}
+  .work .tray .tray-b{flex:1;min-height:0;overflow-y:auto;padding-bottom:24px;}
+  .tray-x{display:inline-flex;}
   /* 月グリッドは7曜日のまま。1列に潰すと42行の縦長になる。 */
   .m-grid{grid-template-columns:repeat(7,minmax(0,1fr)) !important;}
+
+  /* 予定バッジ(.ev)がセルからはみ出していた。
+     7列なのでセルは 390px で53px、内側に使えるのは41px。
+     時刻「08:00」は14px（DESIGN.md の下限）で39px要り、余白を全部削っても
+     入るのは390px以上だけ。360pxでは3px、320pxでは8px足りない。
+
+     端末幅で「時刻が出る/出ない」が変わるのは避けたいので、SPの月表示は一律ドットにする。
+     月表示は「どの日に投稿があるか」を見る面で、時刻は週/日表示とタップ後の詳細にある。
+     ドットはSNSごとの色（.ev.ig / .x / .tt / .yt / .wait）をそのまま持つので、
+     どの媒体の予定かは色で読める。 */
+  /* 残すのはSNSアイコンだけ。時刻と投稿名は落とす。
+     ⚠️ 色だけの丸ポチにはしない。DESIGN.md §Colors は
+     「SNS ブランド（バッジ専用。色は必ず Tabler アイコンとセットで使う）」と決めている。
+     あの色はアイコンと並ぶ前提の文字色なので、単独のベタ丸にすると濁って見えるし、
+     どの媒体かも読み取れない。アイコンなら媒体がそのまま分かる。
+     面と色は元のバッジのまま（subtle地＋ブランド色）なので、規則から外れない。 */
+  .m-grid .d .ev{padding:2px;gap:0;border-radius:var(--radius-sm);
+    display:inline-flex;margin:0 2px 3px 0;line-height:1;}
+  .m-grid .d .ev .tm,.m-grid .d .ev .nm{display:none;}
+  /* ⚠️ 基底に `.ev i{display:none}` がある（PCは時刻＋投稿名で足りるのでアイコンを消していた）。
+     SPは逆にアイコンだけ残す面なので、ここで復活させる。 */
+  .m-grid .d .ev .ti{display:inline-block;font-size:14px;}
+  .m-grid .d{padding:4px 3px;}
 
   /* ツールバーは月移動 + 表示切替 + 操作ボタンを1行に並べていて390pxに入らない。
      折り返して2行に積む。 */
   .tb{flex-wrap:wrap;row-gap:8px;}
   .tb .sp{margin-left:0;flex-wrap:wrap;row-gap:8px;}
   .traybtn,.tb .btn-p{white-space:nowrap;}
+
+  /* ここが3段（月移動＋月名／表示切替＋未確定／投稿を作る）で157px使い、
+     グリッドが始まるのが画面の1/3の位置になっていた。2段まで削る。
+
+     「投稿を作る」はSPでは外す。この画面には作る入口が3つあった:
+       ・右下のFAB       → 作成フローへ直行
+       ・日付セルを押す   → その日の日付パネル（正しい日付で開く）
+       ・このボタン       → 日付パネル（8月17日で固定。押した日と無関係）
+     3つ目は上2つと重複し、しかも日付が固定で誤解を生む。PCには残す。 */
+  .tb .btn-p{display:none;}
+  /* 余白と表示切替の幅も詰める。ここは移動と切替の帯で、読み物ではない */
+  .tb{padding:10px 16px;}
+  .tb .seg{padding:2px;}
+  .tb .seg>*{padding-left:14px;padding-right:14px;}
 }
 /* ===== シェル：ヘッダーとサイドバーを角丸のカードにする =====
    全面ベタ（角丸0・隙間0）だと面が窓枠に貼り付いて古く見える。
@@ -352,9 +426,11 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 /* ===== サイドバーの文字を白に =====
    地の #fe7235 に白は 2.74 で、15px の本文には足りない。
    文字を白にすると決めた以上、地の側を下げてコントラストを作る。
-   ベタで暗くすると濁るので、上を鮮やかなまま残す縦グラデーションにして
-   「明るいオレンジ」の印象を保ちながら 4.5 を満たす。 */
-.sb{background:linear-gradient(180deg,#fe7235 0%,#e85513 55%,#d54101 100%);}
+   以前は縦グラデーション（#fe7235→#e85513→#d54101）で「上は鮮やかなまま」を
+   残していたが、SPではサイドバーが高さ60pxの帯になるため、180度の階調が
+   その中に圧縮されて帯状のムラに見え、古く見える原因になっていた（2026-08-28）。
+   ベタの primary-deep(#d54101) に統一。白文字で 4.58 なので本文でも AA を満たす。 */
+.sb{background:var(--color-primary-deep);}
 .sb .logo{filter:brightness(0) invert(1);opacity:.96;}
 .sb .ni{color:rgba(255,255,255,.88);}
 .sb .ni .ti{color:rgba(255,255,255,.88);}
@@ -495,6 +571,8 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
     <aside class="tray" id="tray">
       <div class="tray-h">
         <div class="t"><i class="ti ti-calendar-event" style="color:var(--color-primary);font-size:17px"></i>未確定<span class="cnt" id="trayCnt">3</span></div>
+        <!-- SPでは全画面で開くので、戻る手段が要る。PCでは非表示（右の列は常設） -->
+        <button class="tray-x" onclick="trayToggle()" aria-label="閉じる"><i class="ti ti-x"></i></button>
       </div>
       <div class="tray-b" id="trayBody"></div>
     </aside>
@@ -511,6 +589,8 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
       <button class="x" onclick="closeAdd()" aria-label="閉じる"><i class="ti ti-x"></i></button>
     </div>
     <div class="pop-b" id="popBody">
+      <!-- その日にすでに入っている予定。openAdd() が中身を作る。0件の日は空のまま出ない -->
+      <div id="popPosts" style="display:none"></div>
       <div class="pop-lb">何時に出しますか</div>
       <div class="pop-times" id="popTimes">
         <button class="tchip on" onclick="pickTime(this)">14:00<span class="rec">おすすめ</span></button>
@@ -592,7 +672,7 @@ function findEvent(id){
 function evHtml(e){
   return '<div class="ev ' + (e.wait ? 'wait' : e.sns) + '" draggable="true" data-eid="' + e.id + '"' +
          ' ondragstart="dragStartEvent(event)" ondragend="dragEnd(event)"' +
-         ' onclick="event.stopPropagation()" title="ドラッグすると日や時間を変えられます">' +
+         ' onclick="event.stopPropagation();openDayFromEvent(this)" title="押すとこの日の予定を開きます／ドラッグで日や時間を変えられます">' +
          '<i class="ti ' + SNS_ICON[e.sns] + '"></i>' +
          '<span class="tm">' + e.t + '</span>' +
          '<span class="nm">' + e.n + '</span></div>';
@@ -702,10 +782,56 @@ function calView(v){
 
 /* ===== 押した日で予約する =====
    カレンダーから作ると、日時が入った状態で始まる。あとから日を決め直す手間をなくす。 */
+/* その日にすでに入っている予定を、パネルの一番上に並べる。
+   カレンダーから既存投稿の詳細へ行く導線がどこにも無く、予定バッジを押しても
+   stopPropagation で何も起きない死にタップだった（2026-08-28）。
+   バッジ(18px)を狙わせるのではなく、セルのどこを押しても開くパネルに一覧を出す。
+   ターゲットが40〜50代未経験者（vault: target-first）なので、当たり判定は大きく取る。 */
+/* 予定バッジから、その日のパネルを開く。
+   ⚠️ バッジのHTMLはJSの ' で囲った文字列の中で組み立てているので、
+   onclick に ' を含む式を直接書くと文字列が途中で閉じてカレンダーごと描画されなくなる。
+   引用符を持ち込まないよう、この関数に逃がす。 */
+function openDayFromEvent(el){
+  var cell = el.closest('.d');
+  if(!cell) return;
+  /* openAdd は先頭で ev.stopPropagation() を呼ぶので、空実装を持たせて渡す */
+  openAdd(null, cell.dataset.date, { currentTarget: cell, stopPropagation: function(){} });
+}
+
+function renderDayPosts(cell){
+  var box = document.getElementById('popPosts');
+  if(!box) return;
+  var evs = cell ? [].slice.call(cell.querySelectorAll('.ev')) : [];
+  if(!evs.length){ box.innerHTML = ''; box.style.display = 'none'; return; }
+  box.style.display = '';
+  var rows = evs.map(function(e){
+    var icon = e.querySelector('.ti');
+    var tm = e.querySelector('.tm');
+    var nm = e.querySelector('.nm');
+    /* SNSの色はバッジのクラス(.ig/.x/.tt/.yt)がそのまま持っている。
+       DESIGN.md の「SNSの色はアイコンとセット」に従い、行頭は色つきアイコンで示す。 */
+    /* 一覧ではなく、その投稿の詳細を開いた状態へ送る（?post= で投稿名を渡す） */
+    var name = nm ? nm.textContent.trim() : '';
+    return '<a class="dp-row ' + e.className.replace('ev', '').trim() + '"'
+      + ' href="./post_list_wire.html?post=' + encodeURIComponent(name) + '">'
+      + '<span class="dp-ic">' + (icon ? icon.outerHTML : '') + '</span>'
+      + '<span class="dp-tm">' + (tm ? tm.textContent : '') + '</span>'
+      + '<span class="dp-nm">' + (nm ? nm.textContent : '（無題）') + '</span>'
+      + '<i class="ti ti-chevron-right dp-go"></i></a>';
+  }).join('');
+  box.innerHTML = '<div class="pop-lb">この日の予定（' + evs.length + '件）</div>'
+    + '<div class="dp-list">' + rows + '</div><div class="dp-sep"></div>';
+}
+
 function openAdd(time, dateLabel, ev){
   if(ev) ev.stopPropagation();
   var pop = document.getElementById('pop');
   document.getElementById('popDate').textContent = dateLabel;
+  /* 押されたセル（バッジから来たときは、その親のセル）の予定を出す */
+  var cell = null;
+  if(ev && ev.currentTarget) cell = ev.currentTarget.closest ? ev.currentTarget.closest('.d') : null;
+  if(!cell && ev && ev.target && ev.target.closest) cell = ev.target.closest('.d');
+  renderDayPosts(cell);
   // 時間が決まっている枠から開いたときは、その時間を選んだ状態にする
   var chips = document.querySelectorAll('#popTimes .tchip');
   chips.forEach(function(c){ c.classList.remove('on'); });
@@ -730,6 +856,14 @@ function openAdd(time, dateLabel, ev){
   } else {
     x = app.width / 2 - 176;
     y = 120;
+  }
+  /* SPは全画面で開く（shell-sp.css）。押した場所に合わせて置く必要が無いうえ、
+     ここでインラインの left/top を書くとCSSより強く効いて、全画面指定が壊れる。
+     ⚠️ 前に開いたときのインライン値が残るので、消してから返す。 */
+  if (matchMedia('(max-width:430px)').matches) {
+    pop.style.left = '';
+    pop.style.top = '';
+    return;
   }
   pop.style.left = Math.max(12, Math.min(x, app.width - 364)) + 'px';
   pop.style.top  = Math.max(12, Math.min(y, app.height - pop.offsetHeight - 12)) + 'px';
@@ -883,6 +1017,24 @@ function toast(msg){
 }
 
 function trayToggle(){ document.getElementById('tray').classList.toggle('hide'); }
+
+/* SPではトレイを全画面で開く（shell側CSS）。開きっぱなしで始まるとカレンダーが
+   隠れてしまうので、最初は閉じておく。PCは右の列として常設なので触らない。
+   ⚠️ 一度でも自分で開閉したら、リサイズで勝手に閉じ直さない。 */
+(function(){
+  var tray = document.getElementById('tray');
+  if(!tray) return;
+  var touched = false;
+  document.querySelectorAll('.traybtn,.tray-x').forEach(function(b){
+    b.addEventListener('click', function(){ touched = true; });
+  });
+  function sync(){
+    if(touched) return;
+    tray.classList.toggle('hide', matchMedia('(max-width:430px)').matches);
+  }
+  sync();
+  addEventListener('resize', sync);
+})();
 renderDrafts();
 
 // 外側を押したら閉じる
@@ -892,4 +1044,5 @@ document.addEventListener('click', function(e){
 });
 </script>
 <script src="./tour.js"></script>
+<script src="./fox-alert.js"></script>
 </body></html>

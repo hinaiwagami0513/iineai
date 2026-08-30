@@ -62,12 +62,8 @@
 body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 
 /* Demo switcher */
-.demo-bar{display:flex;justify-content:center;gap:0;margin-bottom:16px;}
-.demo-tab{padding:10px 28px;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);cursor:pointer;border:1px solid var(--color-border);background:var(--color-card);color:var(--color-muted-foreground);transition:all .15s;}
-.demo-tab:first-child{border-radius:var(--radius-sm) 0 0 var(--radius-sm);}
-.demo-tab:last-child{border-radius:0 var(--radius-sm) var(--radius-sm) 0;border-left:none;}
-.demo-tab.on{background:var(--color-primary);color:var(--color-on-primary);border-color:var(--color-primary);}
-.demo-label{text-align:center;font-size:var(--text-label);color:var(--color-muted-foreground);margin-bottom:12px;}
+/* ロール切替のスイッチは画面から外した（2026-08-28）。どちらを出すかは URL の ?view=。
+   .demo-view の表示切替だけ残す。 */
 
 .demo-view{display:none;}
 .demo-view.on{display:block;}
@@ -110,7 +106,16 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .tab:hover{color:var(--color-foreground);}
 .tab.on{color:var(--color-primary);border-bottom-color:var(--color-primary);font-weight:var(--font-weight-body-strong);}
 .tab .cnt{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);background:var(--color-background);border-radius:var(--radius-full);padding:2px 9px;margin-left:8px;min-width:20px;text-align:center;display:inline-block;}
-.tab.on .cnt{color:var(--color-primary);background:var(--color-primary-subtle);}
+/* 件数バッジは淡い面（非選択=background / 選択中=primary-subtle #fff5f1）で、
+   地のカードとほぼ同じ明るさになり、丸があること自体が見えていなかった。
+   ベタ塗り＋白抜きにして、数字を面で立たせる（2026-08-28）。
+   選択中は primary-deep(#d54101)。白文字で 4.58 あり 14px でも AA を満たす
+   （primary #fe7235 は 2.74 で足りないので使わない）。
+   1桁のときに円になるよう、min-width と height を揃える。 */
+.tab .cnt{color:#fff;background:var(--color-muted-foreground);
+  min-width:22px;height:22px;padding:0 7px;box-sizing:border-box;
+  display:inline-flex;align-items:center;justify-content:center;line-height:1;}
+.tab.on .cnt{color:#fff;background:var(--color-primary-deep);}
 
 /* Filter bar */
 .filterbar{display:flex;align-items:center;gap:10px;padding:14px 26px;border-bottom:1px solid var(--color-border);}
@@ -205,9 +210,11 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 /* ===== サイドバーの文字を白に =====
    地の #fe7235 に白は 2.74 で、15px の本文には足りない。
    文字を白にすると決めた以上、地の側を下げてコントラストを作る。
-   ベタで暗くすると濁るので、上を鮮やかなまま残す縦グラデーションにして
-   「明るいオレンジ」の印象を保ちながら 4.5 を満たす。 */
-.sb{background:linear-gradient(180deg,#fe7235 0%,#e85513 55%,#d54101 100%);}
+   以前は縦グラデーション（#fe7235→#e85513→#d54101）で「上は鮮やかなまま」を
+   残していたが、SPではサイドバーが高さ60pxの帯になるため、180度の階調が
+   その中に圧縮されて帯状のムラに見え、古く見える原因になっていた（2026-08-28）。
+   ベタの primary-deep(#d54101) に統一。白文字で 4.58 なので本文でも AA を満たす。 */
+.sb{background:var(--color-primary-deep);}
 .sb .logo{height:24px;margin-bottom:14px;display:block;}
 .sb .ni{color:rgba(255,255,255,.88);}
 .sb .ni .ti{color:rgba(255,255,255,.88);}
@@ -242,6 +249,36 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .sb .upg .ub:hover{filter:brightness(.94);}
 .create{background:#fff !important;color:#d54101 !important;}
 .create:hover{background:#fff !important;filter:brightness(.96);}
+
+
+@media(max-width:430px){
+  /* タブは 16px×「投稿済み」+件数+左右44px で1枚151px要り、3枚で453px。
+     幅318pxに対して溢れて、ラベルと件数が別の行に割れて重なっていた。
+     字を14px（DESIGN.md の下限）に落とし、余白を詰めて3枚を1行に収める。 */
+  .tabbar{padding:0 12px;}
+  .tab{flex:1;text-align:center;padding:12px 6px;font-size:var(--text-body);white-space:nowrap;}
+
+  /* カードは投稿一覧と同じ2列に揃える（1枚338×332px→半分の幅へ）。
+     ⚠️ shell-sp.css の `.grid{1fr !important}` に潰されるので .content で詳細度を上げる。 */
+  .content .grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:10px;}
+  .content .grid>*{min-width:0;}
+  .pcard-body{padding:10px 11px;gap:6px;}
+  .pcard-title{font-size:var(--text-label);}
+  .pcard-foot{flex-wrap:nowrap;gap:6px;}
+}
+/* 375px以下では、フッタに使える117pxに対し
+   「Instagram」チップ101px + 日付27px + 余白6px = 134px 要って入らない。
+   ここの日付はカード唯一の日付なので消さず、折り返して残す（高さ +20px）。
+   タブも300pxに対し304px要るので、余白を詰めて1行を守る。 */
+@media(max-width:375px){
+  .pcard-foot{flex-wrap:wrap;row-gap:3px;}
+  .tabbar{padding:0 6px;}
+  .tab{padding:12px 3px;}
+}
+/* 2列が成立する下限は投稿一覧と同じ344px。それ未満は1列に戻す。 */
+@media(max-width:343px){
+  .content .grid{grid-template-columns:minmax(0,1fr) !important;}
+}
 </style>
 <!-- SP対応（シェル型）。インラインCSSの後に置く（@media は詳細度を上げないので後勝ちにする） -->
 <link rel="stylesheet" href="./shell-sp.css">
@@ -249,12 +286,12 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 </head>
 <body>
 
-<!-- Demo view switcher -->
-<div class="demo-label">ロール別ビューの比較デモ — タブを切り替えてください</div>
-<div class="demo-bar">
-  <div class="demo-tab on" data-view="creator">作成者ビュー</div>
-  <div class="demo-tab" data-view="approver">承認者ビュー</div>
-</div>
+<!-- ロール別ビューの切替は画面から外した（2026-08-28）。
+     実機に存在しないスイッチを画面内に置くと、確認のたびに製品UIの一部に見えてしまう。
+     どちらを出すかは URL で決める:
+       approval_list_wire.html               → 作成者ビュー（既定）
+       approval_list_wire.html?view=approver → 承認者ビュー
+     画面ボードには2枚とも別枠で登録してあるので、見比べるときはボードから開く。 -->
 
 <!-- ==================== VIEW 1: Creator ==================== -->
 <div class="demo-view on" id="view-creator">
@@ -548,18 +585,16 @@ function navToggle(el){
   sub.classList.toggle('open');
   el.classList.toggle('exp');
 }
-/* Demo view switching */
-document.querySelectorAll('.demo-tab').forEach(function(tab){
-  tab.addEventListener('click',function(){
-    document.querySelectorAll('.demo-tab').forEach(function(t){t.classList.remove('on');});
-    document.querySelectorAll('.demo-view').forEach(function(v){v.classList.remove('on');});
-    tab.classList.add('on');
-    document.getElementById('view-'+tab.dataset.view).classList.add('on');
-    /* close any open sheets */
-    closeSheet('creator');
-    closeSheet('approver');
+/* どちらのロールの画面を出すかは URL で決める（画面内のスイッチは廃止）。
+   ?view=approver → 承認者ビュー / 指定なし → 作成者ビュー。
+   画面ボードには2枚とも別枠で登録してある。 */
+(function(){
+  var v = new URLSearchParams(location.search).get('view');
+  var id = (v === 'approver') ? 'view-approver' : 'view-creator';
+  document.querySelectorAll('.demo-view').forEach(function(el){
+    el.classList.toggle('on', el.id === id);
   });
-});
+})();
 
 /* Card click — open appropriate sheet */
 document.querySelectorAll('.pcard').forEach(function(card){

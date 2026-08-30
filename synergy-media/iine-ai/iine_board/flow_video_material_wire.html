@@ -484,7 +484,15 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
   #subnav{overflow-x:auto;flex-wrap:nowrap;padding:8px 14px;justify-content:flex-start;gap:4px;}
   .main{flex:1;min-height:0;overflow-y:auto;}
   .canvas{padding:16px;max-width:100%;}
-  .g2{grid-template-columns:1fr;}
+  /* 1fr は minmax(auto,1fr)＝中身の min-content が下限になる。選択カードの min-content が
+     親より広いと、トラックごと親を突き破る（320px幅で親288pxに対しトラック334.7px＝47px超過）。
+     下限を0に置き換え、カード側も親より細くなれるようにする。 */
+  /* [アバター][名前+補足][SNSチップ] の3列は320px幅（内側256px）に277px要り、
+     右端のチップが46pxはみ出していた。チップだけ次の行に落として左に揃える。 */
+  .opt.acct{flex-wrap:wrap;}
+  .opt.acct .plat{margin-left:0;margin-top:8px;}
+  .g2{grid-template-columns:minmax(0,1fr);}
+  .g2>*{min-width:0;}
   .g3{grid-template-columns:1fr;}
   .subcards{grid-template-columns:1fr 1fr;}
   .foot{padding:12px 16px;flex-wrap:wrap;gap:8px;}
@@ -1720,4 +1728,5 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeKari(
 </script>
 <script src="./onboarding.js"></script>
 <script src="./tour.js"></script>
+<script src="./fox-alert.js"></script>
 </body></html>

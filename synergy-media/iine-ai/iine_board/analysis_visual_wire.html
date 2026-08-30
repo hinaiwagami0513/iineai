@@ -1372,6 +1372,77 @@ body {
 /* .content を高さ固定のグリッド項目にしたぶん、縦並びの子に flex-shrink が効く。
    タブ帯は縮ませない（analysis_posts で 23px → 1px に潰れていた） */
 .content > .tab-nav{flex:none;}
+
+/* もとはインラインstyleで padding:24px 28px を持っていた枠。
+   メディアクエリで詰められないのでクラスに出した（2026-08-28）。 */
+.vr-page{padding:24px 28px;display:flex;flex-direction:column;gap:20px;}
+
+@media (max-width:430px){
+  /* 左端まで .app(10) + .content(16) + ここ(28) = 54px あって、
+     390px幅のうち108pxが左右の余白に消えていた。中身に幅を返す。 */
+  .vr-page{padding:16px 12px;gap:14px;}
+
+  /* アカウントの帯が「アイコン／名前／@ハンドル／数値」の4段に折り返して詰まって見えていた。
+     .acct-row が switcher(94px) の残り204pxしか取れず、中身が全部縦に落ちていたため。
+     .acct-row を display:contents で透明にして中身を .acct-hd 直下の並びに混ぜ、
+       1段目: アイコン・名前・@ハンドル ……… 右端に［切替］
+       2段目: フォロワー / 投稿数（横いっぱい）
+     の2段に組み直す。1段目は 36+64+79+94+余白 = 297px で306pxに収まる。 */
+  /* ⚠️ flex-direction も明示する。analysis_report だけ既存CSSで column になっていて、
+     そのままだと flex-basis:100% が「高さ100%」に効き、数値チップが168pxまで縦に伸びていた。 */
+  .acct-hd{display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;column-gap:8px;row-gap:8px;}
+  .acct-row{display:contents;}
+  /* ⚠️ margin-left:auto は使わない。折り返す行で自動余白を入れると、その行の
+     残り幅を全部食って、後ろの項目（名前・@ハンドル）が次の行へ押し出される。
+     実際それで4段になっていた。順番だけ指定して自然に並べる。 */
+  .acct-hd .acct-icon,.acct-hd .acct-name,.acct-hd .acct-handle,.acct-hd .acct-switcher{flex:none;}
+  .acct-hd .acct-switcher{order:1;margin-left:0;}
+  .acct-hd .acct-stats{order:2;flex-basis:100%;width:auto;}
+
+  /* タブ帯は overflow-x:visible のまま中身が溢れ、カードの縁で文字が切れていた
+     （「投稿レポート」が「投」、「数値変化」が途中で欠ける）。横スクロールにする。
+     縦に折り返すと帯が2段になって、どこまでがタブか分からなくなるので折り返さない。 */
+  /* ⚠️ flex:none が要る。.content は縦並びの flex で、ここを overflow 持ちの
+     スクロール枠にすると flex-shrink が効いて帯が10pxまで潰れる
+     （既存の `.content > .tab-nav{flex:none}` と同じ事故。サブタブにも要る）。 */
+  .tab-nav,.sub-tab-nav{overflow-x:auto;overflow-y:hidden;flex:none;flex-wrap:nowrap;scrollbar-width:none;}
+  /* サブタブの帯には左右32pxのmarginが入っていて、本文（16px基準）より内側に寄り、
+     帯だけ390px→326pxと細くなっていた。本文と同じ16pxに揃える（2026-08-28）。 */
+  .sub-tab-nav{margin-left:16px;margin-right:16px;}
+  /* サブタブは3つで350px。左右の余白を18px→6pxに詰めれば304pxの枠に収まるので、
+     スクロールさせず全部見せる（3つしかない帯を隠す意味がない）。 */
+  /* 余白を詰めたら今度は右に51px余った。3つで幅を均等に分けて、帯いっぱいに使う。 */
+  .sub-tab-nav>a,.sub-tab-nav>button,.sub-tab-nav>span{
+    /* ⚠️ flex:1 1 0（完全な等分）にすると、いちばん長い「アカウント推移」だけ
+       2px足りずに文字が切れる。auto にして、各自の文字幅を基準に余りだけ分け合う。 */
+    flex:1 1 auto;min-width:0;text-align:center;justify-content:center;
+    padding-left:6px;padding-right:6px;}
+  /* 320px（枠254px）では、3つの文字だけで242px要る。余白を2pxまで詰めて収める。 */
+  @media (max-width:343px){
+    .sub-tab-nav>a,.sub-tab-nav>button,.sub-tab-nav>span{padding-left:2px;padding-right:2px;}
+  }
+  /* 主タブは「ビジュアルレポート/アカウントレポート/投稿レポート」で文字だけ336px要り、
+     370pxの枠に余白込みでは入らないのでスクロールのまま。
+     ただ右端で切れると壊れて見えるので、端をぼかして「続きがある」と分かる形にする。 */
+  .tab-nav{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent 100%);
+           mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent 100%);}
+  .tab-nav::-webkit-scrollbar,.sub-tab-nav::-webkit-scrollbar{display:none;}
+  .tab-nav>*,.sub-tab-nav>*{flex:none;}
+
+  /* ページ名が「分 / 析」と2行に割れていた。
+     .hdr-right が277px（うちプラン名が145px）を占めて .hdr-left に41pxしか残らないため。
+     プラン名は状態表示で操作ではないので、まずここを落として場所を作る
+     （shell-sp.css の `.hd .planchip{display:none}` と同じ判断。
+     分析系5画面は shell-sp.css を読んでいないので個別に持つ）。 */
+  .hdr-page,.pgnm{white-space:nowrap;}
+  .planchip{display:none;}
+
+  /* .app の padding:10px はPCで「浮いた3枚のカード」に見せるための余白。
+     SPは全面表示で何も浮いていないのに、.content の16pxと二重に効いて
+     左右26pxを食っていた。16pxに揃える（shell-sp.css と同じ判断。
+     分析系は shell-sp.css を読んでいないので個別に持つ）。 */
+  .app{padding-left:0;padding-right:0;}
+}
 </style>
 <!-- SP対応（上部バー型）。インラインCSSの後に置く（@media は詳細度を上げないので後勝ちにする） -->
 <link rel="stylesheet" href="./topbar-sp.css">
@@ -1488,7 +1559,8 @@ body {
       </div>
 
       <!-- Visual Report page body -->
-      <div style="padding:24px 28px;display:flex;flex-direction:column;gap:20px;">
+      <!-- インラインstyleだとメディアクエリで詰められないので、クラスに出した（2026-08-28） -->
+      <div class="vr-page">
 
         <!-- レポート期間ヘッダー: どの月のレポートかはここ1箇所で言い切る -->
         <div class="vr-report-hd">

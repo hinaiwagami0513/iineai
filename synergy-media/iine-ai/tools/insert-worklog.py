@@ -48,9 +48,16 @@ def main():
         new = text[:start] + block + text[end:]
         how = "差し替えた"
     else:
-        # 新しい日は一番上（最初の日付見出しの前）に入れる
-        start = marks[0][0]
-        new = text[:start] + block + text[start:]
+        # 新しい日は「日付の降順」を保つ位置に入れる。単純に先頭へ入れると、
+        # --backfill で古い日を後から足したときに 8/26 → 8/25 → 8/27 のように
+        # 順番が壊れる（2026-08-28 に実際に壊した）。自分より古い最初の見出しの
+        # 手前に入れ、自分より古い日が無ければ末尾に足す。
+        older = [pos for pos, d in marks if d < day]
+        if older:
+            start = older[0]
+            new = text[:start] + block + text[start:]
+        else:
+            new = text.rstrip("\n") + "\n\n" + block
         how = "追加した"
 
     io.open(path, "w", encoding="utf-8").write(new)

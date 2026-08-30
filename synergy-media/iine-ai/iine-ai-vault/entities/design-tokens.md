@@ -6,6 +6,11 @@
 - 現行の正は **DESIGN.md**（alpha・2026/07決定を含む＝knowledge.mdより新しい）。
 - globals.css は DESIGN.md からの生成物。手で触らない。
 
+## ⚠️ primary は差し替わる可能性がある（8/28）
+メインカラーが変わるかもしれない（来週〜9月中旬に確定 / [[brand-rename-pending]]）。
+岩上が佐藤に「デザインMDでプライマリーを変えるだけなので**デザイン全部は変わらない**」と回答している。
+**この約束を守る**＝ 色はセマンティック名でしか参照しない。ワイヤーやコードに `#fe7235` 等を直書きしない。
+
 ## 主要トークン（現行）
 - primary `#fe7235` / primary-light `#fea735` / primary-deep(文字用) `#d54101` / primary-subtle `#fff5f1`。
 - secondary `#0077ff` / secondary-light `#00c3ff` / secondary-subtle `#f1f7ff`。**情報・補助専用。押せるものには使わない**。

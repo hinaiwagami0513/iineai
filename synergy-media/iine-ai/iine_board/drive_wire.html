@@ -338,9 +338,11 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 /* ===== サイドバーの文字を白に =====
    地の #fe7235 に白は 2.74 で、15px の本文には足りない。
    文字を白にすると決めた以上、地の側を下げてコントラストを作る。
-   ベタで暗くすると濁るので、上を鮮やかなまま残す縦グラデーションにして
-   「明るいオレンジ」の印象を保ちながら 4.5 を満たす。 */
-.sb{background:linear-gradient(180deg,#fe7235 0%,#e85513 55%,#d54101 100%);}
+   以前は縦グラデーション（#fe7235→#e85513→#d54101）で「上は鮮やかなまま」を
+   残していたが、SPではサイドバーが高さ60pxの帯になるため、180度の階調が
+   その中に圧縮されて帯状のムラに見え、古く見える原因になっていた（2026-08-28）。
+   ベタの primary-deep(#d54101) に統一。白文字で 4.58 なので本文でも AA を満たす。 */
+.sb{background:var(--color-primary-deep);}
 .sb .logo{filter:brightness(0) invert(1);opacity:.96;}
 .sb .ni{color:rgba(255,255,255,.88);}
 .sb .ni .ti{color:rgba(255,255,255,.88);}
@@ -815,4 +817,5 @@ document.addEventListener('click', function(e){
 });
 </script>
 <script src="./tour.js"></script>
+<script src="./fox-alert.js"></script>
 </body></html>

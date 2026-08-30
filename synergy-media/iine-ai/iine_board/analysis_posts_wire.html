@@ -219,9 +219,6 @@ body { font-family: Inter, 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif
 .tab-nav a { padding: 12px 16px; font-size: var(--text-body); font-weight: var(--font-weight-label); color: var(--color-muted-foreground); text-decoration: none; border-bottom: 2px solid transparent; cursor: pointer; transition: color .15s, border-color .15s; white-space: nowrap; }
 .tab-nav a:hover { color: var(--color-foreground); }
 .tab-nav a.active { color: var(--color-primary); font-weight: var(--font-weight-body-strong); border-bottom-color: var(--color-primary); }
-.tab-more { margin-left: auto; }
-.tab-more-btn { width: 36px; height: 36px; border-radius: var(--radius-sm); border: 1px solid var(--color-border); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--color-muted-foreground); font-size: 18px; transition: background .15s; }
-.tab-more-btn:hover { background: var(--color-background); }
 
 /* sub tab nav (shadcn pill / segmented style) */
 .sub-tab-nav{display:inline-flex;gap:4px;margin:16px 32px 20px;padding:4px;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-md);}
@@ -499,7 +496,9 @@ body { font-family: Inter, 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif
 /* ── Responsive ── */
 @media (max-width: 768px) {
   body { padding: 0; }
-  .sb { display: none; }
+  /* 430px以下は shell-sp.css がサイドバーを下部ナビに変えるので消さない。
+     消すのは、下部ナビにならない中間幅（431〜768px）だけにする。 */
+  @media (min-width: 431px) { .sb { display: none; } }
   .app { width: 100%; border-radius: 0; border: none; }
   .tab-nav { padding: 0 16px; overflow-x: auto; }
   .acct-hd { padding: 16px 16px 12px; }
@@ -547,9 +546,11 @@ body { font-family: Inter, 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif
 /* ===== サイドバーの文字を白に =====
    地の #fe7235 に白は 2.74 で、15px の本文には足りない。
    文字を白にすると決めた以上、地の側を下げてコントラストを作る。
-   ベタで暗くすると濁るので、上を鮮やかなまま残す縦グラデーションにして
-   「明るいオレンジ」の印象を保ちながら 4.5 を満たす。 */
-.sb{background:linear-gradient(180deg,#fe7235 0%,#e85513 55%,#d54101 100%);}
+   以前は縦グラデーション（#fe7235→#e85513→#d54101）で「上は鮮やかなまま」を
+   残していたが、SPではサイドバーが高さ60pxの帯になるため、180度の階調が
+   その中に圧縮されて帯状のムラに見え、古く見える原因になっていた（2026-08-28）。
+   ベタの primary-deep(#d54101) に統一。白文字で 4.58 なので本文でも AA を満たす。 */
+.sb{background:var(--color-primary-deep);}
 .sb .logo{height:24px;margin-bottom:14px;display:block;}
 .sb .ni{color:rgba(255,255,255,.88);}
 .sb .ni .ti{color:rgba(255,255,255,.88);}
@@ -647,7 +648,178 @@ body { font-family: Inter, 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif
 /* .content を高さ固定のグリッド項目にしたぶん、縦並びの子に flex-shrink が効く。
    タブ帯は縮ませない（analysis_posts で 23px → 1px に潰れていた） */
 .content > .tab-nav{flex:none;}
+
+/* ===== アカウント帯のSP（2026-08-28。analysis_visual と揃えた） =====
+   アイコン／名前／@ハンドル／数値／切替 を1つの flex に入れていたため、
+   .acct-row が切替(94px)の残り幅しか取れず、中身が縦に落ちて4段になっていた。
+   .acct-row を display:contents で透明にし、親の並びに混ぜて2段に組み直す:
+     1段目: アイコン・名前・@ハンドル … 右端に［切替］
+     2段目: フォロワー / 投稿数（横いっぱい）
+   ⚠️ margin-left:auto は使わない。折り返す行に自動余白を入れると、その行の残り幅を
+   全部食って後続が次の行へ押し出される（実際それで4段になっていた）。 */
+@media (max-width:430px){
+  /* ⚠️ flex-direction も明示する。analysis_report だけ既存CSSで column になっていて、
+     そのままだと flex-basis:100% が「高さ100%」に効き、数値チップが168pxまで縦に伸びていた。 */
+  .acct-hd{display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;column-gap:8px;row-gap:8px;}
+  .acct-row{display:contents;}
+  .acct-hd .acct-icon,.acct-hd .acct-name,.acct-hd .acct-handle,.acct-hd .acct-switcher{flex:none;}
+  .acct-hd .acct-switcher{order:1;margin-left:0;}
+  .acct-hd .acct-stats{order:2;flex-basis:100%;width:auto;}
+
+  /* タブ帯は overflow-x:visible のまま中身が溢れ、カードの縁で文字が切れていた
+     （「投稿レポート」が「投」、「数値変化」が途中で欠ける）。横スクロールにする。
+     縦に折り返すと帯が2段になって、どこまでがタブか分からなくなるので折り返さない。 */
+  /* ⚠️ flex:none が要る。.content は縦並びの flex で、ここを overflow 持ちの
+     スクロール枠にすると flex-shrink が効いて帯が10pxまで潰れる
+     （既存の `.content > .tab-nav{flex:none}` と同じ事故。サブタブにも要る）。 */
+  .tab-nav,.sub-tab-nav{overflow-x:auto;overflow-y:hidden;flex:none;flex-wrap:nowrap;scrollbar-width:none;}
+  /* サブタブの帯には左右32pxのmarginが入っていて、本文（16px基準）より内側に寄り、
+     帯だけ390px→326pxと細くなっていた。本文と同じ16pxに揃える（2026-08-28）。 */
+  .sub-tab-nav{margin-left:16px;margin-right:16px;}
+  /* サブタブは3つで350px。左右の余白を18px→6pxに詰めれば304pxの枠に収まるので、
+     スクロールさせず全部見せる（3つしかない帯を隠す意味がない）。 */
+  /* 余白を詰めたら今度は右に51px余った。3つで幅を均等に分けて、帯いっぱいに使う。 */
+  .sub-tab-nav>a,.sub-tab-nav>button,.sub-tab-nav>span{
+    /* ⚠️ flex:1 1 0（完全な等分）にすると、いちばん長い「アカウント推移」だけ
+       2px足りずに文字が切れる。auto にして、各自の文字幅を基準に余りだけ分け合う。 */
+    flex:1 1 auto;min-width:0;text-align:center;justify-content:center;
+    padding-left:6px;padding-right:6px;}
+  /* 320px（枠254px）では、3つの文字だけで242px要る。余白を2pxまで詰めて収める。 */
+  @media (max-width:343px){
+    .sub-tab-nav>a,.sub-tab-nav>button,.sub-tab-nav>span{padding-left:2px;padding-right:2px;}
+  }
+  /* 主タブは「ビジュアルレポート/アカウントレポート/投稿レポート」で文字だけ336px要り、
+     370pxの枠に余白込みでは入らないのでスクロールのまま。
+     ただ右端で切れると壊れて見えるので、端をぼかして「続きがある」と分かる形にする。 */
+  .tab-nav{-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent 100%);
+           mask-image:linear-gradient(90deg,#000 calc(100% - 28px),transparent 100%);}
+  .tab-nav::-webkit-scrollbar,.sub-tab-nav::-webkit-scrollbar{display:none;}
+  .tab-nav>*,.sub-tab-nav>*{flex:none;}
+
+  /* ページ名が「分 / 析」と2行に割れていた。
+     .hdr-right が277px（うちプラン名が145px）を占めて .hdr-left に41pxしか残らないため。
+     プラン名は状態表示で操作ではないので、まずここを落として場所を作る
+     （shell-sp.css の `.hd .planchip{display:none}` と同じ判断。
+     分析系5画面は shell-sp.css を読んでいないので個別に持つ）。 */
+  .hdr-page,.pgnm{white-space:nowrap;}
+  .planchip{display:none;}
+
+  /* .app の padding:10px はPCで「浮いた3枚のカード」に見せるための余白。
+     SPは全面表示で何も浮いていないのに、.content の16pxと二重に効いて
+     左右26pxを食っていた。16pxに揃える（shell-sp.css と同じ判断。
+     分析系は shell-sp.css を読んでいないので個別に持つ）。 */
+  .app{padding-left:0;padding-right:0;}
+}
+
+/* 狭い端末では、横一列に組んだ小さな行がカードからはみ出す（2026-08-28）。
+   いずれも「チップや数値が並ぶだけ」の行で、縦に折り返しても意味が壊れない。
+     .acct-stats      … フォロワー/投稿数（360pxで12px、320pxで52px超過）
+     .post-quick-stats… 投稿カード内の数値3つ（118pxの枠に116px+余白）
+     .date-selector   … 期間の切替
+     .besttime-hd     … 時間帯グラフの見出しと凡例
+     .post-top-row    … 投稿カードのバッジ行 */
+@media (max-width:430px){
+  .acct-stats,.post-quick-stats,.date-selector,.besttime-hd,.post-top-row{flex-wrap:wrap;}
+  .acct-stats>*,.post-quick-stats>*,.date-selector>*,.besttime-hd>*,.post-top-row>*{min-width:0;}
+}
+
+/* 320px（1枠78px）で残る2件（2026-08-28）。
+   ・.post-badge …「フィード」がnowrapで89px要り11px溢れる → 余白を詰め、
+     それでも入らないときは省略記号で切る（バッジは折り返すと形が崩れる）
+   ・.bt-head   … 見出し＋時刻ラベル8個で2px溢れる → 折り返しを許す */
+@media (max-width:343px){
+  .post-badge{padding-left:6px;padding-right:6px;min-width:0;overflow:hidden;text-overflow:ellipsis;}
+  /* 子8個(128px)＋すき間4px×7=156px に対し枠は154px。すき間を詰めて2pxを吸収する */
+  .bt-head{flex-wrap:wrap;row-gap:4px;gap:2px;}
+}
+
+/* 同じ列に並ぶカードは全部 x16→374 なのに、.besttime だけ margin:32px で
+   x48→342 と内側に寄っていた（2026-08-28）。他と同じ幅に揃える。 */
+@media (max-width:430px){
+  .besttime{margin-left:0;margin-right:0;}
+}
+
+/* ===== 投稿ランキングのカード（2026-08-28） =====
+   [順位40][写真60][情報] を1行に並べているため、SPでは情報側が168pxしか取れず、
+   本文も数値も右の細い柱に押し込まれて、左側に順位と写真ぶんの空白が縦に伸びていた。
+   加えて「今月のベスト」リボンが position:absolute で右上に置かれ、
+   情報側1行目の「フィード」バッジに重なっていた。
+
+   直し方:
+   ・.post-info を display:contents で透明にして、中身をカード直下の並びに混ぜる
+   ・1行目 = 順位 / 写真 / 種別バッジ・日時（写真の高さに収まる）
+   ・2行目以降 = 本文と数値を全幅（左の空白がなくなる）
+   ・リボンは絶対配置をやめ、1行目の右端に流し込む（重なりが構造的に起きなくなる） */
+@media (max-width:430px){
+  .post-card{flex-wrap:wrap;align-items:flex-start;column-gap:10px;row-gap:8px;}
+  .post-card .post-info{display:contents;}
+  .post-card .rank-num,.post-card .post-thumb{flex:none;}
+  /* リボンはカードの見出し帯として最初の行に単独で置く（124pxあり、順位・写真と
+     同じ行には入らない）。絶対配置をやめたので、重なりが構造的に起きなくなる。
+     ⚠️ ただし流し込んだだけだとカードの padding(16)+border(1) のぶん内側に浮き、
+     上に17pxの余白ができて「札が宙に浮いている」見え方になる。
+     元の指定が border-radius:0 0 12px 12px（下だけ丸い＝上端から下がる形）なので、
+     負のマージンで余白を打ち消してカードの上端に密着させ、
+     角丸もカード側（16px）に合わせて上を丸める。 */
+  .post-card .best-ribbon{position:static;order:-1;
+    /* 100% は「中身の幅」なので、左右へ17pxずつ出す分を足さないと右端が34px足りない */
+    flex-basis:calc(100% + 34px);
+    margin:-17px -17px 12px;border-radius:15px 15px 0 0;text-align:center;}
+  /* 種別バッジと日時は写真の右（残り206px）。入らなければ中で折り返す */
+  .post-card .post-top-row{flex:1 1 0;min-width:0;flex-wrap:wrap;row-gap:4px;}
+  /* 本文と数値は全幅。左に順位・写真ぶんの空白を作らない */
+  .post-card .post-caption{order:1;flex-basis:100%;min-width:0;}
+  .post-card .post-quick-stats{order:2;flex-basis:100%;min-width:0;}
+}
+
+/* ===== SPのスクロール量を減らす（2026-08-28） =====
+   投稿ランキング（.posts-list）に着くまでに .month-summary(649px) と
+   .besttime(841px) で1490px＝1.8画面分あり、一番下まで行かないと順位が見えなかった。
+   ページ全体は3128px＝3.7画面分。上2つを詰めて、ランキングを手前に引き上げる。 */
+@media (max-width:430px){
+
+  /* --- おすすめの投稿時間：1位〜3位を1行ずつに畳む ---
+     1枚119px（順位/曜日時刻/反応率/説明の4段）×3で377px使っていた。
+     SPでは知りたいのは「いつ出すか」なので、曜日時刻と反応率だけ1行に並べ、
+     説明文（いちばん見られています 等）は落とす。3枚で約135pxになる。 */
+  .bt-picks{gap:6px;}
+  /* ⚠️ 実際のクラスは .bt-pick（単数）で flex-direction:column を持っている。
+     方向を明示しないと flex にしても縦積みのままで、高さが減らない。 */
+  .bt-picks .bt-pick{flex-direction:row;align-items:baseline;gap:8px;padding:8px 12px;}
+  .bt-picks .bt-pick .bt-rank{flex:none;}
+  .bt-picks .bt-pick .bt-when{flex:1 1 auto;min-width:0;}
+  .bt-picks .bt-pick .bt-rate{flex:none;}
+  .bt-picks .bt-pick .bt-note{display:none;}
+
+  /* --- 今月の投稿まとめ：8枚を3グループに分けてタブで切り替える ---
+     2列×4段で597px使っていた。3列に詰めると294pxまで縮むが、アイコンを落とすことに
+     なって窮屈になった。グループ名（見られた/反応された/深さ）を出して1グループ3枚だけ
+     見せる形にすると、アイコンと余白を戻したうえで162pxに収まる。
+     グループ名そのものが「この数字は何を表すか」の説明にもなる
+     （ターゲットは40〜50代未経験者＝vault: target-first）。 */
+  .ms-tabs{display:flex;gap:6px;margin-bottom:12px;}
+  .ms-tab{flex:1 1 0;min-width:0;padding:9px 4px;border:1px solid var(--color-border);
+    background:var(--color-card);border-radius:var(--radius-full);cursor:pointer;
+    font-family:inherit;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);
+    color:var(--color-muted-foreground);white-space:nowrap;}
+  .ms-tab.on{background:var(--color-primary);border-color:var(--color-primary);color:var(--color-on-primary);}
+  .month-summary-cards{grid-template-columns:repeat(3,minmax(0,1fr)) !important;gap:8px;}
+  .month-summary-cards>*{padding:14px 8px;min-width:0;}
+  /* 選ばれていないグループは隠す */
+  .month-summary-cards>[data-msg]{display:none;}
+  .month-summary-cards>[data-msg].on{display:flex;}
+  .ms-card-val{font-size:var(--text-h2);}
+  .ms-card-lbl{font-size:var(--text-meta);}
+}
+/* タブはSP専用。PCは8枚を一度に並べる面なので出さない。
+   ⚠️ 素の `.ms-tabs{display:none}` だと、SP用のメディアクエリより後ろに来て
+   同じ詳細度で後勝ちし、SPでもタブが消える。min-width 側に閉じ込める。 */
+@media (min-width:431px){ .ms-tabs{display:none;} }
 </style>
+<!-- SP対応。インラインCSSの後に置く（@media は詳細度を上げないので後勝ちにする）。
+     この1枚が抜けていたため、SPでサイドバーが消えるだけで下部ナビに変わらず、
+     この画面からどこにも移動できなくなっていた（2026-08-28 に追加）。 -->
+<link rel="stylesheet" href="./shell-sp.css">
 </head>
 <body>
 
@@ -753,9 +925,6 @@ body { font-family: Inter, 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif
         <a href="./analysis_visual_wire.html">ビジュアルレポート</a>
         <a href="./analysis_report_wire.html">アカウントレポート</a>
         <a class="active" href="./analysis_posts_wire.html">投稿レポート</a>
-        <div class="tab-more">
-          <button class="tab-more-btn" onclick="toast('メニューを開きます')"><i class="ti ti-dots"></i></button>
-        </div>
       </div>
 
       <!-- 「数値変化」は廃止。残る投稿一覧だけではナビにならないのでサブタブ自体を撤去 -->
@@ -775,44 +944,51 @@ body { font-family: Inter, 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif
       <!-- ===== 月間まとめ ===== -->
       <div class="month-summary">
         <div class="month-summary-title">7月の投稿まとめ</div>
+        <!-- SPだけ出る指標の切替。8枚を「見られた/反応された/深さ」の3つに分ける。
+             PCでは8枚とも並ぶので出さない（CSSで display:none）。 -->
+        <div class="ms-tabs" id="msTabs">
+          <button class="ms-tab on" data-msg="seen">見られた</button>
+          <button class="ms-tab" data-msg="react">反応された</button>
+          <button class="ms-tab" data-msg="deep">深さ</button>
+        </div>
         <div class="month-summary-cards">
-          <div class="ms-card best">
+          <div data-msg="seen" class="ms-card best">
             <div class="ms-card-icon"><i class="ti ti-eye"></i></div>
             <div class="ms-card-val">237<span class="ms-card-unit">回</span></div>
             <div class="ms-card-lbl">リーチ合計</div>
           </div>
-          <div class="ms-card">
+          <div data-msg="seen" class="ms-card">
             <div class="ms-card-icon"><i class="ti ti-file-text"></i></div>
             <div class="ms-card-val">5<span class="ms-card-unit">件</span></div>
             <div class="ms-card-lbl">投稿数</div>
           </div>
-          <div class="ms-card">
+          <div data-msg="react" class="ms-card">
             <div class="ms-card-icon"><i class="ti ti-heart"></i></div>
             <div class="ms-card-val">12<span class="ms-card-unit">件</span></div>
             <div class="ms-card-lbl">いいね合計</div>
           </div>
-          <div class="ms-card">
+          <div data-msg="react" class="ms-card">
             <div class="ms-card-icon"><i class="ti ti-message-circle"></i></div>
             <div class="ms-card-val">3<span class="ms-card-unit">件</span></div>
             <div class="ms-card-lbl">コメント合計</div>
           </div>
           <!-- 本番の投稿データにある指標。総合評価以外の数値もここに並べる -->
-          <div class="ms-card">
+          <div data-msg="seen" class="ms-card">
             <div class="ms-card-icon"><i class="ti ti-users"></i></div>
             <div class="ms-card-val">237<span class="ms-card-unit">件</span></div>
             <div class="ms-card-lbl">リーチしたアカウント数</div>
           </div>
-          <div class="ms-card">
+          <div data-msg="react" class="ms-card">
             <div class="ms-card-icon"><i class="ti ti-external-link"></i></div>
             <div class="ms-card-val">4<span class="ms-card-unit">回</span></div>
             <div class="ms-card-lbl">シェア数</div>
           </div>
-          <div class="ms-card">
+          <div data-msg="deep" class="ms-card">
             <div class="ms-card-icon"><i class="ti ti-messages"></i></div>
             <div class="ms-card-val">25<span class="ms-card-unit">回</span></div>
             <div class="ms-card-lbl">インタラクション</div>
           </div>
-          <div class="ms-card">
+          <div data-msg="deep" class="ms-card">
             <div class="ms-card-icon"><i class="ti ti-chart-line"></i></div>
             <div class="ms-card-val">9.7<span class="ms-card-unit">%</span></div>
             <div class="ms-card-lbl">プロフィール率</div>
@@ -1232,5 +1408,33 @@ document.querySelectorAll('.sort-btn').forEach(function(btn) {
 });
 </script>
 
-<script src="./tour.js"></script>
+<script src="./tour.js">
+/* 今月のまとめの指標グループ切替（SPのみ意味を持つ）。
+   PCではタブを display:none にしてあるが、8枚とも見せたいので
+   「SP幅のときだけ絞り込む」形にする。リサイズでも追従させる。 */
+(function(){
+  var tabs = document.getElementById('msTabs');
+  var grid = document.querySelector('.month-summary-cards');
+  if(!tabs || !grid) return;
+  var current = 'seen';
+  function apply(){
+    var sp = matchMedia('(max-width:430px)').matches;
+    [].forEach.call(grid.children, function(c){
+      var g = c.getAttribute('data-msg');
+      if(!g) return;
+      /* PCは全部見せる（.on を付けっぱなしにする） */
+      c.classList.toggle('on', !sp || g === current);
+    });
+    [].forEach.call(tabs.children, function(t){
+      t.classList.toggle('on', t.getAttribute('data-msg') === current);
+    });
+  }
+  [].forEach.call(tabs.children, function(t){
+    t.addEventListener('click', function(){ current = t.getAttribute('data-msg'); apply(); });
+  });
+  apply();
+  addEventListener('resize', apply);
+})();
+</script>
+<script src="./fox-alert.js"></script>
 </body></html>

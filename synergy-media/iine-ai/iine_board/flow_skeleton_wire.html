@@ -171,6 +171,20 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 @media(max-width:600px){
   .stepbar{overflow-x:auto;flex-wrap:nowrap;padding:10px 16px;gap:4px;max-width:100%;justify-content:flex-start;}
 }
+
+/* ===== エディタ上部バーのSP（2026-08-28） =====
+   [ロゴ][フロー名][ステップ 1-6][投稿タイトル][閉じる] を1行(nowrap)に並べているため、
+   390pxでは投稿タイトル(.mini)が155px要るところ66pxまで潰され、
+   nowrapのまま文字がはみ出してステップ番号(.jb)と重なっていた。
+   ・.mini … 潰れてよい代わりに、はみ出さず省略記号で切る
+   ・.jump … ステップ番号は現在地なので潰さない（flex:none）
+   ・.tag  … 余白と字を詰めて、その分をタイトルに回す */
+@media (max-width:430px){
+  .topbar .mini{flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .topbar .jump{flex:none;margin-left:6px;}
+  .topbar .tag{flex:none;padding-left:8px;padding-right:8px;}
+  .topbar .close{flex:none;}
+}
 </style>
 <!-- SP対応（上部バー型）。インラインCSSの後に置く（@media は詳細度を上げないので後勝ちにする） -->
 <link rel="stylesheet" href="./topbar-sp.css">
@@ -321,4 +335,5 @@ function startGen(){
 show();
 
 </script>
+<script src="./fox-alert.js"></script>
 </body></html>

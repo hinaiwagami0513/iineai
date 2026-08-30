@@ -54,9 +54,18 @@
 .fox-alert .tx{flex:1;min-width:0;}
 .fox-alert .t{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);margin-bottom:4px;}
 .fox-alert .d{font-size:var(--text-label);line-height:1.8;}
-/* 閉じるボタン付き（設定画面の説明など）。吹き出しの外に出る */
-.fox-alert .x{flex:none;width:28px;height:28px;border:none;background:transparent;color:var(--color-muted-foreground);border-radius:var(--radius-sm);font-size:16px;cursor:pointer;}
-.fox-alert .x:hover{background:rgba(0,0,0,.05);}
+/* 閉じるボタン。吹き出しの中の右上に float で浮かせる。
+   HTMLには書かなくてよい。fox-alert.js が全部の箱に1個ずつ足して、押されたら
+   localStorage に覚える（消させたくない箱には data-keep を付ける）。
+   吹き出しの外に兄弟として置くと、SPでは 28px + gap 12px が本文から丸ごと引かれて
+   吹き出しが 306→266px まで痩せ、ドライブの ATTENTION が1行増える。中に浮かせれば
+   幅を譲るのは×の高さに掛かる行だけで、ラベルの行の右余白に収まる。
+   中身は ti-x ではなくSVG。.ti-* の字形は各画面が使う分だけ宣言する方式なので、
+   ti-x を持たない画面（analysis_posts_wire）だと空白の四角になる。 */
+.fox-alert .x,.fox-say>.x{float:right;margin:-4px -6px 0 8px;display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;padding:0;border:none;background:transparent;color:var(--color-muted-foreground);border-radius:var(--radius-sm);font-size:16px;cursor:pointer;}
+.fox-alert .x>svg,.fox-say>.x>svg{width:16px;height:16px;}
+.fox-alert .x:hover,.fox-say>.x:hover{background:rgba(0,0,0,.05);color:var(--color-foreground);}
+.fox-alert .x:focus-visible,.fox-say>.x:focus-visible{outline:2px solid var(--color-primary);outline-offset:1px;}
 
 /* 変種。しっぽも同じ変数から色を引くので、地・枠・しっぽがずれない。 */
 /* できた・うまくいっている */
@@ -73,9 +82,21 @@
 .fox-alert.sm>div::after,.fox-alert.sm>p::after{border-right-width:6px;}
 .fox-alert.sm>div::before,.fox-alert.sm>p::before{left:-6px;border-top-width:4px;border-bottom-width:4px;}
 .fox-alert.sm>div::after,.fox-alert.sm>p::after{left:-5px;border-top-width:3px;border-bottom-width:3px;}
+/* ===== 箱を持たない一言（.fox-say） =====
+   AIレポートのスライド下の「リーチが課題やな！」のように、吹き出しの枠を持たず
+   キツネ + テキストだけで喋っている形。中身の作りは画面ごとに違うので、
+   このクラスは「×を付ける目印」と、その置き場所だけを担当する。
+   ×は行の右端に絶対配置する。中に float すると中央寄せの一言が左へずれる。 */
+.fox-say{position:relative;}
+.fox-say>.x{position:absolute;top:50%;right:-4px;transform:translateY(-50%);float:none;margin:0;}
 
-/* 吹き出しの外に置く要素（右端のボタン・閉じるボタン）はキツネの顔の高さに揃える */
-.fox-alert>.sp,.fox-alert>.x{align-self:flex-start;margin-top:calc((var(--fox) - 28px) / 2);}
+/* .sm は行が詰まっているので、×も一回り小さくして掛かる行を1行に収める */
+.fox-alert.sm .x{width:22px;height:22px;margin:-2px -4px 0 6px;}
+.fox-alert.sm .x>svg{width:14px;height:14px;}
+
+/* 吹き出しの外に置く要素（右端のボタン）はキツネの顔の高さに揃える。
+   閉じるボタンは吹き出しの中に float で入るので、ここには含めない。 */
+.fox-alert>.sp{align-self:flex-start;margin-top:calc((var(--fox) - 28px) / 2);}
 
 /* ===== 狭い幅（SP、および細いカラムの中） =====
    右端のボタン（.sp）を本文と同じ行に置くと本文の幅を食う。広告カードの196pxの列に

@@ -228,11 +228,26 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .sent .srow .v{font-weight:var(--font-weight-body-strong);}
 
 @media(max-width:1100px){ .opts,.grid2,.grid3{grid-template-columns:1fr;} }
-/* SP: 4ステップを1行に並べると各53pxまで潰れて「相談を送 / る」と割れる。2×2に畳む。
-   番号バッジ1〜4で順番は読み取れるので、矢印は落として幅を本文に回す。 */
+/* SP: 4ステップを1行に並べると各53pxまで潰れて「相談を送 / る」と割れる。縦に積む。
+   番号バッジ1〜4で順番は読み取れるので、矢印は落として幅を本文に回す。
+
+   ⚠️ 2×2 にしていたが、1枠に要る幅は 番号24 + gap9 + 「OKしたら制作開始」112 = 145px。
+   2列が成立するのは 390px 幅（1枠147px）以上で、しかも余裕は2pxしかなかった。
+   375px 以下では長いステップだけラベルが2行に折れ、左右の高さが揃わずガタつく。
+   いちばん小さい端末（320px）でも崩れないよう1列にする。
+   1列なら1枠が幅いっぱい（320pxでも272px）取れるので、どのラベルも必ず1行に収まる。 */
 @media(max-width:430px){
-  .flow{display:grid;grid-template-columns:1fr 1fr;gap:14px 10px;padding:16px;}
+  .flow{display:grid;grid-template-columns:1fr;gap:12px;padding:16px;}
   .flow .ar{display:none;}
+
+  /* [注記][ボタン] の横並びは、390px でも注記が166pxしか取れず2行に折れて
+     右のボタンと高さが揃わない。縦に積む。
+     並べる順は「押すもの（ボタン）が上、その補足（注記）が下」。
+     .sp は button を包む span なので、span とボタンの両方を幅いっぱいにする。 */
+  .navrow{flex-direction:column;align-items:stretch;gap:8px;}
+  .navrow .sp{order:-1;margin-left:0;}
+  .navrow .sp>button,.navrow .sp>a{width:100%;justify-content:center;}
+  .navrow .n{text-align:center;}
 }
 /* ===== シェル：ヘッダーとサイドバーを角丸のカードにする =====
    全面ベタ（角丸0・隙間0）だと面が窓枠に貼り付いて古く見える。
@@ -251,9 +266,11 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 /* ===== サイドバーの文字を白に =====
    地の #fe7235 に白は 2.74 で、15px の本文には足りない。
    文字を白にすると決めた以上、地の側を下げてコントラストを作る。
-   ベタで暗くすると濁るので、上を鮮やかなまま残す縦グラデーションにして
-   「明るいオレンジ」の印象を保ちながら 4.5 を満たす。 */
-.sb{background:linear-gradient(180deg,#fe7235 0%,#e85513 55%,#d54101 100%);}
+   以前は縦グラデーション（#fe7235→#e85513→#d54101）で「上は鮮やかなまま」を
+   残していたが、SPではサイドバーが高さ60pxの帯になるため、180度の階調が
+   その中に圧縮されて帯状のムラに見え、古く見える原因になっていた（2026-08-28）。
+   ベタの primary-deep(#d54101) に統一。白文字で 4.58 なので本文でも AA を満たす。 */
+.sb{background:var(--color-primary-deep);}
 .sb .logo{filter:brightness(0) invert(1);opacity:.96;}
 .sb .ni{color:rgba(255,255,255,.88);}
 .sb .ni .ti{color:rgba(255,255,255,.88);}
@@ -671,4 +688,5 @@ function send(m){
 }
 </script>
 <script src="./tour.js"></script>
+<script src="./fox-alert.js"></script>
 </body></html>

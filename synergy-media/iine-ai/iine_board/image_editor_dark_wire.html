@@ -597,10 +597,14 @@ table.tbledit.noborder td.cell{border-right-color:rgba(255,255,255,.05);border-b
     flex-direction:row !important;
     gap:2px !important;
   }
+  /* ⚠️ width:56px を固定すると、70px要る「フィルター」「プレビュー」等のラベルが
+     箱から出て隣のツールのラベルと重なる（2026-08-28）。
+     56pxは下限として残し、幅は中身に合わせる。行は .tools が横スクロールする。 */
   .tool{
-    width:56px !important;
+    min-width:56px !important;
+    width:auto !important;
     height:auto !important;
-    padding:8px 0 !important;
+    padding:8px !important;
     flex-shrink:0;
   }
   /* Center canvas: full width */
@@ -649,6 +653,24 @@ table.tbledit.noborder td.cell{border-right-color:rgba(255,255,255,.05);border-b
   .tmpl-dd{width:220px;}
   .tmpl-dd-item{padding:8px 10px;}
   .tmpl-dd-item .tmpl-thumb{width:30px;height:30px;font-size:14px;}
+}
+
+/* ===== エディタのSP（2026-08-28） =====
+   .tools は overflow-x:auto なのに .tool が既定の flex-shrink で56pxまで潰され、
+   「フィルター」「プレビュー」など70px要るラベルが箱からはみ出して
+   隣のツールのラベルと重なっていた。各ツールは潰さず、行ごと横スクロールさせる。 */
+@media (max-width:430px){
+  .tools{overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none;}
+  .tools::-webkit-scrollbar{display:none;}
+  .tools .tool{flex:none;}
+}
+
+/* 台本トグルは [アイコン][アイコン][1/4枚目][タップで開く] を nowrap で並べていて、
+   350pxの枠に見出し「この画像の台本」を足すと入らず文字が切れていた。
+   「タップで開く」は操作の説明で、開けば消える補助文。狭い端末では落とす。 */
+@media (max-width:430px){
+  .script-toggle{min-width:0;}
+  .script-toggle .script-hint{display:none;}
 }
 </style></head><body>
 <div class="app">
