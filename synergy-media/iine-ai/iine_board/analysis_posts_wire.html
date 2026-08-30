@@ -49,6 +49,8 @@
 .ti-chevron-right:before{content:"\ea61"}
 .ti-dots-vertical:before{content:"\ea94"}
 .ti-download:before{content:"\ea96"}
+/* 出力ダイアログの閉じるで使う。字形は他ワイヤーの宣言から写した */
+.ti-x:before{content:"\eb55"}
 .ti-external-link:before{content:"\ea99"}
 .ti-list-check:before{content:"\eb6a"}
 .ti-message-circle:before{content:"\eaed"}
@@ -453,10 +455,104 @@ body { font-family: Inter, 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif
 .sheet-thumb-item .thumb-icon { font-size: 18px; color: rgba(255,255,255,.85); }
 
 /* ── Sheet analysis section ── */
+/* ===== 出力ダイアログ =====
+   面・マスク・行の寸法は settings_wire / analysis_report と同じ（画面ごとに作らない）。
+   選択肢は3つとも「選んだら実行」なので、フッターの実行ボタンは置かない。 */
+.dlgov{position:fixed;inset:0;background:rgba(42,40,38,.45);z-index:200;display:none;align-items:center;justify-content:center;padding:20px;}
+.dlgov.on{display:flex;}
+.dlg{width:min(520px,100%);max-height:calc(100vh - 40px);display:flex;flex-direction:column;
+  background:var(--color-card);border-radius:var(--radius-lg);box-shadow:0 8px 24px rgb(0 0 0 / 0.12);overflow:hidden;}
+.dlg .h{flex:none;display:flex;align-items:center;gap:9px;padding:16px 20px;border-bottom:1px solid var(--color-border);font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);}
+.dlg .h > i{font-size:20px;color:var(--color-primary);}
+.dlg .h .x{margin-left:auto;width:30px;height:30px;border:1px solid var(--color-border);background:none;border-radius:var(--radius-sm);cursor:pointer;color:var(--color-muted-foreground);font-size:15px;display:flex;align-items:center;justify-content:center;}
+.dlg .b{padding:18px 20px;overflow-y:auto;}
+.out-scope{font-size:var(--text-label);color:var(--color-muted-foreground);margin-bottom:11px;}
+.out-scope b{color:var(--color-foreground);}
+.out-list{display:flex;flex-direction:column;gap:9px;}
+.out-row{display:flex;align-items:center;gap:13px;width:100%;text-align:left;font-family:inherit;
+  padding:13px 15px;background:var(--color-card);border:1px solid var(--color-border-strong);
+  border-radius:var(--radius-md);cursor:pointer;}
+.out-row:hover{border-color:var(--color-primary);background:var(--color-primary-subtle);}
+.out-row .out-ic{width:44px;height:44px;flex:none;border-radius:var(--radius-md);display:flex;
+  align-items:center;justify-content:center;font-size:20px;
+  color:var(--color-primary);background:var(--color-primary-subtle);}
+.out-row .tx{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;}
+.out-row .out-t{font-size:var(--text-body);font-weight:var(--font-weight-body-strong);color:var(--color-foreground);}
+.out-row .out-d{font-size:var(--text-label);line-height:1.7;color:var(--color-muted-foreground);}
+.out-row .out-meta{flex:none;padding:2px 9px;border-radius:var(--radius-full);
+  font-size:var(--text-label);font-weight:var(--font-weight-body-strong);
+  color:var(--color-foreground);background:var(--color-surface);border:1px solid var(--color-border);}
+/* 狭い幅では形式を次の行へ。.tx に幅を持たせないと折り返さず、説明文が数文字の柱になる */
+@media(max-width:520px){
+  .out-row{align-items:flex-start;flex-wrap:wrap;}
+  .out-row .tx{flex:1 1 calc(100% - 57px);}
+  .out-row .out-meta{margin-left:57px;}
+}
+
 .sheet-analysis { border: 1.5px solid var(--color-border); border-radius: var(--radius-lg); background: var(--color-card); }
 .sheet-analysis-hd { display: flex; align-items: center; gap: 8px; padding: 14px 16px; border-bottom: 1px solid var(--color-border); background: var(--color-surface); }
 .sheet-analysis-hd .ti { font-size: 18px; color: var(--color-primary); }
 .sheet-analysis-hd span { font-size: var(--text-body); font-weight: var(--font-weight-body-strong); }
+/* 出力はタブに混ぜずボタン。読むものではなく操作なので（analysis_report と同じ扱い） */
+.sheet-analysis-hd .an-out { margin-left: auto; display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px; font-family: inherit; font-size: var(--text-label);
+  font-weight: var(--font-weight-body-strong); color: var(--color-foreground);
+  background: var(--color-card); border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-md); cursor: pointer; }
+.sheet-analysis-hd .an-out:hover { border-color: var(--color-primary); color: var(--color-primary); }
+.sheet-analysis-hd .an-out .ti { font-size: 14px; color: inherit; }
+
+/* 3つの切替。上のサブタブ（.sub-tab の丸ピル）とは階層が違うので、
+   カードの中では下線タブにして「この箱の中の切替」だと分かるようにする */
+.an-tabs { display: flex; gap: 0; border-bottom: 1px solid var(--color-border); padding: 0 8px; }
+.an-tab { padding: 11px 14px; font-family: inherit; font-size: var(--text-label);
+  font-weight: var(--font-weight-body-strong); color: var(--color-muted-foreground);
+  background: none; border: none; border-bottom: 2px solid transparent; margin-bottom: -1px; cursor: pointer; }
+.an-tab:hover { color: var(--color-foreground); }
+.an-tab.on { color: var(--color-primary); border-bottom-color: var(--color-primary); }
+.an-pane { display: none; padding: 14px 16px; }
+.an-pane.on { display: block; }
+.an-none { font-size: var(--text-body); color: var(--color-muted-foreground); }
+/* 分析概要の中身。余白は .an-pane が持つので、ここは並べるだけ */
+.an-ov { display: flex; flex-direction: column; gap: 9px; }
+
+/* 改善点。旧UIは番号付きの長文が縦に積まれていたので、
+   番号 / 見出し / 差分 / 説明 の4段に割って、目が拾う順番を作る */
+.im { display: flex; gap: 11px; padding: 11px 0; }
+.im + .im { border-top: 1px solid var(--color-border); }
+.im-n { width: 22px; height: 22px; flex: none; margin-top: 1px; border-radius: var(--radius-full);
+  display: flex; align-items: center; justify-content: center;
+  font-size: var(--text-meta); font-weight: var(--font-weight-body-strong);
+  color: var(--color-on-primary); background: var(--color-primary); }
+.im-tx { flex: 1; min-width: 0; }
+.im-t { font-size: var(--text-body); font-weight: var(--font-weight-body-strong); }
+/* 「いま → こうする」。文で書くと読み飛ばされるので、差分だけ抜いてチップにする */
+.im-diff { display: inline-flex; align-items: center; gap: 7px; margin-top: 6px; padding: 4px 10px;
+  background: var(--color-surface); border: 1px solid var(--color-border); border-radius: var(--radius-full);
+  font-size: var(--text-label); color: var(--color-muted-foreground); }
+.im-diff b { font-weight: var(--font-weight-body-strong); color: var(--color-foreground); }
+.im-diff b.to { color: var(--color-primary); }
+.im-diff .ti { font-size: 13px; }
+.im-d { font-size: var(--text-label); color: var(--color-muted-foreground); line-height: 1.8; margin-top: 5px; }
+
+/* コンテンツ。中身の内訳を数字で出す。文章はキャプションの実物だけ */
+/* シートは幅400px前後の細いパネル。20pxの数字で4列にすると1マス85pxになり、
+   「フィード」が2行に折れる。2列×2段にして1マス185pxを確保する。 */
+.cn-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+.cn { background: var(--color-surface); border: 1px solid var(--color-border);
+  border-radius: var(--radius-md); padding: 10px 11px; }
+/* 数字は一回り大きく（2026-08-30 陽菜指摘）。
+   ⚠️ このファイルには `--text-body-lg` の定義が無く、指定しても効かずに継承の14pxで出ていた。
+   定義済みの --text-h2（20px）を使う。他の --text-body-lg 使用箇所は前からある分なので触らない
+   （ここでトークンを定義すると、キャプション・日付ドロップダウン・もっと見るまで一斉に太る）。 */
+.cn-v { font-size: var(--text-h2); font-weight: var(--font-weight-h1); color: var(--color-primary); line-height: 1.3; }
+.cn-v small { font-size: var(--text-meta); font-weight: var(--font-weight-body-strong); margin-left: 1px; }
+.cn-k { font-size: var(--text-meta); color: var(--color-muted-foreground); margin-top: 2px; }
+.cn-cap { margin-top: 12px; padding: 12px 13px; background: var(--color-surface);
+  border: 1px solid var(--color-border); border-radius: var(--radius-md);
+  font-size: var(--text-label); color: var(--color-muted-foreground); line-height: 1.9;
+  max-height: 190px; overflow-y: auto; }
+
 .sheet-analysis-list { padding: 12px 16px; display: flex; flex-direction: column; gap: 8px; }
 .sheet-analysis-item { display: flex; align-items: flex-start; gap: 8px; font-size: var(--text-body); line-height: 1.5; }
 .sa-badge { font-size: var(--text-label); font-weight: var(--font-weight-body-strong); border-radius: var(--radius-full); padding: 2px 10px; white-space: nowrap; flex: none; }
@@ -1258,6 +1354,10 @@ var posts = {
     caption: '看板犬ロンと過ごす午後のひととき。テラス席でまったりコーヒータイム。\n\nうちの看板犬ロン（ゴールデンレトリバー・5歳）は人懐っこくてお客さまに大人気。今日もテラス席でお昼寝しながらお客さまをお出迎えしていました。\n\n犬カフェRioでは、看板犬とふれあいながらゆっくりコーヒーを楽しめます。\n\n#犬カフェ #ゴールデンレトリバー #犬カフェRio #テラス席 #看板犬',
     reach: 127, impressions: 203, likes: 8, comments: 2, saves: 5, reachPct: 100, shares: 3, profileVisits: 14,
     fox: 'happy', insight: '犬の写真はリーチが一番伸びます。この路線を続けましょう！',
+    improve: [
+      { t: 'ハッシュタグを増やす', from: '5個', to: '12〜15個', d: '検索から見つけてもらえる数が増えます。犬種名とお店の名前を混ぜるのがコツです。' },
+      { t: '本文の最後に一言そえる', d: '「みなさんのわんちゃんの好きな場所は？」のように問いかけると、コメントが付きやすくなります。' }
+    ],
     analysis: [
       { label: '好調', color: 'success', text: 'リーチが今月平均の5倍' },
       { label: '好調', color: 'success', text: '保存率が高く、後で見返されている' },
@@ -1272,6 +1372,10 @@ var posts = {
     caption: '懐かしい！昭和のテレビから聞こえてきた、あの音♪\n\nテレビ放送の開始・終了時に流れたカラーバーのテストパターン、今見ると何だかエモいですよね。\n\nこの動画では昭和のテレビ文化を振り返りながら、今と昔の放送技術の違いを紹介しています。\n\n#昭和レトロ #テレビ #懐かしい #カラーバー',
     reach: 52, impressions: 80, likes: 2, comments: 1, saves: 0, reachPct: 41, shares: 1, profileVisits: 5,
     fox: null, insight: null,
+    improve: [
+      { t: '最初の3秒を変える', d: '動画の頭に結論か動きを置くと、途中で離れる人が減ります。いまは説明から始まっています。' },
+      { t: '保存したくなる一言を足す', from: '保存 0件', to: '目標 3件', d: '「あとで見返せるように保存してね」の一言で保存が増えます。' }
+    ],
     analysis: [
       { label: 'まずまず', color: 'info', text: 'リーチは平均的。動画の長さが適切' },
       { label: '提案', color: 'warning', text: '最初の3秒にインパクトを入れると離脱が減る' }
@@ -1287,6 +1391,10 @@ var posts = {
     caption: 'グランピング×犬カフェの新メニュー！ 手ぶらBBQセットが登場しました。\n\n食材・器具・セッティングすべて込みで、手ぶらで来てOK。ワンちゃん連れでも安心のスペースを用意しています。\n\nご予約はプロフィールのリンクから。\n\n#グランピング #犬カフェRio #BBQ #手ぶらBBQ #犬連れ',
     reach: 35, impressions: 55, likes: 1, comments: 0, saves: 1, reachPct: 28, shares: 0, profileVisits: 3,
     fox: null, insight: null,
+    improve: [
+      { t: '出す時間を変える', from: '土 18:30', to: '水 14:00', d: 'このアカウントは水曜14時が一番反応が高い時間帯です。' },
+      { t: '写真を増やす', from: '2枚', to: '4〜6枚', d: '料理は寄りと引きの両方があると、伝わり方が変わります。' }
+    ],
     analysis: [
       { label: '普通', color: 'info', text: 'リーチは平均的。写真のクオリティは良い' },
       { label: '提案', color: 'warning', text: '投稿時間を14時台に変えるとリーチが伸びやすい' }
@@ -1301,6 +1409,10 @@ var posts = {
     caption: '今日のお客さまワンちゃん特集！\n\nチワワのモカちゃん、初来店でしたがすぐに看板犬ロンと仲良しになりました。小さい体で元気いっぱい走り回る姿がかわいすぎました。\n\nまた遊びに来てね！\n\n#犬カフェ #チワワ #犬カフェRio #お客さまワンちゃん',
     reach: 22, impressions: 38, likes: 1, comments: 0, saves: 0, reachPct: 17, shares: 0, profileVisits: 1,
     fox: null, insight: null,
+    improve: [
+      { t: '1枚目を寄りにする', d: '小さく写っていると、一覧で目に留まりません。顔が分かる大きさまで寄せてください。' },
+      { t: 'ハッシュタグを増やす', from: '3個', to: '10個以上', d: '犬種名を入れると、その犬種を好きな人に届きやすくなります。' }
+    ],
     analysis: [
       { label: '低調', color: 'warning', text: 'リーチが平均以下。写真枚数が少ない' },
       { label: '提案', color: 'info', text: '犬の写真を1枚目に入れると反応が上がりやすい' }
@@ -1314,6 +1426,10 @@ var posts = {
     caption: 'お知らせ：7月の営業時間が変わります。\n\n月〜金 10:00-18:00\n土日祝 9:00-19:00\n\nになります。ご来店お待ちしております。',
     reach: 1, impressions: 3, likes: 0, comments: 0, saves: 0, reachPct: 1, shares: 0, profileVisits: 0,
     fox: 'sad', insight: '写真なしの投稿はほぼ見てもらえません。写真を付けてみましょう',
+    improve: [
+      { t: '写真を1枚つける', from: '文字だけ', to: '店内写真1枚', d: 'お知らせでも写真があるだけで、届く人数が10倍以上変わります。' },
+      { t: '変わる前と後を並べる', d: '「いままで 10:00-18:00 → これから 9:00-19:00」の形にすると、ひと目で分かります。' }
+    ],
     analysis: [
       { label: '要改善', color: 'destructive', text: 'リーチがほぼゼロ。写真がないことが原因' },
       { label: '提案', color: 'info', text: 'お知らせでも店内写真を添えるだけで10倍以上に' }
@@ -1397,18 +1513,58 @@ function openSheet(id) {
       ssm('プロフィール率',      profRate.toFixed(1),  '%',  judge(profRate, 5, 2),      '目安 2%以上') +
       '</div>';
   }
-  // Build analysis HTML
+  /* ===== AI分析（改善点 / 分析概要 / コンテンツ）=====
+     旧UI（投稿データの右下）にあった4つ組 改善点 / 分析概要 / コンテンツ / 出力 を、
+     この投稿詳細シートの中に入れる（2026-08-30 陽菜依頼）。
+     旧版は番号付きの長文が縦に積まれた文章の壁だったので、そのまま移さず作り直す。
+       改善点   … 次にやること。番号 + 見出し + 「いま → こうする」の差分チップ
+       分析概要 … この投稿がどうだったか。バッジ + 一文（既存の analysis をそのまま使う）
+       コンテンツ… 中身の内訳。形式・枚数・本文の文字数・ハッシュタグ数を数字で出す
+     出力はタブに混ぜずボタン（analysis_report と同じ扱い。読むものではなく操作なので）。 */
   var analysisHtml = '';
-  var analysisItems = p.analysis || [];
-  if (analysisItems.length) {
+  var improve = p.improve || [];
+  var overview = p.analysis || [];
+  if (improve.length || overview.length) {
+    /* コンテンツ側は本文から数える。データを二重に持つと、文面を直したときにずれる */
+    var cap  = p.caption || '';
+    var tags = (cap.match(/#[^\s#]+/g) || []).length;
+    var body = cap.replace(/#[^\s#]+/g, '').replace(/\s+/g, '').length;
+
+    var impHtml = improve.map(function(it, i){
+      var diff = it.from ? '<span class="im-diff"><b>' + it.from + '</b><i class="ti ti-arrow-right"></i><b class="to">' + it.to + '</b></span>' : '';
+      return '<div class="im"><span class="im-n">' + (i + 1) + '</span>' +
+             '<div class="im-tx"><div class="im-t">' + it.t + '</div>' + diff +
+             '<div class="im-d">' + it.d + '</div></div></div>';
+    }).join('');
+
+    var ovHtml = overview.map(function(a){
+      return '<div class="sheet-analysis-item"><span class="sa-badge ' + a.color + '">' + a.label + '</span><span>' + a.text + '</span></div>';
+    }).join('');
+
+    var cnHtml =
+      '<div class="cn-grid">' +
+        '<div class="cn"><div class="cn-v">' + p.type + '</div><div class="cn-k">形式</div></div>' +
+        '<div class="cn"><div class="cn-v">' + (p.images || []).length + '<small>枚</small></div><div class="cn-k">画像</div></div>' +
+        '<div class="cn"><div class="cn-v">' + body + '<small>字</small></div><div class="cn-k">本文</div></div>' +
+        '<div class="cn"><div class="cn-v">' + tags + '<small>個</small></div><div class="cn-k">ハッシュタグ</div></div>' +
+      '</div>' +
+      '<div class="cn-cap">' + cap.replace(/\n+/g, '<br>') + '</div>';
+
     analysisHtml = '<div class="sheet-analysis">' +
-      '<div class="sheet-analysis-hd"><i class="ti ti-chart-line"></i><span>AI分析</span></div>' +
-      '<div class="sheet-analysis-list">';
-    analysisItems.forEach(function(a) {
-      analysisHtml += '<div class="sheet-analysis-item"><span class="sa-badge ' + a.color + '">' + a.label + '</span><span>' + a.text + '</span></div>';
-    });
-    // アカウントレポートへは飛ばさない。投稿ごとの概要・改善点はこの中で完結させる。
-    analysisHtml += '</div></div>';
+      '<div class="sheet-analysis-hd"><i class="ti ti-chart-line"></i><span>AI分析</span>' +
+        '<button class="an-out" onclick="openOut()"><i class="ti ti-download"></i>出力</button></div>' +
+      '<div class="an-tabs">' +
+        '<button class="an-tab on" onclick="anTab(this,0)">改善点</button>' +
+        '<button class="an-tab" onclick="anTab(this,1)">分析概要</button>' +
+        '<button class="an-tab" onclick="anTab(this,2)">コンテンツ</button>' +
+      '</div>' +
+      '<div class="an-pane on">' + (impHtml || '<div class="an-none">直すところは見つかりませんでした。</div>') + '</div>' +
+      /* ⚠️ ここに .sheet-analysis-list を直接付けない。
+         そちらの display:flex が .an-pane{display:none} に後勝ちして、
+         切り替えても分析概要が出しっぱなしになる。中に入れ子で置く。 */
+      '<div class="an-pane"><div class="an-ov">' + ovHtml + '</div></div>' +
+      '<div class="an-pane">' + cnHtml + '</div>' +
+      '</div>';
   }
   // 画像は1枚だけ。カルーセルのサムネイルは出さない
   var imgs = p.images || [];
@@ -1482,7 +1638,70 @@ document.querySelectorAll('.sort-btn').forEach(function(btn) {
     toast.info(labels[btn.dataset.sort] + 'で並び替えました');
   });
 });
+
+/* ===== AI分析の3つ切替 =====
+   シートは開くたびに innerHTML ごと作り直すので、状態はDOMだけで持つ（変数に覚えない）。 */
+function anTab(el, n){
+  var box = el.closest('.sheet-analysis');
+  box.querySelectorAll('.an-tab').forEach(function(t){ t.classList.remove('on'); });
+  el.classList.add('on');
+  box.querySelectorAll('.an-pane').forEach(function(p, i){ p.classList.toggle('on', i === n); });
+}
+
+/* ===== 出力ダイアログ =====
+   3つから1つ選ぶので alertDialog（sonner）は使えない（実行ボタンが1つしかない）。
+   settings_wire / analysis_report と同じ .dlgov / .dlg の形を持ってくる。
+   出すのは**開いている投稿**なので、日付を出して取り違えを防ぐ。 */
+function openOut(){
+  var d = document.querySelector('#sheetInner .sheet-date');
+  document.getElementById('outWhat').textContent = d ? d.textContent : 'この投稿';
+  document.getElementById('dlgOut').classList.add('on');
+}
+function closeOut(){ document.getElementById('dlgOut').classList.remove('on'); }
+function bgCloseOut(e){ if(e.target.id === 'dlgOut') closeOut(); }
+document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeOut(); });
+function outPick(kind){
+  closeOut();
+  if(window.toast) toast.success(kind + 'で出しました');
+}
 </script>
+
+<!-- ===== 出力ダイアログ ===== -->
+<div class="dlgov" id="dlgOut" onclick="bgCloseOut(event)">
+  <div class="dlg">
+    <div class="h"><i class="ti ti-download"></i>出力
+      <button class="x" onclick="closeOut()" aria-label="閉じる"><i class="ti ti-x"></i></button></div>
+    <div class="b">
+      <div class="out-scope"><b id="outWhat">この投稿</b> の分析を出します</div>
+      <div class="out-list">
+        <button class="out-row" onclick="outPick('画像')">
+          <span class="out-ic"><i class="ti ti-photo"></i></span>
+          <span class="tx">
+            <span class="out-t">画像で保存</span>
+            <span class="out-d">数値と改善点を1枚のPNGにします。そのまま共有できます。</span>
+          </span>
+          <span class="out-meta">PNG / 1枚</span>
+        </button>
+        <button class="out-row" onclick="outPick('PDF')">
+          <span class="out-ic"><i class="ti ti-file-text"></i></span>
+          <span class="tx">
+            <span class="out-t">PDFでまとめる</span>
+            <span class="out-d">3つとも1つのPDFに。印刷や、社内で回すときはこちら。</span>
+          </span>
+          <span class="out-meta">PDF / 1ファイル</span>
+        </button>
+        <button class="out-row" onclick="outPick('テキスト')">
+          <span class="out-ic"><i class="ti ti-clipboard-list"></i></span>
+          <span class="tx">
+            <span class="out-t">テキストでコピー</span>
+            <span class="out-d">改善点を文章のままコピーします。メールやチャットに貼れます。</span>
+          </span>
+          <span class="out-meta">クリップボード</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script src="./tour.js">
 /* 今月のまとめの指標グループ切替（SPのみ意味を持つ）。
