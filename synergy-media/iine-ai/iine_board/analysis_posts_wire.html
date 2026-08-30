@@ -314,10 +314,21 @@ body { font-family: Inter, 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif
 /* ── Post insight (fox comment) ── */
 
 /* ── Quick stats (always visible) ── */
-.post-quick-stats { display: flex; align-items: center; gap: 16px; }
-.qs { display: inline-flex; align-items: center; gap: 5px; font-size: var(--text-body); color: var(--color-muted-foreground); }
-.qs strong { color: var(--color-foreground); font-size: 18px; font-weight: var(--font-weight-h2); }
-.qs .ti { font-size: 16px; }
+.post-quick-stats { display: flex; align-items: flex-start; flex-wrap: wrap; gap: 8px 30px; }
+/* 投稿カードの数値。もとは表示・いいね・コメントの3つだけで、
+   陽菜指摘（2026-08-30）「プロフィール率・シェア数・インタラクション・リーチしたアカウント数が
+   抜けてます。全体ではなくて各投稿です」を受けて一度8つ全部を並べたが、
+   「この見えパターンもなんかギツギツすぎない？」となったので**主役3つに絞った**。
+
+   一覧は**見比べる場所**、詳細シートは**詳しく見る場所**、という切り分け。
+   いいね / コメント / 保存 / シェア / 表示 は押した先のシートで見る（そちらには8つとも並ぶ）。
+   残す3つは、届いた数（リーチ）・反応の合計・フォローの入口（プロフィール率）。
+   見た目は詳細シートの .smm と揃える（同じ数字が画面ごとに違う顔をしないように）。 */
+.qs { display: inline-flex; flex-direction: column; align-items: flex-start; gap: 1px; font-size: var(--text-body); color: var(--color-muted-foreground); }
+.qs strong { color: var(--color-primary); font-size: 21px; font-weight: var(--font-weight-h1); line-height: 1.2; }
+.qs strong small { font-size: var(--text-label); font-weight: var(--font-weight-body-strong); margin-left: 2px; }
+.qs .k { display: inline-flex; align-items: center; gap: 5px; font-size: var(--text-label); color: var(--color-muted-foreground); }
+.qs .ti { font-size: 14px; }
 
 /* ── Sheet overlay ── */
 .sheet-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 9999; opacity: 0; pointer-events: none; transition: opacity .25s ease; }
@@ -339,15 +350,45 @@ body { font-family: Inter, 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif
       background: var(--color-border); border-radius: var(--radius-md); overflow: hidden;
       /* .sheet-inner が縦フレックス。指定しないと flex-shrink で高さ0まで潰れる */
       flex: none; }
-.sheet-metrics .spm { background: var(--color-background); text-align: center; padding: 12px 6px; }
-    /* 7指標だと最後の行が1つ余る。空セルを置いて枠の色が透けないようにする */
-    .sheet-metrics .spm.empty { background: var(--color-background); }
-.sheet-metrics .spm:last-child { border-right: none; }
-.sheet-metrics .spm-val { font-size: 20px; font-weight: var(--font-weight-h1); line-height: 1.2; }
-.sheet-metrics .spm-val.hi { color: var(--color-primary); }
-.sheet-metrics .spm-lbl { font-size: var(--text-body); color: var(--color-muted-foreground); margin-top: 4px; }
-/* 何の数字かをアイコンでも示す（色だけ・文字だけに頼らない） */
-.sheet-metrics .spm-ic { display: block; font-size: 16px; line-height: 1; color: var(--color-muted-foreground); margin-bottom: 5px; }
+/* ===== 詳細シートの指標（2026-08-30 作り直し）=====
+   7つを同じ大きさ・同じ色で4列に並べていたため、どれが主役か分からず
+   「リーチしたアカウント数」「インタラクション」だけ2行に折れて形も崩れていた。
+   最後の1マスが空くのを空セルで埋めてもいた。陽菜「もっとメリハリ欲しいかな」。
+
+   直し方は3つ。
+     1. **全体タブと同じ語彙で2組に分ける**（見られた / 反応された）。
+        画面の上下で言い方が変わらないので、同じ数字だと分かる。
+     2. **大きさで差を付ける**。見られた=大 / 反応の合計=中 / 内訳=小。
+     3. **メリハリは大きさと組で作る**（色ではなく）。
+        数字はオレンジ（2026-08-30 陽菜「数字はオレンジの方が良かったかも」）。
+        もとから `.spm-val.hi` でオレンジにしていた（ただし今月のベストの1件だけ）ので、
+        この画面では既存の見た目に合わせて全件オレンジにする。
+        以前オレンジが問題だったのは「7つが同じ大きさで全部オレンジ」だったからで、
+        大きさが3段に分かれた今は色が揃っていても主役は埋もれない。
+   インタラクションは いいね+コメント+保存+シェア の合計なので、内訳の上に置くと計算が見える。 */
+.sheet-metrics { display: block !important; background: none; border-radius: 0; overflow: visible; flex: none; }
+.smg { background: var(--color-background); border-radius: var(--radius-md); padding: 13px 15px; }
+.smg + .smg { margin-top: 8px; }
+.smg-hd { display: flex; align-items: baseline; gap: 10px; font-size: var(--text-meta);
+  font-weight: var(--font-weight-body-strong); color: var(--color-muted-foreground); letter-spacing: .06em; }
+.smg-sum { margin-left: auto; font-size: var(--text-meta); color: var(--color-muted-foreground); }
+.smg-sum b { font-size: 21px; font-weight: var(--font-weight-h1); color: var(--color-primary);
+  margin-right: 6px; letter-spacing: 0; }
+
+/* 見られた。この投稿の主役なので一番大きく出す */
+.smg-main { display: flex; gap: 26px; margin-top: 7px; }
+.smm .v { font-size: 28px; font-weight: var(--font-weight-h1); line-height: 1.2; color: var(--color-primary); }
+.smm .v small { font-size: var(--text-label); font-weight: var(--font-weight-body-strong); margin-left: 2px; }
+.smm .k { display: flex; align-items: center; gap: 5px; font-size: var(--text-label);
+  color: var(--color-muted-foreground); margin-top: 2px; }
+.smm .k .ti { font-size: 14px; }
+
+/* 反応の内訳。合計の下にぶら下がるので、数字は本文サイズまで落とす */
+.smg-sub { display: flex; flex-wrap: wrap; gap: 7px 18px; margin-top: 9px; }
+.sms { display: inline-flex; align-items: center; gap: 5px; font-size: var(--text-label);
+  color: var(--color-muted-foreground); }
+.sms b { font-size: var(--text-body-lg); font-weight: var(--font-weight-body-strong); color: var(--color-primary); }
+.sms .ti { font-size: 14px; }
 
 /* ── 生の5指標から計算した数値。総合評価(🦊)の下に置く ── */
 /* 3列のタイルに縦積みしていたが、1枚 128px しかないのでラベルが折り返し、
@@ -1280,6 +1321,29 @@ var posts = {
   }
 };
 
+/* 一覧カードの数値を posts から描く。
+   もとは HTML に直書きで、しかも目のアイコンにリーチ(127)を入れていて、
+   詳細シート（目=表示203 / 人=リーチ127）と食い違っていた。
+   同じ元データから描けば、片方だけ直して数字がずれることがなくなる。 */
+function fillQuickStats(){
+  document.querySelectorAll('.post-card[data-post]').forEach(function(card){
+    var p = posts[card.dataset.post];
+    var box = card.querySelector('.post-quick-stats');
+    if(!p || !box) return;
+    var inter = p.likes + p.comments + p.saves + p.shares;
+    var prof  = p.reach > 0 ? ((p.profileVisits || 0) / p.reach * 100).toFixed(1) : null;
+    box.innerHTML = [
+      ['ti-users',      'リーチ',        p.reach, '人'],
+      ['ti-messages',   '反応',          inter,   '回'],
+      ['ti-chart-line', 'プロフィール率', (prof === null ? '—' : prof), (prof === null ? '' : '%')]
+    ].map(function(m){
+      return '<span class="qs"><strong>' + m[2] + '<small>' + m[3] + '</small></strong>' +
+             '<span class="k"><i class="ti ' + m[0] + '"></i>' + m[1] + '</span></span>';
+    }).join('');
+  });
+}
+fillQuickStats();
+
 // Sheet open/close
 var overlay = document.getElementById('sheetOverlay');
 var sheet = document.getElementById('sheet');
@@ -1295,12 +1359,14 @@ function openSheet(id) {
     var foxLabel = p.fox === 'sad' ? 'ADVICE' : 'GOOD';
     foxHtml = '<div class="fox-alert sm ' + foxVariant + '"><img src="' + foxImg + '" alt=""><div><span class="lb">' + foxLabel + '</span>' + p.insight + '</div></div>';
   }
-  var hiClass = id === '1' || id === 1 ? ' hi' : '';
-  // 指標セル（アイコン + 数値 + ラベル）
-  function spm(icon, val, label) {
-    return '<div class="spm"><i class="ti ' + icon + ' spm-ic"></i>' +
-           '<div class="spm-val' + hiClass + '">' + val + '</div>' +
-           '<div class="spm-lbl">' + label + '</div></div>';
+  /* 見られた側の大きい数字（リーチ・表示） */
+  function smm(icon, val, unit, label) {
+    return '<div class="smm"><div class="v">' + val + '<small>' + unit + '</small></div>' +
+           '<div class="k"><i class="ti ' + icon + '"></i>' + label + '</div></div>';
+  }
+  /* 反応された側の内訳（いいね・コメント・保存・シェア） */
+  function sms(icon, val, label) {
+    return '<span class="sms"><i class="ti ' + icon + '"></i><b>' + val + '</b>' + label + '</span>';
   }
   // 生の5指標から計算する数値。総合評価(🦊)の下に出す
   var subMetricsHtml = '';
@@ -1357,14 +1423,24 @@ function openSheet(id) {
       '<span class="sheet-date">' + p.date + '</span>' +
     '</div>' +
     '<div class="sheet-metrics">' +
-      spm('ti-users', p.reach, 'リーチしたアカウント数') +
-      spm('ti-eye', p.impressions, '表示') +
-      spm('ti-heart', p.likes, 'いいね') +
-      spm('ti-message-circle', p.comments, 'コメント') +
-      spm('ti-bookmark', p.saves, '保存') +
-      spm('ti-external-link', p.shares, 'シェア') +
-      spm('ti-messages', (p.likes + p.comments + p.saves + p.shares), 'インタラクション') +
-      '<div class="spm empty"></div>' +
+      '<div class="smg">' +
+        '<div class="smg-hd">見られた</div>' +
+        '<div class="smg-main">' +
+          smm('ti-users', p.reach, '人', 'リーチ') +
+          smm('ti-eye', p.impressions, '回', '表示') +
+        '</div>' +
+      '</div>' +
+      '<div class="smg">' +
+        '<div class="smg-hd">反応された' +
+          '<span class="smg-sum"><b>' + (p.likes + p.comments + p.saves + p.shares) + '</b>インタラクション</span>' +
+        '</div>' +
+        '<div class="smg-sub">' +
+          sms('ti-heart', p.likes, 'いいね') +
+          sms('ti-message-circle', p.comments, 'コメント') +
+          sms('ti-bookmark', p.saves, '保存') +
+          sms('ti-external-link', p.shares, 'シェア') +
+        '</div>' +
+      '</div>' +
     '</div>' +
     foxHtml +
     subMetricsHtml +

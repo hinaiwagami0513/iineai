@@ -27,6 +27,12 @@
 .ti-x:before{content:"\eb55"}
 .ti-alert-triangle:before{content:"\ea06"}
 .ti-refresh:before{content:"\eb13"}
+/* アカウント情報カードで使う。字形は他ワイヤーの宣言から写した（実物で描画確認済み） */
+.ti-chevron-right:before{content:"\ea61"}
+.ti-movie:before{content:"\eafa"}
+/* ti-eye は「1年間の表示回数」で前から使われているのに宣言が漏れていて、
+   空白の四角になっていた（2026-08-30 発見）。 */
+.ti-eye:before{content:"\ea9a"}
 .ti-trash:before{content:"\eb41"}
 .ti-pencil:before{content:"\eb04"}
 .ti-users:before{content:"\ebf2"}
@@ -77,6 +83,13 @@
   --color-on-destructive: #ffffff;
   --color-accent-purple: #9724ba;
   --color-accent-purple-subtle: #f5e7f8;
+  /* グラフは primary 起点のオレンジ単一色相ランプ（DESIGN.md「グラフの色」/ [[chart-single-hue-ramp]]）。
+     多い系列ほど濃い。意味色（success / warning）を系列色に流用しない。 */
+  --chart-1: #fe7235;
+  --chart-2: #fea735;
+  --chart-3: #febb6b;
+  --chart-4: #fdd0a0;
+  --chart-5: #fde4d6;
   --color-sns-instagram: #b02a78;
   --color-sns-instagram-subtle: #fce7f3;
   --color-sns-x: #2a2826;
@@ -216,6 +229,17 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .acchd .stat{flex:none;text-align:right;padding-left:20px;}
 .acchd .stat .k{display:block;font-size:var(--text-label);color:var(--color-muted-foreground);}
 .acchd .stat .v{display:block;font-size:var(--text-h3);font-weight:var(--font-weight-body-strong);margin-top:2px;}
+/* SPではアイコン(46px) + 名前 + 統計2つを1行に入れると .tx が潰れ、
+   @ハンドルが枠から46px溢れてフォロワー数の上に重なっていた（2026-08-30）。
+   1行目=アイコンと名前、2行目=統計に折る。統計は左揃えに戻す
+   （右寄せのまま折ると、名前の下でなく画面の右端にぶら下がって見える）。
+   ⚠️ このブロックは .acchd の基本ルールより**後ろ**に置くこと。@media は詳細度を上げないので、
+   前に置くと後ろの .acchd .tx{flex:1} に負けて flex-basis が 0% に戻る（実際そうなっていた）。 */
+@media(max-width:430px){
+  .acchd{flex-wrap:wrap;row-gap:12px;}
+  .acchd .tx{flex:1 1 calc(100% - 60px);}
+  .acchd .stat{padding-left:0;text-align:left;margin-right:28px;}
+}
 
 /* ===== ルールの見出し帯 =====
    投稿ルールはSNSごとに持てるが、実際はほとんどのSNSで同じ内容になる。
@@ -326,6 +350,14 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .dlg .h > i{font-size:20px;color:var(--color-primary);}
 .dlg .h .x{margin-left:auto;width:30px;height:30px;border:1px solid var(--color-border);background:none;border-radius:var(--radius-sm);cursor:pointer;color:var(--color-muted-foreground);font-size:15px;display:flex;align-items:center;justify-content:center;}
 .dlg .b{padding:18px 20px;}
+/* 招待ダイアログの権限。460px幅に3列だと1列150pxで説明文が縦に潰れるので1列に積む。
+   3つを上下に並べたほうが、できることの差を読み比べられる。
+   ⚠️ `.picks{grid-template-columns:repeat(3,1fr)}` はこれより後ろにあり、クラス1個どうしでは
+   後勝ちで負ける。id で詳細度を上げて確実に効かせる（.acchd で踏んだのと同じ罠）。 */
+#dlgInvite .picks{grid-template-columns:1fr;gap:9px;}
+#dlgInvite .pick{padding:12px 14px;}
+#dlgInvite .pick.on{padding:11px 13px;}
+#dlgInvite .pick .e{margin-top:3px;}
 .dlg .f{display:flex;gap:10px;padding:14px 20px;border-top:1px solid var(--color-border);background:var(--color-surface);}
 .dlg .f .sp{margin-left:auto;display:flex;gap:10px;}
 .goalpicks{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;}
@@ -561,6 +593,129 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .pj-eg{margin-top:11px;padding:12px 14px;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-md);}
 .pj-eg .k{font-size:var(--text-meta);color:var(--color-muted-foreground);font-weight:var(--font-weight-body-strong);margin-bottom:5px;}
 .pj-eg .v{font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.9;}
+/* ===== アカウント情報（AIがこのSNSアカウントをどう読み取ったか）=====
+   旧UIの「アカウント設定 > アカウント情報」は見出し11本・箇条書き100行超の文章の壁だった。
+   ここに入れるのは**AIの理解**だけ（どんなアカウントか / いまの状態 / 何を出しているか / 投稿のかたち）。
+   成績・改善案・目標は 分析（アカウントレポート・アカウントデータ・投稿レポート）の担当なので
+   持ち込まず、末尾のリンクで送る。同じ情報を2箇所に置かない。
+   読むだけで直せない。ズレていたら資料を足して「読み直す」を押す。 */
+
+/* 一言。ここは通知ではなく**カードの中身**なので、キツネアラートの箱にはしない
+   （DESIGN.md §Alert の3変種は据え置きの通知・注意・結果用）。地色も枠も持たせず、
+   キツネと大きい文字だけで「AIはこう見ている」を1行で言い切る。 */
+.ai-lead{display:flex;align-items:center;gap:14px;}
+.ai-lead > img{width:56px;height:56px;flex:none;object-fit:contain;}
+.ai-lead .tx{flex:1;min-width:0;}
+.ai-lead .t{font-size:var(--text-h3);font-weight:var(--font-weight-h3,700);line-height:1.5;}
+.ai-lead .d{font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.9;margin-top:5px;}
+/* 節の見出し。カード内に小見出しを何本も立てると旧UIの文章の壁に戻るので、
+   meta の1語だけにして、中身（数字・帯・ピル）に主役を渡す */
+.ai-h{font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);
+  color:var(--color-muted-foreground);letter-spacing:.06em;margin:22px 0 10px;}
+
+/* ===== 回っているかの目印 =====
+   「今どうなのか」を一目で言い切る。前に置いた成熟度バッジ（「育ちはじめ」）は
+   段階の定義が画面のどこにも無く「これは何？」になったので外した（2026-08-30）。
+   こちらは**ユーザー自身が決めた「1週間に出す本数の目標」が基準**なので、作り物の物差しにならない。
+
+   読めるようにするために3段重ねる。ヘルプマークを足さずに済ませるための作り。
+     1. 判定を文で言い切る（「いい調子で回っています」）
+     2. その根拠を1文で出す（「目標は週1本。直近8週のうち6週で出せています」）
+     3. 同じことを絵でも出す（8週ぶんのマス）
+   2が1の理由になっているので、3のマスが何を指すかは説明しなくても読める。
+
+   バナーを新しく作らない（DESIGN.md「.note のような自前バナーを増やさない」）ため、
+   キツネアラートの箱にも独自の色帯にもせず、**すぐ下の数値タイルと同じ面・同じ枠**で出す。
+   地を success-subtle にした版も作って見比べたが、状態色の帯はキツネアラートと見分けが付かず、
+   アラートを自作したことになる。アイコンの丸とマスの色だけで十分読めるので地は中立のままにした。
+   状態は色だけで表さない（アイコンと判定文が形を担う / [[state-color-plus-glyph]]）。
+   キツネを足さないのは、このカードの先頭にもう1匹いて2匹になるため。 */
+.ai-now{--now:var(--color-success);
+  display:flex;align-items:flex-start;gap:11px;margin-bottom:10px;padding:14px 16px;
+  background:var(--color-surface);border:1px solid var(--color-border);border-radius:var(--radius-md);}
+.ai-now.care{--now:var(--color-warning);}
+.ai-now > .ic{width:26px;height:26px;flex:none;margin-top:1px;border-radius:var(--radius-full);
+  display:flex;align-items:center;justify-content:center;font-size:15px;
+  color:#fff;background:var(--now);}
+.ai-now .tx{flex:1;min-width:0;}
+.ai-now .t{font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);line-height:1.5;}
+.ai-now .d{font-size:var(--text-label);color:var(--color-muted-foreground);line-height:1.8;margin-top:3px;}
+/* 8週ぶんのマス。出せた週が塗り、今週だけ枠で示す。
+   マスは押せないので枠・影・cursor を付けない（グラフ面と同じ扱い）。 */
+.ai-wks{display:flex;align-items:center;gap:5px;margin-top:10px;}
+.ai-wks > i{width:22px;height:10px;border-radius:var(--radius-full);background:var(--color-border-strong);}
+.ai-wks > i.on{background:var(--now);}
+.ai-wks > i.now{box-shadow:0 0 0 2px var(--color-surface),0 0 0 3px var(--now);}
+.ai-wks .lb{margin-left:6px;font-size:var(--text-meta);color:var(--color-muted-foreground);white-space:nowrap;}
+/* SPはマスを細くして「今週」を1行に収める（390pxで「今 / 週」に折れていた） */
+@media(max-width:430px){
+  .ai-wks{gap:4px;}
+  .ai-wks > i{width:16px;}
+}
+
+/* いまの状態。数値は読ませる主役なので h3、ラベルは label に落として対比を付ける */
+.ai-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;}
+.ai-stat{background:var(--color-surface);border:1px solid var(--color-border);
+  border-radius:var(--radius-md);padding:12px 14px;}
+.ai-stat .v{font-size:var(--text-h3);font-weight:var(--font-weight-body-strong);line-height:1.3;}
+.ai-stat .v small{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);margin-left:2px;}
+.ai-stat .k{font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:3px;}
+
+/* よく出しているもの。構成比バー + 名前直置き + 実数と割合の3つで読ませる
+   （[[chart-single-hue-ramp]]「色以外の手がかりを3つ持たせる」）。
+   系列は5を超えるとランプが破綻するので、上位4つ + その他 に畳む。
+   グラフ面には枠・影・cursor を付けない（押せないことを形で担保する）。 */
+.ai-band{display:flex;height:12px;border-radius:var(--radius-full);overflow:hidden;gap:2px;}
+.ai-band > i{display:block;height:100%;}
+/* 凡例は3列。全幅カードで2列にすると1行が530pxになり、名前と数字が離れて
+   どの行の値なのか目で追えなくなる（1列あたり340px前後に収める） */
+.ai-cats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px 18px;margin-top:12px;}
+@media(max-width:900px){ .ai-cats{grid-template-columns:repeat(2,minmax(0,1fr));} }
+/* min-width:0 が要る。グリッド項目の既定は min-width:auto で、
+   これだと .nm の nowrap が下限になって行が親より広がる（320pxで14px溢れていた） */
+.ai-cat{display:flex;align-items:center;gap:9px;padding:5px 0;font-size:var(--text-label);min-width:0;}
+.ai-cat .sw{width:10px;height:10px;flex:none;border-radius:var(--radius-full);}
+.ai-cat .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.ai-cat .pc{flex:none;font-weight:var(--font-weight-body-strong);}
+.ai-cat .ct{flex:none;width:44px;text-align:right;color:var(--color-muted-foreground);}
+
+/* 投稿のかたち。ここでもう1本バーを引くと帯グラフと形が被るので、
+   アイコン + 割合のピルにして読み分けさせる */
+.ai-forms{display:flex;gap:10px;flex-wrap:wrap;}
+.ai-form{flex:1;min-width:110px;display:flex;align-items:center;gap:10px;
+  background:var(--color-surface);border:1px solid var(--color-border);
+  border-radius:var(--radius-md);padding:11px 13px;}
+.ai-form .ic{width:30px;height:30px;flex:none;border-radius:var(--radius-sm);
+  display:flex;align-items:center;justify-content:center;font-size:16px;
+  color:var(--color-muted-foreground);background:var(--color-background);}
+.ai-form .v{font-size:var(--text-body-lg);font-weight:var(--font-weight-body-strong);line-height:1.3;}
+.ai-form .k{font-size:var(--text-meta);color:var(--color-muted-foreground);margin-top:1px;}
+
+/* 分析への送り。塗りはオレンジにしない（押せる合図はホバーの枠だけ / [[orange-only-interaction]]） */
+.ai-more{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+  margin-top:20px;padding:12px 16px;font-family:inherit;font-size:var(--text-body);
+  font-weight:var(--font-weight-label,500);color:var(--color-foreground);text-decoration:none;
+  background:var(--color-card);border:1px solid var(--color-border-strong);
+  border-radius:var(--radius-md);cursor:pointer;}
+.ai-more:hover{border-color:var(--color-primary);color:var(--color-primary);}
+
+@media(max-width:640px){
+  .ai-stats{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .ai-cats{grid-template-columns:1fr;}
+  .ai-lead > img{width:44px;height:44px;}
+  .ai-lead .t{font-size:var(--text-body-lg);}
+}
+/* SPの見出し行。他のカードは題が短い（「言葉づかい」）ので1行に収まるが、
+   ここは題 + 説明チップ + ボタンで、チップが3行に折れて潰れる。
+   ボタンを次の行へ落とし、アイコンぶん字下げして題にぶら下げる。
+   #pj-acct だけに効かせる（他カードの .pj-hd は今のままで収まっている）。 */
+@media(max-width:430px){
+  #pj-acct .pj-hd{flex-wrap:wrap;}
+  #pj-acct .pj-hd .tx{flex:1 1 calc(100% - 52px);}
+  /* 100% + margin だと margin ぶん溢れる。basis から引いておく */
+  #pj-acct .pj-hd .sp{flex-basis:calc(100% - 52px);margin-left:52px;}
+}
+
 .pj-form{display:none;}
 .pj.editing .pj-form{display:block;}
 .pj.editing .pj-view{display:none;}
@@ -1121,12 +1276,24 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
           <div class="stat"><span class="k">投稿した数</span><span class="v" id="accPosts">86</span></div>
         </div>
 
+        <!-- 「設定する」ものと「読むだけ」のものをタブで分ける（2026-08-30 陽菜指摘）。
+             アカウント情報を「投稿ルール」の見出しの下に積んでいたため、AIの読み取り結果が
+             ルールの1つに見えていた。旧UI（設定 > SNSアカウント）も ルール / アカウント情報 の
+             タブ構成だったので、その形に戻る。
+             既定は投稿ルール。ここは設定画面で、開く用は「決めごとを直す」ため。
+             状況を見に来る導線は 分析 が持っている（[[analysis-pages]]）。
+             部品は運用目的の .ptabs をそのまま使う（画面ごとにタブを自作しない）。 -->
+        <div class="ptabs">
+          <button class="on" id="stRule" onclick="setSTab('rule')">投稿ルール</button>
+          <button id="stInfo" onclick="setSTab('info')">アカウント情報</button>
+        </div>
+
+        <div class="ppane on" id="spRule">
         <!-- ルールはSNSごとに持てるが、実際はほとんど同じ内容になる。
-             1つ作ったら他へ写せる口をカードの手前に置く（同じことを4回入力させない） -->
+             1つ作ったら他へ写せる口をカードの手前に置く（同じことを4回入力させない）。
+             見出しの「投稿ルール」はタブが持つようになったので、ここは写す口だけ残す -->
         <div class="rulebar">
-          <div class="tx">
-            <div class="t">投稿ルール</div>
-          </div>
+          <div class="tx"></div>
           <span class="act">
             <button class="btn-o" aria-haspopup="true" aria-expanded="false" onclick="rowMenu(this)"><i class="ti ti-clipboard-list"></i>ほかのSNSから写す</button>
             <div class="rowmenu" role="menu" id="ruleCopyMenu"></div>
@@ -1400,10 +1567,104 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 
         </div>
         <!-- /.bento -->
+        </div>
+
+        <!-- 読むだけのタブ。設定するものと混ぜない -->
+        <div class="ppane" id="spInfo">
+        <!-- アカウント情報。他のカード（言葉づかい・推奨ワード…）は「こう書いてほしい」の指示で、
+             こちらは「AIは今こう読んでいる」の答え合わせ。指示より先に読ませたいので先頭・全幅に置く。
+             旧UIのこのページは見出し11本の文章の壁だったので、文を数字・帯・ピルに置き換えている。 -->
+        <!-- 見出しはタブが持つので、カードに「アカウント情報」を重ねて書かない。
+             使いどころと操作は、ルールタブの .rulebar と同じ形で上に出す -->
+        <div class="rulebar">
+          <div class="tx">
+            <span class="pj-use" style="margin-top:0"><i class="ti ti-sparkles"></i>AIが投稿文を作るときに使います</span>
+          </div>
+          <span class="act">
+            <button class="btn-o" onclick="acctReread(this)"><i class="ti ti-refresh"></i>読み直す</button>
+          </span>
+        </div>
+
+        <div class="pj" id="pj-acct">
+          <div class="pj-bd">
+
+            <div class="ai-lead">
+              <img src="./assets/iine-fox-happy.png" alt="">
+              <div class="tx">
+                <div class="t">わんちゃんと過ごす時間を見せる、コミュニティ型のアカウント</div>
+                <!-- 成熟度バッジ（「育ちはじめ」）は置かない（2026-08-30 陽菜判断）。
+                     段階の定義が無いうえ、隣の数値タイル（86件・月4件ペース）以上のことを言っておらず、
+                     ヘルプで説明しないと伝わらない。書き足すのではなく消す（DESIGN.md §Writing 原則4）。
+                     開設からの月数は事実なので、この説明文の中に置く。 -->
+                <div class="d">開設して10ヶ月。店内・テラス席・看板犬の日常が中心です。写真つきの投稿が多く、平日の昼に出しています。</div>
+              </div>
+            </div>
+            <!-- 出どころ。他のカードの「AIが資料から作りました」と同じ位置・同じ部品。
+                 直し方（資料を足して読み直す）は .pj-use と「読み直す」ボタンで足りるので書き足さない -->
+            <span class="byai" style="margin-top:12px"><i class="ti ti-sparkles"></i>資料5件から読み取りました・8/28更新</span>
+
+            <div class="ai-h">いまの状態</div>
+            <!-- 判定 → 根拠 → 絵 の3段。基準はこの画面の「1週間に出す本数の目標」。
+                 状態は .ai-now に ok（既定）/ care を付け替える。
+                 ok  : いい調子で回っています   — 目標を満たしている
+                 care: もう一踏ん張りです       — 目標に届いていない / 間が空いている -->
+            <div class="ai-now">
+              <span class="ic"><i class="ti ti-check"></i></span>
+              <div class="tx">
+                <div class="t">いい調子で回っています</div>
+                <div class="d">目標は週1本。直近8週のうち6週で出せています。</div>
+                <div class="ai-wks" role="img" aria-label="直近8週のうち6週で投稿を出せています">
+                  <i class="on"></i><i class="on"></i><i></i><i class="on"></i>
+                  <i class="on"></i><i class="on"></i><i></i><i class="on now"></i>
+                  <span class="lb">今週</span>
+                </div>
+              </div>
+            </div>
+            <div class="ai-stats">
+              <div class="ai-stat"><div class="v">86<small>件</small></div><div class="k">出した投稿</div></div>
+              <div class="ai-stat"><div class="v">1,240<small>人</small></div><div class="k">フォロワー</div></div>
+              <div class="ai-stat"><div class="v">月4<small>件</small></div><div class="k">いまのペース</div></div>
+              <div class="ai-stat"><div class="v">3.2<small>%</small></div><div class="k">反応された割合</div></div>
+            </div>
+
+            <div class="ai-h">よく出しているもの</div>
+            <!-- 上位4つ + その他。多い系列ほど濃い（--chart-1 が最濃） -->
+            <div class="ai-band" role="img" aria-label="わんちゃんの日常32%、テラス席・店内24%、手作りメニュー18%、お知らせ14%、その他12%">
+              <i style="width:32%;background:var(--chart-1)"></i>
+              <i style="width:24%;background:var(--chart-2)"></i>
+              <i style="width:18%;background:var(--chart-3)"></i>
+              <i style="width:14%;background:var(--chart-4)"></i>
+              <i style="width:12%;background:var(--chart-5)"></i>
+            </div>
+            <div class="ai-cats">
+              <div class="ai-cat"><span class="sw" style="background:var(--chart-1)"></span><span class="nm">わんちゃんの日常</span><span class="pc">32%</span><span class="ct">28件</span></div>
+              <div class="ai-cat"><span class="sw" style="background:var(--chart-2)"></span><span class="nm">テラス席・店内</span><span class="pc">24%</span><span class="ct">21件</span></div>
+              <div class="ai-cat"><span class="sw" style="background:var(--chart-3)"></span><span class="nm">手作りメニュー</span><span class="pc">18%</span><span class="ct">15件</span></div>
+              <div class="ai-cat"><span class="sw" style="background:var(--chart-4)"></span><span class="nm">お知らせ・キャンペーン</span><span class="pc">14%</span><span class="ct">12件</span></div>
+              <div class="ai-cat"><span class="sw" style="background:var(--chart-5)"></span><span class="nm">その他</span><span class="pc">12%</span><span class="ct">10件</span></div>
+            </div>
+
+            <div class="ai-h">投稿のかたち</div>
+            <div class="ai-forms">
+              <div class="ai-form"><span class="ic"><i class="ti ti-photo"></i></span><div><div class="v">62%</div><div class="k">写真</div></div></div>
+              <div class="ai-form"><span class="ic"><i class="ti ti-movie"></i></span><div><div class="v">22%</div><div class="k">動画</div></div></div>
+              <div class="ai-form"><span class="ic"><i class="ti ti-file-text"></i></span><div><div class="v">16%</div><div class="k">文字だけ</div></div></div>
+            </div>
+
+            <!-- 成績・改善案・目標はここに持ち込まない。分析の担当（同じ情報を2箇所に置かない） -->
+            <a class="ai-more" href="./analysis_account_wire.html">くわしい成績は「分析」で見る<i class="ti ti-chevron-right"></i></a>
+
+          </div>
+          <!-- /.pj-bd -->
+        </div>
+        <!-- /#pj-acct -->
+        </div>
+        <!-- /#spInfo -->
       </div>
       <!-- /#snsDetail -->
 
       </div>
+      <!-- /#paSns -->
 
       <!-- ============ メンバー管理 ============ -->
       <div class="pane" id="paMembers">
@@ -1425,8 +1686,8 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 
         <div class="card">
           <div class="card-h">
-            <div><div class="t">メンバー</div><div class="d">4人</div></div>
-            <span class="sp"><button class="btn-o"><i class="ti ti-plus"></i>メンバーを招く</button></span>
+            <div><div class="t">メンバー</div><div class="d" id="memCount">4人</div></div>
+            <span class="sp"><button class="btn-o" onclick="openInvite()"><i class="ti ti-plus"></i>メンバーを招く</button></span>
           </div>
           <div class="mem">
             <span class="av" style="background:#fe7235">田</span>
@@ -1541,6 +1802,37 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 </div>
 
 <!-- ===== 目標を変える ===== -->
+<!-- ===== メンバーを招く =====
+     入力を伴うので alertDialog(sonner) ではなく dlgGoal と同じ自前ダイアログの形。
+     閉じ方は ×／背景クリック／Esc の3系統を openDlg/closeDlg がそのまま持つ。
+     権限はネイティブ select ではなく .picks（1列）にした。表の行では既に決まった権限を
+     選び直すだけなので select でよいが、招くときは**まだ何を選べばいいか分かっていない**ので、
+     3つの説明を並べて見比べられる形にする（下の .rolehelp と同じ文言を使い、言い方を増やさない）。 -->
+<div class="dlgov" id="dlgInvite" onclick="bgClose(event,'dlgInvite')">
+  <div class="dlg">
+    <div class="h"><i class="ti ti-users"></i>メンバーを招く
+      <button class="x" onclick="closeDlg('dlgInvite')" aria-label="閉じる"><i class="ti ti-x"></i></button></div>
+    <div class="b">
+      <div class="field">
+        <label class="lbl" for="invMail">メールアドレス</label>
+        <input class="inp" id="invMail" type="email" placeholder="sato@inucafe-one.example.com" autocomplete="off">
+      </div>
+      <div class="field" style="margin-bottom:0">
+        <label class="lbl">できること</label>
+        <div class="picks inv-picks" id="invRoles">
+          <button class="pick" onclick="pickOne(this)" data-role="オーナー"><div class="t">オーナー</div><div class="e">すべてできます。メンバーの追加・削除と、支払いの変更もできます。</div></button>
+          <button class="pick" onclick="pickOne(this)" data-role="承認者"><div class="t">承認者</div><div class="e">投稿を作れて、ほかの人の投稿を承認できます。メンバーは変えられません。</div></button>
+          <button class="pick on" onclick="pickOne(this)" data-role="作成者"><div class="t">作成者</div><div class="e">投稿を作って、承認をお願いできます。自分では承認できません。</div></button>
+        </div>
+      </div>
+    </div>
+    <div class="f"><span class="sp">
+      <button class="btn-g" id="invCancel" onclick="closeDlg('dlgInvite')">やめる</button>
+      <button class="btn-p" onclick="inviteSend()"><i class="ti ti-check"></i>招待を送る</button>
+    </span></div>
+  </div>
+</div>
+
 <div class="dlgov" id="dlgGoal" onclick="bgClose(event,'dlgGoal')">
   <div class="dlg">
     <div class="h"><i class="ti ti-file-text"></i>1週間に何本出しますか
@@ -1611,8 +1903,33 @@ function segPick(el){
 }
 // 運用目的は項目ごとに読み書きする。
 // 全体を編集モードにすると「どこを直したか分からない」「保存が怖い」が起きるため。
+/* SNSアカウントの中のサブタブ。投稿ルール（設定する）と アカウント情報（読むだけ）を分ける。
+   運用目的の setPTab と同じ作り。 */
+function setSTab(which){
+  var rule = which === 'rule';
+  document.getElementById('spRule').classList.toggle('on', rule);
+  document.getElementById('spInfo').classList.toggle('on', !rule);
+  document.getElementById('stRule').classList.toggle('on', rule);
+  document.getElementById('stInfo').classList.toggle('on', !rule);
+  document.querySelector('.content').scrollTop = 0;
+}
+
 function pjEdit(key, on){
   document.getElementById('pj-' + key).classList.toggle('editing', on);
+}
+/* アカウント情報の読み直し。ワイヤーなので実際には読まないが、
+   押しっぱなしに見えないよう、押した→取りに行っている→終わった、までは見せる。
+   結果はトーストで返す（共有の sonner。画面ごとにダイアログを自作しない）。 */
+function acctReread(btn){
+  if (btn.disabled) return;
+  var html = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = '<i class="ti ti-refresh"></i>読み取り中…';
+  setTimeout(function(){
+    btn.disabled = false;
+    btn.innerHTML = html;
+    if (window.toast) toast('アカウント情報を読み直しました');
+  }, 1400);
 }
 // 一覧から項目へ飛ぶ。どこに飛んだか分かるよう、一瞬光らせる。
 /* ===== SNS設定：一覧 → アカウントの中（2026-08-21） =====
@@ -1668,6 +1985,55 @@ document.addEventListener('keydown', function(e){
   if(e.key !== 'Escape') return;
   document.querySelectorAll('.dlgov.on').forEach(function(d){ d.classList.remove('on'); });
 });
+/* ===== メンバーを招く ===== */
+function openInvite(){
+  var m = document.getElementById('invMail');
+  m.value = '';
+  pickOne(document.querySelector('#invRoles .pick[data-role="作成者"]'));
+  openDlg('dlgInvite');
+  /* DESIGN.md §alert-dialog「開いたら取り消し側にフォーカスを置く」。
+     ただしこのダイアログは入力が主なので、書く場所へ置くほうが手数が減る。
+     Esc と背景クリックで抜けられるので、逃げ道は塞がっていない。 */
+  setTimeout(function(){ m.focus(); }, 0);
+}
+function inviteSend(){
+  var mail = (document.getElementById('invMail').value || '').trim();
+  /* ワイヤーなので送信はしないが、入れ忘れだけは止める。
+     ダイアログの中に赤字の注意書きを増やさず、トーストで返して欄へ戻す。 */
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(mail)){
+    if(window.toast) toast.error('メールアドレスを入れてください');
+    document.getElementById('invMail').focus();
+    return;
+  }
+  var role = document.querySelector('#invRoles .pick.on').dataset.role;
+  addInvitedRow(mail, role);
+  closeDlg('dlgInvite');
+  if(window.toast) toast.success(mail + ' に招待を送りました');
+}
+/* 送ったあと一覧に「招待中」の行を足す。押した結果が画面に出ないと、
+   送れたのかどうかトーストだけで判断させることになる。 */
+function addInvitedRow(mail, role){
+  var list = document.querySelectorAll('#paMembers .mem');
+  var last = list[list.length - 1];
+  var row = document.createElement('div');
+  row.className = 'mem';
+  var opt = ['オーナー','承認者','作成者'].map(function(r){
+    return '<option' + (r === role ? ' selected' : '') + '>' + r + '</option>';
+  }).join('');
+  row.innerHTML =
+    '<span class="av" style="background:var(--color-muted-foreground)">' + mail.charAt(0).toUpperCase() + '</span>' +
+    '<div class="tx"><div class="nm">' + mail.split('@')[0] + '</div>' +
+    '<div class="ml">' + mail + '・<span style="color:var(--color-warning);font-weight:var(--font-weight-body-strong)">招待中（まだ参加していません）</span></div></div>' +
+    '<span class="last">—</span>' +
+    '<select class="role">' + opt + '</select>' +
+    '<button class="iconbtn" aria-label="メニュー"><i class="ti ti-dots-vertical"></i></button>';
+  last.parentNode.insertBefore(row, last.nextSibling);
+  /* 見出しの人数も一緒に動かす（数字が食い違って見えないように）。
+     ⚠️ `.card-h .d` で引くと、上の承認カードの説明文を掴んで上書きしてしまう。id で指す。 */
+  var cnt = document.getElementById('memCount');
+  if(cnt){ cnt.textContent = (document.querySelectorAll('#paMembers .mem').length) + '人'; }
+}
+
 function goalPick(el){
   document.querySelectorAll('#goalPicks .goalpick').forEach(function(b){ b.classList.toggle('on', b === el); });
 }

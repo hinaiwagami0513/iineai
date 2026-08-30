@@ -190,7 +190,8 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .field{margin-bottom:16px;}
 .field:last-child{margin-bottom:0;}
 .lbl{display:block;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);margin-bottom:4px;}
-.sub{font-size:var(--text-label);color:var(--color-muted-foreground);margin-bottom:9px;line-height:1.7;}
+/* .sub（欄の下に添える説明文）は 2026-08-30 に最後の1件（予算の目安）を消して未使用になった。
+   増やさない。説明を足したくなったら、まずラベルを直すか選択肢の形で示す（DESIGN.md §Writing 原則4）。 */
 .inp,.sel,.ta{width:100%;border:1px solid var(--color-border-strong);border-radius:var(--radius-md);padding:11px 13px;font-family:inherit;font-size:var(--text-body);line-height:1.8;background:var(--color-input);color:var(--color-foreground);}
 .ta{resize:vertical;min-height:96px;}
 .inp:focus,.sel:focus,.ta:focus{outline:2px solid var(--color-ring);outline-offset:1px;border-color:var(--color-primary);}
@@ -421,8 +422,10 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
             </div>
           </div>
           <div class="field" style="margin-top:16px;margin-bottom:0">
+            <!-- 「決まっていなければ『わからない』で大丈夫です」の一文は削除（2026-08-30 陽菜指摘）。
+                 選択肢に「わからない」が並んでいるので、同じことを文で言い直している。
+                 説明を足すのではなく、選べる形で示す（DESIGN.md §Writing 原則4） -->
             <label class="lbl">予算の目安</label>
-            <div class="sub">決まっていなければ「わからない」で大丈夫です。こちらから提案します。</div>
             <div class="chips">
               <button class="chip" onclick="pickOne(this)">1万円まで</button>
               <button class="chip on" onclick="pickOne(this)">3万円まで</button>
