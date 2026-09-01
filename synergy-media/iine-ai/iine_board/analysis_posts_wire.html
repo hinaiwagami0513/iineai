@@ -224,8 +224,13 @@ body { font-family: Inter, 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif
 
 /* sub tab nav (shadcn pill / segmented style) */
 .sub-tab-nav{display:inline-flex;gap:4px;margin:16px 32px 20px;padding:4px;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-md);}
-.sub-tab-nav a,.sub-tab-nav span{padding:7px 18px;font-size:var(--text-label);font-weight:var(--font-weight-label);color:var(--color-muted-foreground);text-decoration:none;border-radius:var(--radius-sm);cursor:pointer;transition:all .15s;white-space:nowrap;}
-.sub-tab-nav a:hover{color:var(--color-foreground);background:var(--color-background);}
+/* button も対象に含める。他ページのサブタブはページ遷移なので a／span だが、
+   投稿レポートのセクション切替は同一ページ内なので button を使う。
+   SP側の指定（.sub-tab-nav>a,>button,>span）には元から button が入っている。 */
+.sub-tab-nav a,.sub-tab-nav span,.sub-tab-nav button{padding:7px 18px;font-size:var(--text-label);font-weight:var(--font-weight-label);color:var(--color-muted-foreground);text-decoration:none;border-radius:var(--radius-sm);cursor:pointer;transition:all .15s;white-space:nowrap;}
+/* button のUA既定（枠線・グレー背景・別フォント）を消して a／span と同じ見た目にする */
+.sub-tab-nav button{border:0;background:none;font-family:inherit;line-height:inherit;}
+.sub-tab-nav a:hover,.sub-tab-nav button:not(.active):hover{color:var(--color-foreground);background:var(--color-background);}
 .sub-tab-nav .active{color:var(--color-primary);font-weight:var(--font-weight-body-strong);background:var(--color-primary-subtle);border:1px solid rgba(239,97,8,.2);}
 
 .besttime{margin:20px 32px 0;background:var(--color-card);border:1px solid var(--color-border);border-radius:var(--radius-lg);padding:24px;}
@@ -929,29 +934,50 @@ body { font-family: Inter, 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif
   .bt-picks .bt-pick .bt-note{display:none;}
 
   /* --- 今月の投稿まとめ：8枚を3グループに分けてタブで切り替える ---
-     2列×4段で597px使っていた。3列に詰めると294pxまで縮むが、アイコンを落とすことに
-     なって窮屈になった。グループ名（見られた/反応された/深さ）を出して1グループ3枚だけ
-     見せる形にすると、アイコンと余白を戻したうえで162pxに収まる。
-     グループ名そのものが「この数字は何を表すか」の説明にもなる
+     2列×4段で597px使っていた。グループ名（リーチ/反応/その他）を出して
+     1グループ2〜3枚だけ見せる形にする。グループ名そのものが
+     「この数字は何を表すか」の説明にもなる
      （ターゲットは40〜50代未経験者＝vault: target-first）。 */
+  /* --- セクションの小タブ（まとめ / おすすめ時間 / 投稿ランキング）---
+     見た目は既存の .sub-tab-nav をそのまま使う（他の分析ページと同じ帯）。
+     ここでは「選ばれていない側を隠す」だけを足す。
+     素の display はセクションごとに block / flex と違うので表示側は触らない。 */
+  [data-sec].asec-hide{display:none;}
+  /* 小タブの直下に来るセクションは、上の余白をタブ側（margin-bottom:20px）に任せる */
+  .month-summary[data-sec]{padding-top:0;}
+  .besttime[data-sec]{margin-top:0;}
+
   .ms-tabs{display:flex;gap:6px;margin-bottom:12px;}
   .ms-tab{flex:1 1 0;min-width:0;padding:9px 4px;border:1px solid var(--color-border);
     background:var(--color-card);border-radius:var(--radius-full);cursor:pointer;
     font-family:inherit;font-size:var(--text-label);font-weight:var(--font-weight-body-strong);
     color:var(--color-muted-foreground);white-space:nowrap;}
   .ms-tab.on{background:var(--color-primary);border-color:var(--color-primary);color:var(--color-on-primary);}
-  .month-summary-cards{grid-template-columns:repeat(3,minmax(0,1fr)) !important;gap:8px;}
-  .month-summary-cards>*{padding:14px 8px;min-width:0;}
-  /* 選ばれていないグループは隠す */
+
+  /* 1列の横並びリスト（アイコン左・ラベル左・数値右）。
+     3列に並べるとカード幅103pxで、14pxのラベルは1行6文字しか入らない。
+     「リーチしたアカウント数」(11文字)が2〜3行に折り返して窮屈だった。
+     カードに全幅を与えれば折り返しがゼロになり、ラベルを縮めずに済む。
+     40〜50代向けなので、文字を小さくして詰める方向は取らない。 */
+  .month-summary-cards{grid-template-columns:1fr !important;gap:6px;}
   .month-summary-cards>[data-msg]{display:none;}
-  .month-summary-cards>[data-msg].on{display:flex;}
-  .ms-card-val{font-size:var(--text-h2);}
-  .ms-card-lbl{font-size:var(--text-meta);}
+  .month-summary-cards>[data-msg].on{
+    display:flex;align-items:center;gap:10px;
+    text-align:left;padding:10px 14px;min-width:0;}
+  .ms-card-icon{margin-bottom:0;font-size:18px;flex:none;}
+  /* ラベルが伸びて、数値を右端へ押しやる */
+  .ms-card-lbl{margin-top:0;flex:1 1 auto;min-width:0;font-size:var(--text-body);}
+  /* order で数値を最後に回す（DOM順は 数値→ラベル のまま触らない） */
+  .ms-card-val{flex:none;order:3;font-size:var(--text-h2);}
+  /* best も同じ文字サイズに揃える。PCの32pxのままだとこの行だけ背が高くなる。
+     強調はオレンジの枠線と背景（.ms-card.best）が担うので数値は大きくしない。 */
+  .ms-card.best .ms-card-val{font-size:var(--text-h2);}
 }
 /* タブはSP専用。PCは8枚を一度に並べる面なので出さない。
+   セクションの小タブも同じで、PCは3セクションとも縦に並べたままにする。
    ⚠️ 素の `.ms-tabs{display:none}` だと、SP用のメディアクエリより後ろに来て
    同じ詳細度で後勝ちし、SPでもタブが消える。min-width 側に閉じ込める。 */
-@media (min-width:431px){ .ms-tabs{display:none;} }
+@media (min-width:431px){ .ms-tabs,#asecTabs{display:none;} }
 </style>
 <!-- SP対応。インラインCSSの後に置く（@media は詳細度を上げないので後勝ちにする）。
      この1枚が抜けていたため、SPでサイドバーが消えるだけで下部ナビに変わらず、
@@ -1078,15 +1104,26 @@ body { font-family: Inter, 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif
         </div>
       </div>
 
+      <!-- ===== セクション切替（SP専用の小タブ） =====
+           SPだと まとめ256px + おすすめ時間602px + ランキング1311px = 2169px あり、
+           順位を見るのに2.6画面ぶんスクロールが要る。3つを小タブで出し分ける。
+           data-sec は「隠す側」だけをCSSで制御する。セクションごとに素の display が
+           block / flex と違うので、表示側を display:X で決め打ちすると壊れる。 -->
+      <div class="sub-tab-nav" id="asecTabs">
+        <button class="active" data-sec="summary">まとめ</button>
+        <button data-sec="time">おすすめ時間</button>
+        <button data-sec="ranking">投稿ランキング</button>
+      </div>
+
       <!-- ===== 月間まとめ ===== -->
-      <div class="month-summary">
+      <div class="month-summary" data-sec="summary">
         <div class="month-summary-title">7月の投稿まとめ</div>
-        <!-- SPだけ出る指標の切替。8枚を「見られた/反応された/深さ」の3つに分ける。
+        <!-- SPだけ出る指標の切替。8枚を「リーチ/反応/その他」の3つに分ける。
              PCでは8枚とも並ぶので出さない（CSSで display:none）。 -->
         <div class="ms-tabs" id="msTabs">
-          <button class="ms-tab on" data-msg="seen">見られた</button>
-          <button class="ms-tab" data-msg="react">反応された</button>
-          <button class="ms-tab" data-msg="deep">深さ</button>
+          <button class="ms-tab on" data-msg="seen">リーチ</button>
+          <button class="ms-tab" data-msg="react">反応</button>
+          <button class="ms-tab" data-msg="deep">その他</button>
         </div>
         <div class="month-summary-cards">
           <div data-msg="seen" class="ms-card best">
@@ -1134,7 +1171,7 @@ body { font-family: Inter, 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif
       </div>
 
       <!-- ===== おすすめの投稿時間 ===== -->
-      <div class="besttime">
+      <div class="besttime" data-sec="time">
         <div class="besttime-hd">
           <div>
             <div class="besttime-title">おすすめの投稿時間</div>
@@ -1188,7 +1225,7 @@ body { font-family: Inter, 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif
       </div>
 
       <!-- ===== 並び替え ===== -->
-      <div class="sort-bar">
+      <div class="sort-bar" data-sec="ranking">
         <span class="sort-label">並び順:</span>
         <button class="sort-btn active" data-sort="reach">リーチが多い順</button>
         <button class="sort-btn" data-sort="date">新しい順</button>
@@ -1196,7 +1233,7 @@ body { font-family: Inter, 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif
       </div>
 
       <!-- Post cards list (ranked by reach) -->
-      <div class="posts-list">
+      <div class="posts-list" data-sec="ranking">
 
         <!-- 1位 — ベスト投稿 -->
         <div class="post-card best-post" data-post="1">
@@ -1303,7 +1340,7 @@ body { font-family: Inter, 'Noto Sans JP', 'Hiragino Sans', 'Meiryo', sans-serif
       <!-- /posts-list -->
 
       <!-- Load more button -->
-      <div class="load-more-wrap">
+      <div class="load-more-wrap" data-sec="ranking">
         <button class="load-more-btn" onclick="toast.info('読み込み中...')">さらに読み込む</button>
       </div>
 
@@ -1703,7 +1740,11 @@ function outPick(kind){
   </div>
 </div>
 
-<script src="./tour.js">
+<script src="./tour.js"></script>
+<!-- ⚠️ src 付きの <script> はインラインの中身が実行されない。
+     以前ここに切替スクリプトを同居させていて、タブが無反応かつ
+     SPでまとめカードが全部消えていた。必ず別タグに分ける。 -->
+<script>
 /* 今月のまとめの指標グループ切替（SPのみ意味を持つ）。
    PCではタブを display:none にしてあるが、8枚とも見せたいので
    「SP幅のときだけ絞り込む」形にする。リサイズでも追従させる。 */
@@ -1726,6 +1767,43 @@ function outPick(kind){
   }
   [].forEach.call(tabs.children, function(t){
     t.addEventListener('click', function(){ current = t.getAttribute('data-msg'); apply(); });
+  });
+  apply();
+  addEventListener('resize', apply);
+})();
+
+/* セクション切替（まとめ / おすすめ時間 / 投稿ランキング）。SPのみ意味を持つ。
+   PCは3セクションとも縦に並べる面なので、SP幅のときだけ絞り込む。
+   ⚠️ 触るのは「隠す」クラスだけ。セクションの素の display は block と flex が
+   混在しているので、表示側を display:X で決め打ちすると .sort-bar などが壊れる。 */
+(function(){
+  var tabs = document.getElementById('asecTabs');
+  if(!tabs) return;
+  /* ⚠️ タブボタン自身も data-sec を持つので、帯の中は除外する。
+     除外し損ねるとタブ自体が asec-hide で消える。 */
+  var secs = [].filter.call(document.querySelectorAll('[data-sec]'), function(el){
+    return el.parentNode !== tabs;
+  });
+  if(!secs.length) return;
+  var current = 'summary';
+  function apply(){
+    var sp = matchMedia('(max-width:430px)').matches;
+    [].forEach.call(secs, function(s){
+      /* PCは全部見せる（隠すクラスを外しっぱなしにする） */
+      s.classList.toggle('asec-hide', sp && s.getAttribute('data-sec') !== current);
+    });
+    [].forEach.call(tabs.children, function(t){
+      t.classList.toggle('active', t.getAttribute('data-sec') === current);
+    });
+  }
+  [].forEach.call(tabs.children, function(t){
+    t.addEventListener('click', function(){
+      current = t.getAttribute('data-sec');
+      apply();
+      /* タブを押したら見出しの位置まで戻す。前のタブのスクロール位置が
+         残っていると、切り替えた先の途中から始まって迷子になる。 */
+      tabs.scrollIntoView({block:'start', behavior:'smooth'});
+    });
   });
   apply();
   addEventListener('resize', apply);
