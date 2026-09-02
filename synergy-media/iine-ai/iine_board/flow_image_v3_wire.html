@@ -213,6 +213,13 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
   font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);color:#fff;
   background:var(--color-primary);border-radius:var(--radius-full);padding:3px 10px;line-height:1.5;
   box-shadow:0 1px 3px rgba(0,0,0,.12);}
+/* 枚数カードの並び。グリッドもカードも inline style で持っていたため、
+   SPのメディアクエリが効かず（!important 頼みになる）ここへ出す。
+   上の margin-top は .count-rec のタブが上へはみ出すぶん。 */
+.countgrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;max-width:560px;margin:24px auto 0;}
+.countgrid .opt{padding:20px 10px;text-align:center;}
+.countgrid .num{font-size:var(--text-h1);font-weight:var(--font-weight-h1);line-height:1.2;}
+.countgrid .unit{font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:4px;}
 .method .mi{width:64px;height:64px;box-sizing:border-box;border-radius:50%;background:var(--color-border);color:var(--color-muted-foreground);display:flex;align-items:center;justify-content:center;font-size:30px;line-height:1;margin:0 auto 16px;}.method svg.mi{display:block;padding:16px;}
 .method.sel .mi{background:var(--color-primary);color:#fff;}
 .method .ot{font-size:var(--text-h3);font-weight:var(--font-weight-h3);} .method .od{font-size:var(--text-body);color:var(--color-muted-foreground);margin-top:8px;line-height:1.6;}
@@ -493,6 +500,10 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
   .sug{font-size:14px;padding:6px 10px;}
   .proposal-card-pg{padding:14px 16px;}
   .h1{font-size:var(--text-h2);}
+  /* 枚数カード。390px幅では5列にすると1枚64pxしか取れず、「10」が幅いっぱいになり、
+     「AIおすすめ」のタブ（約72px）もカードより広くて隣にかぶっていた。
+     3列に落として1枚112pxを確保する（1/4/6・8/10 の2段）。下に余白は余っている。 */
+  .countgrid{grid-template-columns:repeat(3,minmax(0,1fr));row-gap:20px;}
   /* エディタ面のSP（3カラム縦積み・ヘッダー・タブ・表）は editor-sp.css に集約 */
   .donebody>div{flex-direction:column !important;gap:24px !important;padding:24px 16px !important;}
   .donebody>div>div:last-child{width:100% !important;max-width:320px;margin:0 auto;}
@@ -769,17 +780,22 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
       <!-- 枚数を選択 -->
       <div class="screen" id="sc_count">
         <div class="h1">画像の枚数を選ぶ<a class="help-inline" href="https://hinaiwagami0513.github.io/iineai/help/create/image/#count" target="_blank" rel="noopener" title="ヘルプ: 画像の枚数" aria-label="この項目のヘルプ">?</a></div>
-        <!-- 上端のタブ（AIおすすめ）がはみ出すので、上に余白を足しておく -->
-        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;max-width:560px;margin:24px auto 0;">
-          <div class="opt method" onclick="pickCount(this)" style="padding:20px 10px;text-align:center;"><div style="font-size:var(--text-h1);font-weight:var(--font-weight-h1);">1</div><div style="font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:4px;">枚</div></div>
-          <div class="opt method" onclick="pickCount(this)" style="padding:20px 10px;text-align:center;"><div style="font-size:var(--text-h1);font-weight:var(--font-weight-h1);">4</div><div style="font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:4px;">枚</div></div>
-          <div class="opt method sel" onclick="pickCount(this)" style="padding:20px 10px;text-align:center;"><div style="font-size:var(--text-h1);font-weight:var(--font-weight-h1);">6</div><div style="font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:4px;">枚</div><div class="count-rec">AIおすすめ</div></div>
-          <div class="opt method" onclick="pickCount(this)" style="padding:20px 10px;text-align:center;"><div style="font-size:var(--text-h1);font-weight:var(--font-weight-h1);">8</div><div style="font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:4px;">枚</div></div>
-          <div class="opt method" onclick="pickCount(this)" style="padding:20px 10px;text-align:center;"><div style="font-size:var(--text-h1);font-weight:var(--font-weight-h1);">10</div><div style="font-size:var(--text-label);color:var(--color-muted-foreground);margin-top:4px;">枚</div></div>
+        <!-- おすすめは青い info の箱ではなくキツネが言う（DESIGN.md §Alert）。
+             選ぶ前に読ませたいので、カードの上に置く。 -->
+        <div class="fox-alert ok" style="max-width:560px;margin:16px auto 0;"><img src="./assets/iine-fox-happy.png" alt="">
+          <div>
+            <span class="lb">ADVICE</span>
+            <div class="t">この投稿は <b>6枚</b> がおすすめやで</div>
+            <div class="d">Instagramのカルーセルは6枚前後がいちばん最後まで見てもらいやすいで。</div>
+          </div>
         </div>
-        <div style="max-width:560px;margin:20px auto 0;padding:16px;background:var(--color-info-subtle);border:1px solid #b8d4ef;border-radius:var(--radius-md);">
-          <div style="font-size:var(--text-body);font-weight:var(--font-weight-body-strong);color:var(--color-info);display:flex;align-items:center;gap:6px;"><i class="ti ti-sparkles"></i>AIのおすすめ：6枚</div>
-          <div style="font-size:var(--text-label);color:var(--color-info);margin-top:4px;line-height:1.6;">Instagramカルーセルでは6枚前後が最もエンゲージメントが高い傾向があります。</div>
+        <!-- 上端のタブ（AIおすすめ）がはみ出すので、上に余白を足しておく -->
+        <div class="countgrid">
+          <div class="opt method" onclick="pickCount(this)"><div class="num">1</div><div class="unit">枚</div></div>
+          <div class="opt method" onclick="pickCount(this)"><div class="num">4</div><div class="unit">枚</div></div>
+          <div class="opt method sel" onclick="pickCount(this)"><div class="num">6</div><div class="unit">枚</div><div class="count-rec">AIおすすめ</div></div>
+          <div class="opt method" onclick="pickCount(this)"><div class="num">8</div><div class="unit">枚</div></div>
+          <div class="opt method" onclick="pickCount(this)"><div class="num">10</div><div class="unit">枚</div></div>
         </div>
       </div>
 
