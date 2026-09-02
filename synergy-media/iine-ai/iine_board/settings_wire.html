@@ -771,6 +771,18 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
   .sns .state{margin-left:55px;min-width:0;}
   .sns .act{width:auto;margin-left:auto;}
 }
+/* SP: 「見てもらうこと」の各行。セグメント3つ（必ず直す/教えてもらうだけ/見ない）が
+   nowrap で約230px を占め、残りを .tx が min-width:0 のまま受けて1文字幅まで潰れ、
+   見出しが縦書きになっていた。1行に並べるのをやめ、
+   見出し＋説明を1行目、セグメントを2行目に全幅で敷く。 */
+@media(max-width:430px){
+  .rule{flex-direction:column;align-items:stretch;gap:10px;padding:14px 16px;}
+  .rule .tx{flex:none;}
+  .seg{display:flex;width:100%;}
+  /* flex:1（basis 0）で等分すると「教えてもらうだけ」が105pxに入らず溢れる。
+     basis auto にして、余りだけを等分する。 */
+  .seg button{flex:1 1 auto;padding:8px 6px;text-align:center;}
+}
 /* ===== シェル：ヘッダーとサイドバーを角丸のカードにする =====
    全面ベタ（角丸0・隙間0）だと面が窓枠に貼り付いて古く見える。
    .app に余白と gap を持たせて、サイドバー / ヘッダー / 本文を
