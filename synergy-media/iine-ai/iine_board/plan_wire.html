@@ -383,6 +383,16 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
   /* プラン比較カードが横に3枚並んで各140pxに潰れる。縦に積む。 */
   .pl-grid{grid-template-columns:1fr !important;}
   .pl-card{width:auto !important;margin-bottom:12px;}
+
+  /* 利用状況の3枚も同じく各108pxまで潰れ、「今月つくった投稿」も
+     「18 / 30件」も折り返して窮屈になる。1枚1行に積み替えて
+     ラベル左・数値右、バーはその下に全幅で敷く。 */
+  .pl-use{grid-template-columns:1fr;gap:8px;}
+  .pl-u{display:grid;grid-template-columns:1fr auto;align-items:baseline;
+        column-gap:12px;padding:12px 14px;}
+  .pl-u .k{white-space:nowrap;}
+  .pl-u .v{margin-top:0;white-space:nowrap;}
+  .pl-u .bar{grid-column:1 / -1;margin-top:8px;}
 }
 /* ===== シェル：ヘッダーとサイドバーを角丸のカードにする =====
    全面ベタ（角丸0・隙間0）だと面が窓枠に貼り付いて古く見える。
