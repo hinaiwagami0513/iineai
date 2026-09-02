@@ -177,6 +177,20 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .room-hd .r{margin-left:auto;display:flex;align-items:center;gap:10px;}
 .iconbtn{width:34px;height:34px;border:none;background:transparent;color:var(--color-muted-foreground);border-radius:var(--radius-sm);font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
 .iconbtn:hover{background:var(--color-surface);color:var(--color-foreground);}
+/* ===== SPのトーク見出し（トップバーの中身と差し替わる） =====
+   PCは一覧が左に常時あり、ルームヘッダーも出るので丸ごと要らない。
+   display は SP のメディアクエリで flex に起こす。 */
+.hd-room{display:none;align-items:center;gap:9px;flex:1;min-width:0;}
+.hd-back{display:flex;align-items:center;justify-content:center;flex:none;
+  width:36px;height:36px;margin-left:-8px;padding:0;border:none;background:transparent;
+  color:var(--color-foreground);border-radius:var(--radius-sm);font-size:23px;cursor:pointer;}
+.hd-back:hover{background:var(--color-surface);}
+.hd-room .av{width:28px;height:28px;flex:none;border-radius:var(--radius-sm);
+  display:flex;align-items:center;justify-content:center;
+  font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:#fff;}
+/* 名前は帯の残り幅を全部もらって、足りなければ「…」で切る。折り返すと帯が2行になる */
+.hd-room .nm{flex:1;min-width:0;font-size:var(--text-body);font-weight:var(--font-weight-body-strong);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
 .members{display:flex;align-items:center;gap:7px;border:1px solid var(--color-border);border-radius:var(--radius-full);padding:4px 11px 4px 5px;cursor:pointer;background:var(--color-card);font-family:inherit;}
 .members:hover{border-color:var(--color-primary);}
 .faces{display:flex;}
@@ -239,19 +253,74 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 
 /* ===== SP調整（この画面固有。シェル共通は shell-sp.css） ===== */
 @media (max-width:430px){
-  /* チャット一覧（.list 250px）と会話（.room）の2カラムは390pxに入らない。
-     会話が140pxに潰れて本文が読めなくなるので、SPでは会話だけを全幅で出す。
-     一覧はDESIGN.md「SP = 全画面遷移」に沿って別画面扱いにする想定。 */
-  .body{flex-direction:column;}
-  .list{display:none;}
-  .room{width:100% !important;}
+  /* チャット一覧（.list 300px）と会話（.room）の2カラムは390pxに入らない。
+     LINE / Slack と同じ「一覧の画面 ⇄ トークの画面」の行き来にする
+     （DESIGN.md「詳細表示は SP = 全画面遷移」）。
 
-  /* ルームヘッダー右のメンバー一覧チップ（顔アイコン+人数）は幅を食う割に操作ではないので落とす。
-     隣の丸ボタンは操作なので触れる状態を保つ。 */
-  .room-hd .members{display:none;}
-  .room-hd .r{flex-wrap:wrap;row-gap:6px;}
+     ⚠️ 以前は .list を display:none にして会話だけを全幅で出していた。
+     会話は読めるが、いま開いている1件から他のトークへ移る手段が画面上に
+     1つも無く、行き止まりになっていた（2026-09-01 指摘）。
+     入口は一覧のほう。着地は一覧で、タップでトークへ入り、左上の戻るで返る。 */
+     状態は .app に持たせる。.hd は .body の兄で、CSS は前の兄弟を選べないため、
+     .body 側に持つとトップバーを状態で切り替えられない。 */
+  .body{flex-direction:column;}
+  /* ⚠️ min-width:0 が要る。.list は .body の flex アイテムで、既定の min-width:auto は
+     min-content まで膨らむ。会話行の「奥澤：来週の撮影、水曜で…」が nowrap なので
+     .conv の min-content が380pxあり、.list が400pxになって320px幅で82px溢れていた。
+     0まで縮めてよいと言えば、中の .last が自前の ellipsis で畳んでくれる。 */
+  .list{width:100% !important;min-width:0;flex:1;min-height:0;border-right:none;}
+  .room{width:100% !important;}
+  .app:not(.sp-room) .room{display:none;}
+  .app.sp-room .list{display:none;}
+
+  /* ===== トークの見出しはトップバーが兼ねる（2026-09-02 指摘） =====
+     ルームヘッダー（.room-hd）は card 地の帯を端まで敷く。そのすぐ上に同じ地の
+     トップバーが居るので、白い帯が2本重なって見えていた。カードに仕立て直しても
+     上の帯とダブるのは変わらない。帯を2本にしないのが答えなので、SPのトーク中は
+     .room-hd を出さず、トップバーの中身をそのままトークの見出しに差し替える。
+     LINE / Slack のトーク画面も帯は1本（戻る + 相手の名前）。
+     ⚠️ トップバー自体は消さない。DESIGN.md「トップバー（全画面共通）」に従う。 */
+  .app.sp-room .room-hd{display:none;}
+  .app.sp-room .hd .pgic,.app.sp-room .hd .pgnm{display:none;}
+  .app.sp-room .hd-room{display:flex;}
+  /* 48pxの帯に「戻る + 顔 + 名前 + 設定 + ヘルプ」を入れる。ToDo と チャット の丸ボタンは
+     ここでは落とす（チャットは今いる画面なので状態表示にすぎず、ToDo は一覧へ戻れば出る）。
+     320px で残すと名前が70pxまで痩せて「犬カフェ…」しか出ない。 */
+  .app.sp-room .hd .hdbtn{display:none;}
+
+  /* 画面の高さに閉じて、流すのは中身だけにする（トークは .msgs、一覧は .list-body）。
+     shell-sp.css は全画面共通で .app を height:auto にしてページごと流している。
+     チャットだけはそれだと送信欄がページの末尾＝メッセージを全部通り過ぎないと
+     届かない場所に落ちる（390x844 で composer の top が 1059px だった）。
+     LINE / Slack と同じく、ヘッダーと送信欄は画面の中に留める。
+     ⚠️ shell-sp.css はこのインラインCSSの後に読まれるので !important が要る。
+     border-box なので padding-bottom:70px（下ナビの逃げ）は 100dvh の内側に入る。 */
+  .app{height:100dvh !important;}
+  /* ⚠️ 高さを閉じるだけでは足りない。縦並びの flex アイテムは min-height:auto が既定で、
+     中身より小さくならない。.app を 100dvh にしても .main → .body → .room → .msgs の
+     どこか1つでも auto のままだと、そこが中身の高さまで伸びて送信欄を画面の外へ押し出す
+     （閉じた .app が overflow:hidden で切るので、スクロールもできない）。
+     縦に積む箱は全部 0 まで縮めるようにして、余りを .msgs / .list-body に吸わせる。 */
+  .main,.room,.list,.msgs,.list-body{min-height:0;}
+
+  /* 一覧は指で触る前提のサイズに広げる。アバター40 + 上下11pxで1行62px
+     （iOS のタップ目標44pxを満たす）。 */
+  .list-top{padding:12px;}
+  .list-body{padding:6px 10px;}
+  .conv{padding:11px 8px;gap:12px;}
+  .conv .av{width:40px;height:40px;}
+
+  /* 右下の＋（投稿作成）は right:16px / bottom:76px に浮く。送信ボタンがちょうど
+     そこに来るので、トークを開いているあいだは重なって送信を隠す。引っ込める。
+     shell-sp.css が生成トレイを開いたときに＋を消すのと同じ扱い。一覧に戻れば出る。 */
+  .app.sp-room .ni-create{opacity:0;pointer-events:none;}
+
   /* コンポーザーの添付ボタン列は折り返す */
+  .composer{padding:10px 14px 12px;}
   .composer .bar{flex-wrap:wrap;row-gap:8px;}
+  /* 「Command+Enter で送信」はキーボードのない端末では読む意味がないうえ、
+     添付ボタン2つと送信の行に入って折り返しを1行増やしていた。 */
+  .composer .hint{display:none;}
   .attbtn{white-space:nowrap;}
 }
 /* ===== シェル：ヘッダーとサイドバーを角丸のカードにする =====
@@ -314,7 +383,7 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 <!-- SP対応。インラインCSSの後に置く（@media は詳細度を上げないので後勝ちにする） -->
 <link rel="stylesheet" href="./shell-sp.css">
 </head><body>
-<div class="app">
+<div class="app" id="chatApp">
   <!-- サイドバー -->
   <aside class="sb">
     <div class="sbtop"><img class="logo" src="data:image/png;base64,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" alt="いいねAI"><a class="create" href="./flow_video_script_wire.html"><i class="ti ti-plus"></i>投稿作成</a></div>
@@ -350,6 +419,14 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
   <div class="main">
     <div class="hd">
       <i class="ti ti-message-dots pgic"></i><span class="pgnm">チャット</span>
+      <!-- SP専用。トークを開いているあいだ、このトップバーがそのままトークの見出しになる
+           （ページ見出しとルームヘッダーで白い帯が2本並ぶのを避ける） -->
+      <div class="hd-room">
+        <button class="hd-back" onclick="spBack()" aria-label="トーク一覧へ戻る"><i class="ti ti-chevron-left"></i></button>
+        <span class="av" id="hdAv" style="background:#b02a78">犬</span>
+        <span class="nm" id="hdNm">犬カフェOne チーム</span>
+        <button class="iconbtn" aria-label="このトークの設定"><i class="ti ti-settings"></i></button>
+      </div>
       <div class="r">
         <a class="planchip" href="./plan_wire.html" title="いまのプラン（押すと料金一覧へ）"><i class="ti ti-sparkles"></i>ベーシックOne</a>
         <button class="hdbtn" title="ToDo" aria-label="ToDo"><i class="ti ti-list-check"></i><span class="hdbadge">5</span></button>
@@ -358,6 +435,7 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
       </div>
     </div>
 
+    <!-- SPでは .app の .sp-room の有無で「一覧」と「トーク」を出し分ける（PCは常に2カラム） -->
     <div class="body">
       <!-- 左：会話リスト -->
       <div class="list">
@@ -529,11 +607,12 @@ function navToggle(el){
 }
 
 // 開いたときは「ここから未読」が見える位置まで送る。未読がなければ一番下。
-(function scrollToUnread(){
+function scrollToUnread(){
   var box = document.getElementById('msgs');
   var mark = box.querySelector('.unreaddiv');
   box.scrollTop = mark ? mark.offsetTop - 70 : box.scrollHeight;
-})();
+}
+scrollToUnread();
 
 /* ===== 会話リスト ===== */
 function grpToggle(el){
@@ -552,6 +631,20 @@ function convFilter(){
   document.getElementById('convEmpty').style.display = shown ? 'none' : 'flex';
 }
 
+/* ===== SPの画面遷移 =====
+   SPは一覧とトークが別画面。.app に .sp-room が付いているあいだだけトークを出し、
+   トップバーの中身をトークの見出しに差し替える。
+   PCのCSSはこのクラスを見ていないので、付いたままでも2カラムのまま。 */
+function spOpenRoom(){
+  document.getElementById('chatApp').classList.add('sp-room');
+  /* SPの初回は .room が display:none で読み込まれるため、読み込み時の
+     scrollToUnread() が高さ0の箱に対して走って効かない。出してから掛け直す。 */
+  scrollToUnread();
+}
+function spBack(){
+  document.getElementById('chatApp').classList.remove('sp-room');
+}
+
 /* ===== 会話をひらく ===== */
 function openConv(el){
   document.querySelectorAll('.conv[data-nm]').forEach(function(c){ c.classList.remove('on'); });
@@ -561,6 +654,11 @@ function openConv(el){
   document.getElementById('rmNm').textContent = nm;
   var av = document.getElementById('rmAv');
   av.textContent = ini; av.style.background = color;
+  /* SPの見出し（トップバー側）も同じ中身にしておく。片方だけ更新すると、
+     画面幅を跨いだときに前のトークの名前が残る */
+  document.getElementById('hdNm').textContent = nm;
+  var hav = document.getElementById('hdAv');
+  hav.textContent = ini; hav.style.background = color;
   document.getElementById('rmMem').textContent = mem + '人';
   document.getElementById('cinput').placeholder = nm + ' へメッセージを送信…';
 
@@ -578,6 +676,9 @@ function openConv(el){
     document.getElementById('blT').textContent = nm + ' へようこそ！';
     document.getElementById('blMem').textContent = 'メンバー' + mem + '人';
   }
+
+  // SPは一覧をタップした時点でトークの画面へ送る
+  spOpenRoom();
 }
 </script>
 <script src="./tour.js"></script>

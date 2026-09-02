@@ -783,6 +783,24 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
      basis auto にして、余りだけを等分する。 */
   .seg button{flex:1 1 auto;padding:8px 6px;text-align:center;}
 }
+/* SP: メンバーの行。アバター38 + 最終ログイン96 + 権限セレクト98 + メニュー32 に
+   gap13×4 を足すと316pxで、390px時の行の内側（316px）をちょうど使い切る。
+   残りを .tx が min-width:0 のまま受けて幅0になり、名前が「田/中/陽/菜」と
+   1文字ずつ縦に並んでいた（.sns / .rule と同じ形）。
+   1行目をアバター+名前+メールで埋め、最終ログイン・権限・メニューは2行目へ落とす。 */
+@media(max-width:430px){
+  .mem{flex-wrap:wrap;row-gap:10px;padding:14px 16px;}
+  .mem .tx{flex:1 1 calc(100% - 51px);}
+  /* 2行目: 最終ログインはアバター列（38+gap13）の分だけ下げて名前と左を揃える。
+     PCの width:96px / 右寄せは縦の桁揃えのためのものなので、1列になるSPでは外す。 */
+  .mem .last{width:auto;margin-left:51px;text-align:left;}
+  /* 権限とメニューは右端へ。操作をまとめておくと行をまたいでも押す場所が変わらない */
+  .mem .role{margin-left:auto;}
+  /* メール行は折り返させる。nowrap + ellipsis のままだと、招待中の人の
+     「iwagami@…example.com・招待中（まだ参加していません）」が
+     メールの途中で切られ、SPだけ招待中かどうかが読めなくなる。 */
+  .mem .ml{white-space:normal;overflow:visible;}
+}
 /* ===== シェル：ヘッダーとサイドバーを角丸のカードにする =====
    全面ベタ（角丸0・隙間0）だと面が窓枠に貼り付いて古く見える。
    .app に余白と gap を持たせて、サイドバー / ヘッダー / 本文を
