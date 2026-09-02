@@ -48,3 +48,26 @@ out/
 **/.cursor/
 claude_skills/
 **/claude_skills/
+
+# ===== 2026-09-02 追加: dev/ 直下に転がっていた未追跡の荷物 =====
+# 既存の「絶対に公開しないもの」と同じ趣旨。`git add -A` の事故止め。
+
+# 別リポジトリ（それぞれ .git を持つ）。この repo には取り込まない。
+# 取り込むと submodule でもない中途半端な形で入り、履歴が壊れる。
+/rep-fe/
+/rep-fe-main/
+synergy-media/green-upcycle/HP/
+# git worktree の実体。作業用の分身なので本体には入れない
+synergy-media/iine-ai/i/
+
+# グリーンアップサイクルのナレッジ。いいねAI とは別グループ（ルート CLAUDE.md の跨ぎ参照禁止）。
+# 中身が「社内検討用ドラフト」の営業戦略・ターゲット候補で、この repo は Pages で公開配信される。
+# 版管理したくなったら、この repo ではなく green-upcycle 側の非公開 repo に置く。
+synergy-media/green-upcycle/green-upcycle-vault/
+
+# 以下2つは公開しても危なくない。事故止めではなく「入れるか未決」なので置いてあるだけ。
+# コミットしたくなったらこの2行を消せばよい。
+# 先頭の / は「dev/ 直下のこれだけ」の意味。素で CLAUDE.md と書くと
+# synergy-media/iine-ai/CLAUDE.md など各グループのルールまで巻き込む。
+/CLAUDE.md
+/iine-ai-cursor/
