@@ -626,25 +626,44 @@ table.tbledit.noborder td.cell{border-right-color:rgba(255,255,255,.05);border-b
     padding:12px !important;
     overflow-y:visible;
   }
-  .ctop{flex-wrap:wrap;gap:6px;}
-  .ctop .r{flex-wrap:wrap;}
+  /* プレビュー見出しの行。折り返させると
+     [プレビュー] / [テンプレ][元画像と比較] / [ズーム] の3行で110px使い、
+     その下のステージまで含めて縦が伸びて、下のツールと調整パネルが
+     スクロールしないと見えなくなっていた（2026-09-03 指摘）。
+     ボタンをアイコンだけにして1行に収める。 */
+  .ctop{flex-wrap:nowrap;gap:8px;margin-bottom:10px;}
+  .ctop .pl{flex:none;}
+  .ctop .r{flex-wrap:nowrap;gap:6px;}
+  /* 「元画像と比較」「ズーム」はアイコンで意味が立つ。ラベルは
+     title / aria-label に残してあるので、読み上げと長押しからは引ける。 */
+  .gbtn .lb{display:none;}
+  .gbtn{padding:8px 9px;gap:0;flex:none;}
   /* Gen instruct area: full width */
   .gen-instruct{width:100%;}
   .gen-instruct-input{min-height:48px;}
   .genrow{grid-template-columns:1fr 1fr;gap:8px;}
-  /* Stage canvas: appropriate mobile height */
+  /* ステージの枠は外す。中の .canvas（260px・4:5）が画像そのものの枠を
+     持っているので、その外にもう1枚 黒い板＋角丸＋枠を敷くと
+     「画像を囲むカード」が二重になる。390pxでは画像の左右に黒い帯が
+     出るだけで何も仕切っていない（2026-09-03 指摘）。背景ごと透明にして
+     .canvas だけを置く。min-height も .canvas の325pxが決めるので外す。 */
   .stage{
-    min-height:260px !important;
-    border-radius:var(--radius-md);
+    min-height:0 !important;
+    border:none !important;
+    border-radius:0 !important;
+    background:transparent !important;
   }
   .thumbs{flex-wrap:wrap;}
   /* Script panel: collapsed by default on SP */
   .script-panel{margin-top:10px;}
-  /* 「この画像の台本」+「1 / 4枚目」+「タップで開く」を1行に詰めると、
-     nowrap が無いぶん見出しだけが min-content まで縮んで
-     「この画像の台 / 本」に割れる。3つ合わせて325pxなので1行に収まる。 */
-  .script-toggle{padding:13px 16px;white-space:nowrap;}
-  .script-toggle .ti-chevron-right{font-size:16px;}
+  /* 「この画像の台本」+「1 / 4枚目」を1行に詰めると、nowrap が無いぶん
+     見出しだけが min-content まで縮んで「この画像の台 / 本」に割れる。
+     開く前は行き先を示すだけの見出しなので、縦は詰めて小さく置く
+     （2026-09-03「もう少し縦幅も薄く、小さく」）。 */
+  .script-toggle{padding:8px 12px;white-space:nowrap;font-size:var(--text-meta);gap:6px;}
+  .script-toggle .ti-chevron-right{font-size:13px;}
+  .script-toggle .ti-notebook{font-size:13px;}
+  .script-toggle .script-badge{font-size:var(--text-meta);padding:1px 7px;}
   .script-toggle .script-hint{display:inline;font-size:var(--text-meta);color:var(--color-editor-muted);margin-left:auto;}
   .script-toggle.open .script-hint{display:none;}
   .script-body{max-height:30vh;}
@@ -711,7 +730,7 @@ table.tbledit.noborder td.cell{border-right-color:rgba(255,255,255,.05);border-b
       <div class="tool" onclick="pickTool(this,'rp-history')"><i class="ti ti-history"></i><span class="l">履歴</span></div>
     </div>
     <div class="center">
-      <div class="ctop"><span class="pl">プレビュー</span><div class="r"><div class="tmpl-sw" id="tmplSw" onclick="this.classList.toggle('open')"><button class="tmpl-btn"><i class="ti ti-template"></i><span class="tmpl-label">テンプレ:</span> <span class="tmpl-name">シンプル白</span><i class="ti ti-chevron-down chevron"></i></button><div class="tmpl-dd" onclick="event.stopPropagation()"><div class="tmpl-dd-item active" onclick="pickTmpl(this,'シンプル白')"><div class="tmpl-thumb"><i class="ti ti-layout-board"></i></div><div class="tmpl-info"><div class="tmpl-n">シンプル白</div><div class="tmpl-d">白背景・ミニマルレイアウト</div></div><i class="ti ti-check tmpl-check"></i></div><div class="tmpl-dd-item" onclick="pickTmpl(this,'ポップ')"><div class="tmpl-thumb" style="background:#ffe8cc;"><i class="ti ti-sparkles"></i></div><div class="tmpl-info"><div class="tmpl-n">ポップ</div><div class="tmpl-d">カラフル・ストーリー映え</div></div><i class="ti ti-check tmpl-check"></i></div><div class="tmpl-dd-item" onclick="pickTmpl(this,'モダン黒')"><div class="tmpl-thumb" style="background:#1a1a1a;color:#aaa;"><i class="ti ti-moon"></i></div><div class="tmpl-info"><div class="tmpl-n">モダン黒</div><div class="tmpl-d">ダーク・高級感</div></div><i class="ti ti-check tmpl-check"></i></div><div class="tmpl-dd-item" onclick="pickTmpl(this,'ナチュラル')"><div class="tmpl-thumb" style="background:#e8f0e4;color:#5a7a4a;"><i class="ti ti-leaf"></i></div><div class="tmpl-info"><div class="tmpl-n">ナチュラル</div><div class="tmpl-d">アースカラー・柔らかい印象</div></div><i class="ti ti-check tmpl-check"></i></div></div></div><button class="gbtn"><i class="ti ti-arrows-left-right"></i>元画像と比較</button><button class="gbtn"><i class="ti ti-zoom-in"></i>ズーム</button></div></div>
+      <div class="ctop"><span class="pl">プレビュー</span><div class="r"><div class="tmpl-sw" id="tmplSw" onclick="this.classList.toggle('open')"><button class="tmpl-btn"><i class="ti ti-template"></i><span class="tmpl-label">テンプレ:</span> <span class="tmpl-name">シンプル白</span><i class="ti ti-chevron-down chevron"></i></button><div class="tmpl-dd" onclick="event.stopPropagation()"><div class="tmpl-dd-item active" onclick="pickTmpl(this,'シンプル白')"><div class="tmpl-thumb"><i class="ti ti-layout-board"></i></div><div class="tmpl-info"><div class="tmpl-n">シンプル白</div><div class="tmpl-d">白背景・ミニマルレイアウト</div></div><i class="ti ti-check tmpl-check"></i></div><div class="tmpl-dd-item" onclick="pickTmpl(this,'ポップ')"><div class="tmpl-thumb" style="background:#ffe8cc;"><i class="ti ti-sparkles"></i></div><div class="tmpl-info"><div class="tmpl-n">ポップ</div><div class="tmpl-d">カラフル・ストーリー映え</div></div><i class="ti ti-check tmpl-check"></i></div><div class="tmpl-dd-item" onclick="pickTmpl(this,'モダン黒')"><div class="tmpl-thumb" style="background:#1a1a1a;color:#aaa;"><i class="ti ti-moon"></i></div><div class="tmpl-info"><div class="tmpl-n">モダン黒</div><div class="tmpl-d">ダーク・高級感</div></div><i class="ti ti-check tmpl-check"></i></div><div class="tmpl-dd-item" onclick="pickTmpl(this,'ナチュラル')"><div class="tmpl-thumb" style="background:#e8f0e4;color:#5a7a4a;"><i class="ti ti-leaf"></i></div><div class="tmpl-info"><div class="tmpl-n">ナチュラル</div><div class="tmpl-d">アースカラー・柔らかい印象</div></div><i class="ti ti-check tmpl-check"></i></div></div></div><button class="gbtn" title="元画像と比較" aria-label="元画像と比較"><i class="ti ti-arrows-left-right"></i><span class="lb">元画像と比較</span></button><button class="gbtn" title="ズーム" aria-label="ズーム"><i class="ti ti-zoom-in"></i><span class="lb">ズーム</span></button></div></div>
       <!-- シート一覧はプレビュー見出しの直下（ステージの上）に置く -->
       <div class="thumbs">
         <div class="cth sel" onclick="pickTh(this,0)"><span class="ed">編集済</span><i class="ti ti-building-store"></i><span class="n">1</span></div>
