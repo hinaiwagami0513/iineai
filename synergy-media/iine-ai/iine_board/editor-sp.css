@@ -16,6 +16,11 @@
       クラスを足したのはそのためで、[style*="grid-template-columns:240px"] の
       当て方はもう使わない（styleの書き換えで黙って外れるため）。 */
 
+/* AIアシストのシートを開いたときの暗幕。editor-sp.js が #aiPanel の隣に足す。
+   実体は常にDOMにあるので、SP以外では必ず消えるようメディアクエリの外で伏せておく
+   （中に入れるとPC幅でルールが1つも当たらず、全面を覆う板になる）。 */
+.ai-sheet-backdrop{display:none;}
+
 @media (max-width:430px){
 
   /* ===== 3カラム → 縦積み ===== */
@@ -26,13 +31,50 @@
   /* 中央カラムは overflow:hidden を持つ枠。中の表とタブが切れる側なので幅を閉じる */
   .ed-xpane{min-width:0;}
 
-  /* ===== AIパネル ===== */
-  /* 280px固定のまま縦積みすると横に出る。全幅にする。
-     閉じているときの縦書きラベルは、横帯になった時点で読めないので横書きへ戻す。 */
-  .ai-panel-open,.ai-panel-closed{width:100% !important;}
-  .ai-panel-closed{height:44px;}
-  .ai-collapsed{flex-direction:row;height:44px;}
-  .ai-col-text{writing-mode:horizontal-tb;letter-spacing:0;}
+  /* ===== AIパネル = 右下の丸アイコン ＋ 下から出るシート ===== */
+  /* PCは右カラムに出しっぱなしでいい。SPで同じものを縦積みにすると、
+     編集内容の下にAIアシストが埋まって、相談するたびに一番下まで
+     スクロールすることになる。本文の流れから外して右下にアイコンで置き、
+     押したときだけチャットを下から上げる。
+     #aiPanel は #sc_editor の中にあるので、他のステップでは display:none の
+     子として自動的に消える（＝投稿編集画面限定になる）。 */
+  .ai-panel-open,.ai-panel-closed{
+    position:fixed;z-index:60;width:auto !important;height:auto;transition:none;}
+
+  /* --- 閉じている状態 = 丸アイコン --- */
+  /* フッター（戻る / 予約する）に重ならないよう、その高さぶん持ち上げる。
+     --sp-foot-h は editor-sp.js が実測して入れる。JSが動かなくても
+     67px（実測値）で成立するようフォールバックを置く。 */
+  .ai-panel-closed{right:16px;bottom:calc(var(--sp-foot-h,67px) + 16px);left:auto;top:auto;}
+  .ai-collapsed{
+    position:relative;width:56px;height:56px;border-radius:var(--radius-full);
+    background:var(--color-card) url(./assets/iine-fox-face.png) center/32px 32px no-repeat;
+    border:1.5px solid var(--color-primary);box-shadow:0 6px 18px rgba(0,0,0,.22);}
+  /* 「«」と「AIアシスト」の文字は56pxの丸に入らない。見た目からは外すが、
+     読み上げには残したいので display:none ではなく視覚的にだけ隠す。 */
+  .ai-col-icon,.ai-col-text{
+    position:absolute;width:1px;height:1px;margin:0;overflow:hidden;
+    clip-path:inset(50%);white-space:nowrap;}
+
+  /* --- 開いている状態 = 下から出るシート --- */
+  .ai-panel-open{left:0;right:0;bottom:0;top:auto;}
+  /* 下端まで使うので、ホームインジケータのぶんだけ内側に逃がす
+     （入力欄と送信ボタンがちょうどその位置に来る）。 */
+  .ai-expanded{max-height:82vh;border-radius:16px 16px 0 0;
+    border-bottom:none;box-shadow:0 -8px 30px rgba(0,0,0,.24);
+    padding-bottom:env(safe-area-inset-bottom);}
+  /* 本文の max-height:46vh はPCの3カラム用。シートでは中身だけ先に止まって
+     下に死んだ余白が残るので、シート側の高さに任せる。 */
+  .ai-ex-stream{max-height:none;}
+  /* 「»」は右へ畳む向き。シートは下へ閉じるので下向きに回す。 */
+  .ai-ex-close{transform:rotate(90deg);}
+
+  /* --- 暗幕（押すと閉じる。editor-sp.js が #aiPanel の隣に足す） --- */
+  .ai-sheet-backdrop.on{display:block;position:fixed;inset:0;z-index:59;
+    background:rgba(0,0,0,.38);}
+  /* シートが開いている間は後ろを動かさない。スクローラは画面によって
+     .main / .canvas のどちらもありうるので両方止める。 */
+  body.ai-sheet-open .main,body.ai-sheet-open .canvas{overflow:hidden;}
 
   /* ===== ヘッダー行（タイトル + 仮予約 + 自動保存ずみ） ===== */
   /* 3つを1行に詰めると、タイトルが幅を取ったあとの残りを
