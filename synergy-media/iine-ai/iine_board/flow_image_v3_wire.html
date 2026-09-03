@@ -566,7 +566,6 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
   background:var(--color-primary-subtle);color:var(--color-primary);font-family:inherit;font-size:var(--text-body);
   font-weight:var(--font-weight-body-strong);cursor:pointer;display:inline-flex;align-items:center;gap:6px;}
 .bulksched .apply:hover{background:var(--color-primary);color:#fff;}
-.bulksched .hint{font-size:var(--text-label);color:var(--color-muted-foreground);margin-left:auto;align-self:center;}
 .cardsched-view{display:flex;align-items:center;gap:6px;margin-top:9px;padding-top:9px;border-top:1px dashed var(--color-border);
   font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-primary);}
 .cardsched-view .kari{font-size:var(--text-meta);font-weight:400;color:var(--color-muted-foreground);
@@ -577,7 +576,6 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 
 /* ===== まとめて作る: 生成前の確認 =====
    一気に作ると最後まで中身が見えないので、作る前に案を並べて見せる。 */
-.bulkcheck-sub{font-size:var(--text-body-lg);color:var(--color-muted-foreground);margin:-6px 0 16px;}
 .bcgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(360px,1fr));gap:14px;}
 .bccard{border:1.5px solid var(--color-border);border-radius:var(--radius-lg);background:var(--color-card);
   overflow:hidden;display:flex;flex-direction:column;transition:border-color .15s,opacity .15s;}
@@ -827,7 +825,6 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
       <!-- まとめて作るときだけ通る: 生成前に案を確認する -->
       <div class="screen" id="sc_bulkcheck">
         <div class="h1">この案で作りますか？<a class="help-inline" href="https://hinaiwagami0513.github.io/iineai/help/create/image/#plan" target="_blank" rel="noopener" title="ヘルプ: 企画を決める" aria-label="この項目のヘルプ">?</a></div>
-        <div class="bulkcheck-sub">いらない案はチェックを外してください。作り直しもできます。投稿日時もここで決められます。</div>
         <div class="bulksched">
           <label class="f"><span>最初の日</span><input type="date" id="bcStart"></label>
           <label class="f"><span>時刻</span><select id="bcTime"></select></label>
@@ -835,7 +832,6 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
             <option value="1">毎日</option><option value="2" selected>2日おき</option>
             <option value="3">3日おき</option><option value="7">毎週おなじ曜日</option></select></label>
           <button class="apply" onclick="bcApplyPattern()"><i class="ti ti-calendar-event"></i>カードにまとめて入れる</button>
-          <span class="hint">1件ずつ違う日にしたいときはカードの日時を変えてください</span>
         </div>
         <!-- 分析の「おすすめの投稿時間」をここで使えるようにする -->
         <div class="bcrec">
