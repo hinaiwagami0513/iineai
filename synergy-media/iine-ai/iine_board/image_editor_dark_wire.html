@@ -653,9 +653,14 @@ table.tbledit.noborder td.cell{border-right-color:rgba(255,255,255,.05);border-b
     border-radius:0 !important;
     background:transparent !important;
   }
-  .thumbs{flex-wrap:wrap;}
+  /* シート一覧と台本アコーディオンの間。.thumbs の margin-bottom 14px と
+     .script-panel の margin-top 10px が足されて24px空いていた。
+     どちらもプレビュー面の中の区切りで、そこまで離す理由がない。
+     8pxまで詰めて、浮いたぶん下のツールと調整パネルを画面に入れる
+     （2026-09-03「上にグッと詰めるともっと下が映る」）。 */
+  .thumbs{flex-wrap:wrap;margin-bottom:8px;}
   /* Script panel: collapsed by default on SP */
-  .script-panel{margin-top:10px;}
+  .script-panel{margin-top:0;}
   /* 「この画像の台本」+「1 / 4枚目」を1行に詰めると、nowrap が無いぶん
      見出しだけが min-content まで縮んで「この画像の台 / 本」に割れる。
      開く前は行き先を示すだけの見出しなので、縦は詰めて小さく置く
