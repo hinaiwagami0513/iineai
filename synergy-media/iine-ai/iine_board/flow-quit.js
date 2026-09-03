@@ -7,13 +7,13 @@
    作るのをやめてボードに帰る口が無かった。ステップ3まで来てから
    「やっぱり何も編集せずにやめたい」が行き止まりになる。
 
-   ヘッダー右の <button class="close"> は全ファイルにあるのに onclick が
-   どこにも無い（クラス名のとおり閉じるボタンのつもりで置かれて、
-   中身が付かないままだった）。アイコンだけ ti-list → ti-x に替えて、
-   ここに出口を繋ぐ。ボタンを増やさないので、SPの狭いヘッダーも今のまま。
+   出口はフッターの「戻る」の隣に置く。最初はヘッダー右の ✕ に付けていたが、
+   操作は全部フッターでしているので目が上に行かず気づけない（2026-09-03 陽菜指摘）。
+   「予約する」と競らないよう、枠線なしの文字ボタンにして
+   予約する（塗り）> 戻る（枠線）> 作成をやめる（文字だけ）の順で弱くする。
 
    確認ダイアログは各ファイルが持っている仮予約ダイアログの
-   .kariov / .karibox のクラスをそのまま使う。CSSは1行も足さない。 */
+   .kariov / .karibox のクラスをそのまま使う。足すCSSはボタン2つぶんだけ。 */
 (function(){
   var HOME = './board.html';
   var ov = null;
@@ -54,14 +54,37 @@
   function openQuit(){ build().classList.add('on'); }
   function closeQuit(){ if(ov) ov.classList.remove('on'); }
 
+  /* .foot は justify-content:space-between で [戻る] … [次へ] の2つを
+     両端に振っている。戻るを包んでから隣に足すと、左の塊 / 右の次へ の
+     2アイテムのままなので、既存の振り分けを崩さずに済む。 */
+  function style(){
+    if(document.getElementById('quitCss')) return;
+    var s = document.createElement('style');
+    s.id = 'quitCss';
+    s.textContent =
+      '.foot-left{display:flex;align-items:center;gap:6px;}'+
+      '.quitbtn{background:none;border:none;font-family:inherit;cursor:pointer;'+
+        'font-size:var(--text-label);font-weight:var(--font-weight-body-strong);'+
+        'color:var(--color-muted-foreground);padding:11px 10px;border-radius:var(--radius-md);}'+
+      '.quitbtn:hover{color:var(--color-primary);background:var(--color-primary-subtle);}';
+    document.head.appendChild(s);
+  }
+
   function init(){
-    var btn = document.querySelector('.topbar .close');
-    if(!btn) return;
-    /* 中身がリストのアイコンのままだと、押した先（やめる）と食い違う */
-    btn.innerHTML = '<i class="ti ti-x"></i>';
-    btn.title = '作成をやめる';
-    btn.setAttribute('aria-label','作成をやめる');
+    var back = document.getElementById('back');
+    var foot = back && back.parentNode;
+    if(!foot || !foot.classList.contains('foot')) return;
+    style();
+    var wrap = document.createElement('span');
+    wrap.className = 'foot-left';
+    foot.insertBefore(wrap, back);
+    wrap.appendChild(back);
+    var btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'quitbtn';
+    btn.textContent = '作成をやめる';
     btn.addEventListener('click', openQuit);
+    wrap.appendChild(btn);
     document.addEventListener('keydown', function(e){
       if(e.key === 'Escape' && ov && ov.classList.contains('on')) closeQuit();
     });
