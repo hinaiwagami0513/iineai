@@ -46,9 +46,11 @@
      --sp-foot-h は editor-sp.js が実測して入れる。JSが動かなくても
      67px（実測値）で成立するようフォールバックを置く。 */
   .ai-panel-closed{right:16px;bottom:calc(var(--sp-foot-h,67px) + 16px);left:auto;top:auto;}
+  /* きつねの顔は 1049x892（横長）。32px 32px と正方形で指定すると縦に伸びるので、
+     幅だけ決めて高さは auto に任せる。イラストの比率は変えない。 */
   .ai-collapsed{
     position:relative;width:56px;height:56px;border-radius:var(--radius-full);
-    background:var(--color-card) url(./assets/iine-fox-face.png) center/32px 32px no-repeat;
+    background:var(--color-card) url(./assets/iine-fox-face.png) center/34px auto no-repeat;
     border:1.5px solid var(--color-primary);box-shadow:0 6px 18px rgba(0,0,0,.22);}
   /* 「«」と「AIアシスト」の文字は56pxの丸に入らない。見た目からは外すが、
      読み上げには残したいので display:none ではなく視覚的にだけ隠す。 */
