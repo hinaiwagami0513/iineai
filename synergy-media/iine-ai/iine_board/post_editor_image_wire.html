@@ -169,11 +169,16 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .hdr-page .ti{color:var(--color-muted-foreground);font-size:18px;}
 /* 上部ステップ */
 .stepbar{display:flex;align-items:center;justify-content:center;padding:20px 24px 20px;background:var(--color-card);gap:0;max-width:600px;margin:0 auto;width:100%;}
-.st{display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;z-index:1;}
+/* ステップは全部おなじ幅にする。中身なりの幅にすると、ラベルの短い段
+   （「完成」など）だけ細くなって丸の間隔が揃わない。 */
+.st{flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:center;gap:6px;position:relative;z-index:1;}
 .st .n{width:28px;height:28px;flex:none;border-radius:var(--radius-full);display:flex;align-items:center;justify-content:center;font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);border:2px solid var(--color-border);background:var(--color-card);transition:all .2s;}
 .st.done .n{background:var(--color-success);color:#fff;border-color:var(--color-success);} .st.now .n{background:var(--color-primary);color:#fff;border-color:var(--color-primary);} .st.todo .n{background:var(--color-card);color:var(--color-muted-foreground);border-color:var(--color-border);}
 .st .tx{font-size:var(--text-meta);font-weight:var(--font-weight-body-strong);white-space:nowrap;color:var(--color-muted-foreground);} .st.now .tx{color:var(--color-foreground);} .st.done .tx{color:var(--color-foreground);}
-.stline{flex:1;height:2px;background:var(--color-border);min-width:40px;margin:0 -4px;margin-bottom:20px;} .stline.done{background:var(--color-success-vivid);}
+/* つなぎ線は伸ばさず固定幅にして、余りを .st で等分させる。
+   丸の中心に合わせる位置は、ラベルが2行になっても動かないよう上基準で取る
+   （丸28px の中心＝13px + 線2px の半分）。 */
+.stline{flex:none;width:40px;height:2px;background:var(--color-border);margin:0 -4px;align-self:flex-start;margin-top:13px;} .stline.done{background:var(--color-success-vivid);}
 .main{flex:1;min-width:0;display:flex;flex-direction:column;min-height:0;}
 #subnav{display:flex;align-items:center;justify-content:center;gap:6px;padding:10px 24px;border-bottom:1px solid var(--color-border);background:var(--color-card);}
 .snn{display:flex;align-items:center;gap:6px;}
@@ -447,7 +452,10 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
   .helpbtn{width:28px;height:28px;}
   /* ===== ステッパー ===== */
   .stepbar{overflow-x:auto;flex-wrap:nowrap;justify-content:flex-start;padding:12px;max-width:none;margin:0;}
-  .stline{min-width:24px;}
+  .stline{width:24px;}
+  /* 幅を等分したぶん1段あたりが狭くなる。長いラベルは折り返させる
+     （nowrap のままだと隣の段の下にはみ出して重なる）。 */
+  .st .tx{white-space:normal;text-align:center;}
   .st .tx{font-size:14px;}
   /* ===== サブナビ ===== */
   #subnav{padding:8px 14px;gap:4px;}
