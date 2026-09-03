@@ -127,15 +127,30 @@
   .ed-typerow>div:first-child{flex-basis:100%;}
 
   /* ===== 台本テーブル ===== */
-  /* 3列を390pxに詰めると各列が42〜58pxになり、セルが1文字ずつ縦に並ぶ
-     （shell-sp.css と同じ判断で、列を潰さず横スクロールで見せる）。
-     列に下限を与えて、合計幅は指で送る。 */
-  .sctable{display:block;overflow-x:auto;}
-  .sctable thead,.sctable tbody{display:table;width:max-content;min-width:100%;}
-  .sctable th,.sctable td{min-width:96px;}
-  .sctable th:nth-child(2),.sctable td:nth-child(2){min-width:210px;}
-  .sctable th:nth-child(3),.sctable td:nth-child(3){min-width:150px;}
-  .sctable::-webkit-scrollbar{height:0;}
+  /* 3列（シーン / 映像（撮影）/ テロップ）を390pxに詰めると各列が42〜58pxになり、
+     セルが1文字ずつ縦に並ぶ。以前は列に下限を与えて横スクロールで送っていたが、
+     390pxの枠に収まるのが1.5列ぶんしかなく、テロップは常に画面の外、映像も
+     右端が切れる。1シーン読むたびに左右へ振ることになって「横スライドしんどい」
+     （2026-09-03）。行ごとカードに畳んで、シーン → 映像 → テロップ を縦に読ませる。
+     ※ 編集は contenteditable の .ed が持っていて td の位置に依存しないので、
+        table のままCSSで畳めばJS（renderScenes / SCENES への反映）は触らずに済む。 */
+  .sctable,.sctable tbody,.sctable tr,.sctable td{display:block;width:auto;}
+  /* 見出し行は各セルの ::before ラベルに引き継ぐので畳む */
+  .sctable thead{display:none;}
+  .sctable tr{border:1px solid var(--color-border);border-radius:var(--radius-md);
+    padding:10px 12px;margin-bottom:10px;}
+  .sctable tr:last-child{margin-bottom:0;}
+  /* td の下罫線はカードの枠と二重になる。セルの区切りは中の線に置き換える */
+  .sctable td{padding:0;border-bottom:none;}
+  .sctable tr:last-child td{border-bottom:none;}
+  .sctable td+td{margin-top:10px;padding-top:10px;border-top:1px solid var(--color-border);}
+  /* 畳んだ見出しの代わり。カード内では2枚目3枚目が何の欄か分からなくなる。
+     1列目は「シーン1」「0〜4秒」を中に持っているのでラベルは要らない。 */
+  .sctable td:nth-child(2)::before{content:"映像（撮影）";}
+  .sctable td:nth-child(3)::before{content:"テロップ";}
+  .sctable td:nth-child(2)::before,.sctable td:nth-child(3)::before{
+    display:block;margin-bottom:4px;font-size:var(--text-meta);
+    font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);}
 
   /* ===== AIのおすすめ（サジェスト） ===== */
   /* 横スクロールにすると .suglabel の width:100% が
