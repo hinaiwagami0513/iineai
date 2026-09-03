@@ -102,11 +102,16 @@
   #titleInput{min-width:0 !important;width:100% !important;}
 
   /* ===== 編集タブ（台本 / 投稿文 / AIレビュー） ===== */
-  /* 3つで340px要る。縮めると「投 / 稿 / 文」になるので、
-     詰めたうえで入らない分は横スクロールで送れるようにする。 */
+  /* 3つで340px要る。縮めると「投 / 稿 / 文」になるので、入らない分は
+     横スクロールで送れるようにする（縮めるのではなく送る）。
+     そのうえで幅が余るときは3つで分け合う。左に寄せて詰めると、
+     右に200pxの空きが残って選択中の下線がどこまでの範囲を指すのか
+     読めなくなる（2026-09-03「壁が左寄り」）。
+     flex-grow だけ許して flex-shrink は 0 のままにするのがポイントで、
+     入りきらない幅では従来どおり横スクロールに落ちる。 */
   .ed-tabs{overflow-x:auto;flex-wrap:nowrap;}
   .ed-tabs::-webkit-scrollbar{height:0;}
-  .ed-xtab,.ed-tab{flex:none;white-space:nowrap;padding:13px 14px !important;}
+  .ed-xtab,.ed-tab{flex:1 0 auto;white-space:nowrap;text-align:center;padding:13px 8px !important;}
   /* テキスト / 画像 の2択トグル */
   .ed-xsw{white-space:nowrap;}
 
