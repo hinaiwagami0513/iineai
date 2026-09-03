@@ -584,6 +584,18 @@ table.tbledit.noborder td.cell{border-right-color:rgba(255,255,255,.05);border-b
     flex-direction:column !important;
     min-height:0;
   }
+  /* ⚠️ PCの order（ツール → プロパティ → 中央 → AI）のまま縦に積むと、
+     AI生成のプロンプトも「この指示で生成」も画面の上に居て、結果の
+     プレビューが下に隠れる。生成を1回まわすたびに下までスクロールして
+     戻ることになる。中央を先頭に上げて、上に結果／下に操作にする
+     （video_editor_dark_wire.html と同じ並べ替え）。 */
+  .center{order:1;}
+  .tools{order:2;}
+  .left-props{order:3;}
+  .right{order:4;}
+  /* 並べ替えで中央がヘッダー直下に来る。ツールは元から border-bottom で
+     切れているが、上側の境界が無くなるので足す。 */
+  .tools{border-top:1px solid var(--color-editor-border);}
   /* Left tools panel → horizontal scrollable strip */
   .tools{
     width:100% !important;
