@@ -490,6 +490,14 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
   .donebody>div{flex-direction:column !important;gap:24px !important;padding:24px 16px !important;}
   .donebody>div>div:last-child{width:100% !important;max-width:320px;margin:0 auto;}
   .donemodal{width:calc(100vw - 24px);max-height:88vh;}
+  /* 企画カードが縦に伸びすぎるので、SPでは補足情報を省いて詰める。
+     保存日・保存元は選ぶ判断に要らないので丸ごと隠す。 */
+  .plan-cards{gap:10px;}
+  .plan-card{padding:14px 16px;}
+  .plan-card .pc-saved{display:none;}
+  .plan-card .pc-head{gap:8px;margin-bottom:8px;}
+  .plan-card .pc-section{margin-bottom:4px;}
+  .plan-card .pc-bullets{padding-left:16px;line-height:1.65;}
 }
 
 /* ===== 完成モーダル =====
