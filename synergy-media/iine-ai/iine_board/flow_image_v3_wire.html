@@ -594,11 +594,16 @@ body {background:#fcf5ef;padding:0;color:var(--color-foreground);}
 .bcmeta{display:flex;flex-wrap:wrap;gap:6px;padding:10px 14px 12px;}
 .bcpill{font-size:var(--text-label);font-weight:var(--font-weight-body-strong);color:var(--color-muted-foreground);
   background:var(--color-background);border-radius:var(--radius-full);padding:2px 9px;}
-.bcfoot{padding:12px 14px 13px;}
-.bcredo{display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:var(--radius-sm);
+/* 「作り直す」と「編集」は同じ重さの並びにする。作り直すはこの画面で完結、
+   編集はステップ3へ出ていく操作で、どちらを押すかはユーザーが選ぶ。 */
+.bcfoot{display:flex;align-items:center;gap:8px;padding:12px 14px 13px;}
+.bcredo,.bcedit{display:inline-flex;align-items:center;gap:5px;padding:6px 11px;border-radius:var(--radius-sm);
   border:1px solid var(--color-border);background:transparent;font-family:inherit;font-size:var(--text-label);
   font-weight:var(--font-weight-body-strong);color:var(--color-foreground);cursor:pointer;}
-.bcredo:hover{border-color:var(--color-primary);color:var(--color-primary);background:var(--color-primary-subtle);}
+.bcredo:hover,.bcedit:hover{border-color:var(--color-primary);color:var(--color-primary);background:var(--color-primary-subtle);}
+/* チェックを外した案は作られないので、日時の入力と同じように編集も止める */
+.bcedit:disabled{opacity:.45;cursor:default;}
+.bcedit:disabled:hover{border-color:var(--color-border);color:var(--color-foreground);background:transparent;}
 @media(max-width:768px){ .bcgrid{grid-template-columns:1fr;} }
 /* 分析のおすすめ時間（この画面から1タップで使えるようにする） */
 .bcrec{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:-8px 0 16px;padding:10px 14px;
@@ -1894,7 +1899,8 @@ function renderBulkCheck(){
         '<select'+dis+' onchange="bcSet('+i+',\'t\',this.value)">'+bcTimeOptions(v.t||'19:00')+'</select>'+
         (bcIsRec(v)?'<span class="rec" title="分析でいちばん反応が良い時間帯です"><i class="ti ti-sparkles"></i>おすすめ</span>':'')+
         '<span class="kari">仮</span></div>'+
-      '<div class="bcfoot"><button class="bcredo" data-redo="'+i+'"><i class="ti ti-refresh"></i>作り直す</button></div>'+
+      '<div class="bcfoot"><button class="bcredo" data-redo="'+i+'"><i class="ti ti-refresh"></i>作り直す</button>'+
+        '<button class="bcedit" data-edit="'+i+'"'+dis+'><i class="ti ti-pencil"></i>編集</button></div>'+
     '</div>';
   }).join('');
 }
@@ -1993,7 +1999,21 @@ document.addEventListener('click',function(e){
     renderBulkCheck();
     if(typeof toast!=='undefined')toast('案'+(i2+1)+'を作り直しました');
     return; }
+  var ed=e.target.closest?e.target.closest('.bcedit'):null;
+  if(ed&&!ed.disabled){ bcOpenEditor(+ed.dataset.edit); return; }
 });
+/* 案の確認からステップ3（投稿を編集）へ入る唯一の口。
+   nav() は「複数のときは1件ずつの編集を通らない」ので editor を飛ばす。
+   ここは飛ばさずに直接その画面へ行く（戻るは nav(-1) で案の確認に戻る）。
+   どの案を開いているか分かるよう、編集画面のタイトルを選んだ案に差し替える。 */
+function bcOpenEditor(n){
+  var p=BULK_PLANS[n]; if(!p||!p.on)return;
+  var v=document.getElementById('titleView');
+  if(v&&v.firstChild&&v.firstChild.nodeType===3)v.firstChild.nodeValue=p.title;
+  var inp=document.getElementById('titleInput'); if(inp)inp.value=p.title;
+  jump(SCR.indexOf('editor'));
+  if(typeof toast!=='undefined')toast('案'+(n+1)+'を編集します');
+}
 </script>
 
 
