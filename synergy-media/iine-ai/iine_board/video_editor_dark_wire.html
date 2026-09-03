@@ -430,9 +430,24 @@ body.props-resizing{cursor:col-resize;user-select:none;}
      その隣のプロパティ（.left-props）を position:absolute で浮かせているが、
      幅だけ100%にして absolute を残すと、この2枚が .mid（ステージ）と .tl
      （タイムライン）の上に重なって、プレビューもトラックも見えなくなる。
-     390pxでは黒い空白だけが出ていた。position から降ろして、DOMの順
-     （ツール → プロパティ → ステージ → AI → タイムライン）に縦へ積む。 */
+     390pxでは黒い空白だけが出ていた。position から降ろして縦へ積む
+     （積む順は下の order で決める）。 */
   .tools,.left-props{position:static !important;}
+  /* ⚠️ ただしDOM順のままだと ツール → プロパティ → ステージ になり、
+     プロパティ（ズーム・X・Y…）を動かしても結果のプレビューが
+     画面の外（下）にあって、いじりながら効き目を見られない。
+     .app は flex column なので order だけ差し替えて
+     ステージ → ツール → プロパティ → AI → タイムライン に並べ替える
+     （上に結果／下に操作。CapCut など縦画面の動画編集と同じ並び）。
+     DOMは触らないので、PC幅では order が効かず今までどおり。 */
+  .mid{order:1;}
+  .tools,.props-resize{order:2;}
+  .left-props{order:3;}
+  .right{order:4;}
+  .tl{order:5;}
+  /* 並べ替えでステージがヘッダー直下に来る。ツールとプロパティは元から
+     border-bottom で切れているが、上側の境界が無くなるので足す。 */
+  .tools{border-top:1px solid var(--color-editor-border);}
   /* パネル幅を引っぱるためのグリップ。1カラムでは掴む先が無いのに
      right:auto の計算で画面の外（x=397）に残っていた。 */
   .props-resize,.resize-handle{display:none !important;}
